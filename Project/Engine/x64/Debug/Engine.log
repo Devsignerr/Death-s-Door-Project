@@ -1,0 +1,1787 @@
+﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 23 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  StructuredBuffer g_arrFrameTrans;
+  StructuredBuffer g_arrOffset;
+  RWStructuredBuffer g_arrFinelMat;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 22 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  RWStructuredBuffer g_arrDestMat;
+  StructuredBuffer g_srcMat;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\CopyTexture.fx(19,9-35): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Death'sDoor Project\3DProject\Project\Engine\CopyTexture.fx(19,40-66): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 22 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  RWTexture2D g_DestTex;
+  Texture2D g_SrcTex;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 23 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  RWTexture2D g_HeightMap;
+  Texture2D g_brushtex;
+  StructuredBuffer g_PickPos;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\light.fx(41,5-40): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\light.fx(163,5-40): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 22 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  RWStructuredBuffer g_particlebuffer;
+  RWStructuredBuffer g_shared;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\picking.fx(30,9-42): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 21 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  RWStructuredBuffer g_output;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\std2d.fx(158,11-60): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 21 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  StructuredBuffer g_particelbuffer;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\std3d.fx(82,21-37): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\terrain.fx(58,12-27): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\terrain.fx(158,5-72): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\terrain.fx(159,5-70): warning X3206: implicit truncation of vector type
+C:\Death'sDoor Project\3DProject\Project\Engine\terrain.fx(160,5-74): warning X3206: implicit truncation of vector type
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 20 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+  }
+  
+  //
+  // 22 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  RWTexture2D WeightTex;
+  StructuredBuffer g_PickPos;
+  
+  CFBXLoader.cpp
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(286,26): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(287,31): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(288,31): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(845,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(845,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(852,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(852,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(859,14): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(860,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(861,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(73): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Death'sDoor Project\3DProject\Project\Engine\CFBXLoader.cpp(73): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+  Engine.vcxproj -> C:\Death'sDoor Project\3DProject\External\Library\Engine\Engine_debug.lib
+  .\Project\Engine\CAnimation2D.h
+  .\Project\Engine\CAnimation3DShader.h
+  .\Project\Engine\CAnimator2D.h
+  .\Project\Engine\CAnimator3D.h
+  .\Project\Engine\CCamera.h
+  .\Project\Engine\CCollider2D.h
+  .\Project\Engine\CCollisionMgr.h
+  .\Project\Engine\CComponent.h
+  .\Project\Engine\CComputeShader.h
+  .\Project\Engine\CConstBuffer.h
+  .\Project\Engine\CCopyBoneMatrixShader.h
+  .\Project\Engine\CCopyShaderCS.h
+  .\Project\Engine\CCore.h
+  .\Project\Engine\CDevice.h
+  .\Project\Engine\CEntity.h
+  .\Project\Engine\CEventMgr.h
+  .\Project\Engine\CFBXLoader.h
+  .\Project\Engine\CGameObject.h
+  .\Project\Engine\CGraphicsShader.h
+  .\Project\Engine\CHeightMapShader.h
+  .\Project\Engine\CInstancingBuffer.h
+  .\Project\Engine\CInterface.h
+  .\Project\Engine\CKeyMgr.h
+  .\Project\Engine\CLayer.h
+  .\Project\Engine\CLight2D.h
+  .\Project\Engine\CLight3D.h
+  .\Project\Engine\CLightCamera.h
+  .\Project\Engine\CMaterial.h
+  .\Project\Engine\CMesh.h
+  .\Project\Engine\CMeshData.h
+  .\Project\Engine\CMeshRender.h
+  .\Project\Engine\CMRT.h
+  .\Project\Engine\CParticleSystem.h
+  .\Project\Engine\CParticleUpdateShader.h
+  .\Project\Engine\CPathMgr.h
+  .\Project\Engine\CPickingShader.h
+  .\Project\Engine\CPrefab.h
+  .\Project\Engine\CRenderMgr.h
+  .\Project\Engine\CRes.h
+  .\Project\Engine\CResMgr.h
+  .\Project\Engine\CScene.h
+  .\Project\Engine\CSceneMgr.h
+  .\Project\Engine\CScript.h
+  .\Project\Engine\CShader.h
+  .\Project\Engine\CSingleton.h
+  .\Project\Engine\CSound.h
+  .\Project\Engine\CStructuredBuffer.h
+  .\Project\Engine\CTerrain.h
+  .\Project\Engine\CTexture.h
+  .\Project\Engine\CTimeMgr.h
+  .\Project\Engine\CTransform.h
+  .\Project\Engine\CWeightShader.h
+  .\Project\Engine\define.h
+  .\Project\Engine\extern.h
+  .\Project\Engine\func.h
+  .\Project\Engine\global.h
+  .\Project\Engine\Ptr.h
+  .\Project\Engine\SimpleMath.h
+  .\Project\Engine\struct.h
+  .\Project\Engine\Temp.h
+  60개 파일이 복사되었습니다.
+  .\Project\Engine\animation.fx
+  .\Project\Engine\bonecopy.fx
+  .\Project\Engine\CopyTexture.fx
+  .\Project\Engine\func.fx
+  .\Project\Engine\heightmap.fx
+  .\Project\Engine\light.fx
+  .\Project\Engine\particleupdate.fx
+  .\Project\Engine\picking.fx
+  .\Project\Engine\posteffect.fx
+  .\Project\Engine\shadowmap.fx
+  .\Project\Engine\std2d.fx
+  .\Project\Engine\std3d.fx
+  .\Project\Engine\struct.fx
+  .\Project\Engine\terrain.fx
+  .\Project\Engine\tess.fx
+  .\Project\Engine\value.fx
+  .\Project\Engine\weightmap.fx
+  17개 파일이 복사되었습니다.

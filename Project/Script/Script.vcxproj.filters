@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CMissileScript.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonsterScript.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
+    <ClInclude Include="CScriptMgr.h" />
+    <ClInclude Include="CCameraScript.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkyBoxScript.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
+    <ClInclude Include="CHsh.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Default">
+      <UniqueIdentifier>{e4e4557c-e528-467f-8a45-f0ed293e613c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode">
+      <UniqueIdentifier>{1f77e2bc-7650-48f4-8ed5-a35b7b119fd0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CMissileScript.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
+    <ClCompile Include="CMonsterScript.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
+    <ClCompile Include="CScriptMgr.cpp" />
+    <ClCompile Include="CCameraScript.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkyBoxScript.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
+    <ClCompile Include="CHsh.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+﻿  .\Project\Script\CCameraScript.h
+  .\Project\Script\CHsh.h
+  .\Project\Script\CMissileScript.h
+  .\Project\Script\CMonsterScript.h
+  .\Project\Script\CPlayerScript.h
+  .\Project\Script\CScriptMgr.h
+  .\Project\Script\CSkyBoxScript.h
+  7개 파일이 복사되었습니다.
+  CCameraScript.cpp
+  CHsh.cpp
+  CMissileScript.cpp
+  CMonsterScript.cpp
+  CPlayerScript.cpp
+  CScriptMgr.cpp
+  CSkyBoxScript.cpp
+  코드를 생성하고 있습니다...
+  Script.vcxproj -> C:\MyDirectx2\3DProject\External\Library\Script\Script_debug.lib
