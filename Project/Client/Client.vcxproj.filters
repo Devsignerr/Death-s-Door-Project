@@ -101,6 +101,9 @@
     <Filter Include="GUI\InspectorGUI\ComponentGUI\Animator3DGUI">
       <UniqueIdentifier>{4c60bd95-6756-4862-abca-f9740e9e65de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\ImGUIMgr\ImGUI\Imguizmo">
+      <UniqueIdentifier>{f99ed917-014f-480a-917c-aaeb7df09adf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -229,6 +232,9 @@
     <ClInclude Include="Animator3DGUI.h">
       <Filter>GUI\InspectorGUI\ComponentGUI\Animator3DGUI</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuizmo.h">
+      <Filter>Manager\ImGUIMgr\ImGUI\Imguizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -355,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="Animator3DGUI.cpp">
       <Filter>GUI\InspectorGUI\ComponentGUI\Animator3DGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo.cpp">
+      <Filter>Manager\ImGUIMgr\ImGUI\Imguizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

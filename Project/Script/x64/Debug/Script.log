@@ -1,19 +1,23 @@
-﻿  .\Project\Script\CCameraScript.h
+﻿  .\Project\Script\CActorScript.h
+  .\Project\Script\CCameraScript.h
   .\Project\Script\CHsh.h
   .\Project\Script\CMissileScript.h
   .\Project\Script\CMonsterScript.h
   .\Project\Script\CPlayerScript.h
   .\Project\Script\CScriptMgr.h
   .\Project\Script\CSkyBoxScript.h
-  7개 파일이 복사되었습니다.
+  .\Project\Script\CTestMonsterScript.h
+  9개 파일이 복사되었습니다.
   pch.cpp
+  CActorScript.cpp
   CCameraScript.cpp
   CHsh.cpp
   CMissileScript.cpp
   CMonsterScript.cpp
   CPlayerScript.cpp
-C:\Death'sDoor Project\3DProject\External\Include\Engine\CAnimator3D.h(49,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\AssortRock\Desktop\Death'sDoor Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(49,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CScriptMgr.cpp
   CSkyBoxScript.cpp
+  CTestMonsterScript.cpp
   코드를 생성하고 있습니다...
-  Script.vcxproj -> C:\Death'sDoor Project\3DProject\External\Library\Script\Script_debug.lib
+  Script.vcxproj -> C:\Users\AssortRock\Desktop\Death'sDoor Project\Death-s-Door-Project\External\Library\Script\Script_debug.lib

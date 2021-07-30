@@ -107,6 +107,31 @@ float4 PS_Std3D(VTX_OUT _in) : SV_Target
 }
 
 
+// =========================
+// Collider3D Shader
+// g_int_0 : Collision check
+// =========================
+float4 VS_Collider3D(float3 _vPos : POSITION) : SV_Position
+{
+    float4 vPosition = (float4) 0.f;
+    vPosition = mul(float4(_vPos, 1.f), g_matWVP);
+
+    return vPosition;
+}
+
+float4 PS_Collider3D(float4 _vScreenPos : SV_Position) : SV_Target
+{
+    if (g_int_0)
+    {
+        return float4(1.f, 0.f, 0.f, 1.f);
+    }
+    else
+    {
+        return float4(0.f, 1.f, 0.f, 1.f);
+    }
+}
+
+
 
 // =========================
 // Std3D Deferred Shader

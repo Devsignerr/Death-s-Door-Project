@@ -5,6 +5,7 @@ class CComponent;
 class CTransform;
 class CMeshRender;
 class CCollider2D;
+class CCollider3D;
 class CAnimator2D;
 class CAnimator3D;
 class CCamera;
@@ -46,6 +47,7 @@ public:
     CParticleSystem* ParticleSystem(){return (CParticleSystem*)m_arrCom[(UINT)COMPONENT_TYPE::PARTICLE];}
     CCamera* Camera() { return (CCamera*)m_arrCom[(UINT)COMPONENT_TYPE::CAMERA]; }
     CCollider2D* Collider2D() { return (CCollider2D*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER2D]; }
+    CCollider3D* Collider3D() { return (CCollider3D*)m_arrCom[(UINT)COMPONENT_TYPE::COLLIDER3D]; }
     CLight2D* Light2D() { return (CLight2D*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT2D]; }
     CLight3D* Light3D() { return (CLight3D*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT3D]; }
     CAnimator2D* Animator2D() { return (CAnimator2D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR2D]; }

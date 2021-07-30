@@ -25,6 +25,9 @@ private:
 
     D3D11_TEXTURE2D_DESC                m_tDesc;    // GPU Texture2D Á¤º¸
 
+    bool								m_UsageShadowMap;
+public:
+    void SetUsageShadowMap(bool _Usage) { m_UsageShadowMap = _Usage; }
 public:
     int Create(UINT _iWidth, UINT _iHeight, UINT _eFlag , DXGI_FORMAT _eFormat);
     int Create(ComPtr<ID3D11Texture2D> _pTex2D);

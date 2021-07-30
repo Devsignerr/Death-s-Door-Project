@@ -29,3 +29,26 @@ wstring CPathMgr::GetRelativePath(const wstring& _strPath)
 
 	return strRelativePath;
 }
+
+std::wstring CPathMgr::GetFileName(std::wstring& _path)
+{
+	std::wstring path = {};
+	wchar_t filename[256] = {};
+
+	path = wcsrchr(_path.c_str(), L'\\');
+
+	size_t Len = wcslen(path.c_str());
+
+	for (size_t i = 0; i < Len; ++i)
+	{
+		if (L'.' == path[i])
+		{
+			path[i] = 0;
+			break;
+		}
+
+		filename[i] = path[i];
+	}
+
+	return filename + 1;
+}

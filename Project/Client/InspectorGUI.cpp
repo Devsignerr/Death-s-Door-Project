@@ -40,7 +40,7 @@ void InspectorGUI::init()
     ComponentGUI* pNew = new TransformGUI;
   
     pNew->SetName(L"Transform");
-    pNew->SetSize(Vec2(0.f, 100.f));
+    pNew->SetSize(Vec2(0.f, 130.f));
     m_arrComGUI[(UINT)COMPONENT_TYPE::TRANSFORM] = pNew;
 
     pNew = new MeshRenderGUI;
@@ -134,6 +134,14 @@ void InspectorGUI::render()
 
     if (m_pTargetObj)
     {
+        std::wstring ObjName = L"Object Name : ";
+        ObjName += m_pTargetObj->GetName();
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.5f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.5f, 0.5f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.5f, 0.5f, 0.5f));
+        ImGui::Button(GetString(ObjName));
+        ImGui::PopStyleColor(3);
+
         for(UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
         {
             if (nullptr == m_arrComGUI[i])

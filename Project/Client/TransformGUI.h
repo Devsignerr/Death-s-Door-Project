@@ -12,7 +12,8 @@ public:
     virtual void init();
     virtual void lateupdate();
     virtual void render();
-
+private:
+    void DrawGizmo(int _Mode);
 
 public:
     TransformGUI();

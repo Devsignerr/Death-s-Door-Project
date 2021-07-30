@@ -9,7 +9,12 @@ private:
 public:
     Light3DGUI();
     ~Light3DGUI();
+
 public:
     virtual void finalupdate();
     virtual void render();
+
+private:
+    void BakingShadowMap();
+    void LoadShadowMap();
 };

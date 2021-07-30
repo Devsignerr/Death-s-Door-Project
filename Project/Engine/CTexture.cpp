@@ -163,12 +163,15 @@ void CTexture::Save(const wstring& _strRelativePath)
 	size_t arrsize = m_Image.GetMetadata().arraySize;
 
 	// array 사이즈가 1 이상이면 dds 포맷으로 저장
-	if (1 < arrsize)
+	if (1 < arrsize || true == m_UsageShadowMap )
 	{
+		strPath += L".dds";
 		SaveToDDSFile(m_Image.GetImages(), arrsize, m_Image.GetMetadata(), DDS_FLAGS::DDS_FLAGS_NONE, strPath.c_str());
+		m_UsageShadowMap = false;
 	}
 	else
 	{
+		strPath += L".png";
 		SaveToWICFile(*(m_Image.GetImages())
 			, WIC_FLAGS_NONE
 			, GetWICCodec(static_cast<WICCodecs>(WICCodecs::WIC_CODEC_PNG))

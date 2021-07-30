@@ -20,12 +20,16 @@ void CCopyShaderCS::UpdateData()
 
 	if(nullptr != m_pSrcTex)
 		m_pSrcTex->UpdateData(13, (UINT)PIPELINE_STAGE::PS_COMPUTE);
+
+	if (nullptr != m_StaticShadowTex)
+		m_StaticShadowTex->UpdateData(14, (UINT)PIPELINE_STAGE::PS_COMPUTE);
 }
 
 void CCopyShaderCS::Clear()
 {
 	CTexture::ClearRW(0);
 	CTexture::Clear(13, (UINT)PIPELINE_STAGE::PS_COMPUTE);	
+	CTexture::Clear(14, (UINT)PIPELINE_STAGE::PS_COMPUTE);
 }
 
 void CCopyShaderCS::Excute()

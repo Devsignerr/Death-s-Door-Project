@@ -16,6 +16,8 @@ public:
 
 	static wstring GetRelativePath(const wstring& _strPath);
 	
+public:
+	static std::wstring GetFileName(std::wstring& _path);
 
 private:
 	CPathMgr()

@@ -10,6 +10,8 @@
 #include "CTransform.h"
 #include "CLightCamera.h"
 
+#include "CCopyShaderCS.h"
+
 
 
 CLight3D::CLight3D()
@@ -67,13 +69,45 @@ void CLight3D::render()
 	// Directional Light 인 경우
 	if (LIGHT_TYPE::DIR == m_info.eType)
 	{
+
+		CCopyShaderCS* CopyShader = (CCopyShaderCS*)CResMgr::GetInst()->GetRes(RES_TYPE::SHADER).find(L"CopyTextureShader")->second;
+
+		// 스태틱 쉐도우 로드, 세팅
+		CopyShader->SetStaticShadowTex(m_StaticShadowTex);
+
+		Ptr<CTexture> ShadowMapTex = CResMgr::GetInst()->FindDataTexture(L"ShadowMapTargetTex");
+		// 다이나믹 쉐도우 세팅
+		CopyShader->SetSrcTex(ShadowMapTex.Get());
+
 		// 광원 시점 ShadowMap 깊이정보 텍스쳐
-		Ptr<CTexture> pShadowMapTex = CResMgr::GetInst()->FindDataTexture(L"ShadowMapTargetTex");
-		m_pMtrl->SetData(SHADER_PARAM::TEX_3, pShadowMapTex.Get());
+		Ptr<CTexture> FinalShadowMapTex = CResMgr::GetInst()->FindDataTexture(L"FinalShadowMapTargetTex");
+
+		// 스태틱 쉐도우 + 다이나믹 쉐도우를 합칠 최종 쉐도우텍스쳐 세팅
+		// 스태틱 쉐도우 + 다이나믹 쉐도우 복사
+		CopyShader->SetDestTex(FinalShadowMapTex.Get());
+		CopyShader->UpdateData();
+		CopyShader->Excute();
+
+		m_pMtrl->SetData(SHADER_PARAM::TEX_3, FinalShadowMapTex.Get());
 
 		// 광원으로 투영시키기 위한 광원 카메라의 View, Proj 행렬
-		Matrix matVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
-		m_pMtrl->SetData(SHADER_PARAM::MAT_0, &matVP);
+		Matrix MatVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
+		m_pMtrl->SetData(SHADER_PARAM::MAT_0, &MatVP);
+
+		CopyShader->Clear();
+
+#pragma region Origin
+
+
+
+		//// 광원 시점 ShadowMap 깊이정보 텍스쳐
+		//Ptr<CTexture> pShadowMapTex = CResMgr::GetInst()->FindDataTexture(L"ShadowMapTargetTex");
+		//m_pMtrl->SetData(SHADER_PARAM::TEX_3, pShadowMapTex.Get());
+
+		//// 광원으로 투영시키기 위한 광원 카메라의 View, Proj 행렬
+		//Matrix matVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
+		//m_pMtrl->SetData(SHADER_PARAM::MAT_0, &matVP);
+#pragma endregion
 	}
 
 	m_pMtrl->SetData(SHADER_PARAM::INT_0, &m_iLightIdx);	

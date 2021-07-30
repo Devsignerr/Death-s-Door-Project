@@ -4,6 +4,10 @@
 #include <Engine/CSceneMgr.h>
 #include <Engine/CTransform.h>
 
+#include <Engine/CPathMgr.h>
+#include <Engine/CCore.h>
+#include <Engine/CResMgr.h>
+
 Light3DGUI::Light3DGUI() :
     ComponentGUI(COMPONENT_TYPE::LIGHT3D),
     m_iLight3DIdx(0)
@@ -51,7 +55,7 @@ void Light3DGUI::render()
 
     ImGui::Text("eType      \t");  ImGui::SameLine(); ImGui::Combo("##eType", &item_current, items, IM_ARRAYSIZE(items));
 
-    End();
+
 
     GetTargetObj()->Light3D()->SetAmbPow(temp.color.vAmb);
     GetTargetObj()->Light3D()->SetDiffusePow(temp.color.vDiff);
@@ -68,4 +72,103 @@ void Light3DGUI::render()
 
     GetTargetObj()->Light3D()->SetRange(temp.fRange);
     GetTargetObj()->Light3D()->SetAngle(temp.fAngle);
+
+
+	CLight3D* Light3D = GetTargetObj()->Light3D();
+
+	Ptr<CTexture> ShadowTex = Light3D->GetStaticShadowTex();
+	std::wstring TempShadowTexName = {};
+	if (nullptr == ShadowTex)
+		TempShadowTexName = L"Empty";
+	else
+		TempShadowTexName = ShadowTex->GetRelativePath();
+
+	std::string ShadowTexName = GetString(TempShadowTexName);
+
+	char szBuffer[255] = "";
+	strcpy_s(szBuffer, 255, ShadowTexName.c_str());
+	std::string LabelName = "##";
+	LabelName += ShadowTexName;
+	ImGui::Text("Cur ShadowMapTex");
+	ImGui::PushItemWidth(150);
+	ImGui::SameLine();
+	ImGui::InputText(LabelName.c_str(), szBuffer, 255, ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine();
+	if (ImGui::Button("Select##SelShadowMapTex"))
+	{
+		LoadShadowMap();
+	}
+
+	BakingShadowMap();
+
+	End();
+
 }
+
+void Light3DGUI::BakingShadowMap()
+{
+	Ptr<CTexture> ShadowMapTex = CResMgr::GetInst()->FindDataTexture(L"ShadowMapTargetTex");
+
+	ImVec2 uv_min = ImVec2(0.0f, 0.0f);
+	ImVec2 uv_max = ImVec2(1.0f, 1.0f);
+	ImVec2 teszie = ImVec2(200.f, 200.f);
+	ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f);
+	ImGui::Image(ShadowMapTex->GetSRV().Get(), teszie, uv_min, uv_max, tint_col, border_col);
+
+	ImGui::NewLine();
+	ImGui::Text("Create ShadowMap");
+
+	ImGui::PushItemWidth(140);
+	static char ShadowMapName[256] = {};
+	ImGui::InputText("##ShadowMapName", ShadowMapName, IM_ARRAYSIZE(ShadowMapName));
+	ImGui::SameLine();
+
+	if (ImGui::Button("Baking"))
+	{
+		if ('\0' != ShadowMapName[0])
+		{
+			std::string TempPath = "texture\\ShadowMap\\";
+			TempPath += ShadowMapName;
+
+			std::wstring Path = std::wstring(TempPath.begin(), TempPath.end());
+			ShadowMapTex->SetUsageShadowMap(true);
+			ShadowMapTex->Save(L"texture\\ShadowMap\\ShadowMap");
+		}
+	}
+}
+
+void Light3DGUI::LoadShadowMap()
+{
+	std::wstring Path = CPathMgr::GetResPath();
+	Path += L"TEXTURE\\SHADOWMAP\\"; //
+
+	OPENFILENAME ofn;
+	wchar_t fileName[MAX_PATH] = L"";
+	ZeroMemory(&ofn, sizeof(ofn));
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = CCore::GetInst()->GetWndHwnd();
+	ofn.lpstrFilter = L"(*.*)";
+	ofn.lpstrFile = fileName;
+	ofn.lpstrInitialDir = Path.c_str();
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = nullptr;
+
+	std::wstring fileNameStr = {};
+
+	std::wstring SaveFileName = {};
+	if (GetOpenFileName(&ofn))
+		SaveFileName = ofn.lpstrFile;
+
+	fileNameStr = L"TEXTURE\\SHADOWMAP\\";
+	SaveFileName = CPathMgr::GetFileName(SaveFileName);
+	fileNameStr += SaveFileName;
+	fileNameStr += L".dds";
+	Ptr<CTexture> ShadowMapTex = CResMgr::GetInst()->Load<CTexture>(SaveFileName, fileNameStr);
+
+
+	GetTargetObj()->Light3D()->SetStaticShadowTex(ShadowMapTex);
+}
+

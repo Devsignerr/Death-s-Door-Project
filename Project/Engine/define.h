@@ -186,6 +186,13 @@ enum class COLLIDER2D_TYPE
 	CIRCLE,
 };
 
+enum class COLLIDER3D_TYPE
+{
+	CUBE,
+	SHPHERE,
+	POINT
+};
+
 enum class LIGHT_TYPE
 {
 	DIR,		// 방향성 광원(태양)

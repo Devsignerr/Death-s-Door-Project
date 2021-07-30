@@ -181,6 +181,9 @@
     <ClInclude Include="CLightCamera.h">
       <Filter>Engine\04. Component\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="CCollider3D.h">
+      <Filter>Engine\04. Component\Collider3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -360,6 +363,9 @@
     <ClCompile Include="CLightCamera.cpp">
       <Filter>Engine\04. Component\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="CCollider3D.cpp">
+      <Filter>Engine\04. Component\Collider3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -523,6 +529,9 @@
     </Filter>
     <Filter Include="Engine\02. Manager\InstancingBuffer">
       <UniqueIdentifier>{b65249f6-3a9b-4b55-baad-db66bd79f765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04. Component\Collider3D">
+      <UniqueIdentifier>{4a271797-a290-4ee6-8c9d-4c611b535426}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

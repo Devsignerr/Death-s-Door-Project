@@ -8,6 +8,9 @@
 #include "CGameObject.h"
 #include "CCollider2D.h"
 
+#include "CCollider3D.h"
+#include "CTransform.h"
+
 
 CCollisionMgr::CCollisionMgr()
 	: m_arrCheck{}
@@ -35,71 +38,159 @@ void CCollisionMgr::update()
 
 void CCollisionMgr::CollisionGroup(int _iLeft, int _iRight)
 {
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+#pragma region Origin
 
-	const vector<CGameObject*>& vecLeft = pCurScene->GetLayer(_iLeft)->GetObjects();
-	const vector<CGameObject*>& vecRight = pCurScene->GetLayer(_iRight)->GetObjects();
 
-	for (size_t i = 0; i < vecLeft.size(); ++i)
+
+	//CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+
+	//const vector<CGameObject*>& vecLeft = pCurScene->GetLayer(_iLeft)->GetObjects();
+	//const vector<CGameObject*>& vecRight = pCurScene->GetLayer(_iRight)->GetObjects();
+
+	//for (size_t i = 0; i < vecLeft.size(); ++i)
+	//{
+	//	if (nullptr == vecLeft[i]->Collider2D())
+	//		continue;
+
+	//	for (size_t j = 0; j < vecRight.size(); ++j)
+	//	{
+	//		if (nullptr == vecRight[j]->Collider2D() || vecLeft[i] == vecRight[j])
+	//		{
+	//			continue;
+	//		}
+
+	//		// 두 충돌체 조합 아이디 생성
+	//		COLLIDER_PAIR pairid;
+	//		pairid.iLeftID = vecLeft[i]->Collider2D()->GetID();
+	//		pairid.iRightID = vecRight[j]->Collider2D()->GetID();
+
+	//		map<LONGLONG, bool>::iterator iter = m_mapColPairInfo.find(pairid.iPairID);
+	//		if (m_mapColPairInfo.end() == iter)
+	//		{
+	//			m_mapColPairInfo.insert(make_pair(pairid.iPairID, false));
+	//			iter = m_mapColPairInfo.find(pairid.iPairID);
+	//		}
+
+	//		// 현재 기준, 충돌 중인지 검사
+	//		if(Collision(vecLeft[i]->Collider2D(), vecRight[j]->Collider2D()))
+	//		{
+	//			// 충돌 했다.
+	//			if (iter->second) // 이전에도 충돌했었다.
+	//			{					
+	//				// 두 오브젝트중 하나라도 삭제 예정상태라면
+	//				if (vecLeft[i]->IsDead() || vecRight[j]->IsDead())
+	//				{
+	//					vecLeft[i]->Collider2D()->OnCollisionExit(vecRight[j]->Collider2D());
+	//					vecRight[j]->Collider2D()->OnCollisionExit(vecLeft[i]->Collider2D());
+	//				}
+	//				else
+	//				{
+	//					vecLeft[i]->Collider2D()->OnCollision(vecRight[j]->Collider2D());
+	//					vecRight[j]->Collider2D()->OnCollision(vecLeft[i]->Collider2D());
+	//				}					
+	//			}
+	//			else // 이전에는 충돌하지 않았다.
+	//			{
+	//				// 두 오브젝트중 하나라도 삭제 예정상태라면
+	//				if (vecLeft[i]->IsDead() || vecRight[j]->IsDead())					
+	//					continue;
+
+	//				vecLeft[i]->Collider2D()->OnCollisionEnter(vecRight[j]->Collider2D());
+	//				vecRight[j]->Collider2D()->OnCollisionEnter(vecLeft[i]->Collider2D());
+	//				iter->second = true;
+	//			}
+	//		}
+	//		else // 충돌하지 않는다.
+	//		{				
+	//			if (iter->second) // 이전엔 충돌 했었다.
+	//			{
+	//				vecLeft[i]->Collider2D()->OnCollisionExit(vecRight[j]->Collider2D());
+	//				vecRight[j]->Collider2D()->OnCollisionExit(vecLeft[i]->Collider2D());
+	//				iter->second = false;
+	//			}
+	//		}
+	//	}
+	//}
+#pragma endregion
+
+	// 레이어 그룹끼리 충돌을 진행하는 함수
+
+	// 현재 씬을 가져온다
+	CScene* CurScenc = CSceneMgr::GetInst()->GetCurScene();
+
+	// 레이어를 받는다
+	const std::vector<CGameObject*>& VecLeft = CurScenc->GetLayer(_iLeft)->GetObjects();
+	const std::vector<CGameObject*>& VecRight = CurScenc->GetLayer(_iRight)->GetObjects();
+
+	for (size_t i = 0; i < VecLeft.size(); ++i)
 	{
-		if (nullptr == vecLeft[i]->Collider2D())
-			continue;
-
-		for (size_t j = 0; j < vecRight.size(); ++j)
+		if (nullptr == VecLeft[i]->Collider3D())
 		{
-			if (nullptr == vecRight[j]->Collider2D() || vecLeft[i] == vecRight[j])
+			// 둘중 하나가 충돌체가 없는 경우
+			continue;
+		}
+
+		for (size_t j = 0; j < VecRight.size(); ++j)
+		{
+			if (nullptr == VecRight[j]->Collider3D() || VecLeft[i] == VecRight[j])
 			{
+				// 둘중 하나가 충돌체가 없는 경우, 충돌대상이 자기 자신인 경우
 				continue;
 			}
 
 			// 두 충돌체 조합 아이디 생성
-			COLLIDER_PAIR pairid;
-			pairid.iLeftID = vecLeft[i]->Collider2D()->GetID();
-			pairid.iRightID = vecRight[j]->Collider2D()->GetID();
+			COLLIDER_PAIR CombineID;
+			CombineID.iLeftID = VecLeft[i]->Collider3D()->GetID();
+			CombineID.iRightID = VecRight[j]->Collider3D()->GetID();
 
-			map<LONGLONG, bool>::iterator iter = m_mapColPairInfo.find(pairid.iPairID);
-			if (m_mapColPairInfo.end() == iter)
+			std::map<LONGLONG, bool>::iterator FindIter = m_mapColPairInfo.find(CombineID.iPairID);
+
+			if (m_mapColPairInfo.end() == FindIter)
 			{
-				m_mapColPairInfo.insert(make_pair(pairid.iPairID, false));
-				iter = m_mapColPairInfo.find(pairid.iPairID);
+				m_mapColPairInfo.insert(std::map<LONGLONG, bool>::value_type(CombineID.iPairID, false));
+				FindIter = m_mapColPairInfo.find(CombineID.iPairID);
 			}
 
 			// 현재 기준, 충돌 중인지 검사
-			if(Collision(vecLeft[i]->Collider2D(), vecRight[j]->Collider2D()))
+			if (/*true == Collision(VecLeft[i]->Collider2D(), VecRight[j]->Collider2D()) ||*/
+				true == Collision(VecLeft[i]->Collider3D(), VecRight[j]->Collider3D()))
 			{
-				// 충돌 했다.
-				if (iter->second) // 이전에도 충돌했었다.
-				{					
-					// 두 오브젝트중 하나라도 삭제 예정상태라면
-					if (vecLeft[i]->IsDead() || vecRight[j]->IsDead())
+				// 이전 프레임에 충돌 했다.
+				if (true == FindIter->second) // 이전에도 충돌했었다.
+				{
+					// 두 오브젝트 중 하나라도 삭제 예정상태라면
+					if (true == VecLeft[i]->IsDead() || true == VecRight[j]->IsDead())
 					{
-						vecLeft[i]->Collider2D()->OnCollisionExit(vecRight[j]->Collider2D());
-						vecRight[j]->Collider2D()->OnCollisionExit(vecLeft[i]->Collider2D());
+						VecLeft[i]->Collider3D()->OnCollisionExit(VecRight[j]->Collider3D());
+						VecRight[j]->Collider3D()->OnCollisionExit(VecLeft[i]->Collider3D());
 					}
 					else
 					{
-						vecLeft[i]->Collider2D()->OnCollision(vecRight[j]->Collider2D());
-						vecRight[j]->Collider2D()->OnCollision(vecLeft[i]->Collider2D());
-					}					
+						VecLeft[i]->Collider3D()->OnCollisionStay(VecRight[j]->Collider3D());
+						VecRight[j]->Collider3D()->OnCollisionStay(VecLeft[i]->Collider3D());
+					}
+
 				}
 				else // 이전에는 충돌하지 않았다.
 				{
-					// 두 오브젝트중 하나라도 삭제 예정상태라면
-					if (vecLeft[i]->IsDead() || vecRight[j]->IsDead())					
+					// 두 오브젝트 중 하나라도 삭제 예정 상태라면
+					if (true == VecLeft[i]->IsDead() || true == VecRight[j]->IsDead())
+					{
 						continue;
+					}
 
-					vecLeft[i]->Collider2D()->OnCollisionEnter(vecRight[j]->Collider2D());
-					vecRight[j]->Collider2D()->OnCollisionEnter(vecLeft[i]->Collider2D());
-					iter->second = true;
+					VecLeft[i]->Collider3D()->OnCollisionEnter(VecRight[j]->Collider3D());
+					VecRight[j]->Collider3D()->OnCollisionEnter(VecLeft[i]->Collider3D());
+					FindIter->second = true;
 				}
 			}
 			else // 충돌하지 않는다.
-			{				
-				if (iter->second) // 이전엔 충돌 했었다.
+			{
+				if (true == FindIter->second) // 이전엔 충돌 했었다.
 				{
-					vecLeft[i]->Collider2D()->OnCollisionExit(vecRight[j]->Collider2D());
-					vecRight[j]->Collider2D()->OnCollisionExit(vecLeft[i]->Collider2D());
-					iter->second = false;
+					VecLeft[i]->Collider3D()->OnCollisionExit(VecRight[j]->Collider3D());
+					VecRight[j]->Collider3D()->OnCollisionExit(VecLeft[i]->Collider3D());
+					FindIter->second = false;
 				}
 			}
 		}
@@ -179,6 +270,288 @@ bool CCollisionMgr::CollisionCvsC(CCollider2D* _pLeftCol, CCollider2D* _pRightCo
 	_pLeftCol->GetmatColWorld();
 	_pRightCol->GetmatColWorld();
 
+	return false;
+}
+
+bool CCollisionMgr::Collision(CCollider3D* _LeftCol, CCollider3D* _RightCol)
+{
+	if (COLLIDER3D_TYPE::CUBE == _LeftCol->GetCollider3DType() &&
+		COLLIDER3D_TYPE::CUBE == _RightCol->GetCollider3DType())
+	{
+		return CubeToCube(_LeftCol, _RightCol);
+	}
+	else if (COLLIDER3D_TYPE::SHPHERE == _LeftCol->GetCollider3DType() &&
+		COLLIDER3D_TYPE::SHPHERE == _RightCol->GetCollider3DType())
+	{
+		return SphereToSphere(_LeftCol, _RightCol);
+	}
+	else if (COLLIDER3D_TYPE::CUBE == _LeftCol->GetCollider3DType() &&
+		COLLIDER3D_TYPE::POINT == _RightCol->GetCollider3DType())
+	{
+		return CubeToPoint(_LeftCol, _RightCol);
+	}
+	//else if (COLLIDER3D_TYPE::CUBE == _LeftCol->GetCollider3DType() &&
+	//		 COLLIDER3D_TYPE::SHPHERE == _RightCol->GetCollider3DType())
+	//{
+	//	return CubeToSphere(_LeftCol, _RightCol);
+	//}
+	//else if (COLLIDER3D_TYPE::SHPHERE == _LeftCol->GetCollider3DType() &&
+	//	COLLIDER3D_TYPE::CUBE == _RightCol->GetCollider3DType())
+	//{
+	//	return CubeToPoint(_LeftCol, _RightCol);
+	//}
+
+	return false;
+}
+
+bool CCollisionMgr::CubeToCube(CCollider3D* _LeftCol, CCollider3D* _RightCol)
+{
+	const Matrix& MatColLeft = _LeftCol->GetMatColWorld();
+	const Matrix& MatColRight = _RightCol->GetMatColWorld();
+
+	Vec3 t = DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColLeft) - DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColRight);;
+	// center 사이 벡터 
+
+	//두 충돌체의 차이 벡터를 왼쪽 충돌체의 축에다 사영시킨 길이 
+	float LAxisProjDistance[3];
+
+	//두 충돌체의 차이 벡터를 오른쪽 충돌체의 축에다 사영시킨 길이 
+	float RAxisProjDistance[3];
+
+	float d, e0, e1; // center 거리, projected extents 거리
+
+	Vec3 ArrLeftAxis[3] = {};
+	//x 축 
+	ArrLeftAxis[0] = DirectX::XMVector3TransformNormal(Vec3(1.0f, 0.0f, 0.0f), MatColLeft);
+	ArrLeftAxis[1] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 1.0f, 0.0f), MatColLeft);
+	ArrLeftAxis[2] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 0.0f, 1.0f), MatColLeft);
+
+	Vec3 ArrRightAxis[3] = {};
+	//x 축 
+	ArrRightAxis[0] = DirectX::XMVector3TransformNormal(Vec3(1.0f, 0.0f, 0.0f), MatColRight);
+	ArrRightAxis[1] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 1.0f, 0.0f), MatColRight);
+	ArrRightAxis[2] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 0.0f, 1.0f), MatColRight);
+
+	static const Vec3 LocalMesh[5] = {
+	Vec3(-0.5f,0.5f,-0.5f),Vec3(0.5f,0.5f,-0.5f) ,Vec3(0.5f,0.5f,0.5f),Vec3(-0.5f,0.5f,0.5f),Vec3(-0.5f,-0.5f,-0.5f) };
+
+	Vec3 vCubeHalf[6] = {};
+	vCubeHalf[0] = DirectX::XMVector3TransformCoord(LocalMesh[1], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft);
+	vCubeHalf[1] = DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[4], MatColLeft);
+	vCubeHalf[2] = DirectX::XMVector3TransformCoord(LocalMesh[3], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft);
+
+	vCubeHalf[3] = DirectX::XMVector3TransformCoord(LocalMesh[1], MatColRight) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColRight);
+	vCubeHalf[4] = DirectX::XMVector3TransformCoord(LocalMesh[0], MatColRight) - DirectX::XMVector3TransformCoord(LocalMesh[4], MatColRight);
+	vCubeHalf[5] = DirectX::XMVector3TransformCoord(LocalMesh[3], MatColRight) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColRight);
+
+	for (int i = 0; i < 6; ++i)
+		vCubeHalf[i] /= 2.0f;
+
+	Vec3 vLeftHalfSize = { abs(vCubeHalf[0].x),abs(vCubeHalf[1].y),abs(vCubeHalf[2].z) };
+	Vec3 vRighthalfSize = { abs(vCubeHalf[3].x),abs(vCubeHalf[4].y),abs(vCubeHalf[5].z) };
+
+	LAxisProjDistance[0] = abs(ArrLeftAxis[0].Dot(t));
+	LAxisProjDistance[1] = abs(ArrLeftAxis[1].Dot(t));
+	LAxisProjDistance[2] = abs(ArrLeftAxis[2].Dot(t));
+
+	RAxisProjDistance[0] = abs(ArrRightAxis[0].Dot(t));
+	RAxisProjDistance[1] = abs(ArrRightAxis[1].Dot(t));
+	RAxisProjDistance[2] = abs(ArrRightAxis[2].Dot(t));
+
+	e0 = abs(ArrLeftAxis[0].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[0].Dot(vCubeHalf[3])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[4])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[5]));
+	d = LAxisProjDistance[0];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrLeftAxis[1].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[1].Dot(vCubeHalf[3])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[4])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[5]));
+	d = LAxisProjDistance[1];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrLeftAxis[2].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[2].Dot(vCubeHalf[3])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[4])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[5]));
+	d = LAxisProjDistance[2];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrRightAxis[0].Dot(vCubeHalf[0])) + abs(ArrRightAxis[0].Dot(vCubeHalf[1])) + abs(ArrRightAxis[0].Dot(vCubeHalf[2]));
+	e1 = abs(ArrRightAxis[0].Dot(vCubeHalf[3])) + abs(ArrRightAxis[0].Dot(vCubeHalf[4])) + abs(ArrRightAxis[0].Dot(vCubeHalf[5]));
+	d = RAxisProjDistance[0];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrRightAxis[1].Dot(vCubeHalf[0])) + abs(ArrRightAxis[1].Dot(vCubeHalf[1])) + abs(ArrRightAxis[1].Dot(vCubeHalf[2]));
+	e1 = abs(ArrRightAxis[1].Dot(vCubeHalf[3])) + abs(ArrRightAxis[1].Dot(vCubeHalf[4])) + abs(ArrRightAxis[1].Dot(vCubeHalf[5]));
+	d = RAxisProjDistance[1];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrRightAxis[2].Dot(vCubeHalf[0])) + abs(ArrRightAxis[2].Dot(vCubeHalf[1])) + abs(ArrRightAxis[2].Dot(vCubeHalf[2]));
+	e1 = abs(ArrRightAxis[2].Dot(vCubeHalf[3])) + abs(ArrRightAxis[2].Dot(vCubeHalf[4])) + abs(ArrRightAxis[2].Dot(vCubeHalf[5]));
+	d = RAxisProjDistance[2];
+
+	if (d > e0 + e1)
+		return false;
+
+	return true;
+}
+
+bool CCollisionMgr::CubeToPoint(CCollider3D* _LeftCol, CCollider3D* _RightCol)
+{
+	const Matrix& MatColLeft = _LeftCol->GetMatColWorld();
+	const Matrix& MatColRight = _RightCol->GetMatColWorld();
+
+	Vec3 t = DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColLeft) - DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColRight);;
+	// center 사이 벡터 
+
+	//두 충돌체의 차이 벡터를 왼쪽 충돌체의 축에다 사영시킨 길이 
+	float LAxisProjDistance[3];
+
+	float d, e0, e1; // center 거리, projected extents 거리
+
+	Vec3 ArrLeftAxis[3] = {};
+	//x 축 
+	ArrLeftAxis[0] = DirectX::XMVector3TransformNormal(Vec3(1.0f, 0.0f, 0.0f), MatColLeft);
+	ArrLeftAxis[1] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 1.0f, 0.0f), MatColLeft);
+	ArrLeftAxis[2] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 0.0f, 1.0f), MatColLeft);
+
+	static const Vec3 LocalMesh[5] = {
+	Vec3(-0.5f,0.5f,-0.5f),Vec3(0.5f,0.5f,-0.5f) ,Vec3(0.5f,0.5f,0.5f),Vec3(-0.5f,0.5f,0.5f),Vec3(-0.5f,-0.5f,-0.5f) };
+
+	Vec3 vCubeHalf[6] = {};
+	vCubeHalf[0] = DirectX::XMVector3TransformCoord(LocalMesh[1], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft);
+	vCubeHalf[1] = DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[4], MatColLeft);
+	vCubeHalf[2] = DirectX::XMVector3TransformCoord(LocalMesh[3], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft);
+
+	vCubeHalf[3] = Vec3(0.0f, 0.0f, 0.0f);
+	vCubeHalf[4] = Vec3(0.0f, 0.0f, 0.0f);
+	vCubeHalf[5] = Vec3(0.0f, 0.0f, 0.0f);
+
+	for (int i = 0; i < 6; ++i)
+		vCubeHalf[i] /= 2.0f;
+
+	Vec3 vLeftHalfSize = { abs(vCubeHalf[0].x),abs(vCubeHalf[1].y),abs(vCubeHalf[2].z) };
+
+	LAxisProjDistance[0] = abs(ArrLeftAxis[0].Dot(t));
+	LAxisProjDistance[1] = abs(ArrLeftAxis[1].Dot(t));
+	LAxisProjDistance[2] = abs(ArrLeftAxis[2].Dot(t));
+
+	e0 = abs(ArrLeftAxis[0].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[0].Dot(vCubeHalf[3])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[4])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[5]));
+	d = LAxisProjDistance[0];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrLeftAxis[1].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[1].Dot(vCubeHalf[3])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[4])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[5]));
+	d = LAxisProjDistance[1];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrLeftAxis[2].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[2].Dot(vCubeHalf[3])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[4])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[5]));
+	d = LAxisProjDistance[2];
+
+	if (d > e0 + e1)
+		return false;
+
+	return true;
+}
+
+
+bool CCollisionMgr::SphereToSphere(CCollider3D* _LeftCol, CCollider3D* _RightCol)
+{
+	const Matrix& MatColLeft = _LeftCol->GetMatColWorld();
+	const Matrix& MatColRight = _RightCol->GetMatColWorld();
+
+	float Distanse = Vec3::Distance(DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColLeft), DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColRight)) / 2.0f;
+	float LSphereHalf = _LeftCol->Transform()->GetLocalScale().x / 2.0f;
+	float RSphereHalf = _RightCol->Transform()->GetLocalScale().x / 2.0f;
+
+	if (abs(Distanse) > LSphereHalf + RSphereHalf)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool CCollisionMgr::CubeToSphere(CCollider3D* _LeftCol, CCollider3D* _RightCol)
+{
+	const Matrix& MatColLeft = _LeftCol->GetMatColWorld();
+	const Matrix& MatColRight = _RightCol->GetMatColWorld();
+
+	Vec3 t = DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColLeft) - DirectX::XMVector3TransformCoord(Vec3(0.0f, 0.0f, 0.0f), MatColRight);;
+	// center 사이 벡터 
+
+	//두 충돌체의 차이 벡터를 왼쪽 충돌체의 축에다 사영시킨 길이 
+	float LAxisProjDistance[3];
+
+	float d, e0, e1; // center 거리, projected extents 거리
+
+	Vec3 ArrLeftAxis[3] = {};
+	//x 축 
+	ArrLeftAxis[0] = DirectX::XMVector3TransformNormal(Vec3(1.0f, 0.0f, 0.0f), MatColLeft);
+	ArrLeftAxis[1] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 1.0f, 0.0f), MatColLeft);
+	ArrLeftAxis[2] = DirectX::XMVector3TransformNormal(Vec3(0.0f, 0.0f, 1.0f), MatColLeft);
+
+	static const Vec3 LocalMesh[5] = {
+	Vec3(-0.5f,0.5f,-0.5f),Vec3(0.5f,0.5f,-0.5f) ,Vec3(0.5f,0.5f,0.5f),Vec3(-0.5f,0.5f,0.5f),Vec3(-0.5f,-0.5f,-0.5f) };
+
+	Vec3 vCubeHalf[3] = {};
+	vCubeHalf[0] = DirectX::XMVector3TransformCoord(LocalMesh[1], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft);
+	vCubeHalf[1] = DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[4], MatColLeft);
+	vCubeHalf[2] = DirectX::XMVector3TransformCoord(LocalMesh[3], MatColLeft) - DirectX::XMVector3TransformCoord(LocalMesh[0], MatColLeft);
+
+	Vec3 SphereHalf[3] = {};
+	SphereHalf[0] = Vec3(_RightCol->Transform()->GetLocalScale().x, 0.0f, 0.0f);
+	SphereHalf[1] = Vec3(0.0f, _RightCol->Transform()->GetLocalScale().y, 0.0f);
+	SphereHalf[2] = Vec3(0.0f, 0.0f, _RightCol->Transform()->GetLocalScale().z);
+
+	for (int i = 0; i < 3; ++i)
+		vCubeHalf[i] /= 2.0f;
+
+	Vec3 vLeftHalfSize = { abs(vCubeHalf[0].x),abs(vCubeHalf[1].y),abs(vCubeHalf[2].z) };
+
+	LAxisProjDistance[0] = abs(ArrLeftAxis[0].Dot(t));
+	LAxisProjDistance[1] = abs(ArrLeftAxis[1].Dot(t));
+	LAxisProjDistance[2] = abs(ArrLeftAxis[2].Dot(t));
+
+	e0 = abs(ArrLeftAxis[0].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[0].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[0].Dot(SphereHalf[0]));
+	d = LAxisProjDistance[0];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrLeftAxis[1].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[1].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[1].Dot(SphereHalf[1]));
+	d = LAxisProjDistance[1];
+
+	if (d > e0 + e1)
+		return false;
+
+	e0 = abs(ArrLeftAxis[2].Dot(vCubeHalf[0])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[1])) + abs(ArrLeftAxis[2].Dot(vCubeHalf[2]));
+	e1 = abs(ArrLeftAxis[2].Dot(SphereHalf[2]));
+	d = LAxisProjDistance[2];
+
+	if (d > e0 + e1)
+		return false;
+
+	return true;
+}
+
+bool CCollisionMgr::SphereToCube(CCollider3D* _LeftCol, CCollider3D* _RightCol)
+{
 	return false;
 }
 

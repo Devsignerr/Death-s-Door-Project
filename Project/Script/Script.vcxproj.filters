@@ -10,9 +10,6 @@
     <ClInclude Include="CMissileScript.h">
       <Filter>ScriptCode</Filter>
     </ClInclude>
-    <ClInclude Include="CMonsterScript.h">
-      <Filter>ScriptCode</Filter>
-    </ClInclude>
     <ClInclude Include="CPlayerScript.h">
       <Filter>ScriptCode</Filter>
     </ClInclude>
@@ -26,6 +23,15 @@
     <ClInclude Include="CHsh.h">
       <Filter>ScriptCode</Filter>
     </ClInclude>
+    <ClInclude Include="CMonsterScript.h">
+      <Filter>ScriptCode\Actor\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="CActorScript.h">
+      <Filter>ScriptCode\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="CTestMonsterScript.h">
+      <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -34,15 +40,24 @@
     <Filter Include="ScriptCode">
       <UniqueIdentifier>{1f77e2bc-7650-48f4-8ed5-a35b7b119fd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ScriptCode\Actor">
+      <UniqueIdentifier>{9957e515-72c6-467f-b60e-0db6342ff115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster">
+      <UniqueIdentifier>{4fc8f0e9-2b27-4ac2-9dd9-f5c505f9d026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Player">
+      <UniqueIdentifier>{6463b054-d226-405e-817c-d652a1f5738b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\TestMonster">
+      <UniqueIdentifier>{1ab8d4dd-d6c0-4419-ab1d-e77d1f6c105a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
     </ClCompile>
     <ClCompile Include="CMissileScript.cpp">
-      <Filter>ScriptCode</Filter>
-    </ClCompile>
-    <ClCompile Include="CMonsterScript.cpp">
       <Filter>ScriptCode</Filter>
     </ClCompile>
     <ClCompile Include="CPlayerScript.cpp">
@@ -57,6 +72,15 @@
     </ClCompile>
     <ClCompile Include="CHsh.cpp">
       <Filter>ScriptCode</Filter>
+    </ClCompile>
+    <ClCompile Include="CMonsterScript.cpp">
+      <Filter>ScriptCode\Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="CActorScript.cpp">
+      <Filter>ScriptCode\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="CTestMonsterScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

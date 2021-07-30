@@ -1,6 +1,8 @@
+CActorScript
 CCameraScript
 CHsh
 CMissileScript
 CMonsterScript
 CPlayerScript
 CSkyBoxScript
+CTestMonsterScript

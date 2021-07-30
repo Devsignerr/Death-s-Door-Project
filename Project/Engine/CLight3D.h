@@ -20,6 +20,13 @@ private:
 
     CGameObject*     m_pCamObj;
 
+// =============================================================================================
+    Ptr<CTexture>   m_StaticShadowTex; 
+public:
+    void SetStaticShadowTex(Ptr<CTexture> _ShadowTex) { m_StaticShadowTex = _ShadowTex; }
+    Ptr<CTexture> GetStaticShadowTex() { return m_StaticShadowTex; }
+// =============================================================================================
+
 public:
     virtual void finalupdate();
     void render();

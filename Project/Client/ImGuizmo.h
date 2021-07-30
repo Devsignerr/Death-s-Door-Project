@@ -42,6 +42,7 @@
 // 
 // -------------------------------------------------------------------------------------------
 // Example 
+
 #if 0
 void EditTransform(const Camera& camera, matrix_t& matrix)
 {
@@ -110,7 +111,6 @@ void EditTransform(const Camera& camera, matrix_t& matrix)
 #ifndef IMGUI_API
 #define IMGUI_API
 #endif
-
 namespace ImGuizmo
 {
    // call inside your own window and before Manipulate() in order to draw gizmo to that window.

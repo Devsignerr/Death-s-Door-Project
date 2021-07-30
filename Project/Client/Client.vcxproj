@@ -237,6 +237,7 @@ call ClientCopy.bat</Command>
     <ClInclude Include="DataGUI.h" />
     <ClInclude Include="DebugGUI.h" />
     <ClInclude Include="HierachyGUI.h" />
+    <ClInclude Include="ImGuizmo.h" />
     <ClInclude Include="InspectorGUI.h" />
     <ClInclude Include="Light3DGUI.h" />
     <ClInclude Include="ListGUI.h" />
@@ -280,6 +281,7 @@ call ClientCopy.bat</Command>
     <ClCompile Include="DataGUI.cpp" />
     <ClCompile Include="DebugGUI.cpp" />
     <ClCompile Include="HierachyGUI.cpp" />
+    <ClCompile Include="ImGuizmo.cpp" />
     <ClCompile Include="InspectorGUI.cpp" />
     <ClCompile Include="Light3DGUI.cpp" />
     <ClCompile Include="ListGUI.cpp" />

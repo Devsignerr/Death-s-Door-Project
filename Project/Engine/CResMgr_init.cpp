@@ -334,6 +334,145 @@ void CResMgr::CreateDefaultMesh()
 	AddRes(L"CubeMesh", pMesh);
 	vecIdx.clear();
 
+	{
+		// =============
+		// CubeMesh_C3D
+		// =============
+
+		VTX arrCube[24] = {};
+
+		// À­¸é
+		arrCube[0].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+		arrCube[0].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+		arrCube[1].vPos = Vec3(0.5f, 0.5f, 0.5f);
+		arrCube[1].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+		arrCube[2].vPos = Vec3(0.5f, 0.5f, -0.5f);
+		arrCube[2].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+		arrCube[3].vPos = Vec3(-0.5f, 0.5f, -0.5f);
+		arrCube[3].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+
+		// ¾Æ·§ ¸é	
+		arrCube[4].vPos = Vec3(0.5f, -0.5f, 0.5f);
+		arrCube[4].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+
+		arrCube[5].vPos = Vec3(-0.5f, -0.5f, 0.5f);
+		arrCube[5].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+
+		arrCube[6].vPos = Vec3(0.5f, -0.5f, -0.5f);
+		arrCube[6].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+
+		arrCube[7].vPos = Vec3(-0.5f, -0.5f, -0.5f);
+		arrCube[7].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+
+		// ¿ÞÂÊ ¸é
+		arrCube[8].vPos = Vec3(-0.5f, 0.5f, -0.5f);
+		arrCube[8].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+
+		arrCube[9].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+		arrCube[9].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+
+		arrCube[10].vPos = Vec3(-0.5f, -0.5f, 0.5f);
+		arrCube[10].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+
+		arrCube[11].vPos = Vec3(-0.5f, -0.5f, -0.5f);
+		arrCube[11].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+
+		// ¿À¸¥ÂÊ ¸é
+		arrCube[12].vPos = Vec3(0.5f, 0.5f, -0.5f);
+		arrCube[12].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+
+		arrCube[13].vPos = Vec3(0.5f, 0.5f, 0.5f);
+		arrCube[13].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+
+		arrCube[14].vPos = Vec3(0.5f, -0.5f, 0.5f);
+		arrCube[14].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+
+		arrCube[15].vPos = Vec3(0.5f, -0.5f, -0.5f);
+		arrCube[15].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+
+		// µÞ ¸é
+		arrCube[16].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+		arrCube[16].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+
+		arrCube[17].vPos = Vec3(0.5f, 0.5f, 0.5f);
+		arrCube[17].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+
+		arrCube[18].vPos = Vec3(0.5f, -0.5f, 0.5f);
+		arrCube[18].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+
+		arrCube[19].vPos = Vec3(-0.5f, -0.5f, 0.5f);
+		arrCube[19].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+
+		// ¾Õ ¸é
+		arrCube[20].vPos = Vec3(-0.5f, 0.5f, -0.5f);;
+		arrCube[20].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+
+		arrCube[21].vPos = Vec3(0.5f, 0.5f, -0.5f);
+		arrCube[21].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+
+		arrCube[22].vPos = Vec3(0.5f, -0.5f, -0.5f);
+		arrCube[22].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+
+		arrCube[23].vPos = Vec3(-0.5f, -0.5f, -0.5f);
+		arrCube[23].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+
+		////À­¸é
+		vecIdx.push_back(0);
+		vecIdx.push_back(1);
+		vecIdx.push_back(2);
+		vecIdx.push_back(3);
+		vecIdx.push_back(0);
+
+		////¾Æ·§¸é
+		vecIdx.push_back(5);
+		vecIdx.push_back(4);
+		vecIdx.push_back(6);
+		vecIdx.push_back(7);
+		vecIdx.push_back(5);
+
+		//¿ÞÂÊ
+		vecIdx.push_back(0);
+		vecIdx.push_back(3);
+		vecIdx.push_back(0);
+		vecIdx.push_back(5);
+		vecIdx.push_back(7);
+		vecIdx.push_back(3);
+
+		//¿À¸¥ÂÊ
+		vecIdx.push_back(2);
+		vecIdx.push_back(1);
+		vecIdx.push_back(4);
+		vecIdx.push_back(6);
+		vecIdx.push_back(2);
+
+		//µÚ
+		vecIdx.push_back(1);
+		vecIdx.push_back(0);
+		vecIdx.push_back(1);
+		vecIdx.push_back(4);
+		vecIdx.push_back(5);
+		vecIdx.push_back(0);
+
+		//¾Õ
+		vecIdx.push_back(3);
+		vecIdx.push_back(2);
+		vecIdx.push_back(6);
+		vecIdx.push_back(7);
+		vecIdx.push_back(3);
+
+
+		pMesh = new CMesh;
+		pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
+		AddRes(L"CubeMesh_C3D", pMesh);
+		vecIdx.clear();
+
+
+	}
+
 	// ===========
 	// Sphere Mesh
 	// ===========
@@ -444,6 +583,118 @@ void CResMgr::CreateDefaultMesh()
 
 	vecVtx.clear();
 	vecIdx.clear();
+
+
+	{
+		fRadius = 1.f;
+
+		// Top
+		v.vPos = Vec3(0.f, fRadius, 0.f);
+		v.vUV = Vec2(0.5f, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.Normalize();
+		v.vTangent = Vec3(1.f, 0.f, 0.f);
+		v.vBinormal = Vec3(0.f, 0.f, 1.f);
+		vecVtx.push_back(v);
+
+		// Body
+		UINT iStackCount = 40; // °¡·Î ºÐÇÒ °³¼ö
+		iSliceCount = 40; // ¼¼·Î ºÐÇÒ °³¼ö
+
+		float fStackAngle = XM_PI / iStackCount;
+		float fSliceAngle = XM_2PI / iSliceCount;
+
+		float fUVXStep = 1.f / (float)iSliceCount;
+		float fUVYStep = 1.f / (float)iStackCount;
+
+		for (UINT i = 1; i < iStackCount; ++i)
+		{
+			float phi = i * fStackAngle;
+
+			for (UINT j = 0; j <= iSliceCount; ++j)
+			{
+				float theta = j * fSliceAngle;
+
+				v.vPos = Vec3(fRadius * sinf(i * fStackAngle) * cosf(j * fSliceAngle)
+					, fRadius * cosf(i * fStackAngle)
+					, fRadius * sinf(i * fStackAngle) * sinf(j * fSliceAngle));
+				v.vUV = Vec2(fUVXStep * j, fUVYStep * i);
+				v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+				v.vNormal = v.vPos;
+				v.vNormal.Normalize();
+
+				v.vTangent.x = -fRadius * sinf(phi) * sinf(theta);
+				v.vTangent.y = 0.f;
+				v.vTangent.z = fRadius * sinf(phi) * cosf(theta);
+				v.vTangent.Normalize();
+
+				v.vTangent.Cross(v.vNormal, v.vBinormal);
+				v.vBinormal.Normalize();
+
+				vecVtx.push_back(v);
+			}
+		}
+
+		// Bottom
+		v.vPos = Vec3(0.f, -fRadius, 0.f);
+		v.vUV = Vec2(0.5f, 1.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.Normalize();
+
+		v.vTangent = Vec3(1.f, 0.f, 0.f);
+		v.vBinormal = Vec3(0.f, 0.f, -1.f);
+		vecVtx.push_back(v);
+
+		// ÀÎµ¦½º
+		// ºÏ±ØÁ¡
+		for (UINT i = 0; i < iSliceCount; ++i)
+		{
+			vecIdx.push_back(0);
+			vecIdx.push_back(i + 2);
+			vecIdx.push_back(i + 1);
+		}
+
+		// ¸öÅë
+		for (UINT i = 0; i < iStackCount - 2; ++i)
+		{
+			for (UINT j = 0; j < iSliceCount; ++j)
+			{
+				// + 
+				// | \
+				// +--+
+				vecIdx.push_back((iSliceCount + 1) * (i)+(j)+1);
+				vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+				vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j)+1);
+
+				// +--+
+				//  \ |
+				//    +
+				vecIdx.push_back((iSliceCount + 1) * (i)+(j)+1);
+				vecIdx.push_back((iSliceCount + 1) * (i)+(j + 1) + 1);
+				vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+			}
+		}
+
+		// ³²±ØÁ¡
+		UINT iBottomIdx = (UINT)vecVtx.size() - 1;
+		for (UINT i = 0; i < iSliceCount; ++i)
+		{
+			vecIdx.push_back(iBottomIdx);
+			vecIdx.push_back(iBottomIdx - (i + 2));
+			vecIdx.push_back(iBottomIdx - (i + 1));
+		}
+
+		pMesh = new CMesh;
+		pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+		pMesh->SetName(L"SphereMesh_C3D");
+		AddRes(pMesh->GetName(), pMesh);
+
+		vecVtx.clear();
+		vecIdx.clear();
+	}
+
 }
 
 void CResMgr::CreateDefaultShader()
@@ -603,6 +854,18 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 	AddRes<CGraphicsShader>(L"Collider2DShader", pShader);
+
+	// ==================
+	// Collider3D Shader
+	// ==================
+	pShader = new CGraphicsShader(SHADER_POV::FORWARD);
+	pShader->CreateVertexShader(L"shader\\std3d.fx", "VS_Collider3D");
+	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Collider3D");
+	pShader->SetDSType(DS_TYPE::NO_TEST);
+	pShader->SetTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+
+	AddRes<CGraphicsShader>(L"Collider3DShader", pShader);
 
 	// ======================
 	// Particle Render Shader
@@ -780,6 +1043,16 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Collider2DShader"));
 	pMtrl->m_bDefault = true;
 	AddRes<CMaterial>(L"Collider2DMtrl", pMtrl);
+
+	// ===================
+	// Collider3D Material
+	// ===================
+	pMtrl = new CMaterial;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Collider3DShader"));
+	pMtrl->m_bDefault = true;
+	AddRes<CMaterial>(L"Collider3DMtrl", pMtrl);
+
+
 
 	// ========================
 	// Particle Render Material

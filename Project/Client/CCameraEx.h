@@ -6,5 +6,6 @@ class CCameraEx :
 {
 public:
     virtual void finalupdate();
+    void ObjectSelectToRay();
 };
 

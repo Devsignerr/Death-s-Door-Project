@@ -4,16 +4,27 @@
 #include "CPlayerScript.h"
 
 CMonsterScript::CMonsterScript()
-	: CScript((int)SCRIPT_TYPE::MONSTERSCRIPT)
+	: m_CurState(MONSTERSTATE::IDLE)
 {
+	m_iScriptType = (int)SCRIPT_TYPE::MONSTERSCRIPT;
 }
 
 CMonsterScript::~CMonsterScript()
 {
 }
 
+bool CMonsterScript::RangeSearch(float _Range)
+{
+	return false;
+}
+
+void CMonsterScript::ChangeState(MONSTERSTATE _State, float _BlendingTime)
+{
+}
+
 void CMonsterScript::update()
 {
+	CActorScript::update();
 }
 
 void CMonsterScript::OnCollisionEnter(CGameObject* _pOther)

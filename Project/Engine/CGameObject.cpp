@@ -11,6 +11,7 @@
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
 #include "CCollider2D.h"
+#include "CCollider3D.h"
 #include "CCamera.h"
 #include "CLight2D.h"
 #include "CLight3D.h"
@@ -353,7 +354,7 @@ void CGameObject::LoadFromScene(FILE* _pFile)
 			pComponent = new CCollider2D;
 			break;
 		case COMPONENT_TYPE::COLLIDER3D:
-			//pComponent = new CCollider2D;
+			pComponent = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			pComponent = new CAnimator2D;

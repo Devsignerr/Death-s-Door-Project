@@ -94,6 +94,12 @@ void CRenderMgr::CreateMRT()
 			, D3D11_BIND_DEPTH_STENCIL
 			, DXGI_FORMAT_D32_FLOAT, true);
 
+
+		Ptr<CTexture> FinalShadowMapTex = CResMgr::GetInst()->CreateTexture(L"FinalShadowMapTargetTex"
+			, ptShadowMapResolution.x, ptShadowMapResolution.y
+			, D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE
+			, DXGI_FORMAT_R32_FLOAT, true);
+
 		Ptr<CTexture> arrTex[8] = { pShadowMapTex , };
 		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f), };
 
