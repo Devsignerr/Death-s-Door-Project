@@ -4,7 +4,9 @@
 #include <Engine\CGameObject.h>
 #include <Engine\CSceneMgr.h>
 #include <Engine\CGameObject.h>
+
 #include <Engine\CRes.h>
+#include <Engine/CResMgr.h>
 
 #include <Script\CScriptMgr.h>
 
@@ -16,9 +18,12 @@
 #include "Animator3DGUI.h"
 #include "Light3DGUI.h"
 #include "Particle3DGUI.h"
+#include "CameraGUI.h"
+
 
 #include "ResInfoGUI.h"
 #include "MaterialGUI.h"
+#include "PrefabGUI.h"
 
 InspectorGUI::InspectorGUI()
     : m_arrComGUI{}
@@ -73,6 +78,12 @@ void InspectorGUI::init()
     pNew->SetSize(Vec2(0.f, 350.f));
     m_arrComGUI[(UINT)COMPONENT_TYPE::ANIMATOR3D] = pNew;
 
+    pNew = new CameraGUI;
+
+    pNew->SetName(L"Camera");
+    pNew->SetSize(Vec2(0.f, 100.f));
+    m_arrComGUI[(UINT)COMPONENT_TYPE::CAMERA] = pNew;
+
     for (int i = 0; i < 10; ++i)
     {
         m_vecScriptGUI.push_back(new ScriptGUI);
@@ -81,6 +92,10 @@ void InspectorGUI::init()
     ResInfoGUI* pResInfoGUI = new MaterialGUI;
     pResInfoGUI->SetName(L"Material");
     m_arrResInfoGUI[(UINT)RES_TYPE::MATERIAL] = pResInfoGUI;
+
+    PrefabGUI* pPrefabGUI = new PrefabGUI;
+    pPrefabGUI->SetName(L"PrefabGUI");
+    m_arrResInfoGUI[(UINT)RES_TYPE::PREFAB] = pPrefabGUI;
 }
 
 void InspectorGUI::update()
@@ -142,6 +157,34 @@ void InspectorGUI::render()
         ImGui::Button(GetString(ObjName));
         ImGui::PopStyleColor(3);
 
+        ImGui::NewLine();
+
+        static bool DynamicShadow = false;
+        static bool FrustumCulling = false;
+
+        ImGui::Checkbox("DynamicShadow", &DynamicShadow);
+        if (true == DynamicShadow)
+        {
+            m_pTargetObj->SetDynamicShadow(true);
+        }
+        else 
+        {
+            m_pTargetObj->SetDynamicShadow(false);
+        }
+
+        ImGui::SameLine();
+
+        ImGui::Checkbox("FrustumCulling", &FrustumCulling);
+        if (true == FrustumCulling)
+        {
+            m_pTargetObj->SetFrustumCheck(true);
+        }
+        else
+        {
+            m_pTargetObj->SetFrustumCheck(false);
+        }
+
+
         for(UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
         {
             if (nullptr == m_arrComGUI[i])
@@ -168,6 +211,60 @@ void InspectorGUI::render()
             m_vecScriptGUI[i]->SetScript(vecScript[i]);
             m_vecScriptGUI[i]->render();
         }
+
+
+        static char szEmpty[100] = {};
+        ImGui::InputText("PrefabName", szEmpty, IM_ARRAYSIZE(szEmpty));
+
+        if (ImGui::Button("Object Name"))
+        {
+            int length = strlen(szEmpty);
+            wstring ObjectName(szEmpty, &szEmpty[length]);
+            m_pTargetObj->SetName(ObjectName);
+        }
+
+        if (ImGui::Button("make Prefab"))
+        {
+            Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(m_pTargetObj->GetName());
+
+            if (nullptr == pPrefab)
+            {
+                int Layer = m_pTargetObj->GetLayerIndex();
+
+                CGameObject* ProtoObject = m_pTargetObj->Clone();
+                ProtoObject->SetName(m_pTargetObj->GetName());
+
+                UINT ChildCount = m_pTargetObj->GetChild().size();
+
+                for (UINT i = 0; i < ChildCount; ++i)
+                {
+                    wstring ChildName = m_pTargetObj->GetChild()[i]->GetName();
+
+                    ProtoObject->GetChild()[i]->SetName(ChildName);
+                }
+
+                ProtoObject->SetLayerIndex(Layer);
+
+                pPrefab = new CPrefab(ProtoObject);
+                wstring Name = m_pTargetObj->GetName();
+                Name = L"prefab\\" + Name + L".pref";
+                pPrefab->Save(Name);
+                CResMgr::GetInst()->AddRes<CPrefab>(m_pTargetObj->GetName(), pPrefab);
+            }
+        }
+
+        int LayerIdx = m_pTargetObj->GetLayerIndex();
+        char strIdx[10] = {};
+        _itoa_s(LayerIdx, strIdx, 10);
+
+        ImGui::Text("Current Layer");
+        ImGui::SameLine();
+        ImGui::Text(strIdx);
+
+
+
+
+
     }
     else if (m_pTargetRes)
     {

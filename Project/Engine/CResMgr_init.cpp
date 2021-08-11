@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CResMgr.h"
+#include "CPathMgr.h"
 
 #include "CMesh.h"
 #include "CGraphicsShader.h"
@@ -16,6 +17,8 @@ void CResMgr::init()
 
 	// FMOD 초기화
 	InitSound();
+
+	LoadPrefab();
 }
 
 void CResMgr::ClearCloneRes()
@@ -759,6 +762,8 @@ void CResMgr::CreateDefaultShader()
 	// Shader Param		
 	pShader->AddShaderParam(SHADER_PARAM::TEX_0, L"Albedo Map");
 	pShader->AddShaderParam(SHADER_PARAM::TEX_1, L"Normal Map");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_2, L"Specular Map");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_3, L"Emissive Map");
 
 	pShader->AddShaderParam(SHADER_PARAM::TEXCUBE_0, L"CubeMap");
 
@@ -1033,6 +1038,7 @@ void CResMgr::CreateDefaultMaterial()
 	// SkyBox Shader
 	// ===============
 	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"SkyBoxShader"));	
 	AddRes<CMaterial>(L"SkyBoxMtrl", pMtrl);	
 
@@ -1106,4 +1112,20 @@ void CResMgr::InitSound()
 
 	// 32개 채널 생성
 	CSound::g_pFMOD->init(32, FMOD_DEFAULT, nullptr);
+}
+
+void CResMgr::LoadPrefab()
+{
+	std::wstring PrefabPath = CPathMgr::GetResPath();
+	PrefabPath += L"prefab\\";
+	CPathMgr::GetAllFilePath(PrefabPath, L"*.pref");
+	CPathMgr::GetAllFileName(PrefabPath, L"*.pref");
+
+	Ptr<CPrefab> Prefab = {};
+	for (size_t i = 0; i < CPathMgr::GetVecFileName().size(); ++i)
+	{
+		std::wstring Path = L"prefab\\";
+		Path += CPathMgr::GetVecFilePath()[i];
+		Load<CPrefab>(CPathMgr::GetVecFileName()[i], Path);
+	}
 }

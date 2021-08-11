@@ -46,7 +46,7 @@ private:
 	vector<CGameObject*>							m_vecDeadObj;
 
 	bool											m_bEvent; // HierachyGUI 가 알림받을 용도
-
+	bool											m_bDeadEventExist;
 public:
 	void update();
 	void AddEvent(const tEvent& _event) { m_event.push(_event); }

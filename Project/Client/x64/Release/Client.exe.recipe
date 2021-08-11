@@ -2,12 +2,12 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\MyDirectx2\3DProject\OutputFile\bin\Client.exe</FullPath>
+      <FullPath>C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin\Client.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\MyDirectx2\3DProject\OutputFile\bin\tool.cso</FullPath>
+      <FullPath>C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin\tool.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

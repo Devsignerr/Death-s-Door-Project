@@ -13,7 +13,6 @@ class CCameraScript :
 private:
     CGameObject* m_pPlayerPivot;
     CAMERA_MODE  m_eMode;
-    float        m_fOrbit;
 public:
     virtual void update();
     virtual void start();
@@ -24,6 +23,11 @@ private:
     void SetCameraPos();
     void CameraFreeMove();
     void FollowMove();
+
+
+    virtual void SaveToScene(FILE* _pFile);
+    virtual void LoadFromScene(FILE* _pFile);
+
 
 public:
     CCameraScript();

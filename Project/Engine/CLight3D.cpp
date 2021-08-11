@@ -170,6 +170,17 @@ void CLight3D::SetRange(float _fRange)
 
 
 
+void CLight3D::SetLightInfo(tLightInfo Info)
+{
+	m_info.color.vAmb = Info.color.vAmb;
+	m_info.color.vDiff = Info.color.vDiff;
+	m_info.color.vSpec = Info.color.vSpec;
+
+	m_info.eType = Info.eType;
+	m_info.fAngle = Info.fAngle;
+	m_info.fRange = Info.fRange;
+}
+
 void CLight3D::SaveToScene(FILE* _pFile)
 {
 	CComponent::SaveToScene(_pFile);

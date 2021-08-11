@@ -13,6 +13,9 @@
 
 #include <Windows.h>
 #include <vector>
+#include <iostream>
+#include <string>
+#include <locale>
 
 using namespace std;
 

@@ -23,6 +23,7 @@ public:
 
 public:
     Ptr<CMesh> GetMesh() { return m_pMesh; }
+    vector<Ptr<CMaterial>> GetVecMtrl() { return m_vecMtrl; }
     void SetMesh(Ptr<CMesh> _pMesh);
     void SetMaterial(Ptr<CMaterial> _pMtrl, UINT _iIdx);
     UINT GetMtrlCount() { return (UINT)m_vecMtrl.size(); }
@@ -40,6 +41,7 @@ public:
 
 public:
     CMeshRender();
+    CMeshRender(CMeshRender& _origin);
     ~CMeshRender();
 };
 

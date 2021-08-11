@@ -213,6 +213,8 @@ struct PS_OUT
     float4 vDiff : SV_Target0;
     float4 vNormal : SV_Target1;
     float4 vPosition : SV_Target2;
+    float4 vDiffLight : SV_Target3; //디퍼드 단계에서 미리 빛을 라이트 타겟에 넣어놓아 그림자에 걸릴일이 없어진다 . 
+                                    //또한 , 라이트 타겟을 가져와 블룸처리를 할수도 있다 
 };
 
 PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
@@ -220,7 +222,7 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
     PS_OUT output = (PS_OUT) 0.f;
     
     // Albedo Texture Sampling
-    float4 vObjectColor = float4(1.f, 0.f, 1.f, 1.f);
+    float4 vObjectColor = float4(0.13f, 0.13f, 0.13f, 1.f);
     if (btex_0)
     {
         vObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV);
@@ -259,6 +261,50 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
     output.vDiff = vObjectColor;
     output.vNormal.xyz = vViewNormal;
     output.vPosition.xyz = _in.vViewPos;
+    
+     // 반사광 맵이 있다면
+    if (btex_2)
+    {
+        float4 vMtrlCoeff = g_tex_2.Sample(g_sam_0, _in.vUV);
+        output.vNormal.a = encode(vMtrlCoeff);
+    }
+    
+    // 발광 맵이 있다면
+    if (btex_3)
+    {
+        float4 vEmissive = g_tex_3.Sample(g_sam_0, _in.vUV);
+        
+        if (vEmissive.x > 0.f || vEmissive.y > 0.f || vEmissive.z > 0.f)
+        {            
+            output.vDiffLight.x = g_vEmis.x * 2;
+            output.vDiffLight.y = g_vEmis.y * 2;
+            output.vDiffLight.z = g_vEmis.z * 2;
+        }
+        else
+        {
+            output.vDiffLight.x = vEmissive * 2;
+            output.vDiffLight.y = vEmissive * 2;
+            output.vDiffLight.z = vEmissive * 2;
+        }
+               
+        //output.vDiffLight.xyz = vEmissive.xyz ;  //현재는 상수값이 곱해져 있지만 계수값을 넘겨 처리할수 있도록 한다 
+    }
+    
+   //if (g_vEmis.x > 0.1f || g_vEmis.y > 0.1f || g_vEmis.z > 0.1f )
+   //{
+   //    output.vDiffLight.x=  g_vEmis.x*2;
+   //    output.vDiffLight.y = g_vEmis.y*2;
+   //    output.vDiffLight.z = g_vEmis.z*2;
+   //}
+    
+    if (g_vDiff.x != 1.f || g_vDiff.y != 1.f || g_vDiff.z != 1.f)
+   {
+        output.vDiff.x = (output.vDiff.x * (1.f - g_vDiff.w)) + g_vDiff.x * g_vDiff.w;
+        output.vDiff.y = (output.vDiff.y * (1.f - g_vDiff.w)) + g_vDiff.y * g_vDiff.w;
+        output.vDiff.z = (output.vDiff.z * (1.f - g_vDiff.w)) + g_vDiff.z * g_vDiff.w;
+   
+   }
+    
     
     return output;
 }

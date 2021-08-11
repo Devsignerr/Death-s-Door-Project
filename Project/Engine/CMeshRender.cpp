@@ -14,6 +14,14 @@ CMeshRender::CMeshRender()
 {
 }
 
+CMeshRender::CMeshRender(CMeshRender& _origin)
+	: CComponent(COMPONENT_TYPE::MESHRENDER),
+	m_pMesh(_origin.m_pMesh),
+	m_vecMtrl(_origin.m_vecMtrl)
+{
+	
+}
+
 CMeshRender::~CMeshRender()
 {
 }
@@ -183,6 +191,13 @@ void CMeshRender::render_shadowmap(UINT _iMtrl)
 	pMtrl->UpdateData();
 	m_pMesh->UpdateData(_iMtrl);
 	m_pMesh->render(_iMtrl);
+
+	// Á¤¸®	
+	if (Animator3D())
+	{
+		Animator3D()->ClearData();
+		pMtrl->SetAnim3D(false);
+	}
 }
 
 void CMeshRender::SetMesh(Ptr<CMesh> _pMesh)
@@ -243,6 +258,14 @@ void CMeshRender::SaveToScene(FILE* _pFile)
 
 	int iMtrlSize = (int)m_vecMtrl.size();
 	fwrite(&iMtrlSize, sizeof(int), 1, _pFile);
+
+	for (UINT i = 0; i < iMtrlSize; ++i)
+	{
+		if (nullptr == m_vecMtrl[i] || m_vecMtrl[i]->IsDefault())
+			continue;
+
+		m_vecMtrl[i]->Save(m_vecMtrl[i]->GetRelativePath());
+	}
 
 	for (int i = 0; i < (int)m_vecMtrl.size(); ++i)
 	{

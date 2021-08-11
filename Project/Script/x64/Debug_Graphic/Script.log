@@ -1,13 +1,68 @@
-﻿  .\Project\Script\CCameraScript.h
-  .\Project\Script\CHsh.h
+﻿  .\Project\Script\CActorScript.h
+  .\Project\Script\CBatScript.h
+  .\Project\Script\CBazookaBullet.h
+  .\Project\Script\CBazookaScript.h
+  .\Project\Script\CCameraScript.h
+  .\Project\Script\CIronmaceScript.h
   .\Project\Script\CMissileScript.h
   .\Project\Script\CMonsterScript.h
+  .\Project\Script\CNailScript.h
+  .\Project\Script\CPlantBullet.h
+  .\Project\Script\CPlantScript.h
   .\Project\Script\CPlayerScript.h
+  .\Project\Script\CProjectile.h
+  .\Project\Script\CRandomMgrScript.h
   .\Project\Script\CScriptMgr.h
+  .\Project\Script\CSkullBullet.h
+  .\Project\Script\CSkullScript.h
   .\Project\Script\CSkyBoxScript.h
-  7개 파일이 복사되었습니다.
+  .\Project\Script\CSpearManScript.h
+  .\Project\Script\CSpiderScript.h
+  .\Project\Script\CTestMonsterAttackEffect.h
+  .\Project\Script\CTestMonsterScript.h
+  .\Project\Script\CTongueBullet.h
+  .\Project\Script\CTongueScript.h
+  24개 파일이 복사되었습니다.
   pch.cpp
+  CActorScript.cpp
+  CBatScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CBazookaBullet.cpp
+  CBazookaScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CCameraScript.cpp
-  CHsh.cpp
+  CIronmaceScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CMissileScript.cpp
   CMonsterScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CNailScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CPlantBullet.cpp
+  CPlantScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CPlayerScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CProjectile.cpp
+  CRandomMgrScript.cpp
+  CScriptMgr.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSkullBullet.cpp
+  CSkullScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSkyBoxScript.cpp
+  CSpearManScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSpiderScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  CTestMonsterAttackEffect.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Script\CTestMonsterAttackEffect.cpp(82,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CTestMonsterScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CTongueBullet.cpp
+  CTongueScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  Script.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Script\Script_debug.lib

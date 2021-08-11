@@ -30,7 +30,6 @@ class CScript :
 {
 protected:
     int                 m_iScriptType;
-private:
     vector<tDataDesc>   m_vecDesc;
 
 public:

@@ -1,23 +1,62 @@
 ﻿  .\Project\Script\CActorScript.h
+  .\Project\Script\CBatScript.h
+  .\Project\Script\CBazookaBullet.h
+  .\Project\Script\CBazookaScript.h
   .\Project\Script\CCameraScript.h
-  .\Project\Script\CHsh.h
-  .\Project\Script\CMissileScript.h
+  .\Project\Script\CIronmaceScript.h
   .\Project\Script\CMonsterScript.h
+  .\Project\Script\CNailScript.h
+  .\Project\Script\CPlantBullet.h
+  .\Project\Script\CPlantScript.h
   .\Project\Script\CPlayerScript.h
+  .\Project\Script\CProjectile.h
+  .\Project\Script\CRandomMgrScript.h
   .\Project\Script\CScriptMgr.h
+  .\Project\Script\CSkullBullet.h
+  .\Project\Script\CSkullScript.h
   .\Project\Script\CSkyBoxScript.h
+  .\Project\Script\CSpearManScript.h
+  .\Project\Script\CSpiderScript.h
+  .\Project\Script\CTestMonsterAttackEffect.h
   .\Project\Script\CTestMonsterScript.h
-  9개 파일이 복사되었습니다.
-  pch.cpp
-  CActorScript.cpp
-  CCameraScript.cpp
-  CHsh.cpp
-  CMissileScript.cpp
+  .\Project\Script\CTongueBullet.h
+  .\Project\Script\CTongueScript.h
+  .\Project\Script\TPlayerArrow.h
+  .\Project\Script\TPlayerBomb.h
+  .\Project\Script\TPlayerCharge.h
+  .\Project\Script\TPlayerHit.h
+  .\Project\Script\TPlayerHook.h
+  .\Project\Script\TPlayerIdle.h
+  .\Project\Script\TPlayerMagic.h
+  .\Project\Script\TPlayerRoll.h
+  .\Project\Script\TPlayerRun.h
+  .\Project\Script\TPlayerSlash.h
+  33개 파일이 복사되었습니다.
+  CBatScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CBazookaScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CIronmaceScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CMonsterScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CNailScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CPlantScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CPlayerScript.cpp
-C:\Users\AssortRock\Desktop\Death'sDoor Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(49,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CScriptMgr.cpp
-  CSkyBoxScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSkullScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSpearManScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSpiderScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CTestMonsterScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CTongueScript.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
-  Script.vcxproj -> C:\Users\AssortRock\Desktop\Death'sDoor Project\Death-s-Door-Project\External\Library\Script\Script_debug.lib
+  Script.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Script\Script_debug.lib

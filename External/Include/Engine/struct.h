@@ -137,7 +137,7 @@ struct tMTAnimClip
 	float			fUpdateTime; // ¿Ã∞≈ æ»æ∏
 
 	bool			bFinish;
-	bool			bRepeat;
+	bool			bStay;
 
 	FbxTime::EMode	eMode;
 
@@ -153,7 +153,7 @@ struct tMTAnimClip
 		fUpdateTime=0;
 
 		bFinish=false;
-		bRepeat=true;
+		bStay=true;
 
 		eMode=(FbxTime::EMode)0;
 	}

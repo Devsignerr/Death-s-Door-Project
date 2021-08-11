@@ -28,6 +28,8 @@ public:
     }
 
     CGameObject* FindObjectByName(const wstring& _strName);
+    CGameObject* FindObjectByLayer(const wstring& _strName, int _LayerIdx);
+    CGameObject* FindParentObj(const wstring& _strName, int _Layer);
     SCENE_STATE GetState() { return m_eState; }
     void SetState(SCENE_STATE _eState) { m_eState = _eState; }
  

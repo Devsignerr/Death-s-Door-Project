@@ -1,0 +1,2 @@
+Room_Shaft0 filter=lfs diff=lfs merge=lfs -text
+Rock_Left0 filter=lfs diff=lfs merge=lfs -text

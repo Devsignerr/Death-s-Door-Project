@@ -26,10 +26,13 @@ private:
 	bool					m_bEvent; // Resource 가 새롭게 추가 되거나 삭제되는 경우를 감지하는 용도
 
 	//==================================
-	vector<CMeshData*>      m_pVecMeshData;
+	vector<CMeshData*>      m_pVecMeshData; // 메쉬데이터 생성을 위한 벡터 
+	vector<CMesh*>		    m_pVecMesh; 	//메쉬 생성을 위한 벡터 
 
 public:
 	vector<CMeshData*>& GetMeshDataVec() { return m_pVecMeshData; }
+	vector<CMesh*>& GetMeshVec() { return m_pVecMesh; }
+
 public:
 	void init();
 	void ClearCloneRes();
@@ -59,7 +62,7 @@ public:
 
 	Ptr<CTexture> FindDataTexture(const wstring& _strKey);
 
-	void LoadFBX(const wstring& _strPath);
+	void LoadFBX(const wstring& _strPath ,FBXLOAD_TYPE _LoadType);
 
 private:
 	void CreateDefaultMesh();
@@ -67,6 +70,8 @@ private:
 	void CreateComputeShader();
 	void CreateDefaultMaterial();	
 	void InitSound();
+
+	void LoadPrefab();
 };
 
 template<typename T>

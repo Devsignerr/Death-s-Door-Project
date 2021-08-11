@@ -45,6 +45,7 @@ int main()
 	{
 		// 예외가 아닌경우, 스크립트 이름으로 본다.
 		bool bExeption = false;
+
 		for (size_t i = 0; i < strExept.size(); ++i)
 		{
 			if (!wcscmp(tData.cFileName, strExept[i].c_str()))
@@ -52,7 +53,18 @@ int main()
 				bExeption = true;
 				break;
 			}
+
+			// aaaa.h 라는 파일 이름 (State , Script 모두 포함) 
+			wstring strState(tData.cFileName);
+			wchar_t wc = strState[0];
+
+			if (wc == L'T')
+			{
+				bExeption = true;
+				break;
+			}			
 		}
+
 
 		if (!bExeption)
 		{

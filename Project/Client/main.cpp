@@ -69,6 +69,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
        
+    CSaveLoadMgr::init();
     
     // 1920 1080 83.3333%    
     if (FAILED(CCore::GetInst()->init(g_hWnd, POINT{ 1600, 900 })))
@@ -76,7 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return 0;
     }
 
-    CSaveLoadMgr::init();
+   
     CreateTestScene();
 
     // Tool 전용 오브젝트 초기화

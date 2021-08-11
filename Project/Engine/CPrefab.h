@@ -13,6 +13,9 @@ public:
     CGameObject*    Instantiate();
 
 public:
+    CGameObject* GetProtoObj() { return m_pProtoObj; }
+
+public:
     virtual void Save(const wstring& _strRelativePath);
 
 private:

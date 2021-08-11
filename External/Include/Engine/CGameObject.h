@@ -27,6 +27,7 @@ private:
     int                     m_iLayerIdx;
 
     bool                    m_bDead;
+    bool                    m_bFrustum;
     bool                    m_bDynamicShadow;
 
 public:
@@ -60,14 +61,17 @@ public:
     CGameObject* GetParent() { return m_pParentObj; }
     const vector<CGameObject*>& GetChild() { return m_vecChild; }
 
-    void SetDynamicShadow(bool _bTrue) { m_bDynamicShadow = _bTrue; }
+    void SetDynamicShadow(bool _bTrue);
     bool IsDynamicShdow() { return m_bDynamicShadow; }
 
+    void SetFrustumCheck(bool _b);
+    bool IsFrustum() { return m_bFrustum; }
+
     bool IsDead() { return m_bDead; }
+    void SetLayerIndex(int _iIdx) { m_iLayerIdx = _iIdx; }
+    int GetLayerIndex() { return m_iLayerIdx; }
 
 private:
-    int GetLayerIndex() { return m_iLayerIdx; }
-    void SetLayerIndex(int _iIdx) { m_iLayerIdx = _iIdx; }
 
     // 부모 오브젝트와의 연결 해제
     void DisconnectWithParent(); 
@@ -78,6 +82,7 @@ private:
     // 소속된 Layer 에서 부모로서 연결 해제    
     void ReleaseAsParentObj();
 
+public:
     // 자식 오브젝트 추가
     void AddChild(CGameObject* _pChildObj);
 
@@ -89,7 +94,7 @@ public:
 
 public:
     CGameObject();
-    CGameObject(const CGameObject& _origin);
+    CGameObject(CGameObject& _origin);
     ~CGameObject();
 
     friend class CLayer;

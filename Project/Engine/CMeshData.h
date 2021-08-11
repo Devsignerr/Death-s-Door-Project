@@ -18,20 +18,16 @@ private:
 
 
 	//=======================================
-
-	static vector<CMeshData*> m_pVecMeshData;
 	bool					  m_bLoadFail;
 
 public:
-
 	const bool	IsLoadFail() { return m_bLoadFail; }
 public:
-	static vector<CMeshData*>& LoadFromFBX(const wstring& _strFilePath);
-
+	static void LoadFromFBX(const wstring& _strFilePath,FBXLOAD_TYPE _LoadType);
 	virtual void Save(const wstring& _strRelativePath);
 	virtual void Load(const wstring& _strFilePath);
 
-	CGameObject* Instantiate();
+	CGameObject* Instantiate(FBXLOAD_TYPE _Type = FBXLOAD_TYPE::ANIMATION_LOAD);
 
 	CLONE_DISABLE(CMeshData);
 

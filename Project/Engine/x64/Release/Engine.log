@@ -202,8 +202,6 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   StructuredBuffer g_srcMat;
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\CopyTexture.fx(19,9-35): warning X3203: signed/unsigned mismatch, unsigned assumed
-C:\MyDirectx2\3DProject\Project\Engine\CopyTexture.fx(19,40-66): warning X3203: signed/unsigned mismatch, unsigned assumed
   
   //
   // FX Version: fx_5_0
@@ -275,7 +273,7 @@ C:\MyDirectx2\3DProject\Project\Engine\CopyTexture.fx(19,40-66): warning X3203: 
   }
   
   //
-  // 22 local object(s)
+  // 23 local object(s)
   //
   Texture2D g_tex_0;
   Texture2D g_tex_1;
@@ -303,10 +301,11 @@ C:\MyDirectx2\3DProject\Project\Engine\CopyTexture.fx(19,40-66): warning X3203: 
   };
   RWTexture2D g_DestTex;
   Texture2D g_SrcTex;
+  Texture2D g_StaticSrcTex;
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -406,8 +405,8 @@ C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implic
   };
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -510,10 +509,10 @@ C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implic
   StructuredBuffer g_PickPos;
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\light.fx(41,5-40): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\light.fx(163,5-40): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\light.fx(41,5-40): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\light.fx(170,5-40): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -613,8 +612,8 @@ C:\MyDirectx2\3DProject\Project\Engine\light.fx(163,5-40): warning X3206: implic
   };
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -716,9 +715,9 @@ C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implic
   RWStructuredBuffer g_shared;
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\picking.fx(30,9-42): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\picking.fx(30,9-42): warning X3203: signed/unsigned mismatch, unsigned assumed
   
   //
   // FX Version: fx_5_0
@@ -918,8 +917,8 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   };
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -1019,9 +1018,9 @@ C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implic
   };
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\std2d.fx(158,11-60): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(158,11-60): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -1122,9 +1121,12 @@ C:\MyDirectx2\3DProject\Project\Engine\std2d.fx(158,11-60): warning X3206: impli
   StructuredBuffer g_particelbuffer;
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\std3d.fx(82,21-37): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(82,21-37): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(285,13-47): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(286,13-47): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(287,13-47): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -1224,12 +1226,12 @@ C:\MyDirectx2\3DProject\Project\Engine\std3d.fx(82,21-37): warning X3203: signed
   };
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\terrain.fx(58,12-27): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\terrain.fx(158,5-72): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\terrain.fx(159,5-70): warning X3206: implicit truncation of vector type
-C:\MyDirectx2\3DProject\Project\Engine\terrain.fx(160,5-74): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\terrain.fx(58,12-27): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\terrain.fx(158,5-72): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\terrain.fx(159,5-70): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\terrain.fx(160,5-74): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -1627,13 +1629,185 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   RWTexture2D WeightTex;
   StructuredBuffer g_PickPos;
   
-  Engine.vcxproj -> C:\MyDirectx2\3DProject\External\Library\Engine\Engine.lib
+  CAnimation2D.cpp
+  CAnimator2D.cpp
+  CAnimator3D.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.cpp(72,39): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.cpp(287,30): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.cpp(326,36): warning C4244: '=': 'double'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Ty=float
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.cpp(334,43): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.cpp(423,66): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.cpp(473,43): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CCamera.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CCollider2D.cpp
+  CCollider3D.cpp
+  CCollisionMgr.cpp
+  CCore.cpp
+  CDevice.cpp
+  CFBXLoader.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(415,26): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(416,31): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(417,31): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(983,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(983,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(990,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(990,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=fbxsdk::FbxDouble
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(997,14): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(998,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(999,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(128): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(128): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+  CFSM.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CGameObject.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(215,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(227,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CInstancingBuffer.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CInstancingBuffer.cpp(64,37): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  CKeyMgr.cpp
+  CLight2D.cpp
+  CLight3D.cpp
+  CLightCamera.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CMaterial.cpp
+  CMesh.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMesh.cpp(371,38): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMesh.cpp(383,61): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CMeshData.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  컴파일하고 있습니다...
+  CMeshRender.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMeshRender.cpp(262,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  CParticleSystem.cpp
+  CRenderMgr.cpp
+  CRenderMgr_init.cpp
+  CResMgr.cpp
+  CResMgr_init.cpp
+  CScript.cpp
+  CSound.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CSound.cpp(95): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CSound.cpp(95): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+  CTerrain.cpp
+  CTerrain_init.cpp
+  CTimeMgr.cpp
+  Engine.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Engine\Engine.lib
   .\Project\Engine\CAnimation2D.h
   .\Project\Engine\CAnimation3DShader.h
   .\Project\Engine\CAnimator2D.h
   .\Project\Engine\CAnimator3D.h
   .\Project\Engine\CCamera.h
   .\Project\Engine\CCollider2D.h
+  .\Project\Engine\CCollider3D.h
   .\Project\Engine\CCollisionMgr.h
   .\Project\Engine\CComponent.h
   .\Project\Engine\CComputeShader.h
@@ -1645,6 +1819,8 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   .\Project\Engine\CEntity.h
   .\Project\Engine\CEventMgr.h
   .\Project\Engine\CFBXLoader.h
+  .\Project\Engine\CFrustum.h
+  .\Project\Engine\CFSM.h
   .\Project\Engine\CGameObject.h
   .\Project\Engine\CGraphicsShader.h
   .\Project\Engine\CHeightMapShader.h
@@ -1674,6 +1850,7 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   .\Project\Engine\CShader.h
   .\Project\Engine\CSingleton.h
   .\Project\Engine\CSound.h
+  .\Project\Engine\CState.h
   .\Project\Engine\CStructuredBuffer.h
   .\Project\Engine\CTerrain.h
   .\Project\Engine\CTexture.h
@@ -1688,7 +1865,7 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   .\Project\Engine\SimpleMath.h
   .\Project\Engine\struct.h
   .\Project\Engine\Temp.h
-  60개 파일이 복사되었습니다.
+  64개 파일이 복사되었습니다.
   .\Project\Engine\animation.fx
   .\Project\Engine\bonecopy.fx
   .\Project\Engine\CopyTexture.fx

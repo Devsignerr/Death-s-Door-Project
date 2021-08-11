@@ -21,17 +21,19 @@ CGameObject::CGameObject()
 	: m_arrCom{}
 	, m_iLayerIdx(-1)
 	, m_pParentObj(nullptr)
+	, m_bFrustum(false)
 	, m_bDynamicShadow(false)
 	, m_bDead(false)
 {
 }
 
-CGameObject::CGameObject(const CGameObject& _origin)
+CGameObject::CGameObject(CGameObject& _origin)
 	: m_arrCom{}
 	, m_vecChild()
 	, m_pParentObj(nullptr)
 	, m_bDynamicShadow(_origin.m_bDynamicShadow)
 	, m_iLayerIdx(-1)
+	, m_bFrustum(_origin.m_bFrustum)
 	, m_bDead(false)
 {
 	// 컴포넌트 복사
@@ -54,6 +56,8 @@ CGameObject::CGameObject(const CGameObject& _origin)
 	{
 		AddChild(_origin.m_vecChild[i]->Clone());
 	}
+	wstring Name = _origin.GetName();
+	SetName(Name);
 }
 
 CGameObject::~CGameObject()
@@ -202,6 +206,30 @@ void CGameObject::AddComponent(CComponent* _pComponent)
 	}
 		
 	_pComponent->SetGameObject(this);
+}
+
+void CGameObject::SetDynamicShadow(bool _bTrue)
+{
+	m_bDynamicShadow = _bTrue;
+
+	UINT ChildCount = GetChild().size();
+
+	for (UINT i = 0; i < ChildCount; ++i)
+	{
+		GetChild()[i]->SetDynamicShadow(_bTrue);
+	}
+}
+
+void CGameObject::SetFrustumCheck(bool _bTrue)
+{
+	m_bFrustum = _bTrue;
+
+	UINT ChildCount = GetChild().size();
+
+	for (UINT i = 0; i < ChildCount; ++i)
+	{
+		GetChild()[i]->SetFrustumCheck(_bTrue);
+	}
 }
 
 void CGameObject::DisconnectWithParent()

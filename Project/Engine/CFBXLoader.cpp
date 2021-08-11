@@ -33,6 +33,80 @@ CFBXLoader::~CFBXLoader()
 	}
 }
 
+void CFBXLoader::CreateNavMesh()
+{
+	const tContainer* container = &GetContainer(0);
+
+	//정점 갯수 
+	UINT iVtxCount = (UINT)container->vecPos.size();
+
+	//NavMesh 는 딱1개 로드된다 
+	CMesh* pMesh = CResMgr::GetInst()->GetMeshVec()[0];
+
+	//메쉬 폴리곤의 갯수가 100개라면 아래 벡터의 크기도 100
+	vector<tNavMeshNode>& vecNavMeshNode = pMesh->GetMeshNodeVec();
+
+	UINT PolygonCnt = iVtxCount / 3;
+	vecNavMeshNode.resize(PolygonCnt);
+
+	//정점의 위치를 모두 온다 . 정점 3개당 NavMeshNode 구조체 1개에 들어간다 .
+	UINT VecIdx = 0;
+	UINT VTXPosIdx = 0;
+
+	for (UINT i = 0; i < iVtxCount; ++i)
+	{
+		//네비메쉬 벡터 인덱스는 정점 3번당 1번씩 증가함 
+		//정점배열 인덱스는 정점 3번당 0으로 초기화됨 
+		if (0 != i)
+		{
+			VecIdx = i / 3;
+			VTXPosIdx = i % 3;
+		}
+
+		//정점의 위치를 벡터에 모두 입력함 
+		vecNavMeshNode[VecIdx].VertexPosition[VTXPosIdx] = container->vecPos[i];
+
+		//처음 한번 로드할때야 NearNode 의 주소를 안다 쳐도 , 다음번 Iniciate할때 
+		//그 주소를 알수 없으므로 Idx로 소속된 폴리곤과 NearNode의 정보를 기억시킨다 
+		//이 NodeIdx로 소속된 폴리곤의 정점의 위치를 받아올수 있다 
+		vecNavMeshNode[VecIdx].NodeIdx = VecIdx;
+	}
+
+	UINT CompareVecIdx = 0;
+	UINT CompareVTXPosIdx = 0;
+
+
+	for (UINT i = 0; i < PolygonCnt; ++i)
+	{
+		for (UINT j = 0; j < PolygonCnt; ++j)
+		{
+			for (UINT k = 0; k < 3; k++)
+			{
+				for (UINT m = 0; m < 3; m++)
+				{
+					if (i != j && vecNavMeshNode[i].VertexPosition[k] == vecNavMeshNode[j].VertexPosition[m])
+					{
+						vecNavMeshNode[i].VecNearNodeIdx.push_back(vecNavMeshNode[j].NodeIdx);
+					}
+				}
+			}
+		}
+	}
+
+	for (UINT n = 0; n < PolygonCnt; n++)
+	{
+		//중복 원소 제거 
+		vecNavMeshNode[n].VecNearNodeIdx.erase(std::unique(
+			vecNavMeshNode[n].VecNearNodeIdx.begin(),
+			vecNavMeshNode[n].VecNearNodeIdx.end()),
+			vecNavMeshNode[n].VecNearNodeIdx.end());
+	}
+
+	vecNavMeshNode;
+
+	int a = 10;
+}
+
 void CFBXLoader::init()
 {
 	m_pManager = FbxManager::Create();
@@ -47,29 +121,10 @@ void CFBXLoader::init()
 		assert(NULL);
 }
 
-void CFBXLoader::LoadFbx(const wstring & _strPath)
+void CFBXLoader::LoadFbx(const wstring & _strPath, FBXLOAD_TYPE _LoadType)
 {
-	
-	/*1. FbxManager를 생성한다.
-
-	2. Fbx 파일을 로드하기 위한 Scene을 하나 생성한다.
-
-	3. Fbx 파일을 로드하기 위한 FbxImporter를 하나 생성한다.
-
-	4. FbxImporter에 로드하려는 파일명을 넣어준다.
-
-	5. Importer를 이용해 Scene을 로드한다.
-
-	6. RootNode부터 순회하면서 원하는 정보를 얻는다.
-
-	* Vertex / Normal / Tangent등 Attribute를 비교해가면서 얻어가면 된다.*/
-
-
 	m_vecContainer.clear();
-
 	m_pImporter = FbxImporter::Create(m_pManager, "");
-
-	//wstring str = wstring_convert<codecvt_utf8<wchar_t>>().from_bytes(strName.c_str());
 	string strPath(_strPath.begin(), _strPath.end());
 		
 	if (!m_pImporter->Initialize(strPath.c_str(), -1, m_pManager->GetIOSettings()))
@@ -77,42 +132,11 @@ void CFBXLoader::LoadFbx(const wstring & _strPath)
 
 	m_pImporter->Import(m_pScene);
 
-	/*FbxAxisSystem originAxis = FbxAxisSystem::eMax;
-	originAxis = m_pScene->GetGlobalSettings().GetAxisSystem();
-	FbxAxisSystem DesireAxis = FbxAxisSystem::DirectX;
-	DesireAxis.ConvertScene(m_pScene);
-	originAxis = m_pScene->GetGlobalSettings().GetAxisSystem();*/
-
-	//Objects in the FBX SDK are always created in the right handed
 	m_pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::Max);
-
-	// Bone 정보 읽기
 	LoadSkeleton(m_pScene->GetRootNode());
-
-	// Animation 이름정보 
 	m_pScene->FillAnimStackNameArray(m_arrAnimName);
 
 
-	//==========================================================
-	//m_pScene->GetAnimationEvaluator();
-	//
-	//FbxTakeInfo* info = m_pScene->GetTakeInfo((*m_arrAnimName[0]));
-	//info->mName;
-	//FbxAnimStack* stack = m_pScene->GetCurrentAnimationStack();
-	//
-	//
-	////FbxAnimLayer* layer = m_pScene->GetMember<FbxAnimLayer>();
-	////
-	//const char* str = stack->GetName();
-	//
-	//m_pScene->RemoveAnimStack(str);
-	//
-	//stack = m_pScene->GetCurrentAnimationStack();
-	////m_pScene->SetCurrentAnimationStack();
-	//str = stack->GetName();
-	//
-	//============================================================  
-	  
 	// Animation Clip 정보
 	LoadAnimationClip();
 
@@ -120,28 +144,35 @@ void CFBXLoader::LoadFbx(const wstring & _strPath)
 	Triangulate(m_pScene->GetRootNode());
 
 	// 메쉬 데이터 얻기
-	LoadMeshDataFromNode(m_pScene->GetRootNode());
+	LoadMeshDataFromNode(m_pScene->GetRootNode(), _LoadType);
 
 	m_pImporter->Destroy();
 
-	// 필요한 텍스쳐 로드
-	LoadTexture();
+	//네비메쉬는 아래 정보가 필요하지 않음 
+	if (FBXLOAD_TYPE::NAVMESH_LOAD !=_LoadType) 
+	{
+		// 필요한 텍스쳐 로드
+		LoadTexture();
 
-	// 필요한 메테리얼 생성
-	CreateMaterial();
+		// 필요한 메테리얼 생성
+		CreateMaterial();
+	}
 }
 
-void CFBXLoader::LoadMeshDataFromNode(FbxNode * _pNode)
+void CFBXLoader::LoadMeshDataFromNode(FbxNode * _pNode, FBXLOAD_TYPE _LoadType)
 {
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
 	FbxMesh* pMesh = _pNode->GetMesh();
 
 	FbxAMatrix matrix = _pNode->EvaluateGlobalTransform();
+	FbxString MeshName = {};
 
 	//메쉬가 없으면 여기에 들어올수 없음 
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
+		MeshName = _pNode->GetName();
+
 		FbxAMatrix matrixGeo;
 
 		matrixGeo.SetIdentity();
@@ -173,32 +204,124 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode * _pNode)
 		matrix = parentMatrix * localMatrix * matrixGeo;
 	}
 
-	if (NULL != pMesh)
-		LoadMesh(pMesh);// , matrix);
-
-	// 해당 노드의 재질정보 읽기
-	UINT iMtrlCnt = _pNode->GetMaterialCount();
-	if (iMtrlCnt > 0)
-	{
-		for (UINT i = 0; i < iMtrlCnt; ++i)
+	if (NULL != pMesh) 
+	{	
+		if (_LoadType == FBXLOAD_TYPE::NAVMESH_LOAD)
 		{
-			FbxSurfaceMaterial* pMtrlSur = _pNode->GetMaterial(i);
-			LoadMaterial(pMtrlSur);
+			LoadNavMesh(pMesh, MeshName);
+		}
+		else 
+		{
+			if (m_arrAnimName.Size() > 0)
+			{
+				//애니메이션이 하나라도 있다면 이 함수 호출. 
+				//이 함수는 부모관계 영향없이 순수하게 애니메이션 전용 호출 함수임 
+				LoadMesh(pMesh, MeshName);
+			}
+			else {
+				//이 함수는 부모의 영향까지 계산하여 여러개의 메쉬를 올바른 위치에 생성하는 함수임 
+				LoadMesh(pMesh, matrix, MeshName);
+			}
+		}		
+	}	
+	
+	//네비메쉬는 재질정보가 필요없다 
+	if (FBXLOAD_TYPE::NAVMESH_LOAD != _LoadType)
+	{
+		// 해당 노드의 재질정보 읽기
+		UINT iMtrlCnt = _pNode->GetMaterialCount();
+		if (iMtrlCnt > 0)
+		{
+			for (UINT i = 0; i < iMtrlCnt; ++i)
+			{
+				FbxSurfaceMaterial* pMtrlSur = _pNode->GetMaterial(i);
+				LoadMaterial(pMtrlSur);
+			}
 		}
 	}
 
 	// 자식 노드 정보 읽기
 	int iChildCnt = _pNode->GetChildCount();
 
+	//메쉬의 이름정보도 들어있다 ! 
+	const char* name = _pNode->GetName();
+
 	//자식을 가지고 있다면 똑같은 처리를 하도록 함 
 	for (int i = 0; i < iChildCnt; ++i)
 	{
-		LoadMeshDataFromNode(_pNode->GetChild(i));
+		LoadMeshDataFromNode(_pNode->GetChild(i), _LoadType);
+	}
+	
+}
+
+//==================================================================
+//						네비메쉬 로드 
+//==================================================================
+void CFBXLoader::LoadNavMesh(FbxMesh* _pFbxMesh, FbxString _MeshName)
+{
+	m_vecContainer.push_back(tContainer{});
+	tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
+
+
+	int iVtxCnt = _pFbxMesh->GetControlPointsCount();
+	Container.Resize(iVtxCnt);
+
+	FbxVector4* pFbxPos = _pFbxMesh->GetControlPoints();
+
+	for (int i = 0; i < iVtxCnt; ++i)
+	{
+		Container.vecPos[i].x = (float)pFbxPos[i].mData[0];
+		Container.vecPos[i].y = (float)pFbxPos[i].mData[2];
+		Container.vecPos[i].z = (float)pFbxPos[i].mData[1];
+	}
+
+	// 폴리곤 개수
+	int iPolyCnt = _pFbxMesh->GetPolygonCount();
+
+	// 재질의 개수 ( ==> SubSet 개수 ==> Index Buffer Count)
+	int iMtrlCnt = _pFbxMesh->GetNode()->GetMaterialCount();
+	Container.vecIdx.resize(iMtrlCnt);
+
+	// 정점 정보가 속한 subset 을 알기위해서...
+	FbxGeometryElementMaterial* pMtrl = _pFbxMesh->GetElementMaterial();
+
+	// 폴리곤을 구성하는 정점 개수
+	int iPolySize = _pFbxMesh->GetPolygonSize(0);
+	if (3 != iPolySize)
+		assert(NULL); // Polygon 구성 정점이 3개가 아닌 경우
+
+	UINT arrIdx[3] = {};
+	UINT iVtxOrder = 0; // 폴리곤 순서로 접근하는 순번
+
+	for (int i = 0; i < iPolyCnt; ++i)
+	{
+		for (int j = 0; j < iPolySize; ++j)
+		{
+			// i 번째 폴리곤에, j 번째 정점
+			int iIdx = _pFbxMesh->GetPolygonVertex(i, j);
+			arrIdx[j] = iIdx;
+
+			GetTangent(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			GetNormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j));
+
+			++iVtxOrder;
+		}
+		UINT iSubsetIdx = pMtrl->GetIndexArray().GetAt(i);
+		Container.vecIdx[iSubsetIdx].push_back(arrIdx[0]);
+		Container.vecIdx[iSubsetIdx].push_back(arrIdx[2]);
+		Container.vecIdx[iSubsetIdx].push_back(arrIdx[1]);
 	}
 }
 
-void CFBXLoader::LoadMesh(FbxMesh * _pFbxMesh)
+//==================================================================
+//						애니메이션 메쉬 로드 
+//==================================================================
+void CFBXLoader::LoadMesh(FbxMesh * _pFbxMesh, FbxString _MeshName)
 {
+	const char* cName = _MeshName;
+
 	m_vecContainer.push_back(tContainer{});
 	tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
 
@@ -259,8 +382,14 @@ void CFBXLoader::LoadMesh(FbxMesh * _pFbxMesh)
 	LoadAnimationData(_pFbxMesh, &Container);
 }
 
-void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh, FbxAMatrix _mat)
+
+//==================================================================
+//						맵 , 오브젝트 로드 
+//==================================================================
+void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh, FbxAMatrix _mat, FbxString _MeshName)
 {
+	const char* cName = _MeshName;
+
 	//컨테이너를 하나 생성해서 넣어준다 
 	m_vecContainer.push_back(tContainer{});
 
@@ -343,24 +472,24 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial * _pMtrlSur)
 		, FbxSurfaceMaterial::sDiffuseFactor);
 
 	// Amb
-	//tMtrlInfo.tMtrl.vAmb = GetMtrlData(_pMtrlSur
-	//	, FbxSurfaceMaterial::sAmbient
-	//	, FbxSurfaceMaterial::sAmbientFactor);
-	//
-	//// Spec
-	//tMtrlInfo.tMtrl.vSpec = GetMtrlData(_pMtrlSur
-	//	, FbxSurfaceMaterial::sSpecular
-	//	, FbxSurfaceMaterial::sSpecularFactor);
-	//
-	//// Emisv
-	//tMtrlInfo.tMtrl.vEmis = GetMtrlData(_pMtrlSur
-	//	, FbxSurfaceMaterial::sEmissive
-	//	, FbxSurfaceMaterial::sEmissiveFactor);
+	tMtrlInfo.tMtrl.vAmb = GetMtrlData(_pMtrlSur
+		, FbxSurfaceMaterial::sAmbient
+		, FbxSurfaceMaterial::sAmbientFactor);
+	
+	// Spec
+	tMtrlInfo.tMtrl.vSpec = GetMtrlData(_pMtrlSur
+		, FbxSurfaceMaterial::sSpecular
+		, FbxSurfaceMaterial::sSpecularFactor);
+	
+	// Emisv
+	tMtrlInfo.tMtrl.vEmis = GetMtrlData(_pMtrlSur
+		, FbxSurfaceMaterial::sEmissive
+		, FbxSurfaceMaterial::sEmissiveFactor);
 	
 	// Texture Name
 	tMtrlInfo.strDiff = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sDiffuse);
-	//tMtrlInfo.strNormal = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sNormalMap);
-	//tMtrlInfo.strSpec = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sSpecular);
+	tMtrlInfo.strNormal = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sNormalMap);
+	tMtrlInfo.strSpec = GetMtrlTextureName(_pMtrlSur, FbxSurfaceMaterial::sSpecular);
 		
 	m_vecContainer.back().vecMtrl.push_back(tMtrlInfo);
 }
@@ -438,7 +567,7 @@ void CFBXLoader::GetNormal(FbxMesh * _pMesh, tContainer * _pContainer, int _iIdx
 	if (1 != iNormalCnt)
 		assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
 
-					  // 종법선 data 의 시작 주소
+					  // 법선 data 의 시작 주소
 	FbxGeometryElementNormal* pNormal = _pMesh->GetElementNormal();
 	UINT iNormalIdx = 0;
 
@@ -471,11 +600,20 @@ void CFBXLoader::GetUV(FbxMesh * _pMesh, tContainer * _pContainer, int _iIdx, in
 	UINT iUVIdx = 0;
 	if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
 		iUVIdx = _iIdx;
+	else if (pUV->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+	{
+		iUVIdx = _iUVIndex;
+	}
 	else
 		iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
 
-	iUVIdx = _iUVIndex;
+	
+
+	FbxLayerElement::EReferenceMode mode = pUV->GetReferenceMode();
+
+
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
+
 	_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
 	_pContainer->vecUV[_iIdx].y = 1.f - (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
 }
@@ -564,13 +702,13 @@ void CFBXLoader::LoadTexture()
 				switch (k)
 				{
 				case 0: m_vecContainer[i].vecMtrl[j].strDiff = path_dest; break;
-				case 1: m_vecContainer[i].vecMtrl[j].strNormal = path_dest; break;
-				case 2: m_vecContainer[i].vecMtrl[j].strSpec = path_dest; break;
+				//case 1: m_vecContainer[i].vecMtrl[j].strNormal = path_dest; break;
+				//case 2: m_vecContainer[i].vecMtrl[j].strSpec = path_dest; break;
 				}
 			}		
 		}
 		path_origin = path_origin.parent_path();
-		remove_all(path_origin);
+		//remove_all(path_origin);
 	}
 }
 

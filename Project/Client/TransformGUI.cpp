@@ -39,42 +39,6 @@ void TransformGUI::lateupdate()
 
 void TransformGUI::render()
 {
-#pragma region Origin
-
-
-
-   // CTransform* pTransform = GetTargetObj()->Transform();
-   //
-   // float arrData[3][3] = {};
-   // Vec3 vData[3] = { pTransform->GetLocalPos(), pTransform->GetLocalScale(), pTransform->GetLocalRot() };
-   //
-   // for (int i = 0; i < 3; ++i)
-   // {
-   //     for (int j = 0; j < 3; ++j)
-   //     {
-   //         arrData[i][j] = vData[i][j];
-   //     }
-   // }
-   //
-   // arrData[2][0] *= 180.f / XM_PI;
-   // arrData[2][1] *= 180.f / XM_PI;
-   // arrData[2][2] *= 180.f / XM_PI;
-   //
-   // Start();
-   // ImGui::Text("Position\t");  ImGui::SameLine(); ImGui::DragFloat3("##Position", arrData[0]);
-   // ImGui::Text("Scale   \t");  ImGui::SameLine(); ImGui::DragFloat3("##Scale", arrData[1]);
-   // ImGui::Text("Rotation\t");  ImGui::SameLine(); ImGui::DragFloat3("##Rotation", arrData[2]);
-   // End();
-   //
-   // arrData[2][0] /= 180.f / XM_PI;
-   // arrData[2][1] /= 180.f / XM_PI;
-   // arrData[2][2] /= 180.f / XM_PI;
-   //
-   // pTransform->SetLocalPos(Vec3(arrData[0]));
-   // pTransform->SetLocalScale(Vec3(arrData[1]));
-   // pTransform->SetLocalRot(Vec3(arrData[2]));
-#pragma endregion
-
     CTransform* Transform = GetTargetObj()->Transform();
 
     float ArrData[3][3] = {};
@@ -177,6 +141,32 @@ void TransformGUI::DrawGizmo(int _Mode)
 
     ImGuizmo::Manipulate(ViewMat, ViewProj, OP, ImGuizmo::MODE::WORLD, objectMatrix);
     ImGuizmo::ViewManipulate(ViewMat, 100000.0f, ImVec2((float)rt.right - 144.0f, (float)rt.bottom - 185.0f), ImVec2(128, 128), 0x10101010);
+
+
+   // objectMatrix
+
+    CGameObject* pParent = GetTargetObj()->GetParent();
+    Matrix ParentMatIvn = {};
+
+    if (nullptr != pParent)
+    {
+        Matrix ParentMatIvn = pParent->Transform()->GetWorldInvMat();
+
+        Matrix ChildMat =
+        {
+        objectMatrix[0],objectMatrix[1],objectMatrix[2],objectMatrix[3],
+        objectMatrix[4],objectMatrix[5],objectMatrix[6],objectMatrix[7],
+        objectMatrix[8],objectMatrix[9],objectMatrix[10],objectMatrix[11],
+        objectMatrix[12],objectMatrix[13],objectMatrix[14],objectMatrix[15],
+        };
+
+        ChildMat *= ParentMatIvn;
+
+        objectMatrix[0] = ChildMat._11; objectMatrix[1] = ChildMat._12; objectMatrix[2] = ChildMat._13; objectMatrix[3] = ChildMat._14;
+        objectMatrix[4] = ChildMat._21; objectMatrix[5] = ChildMat._22; objectMatrix[6] = ChildMat._23; objectMatrix[7] = ChildMat._24;
+        objectMatrix[8] = ChildMat._31; objectMatrix[9] = ChildMat._32; objectMatrix[10] = ChildMat._33; objectMatrix[11] = ChildMat._34;
+        objectMatrix[12] = ChildMat._41; objectMatrix[13] = ChildMat._42; objectMatrix[14] = ChildMat._43; objectMatrix[15] = ChildMat._44;
+    }
 
     float matrixTranslation[3], matrixRotation[3], matrixScale[3];
     ImGuizmo::DecomposeMatrixToComponents(objectMatrix, matrixTranslation, matrixRotation, matrixScale);

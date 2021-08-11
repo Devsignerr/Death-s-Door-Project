@@ -5,7 +5,11 @@ class CTestMonsterScript : public CMonsterScript
 public:
 	void awake() override;
 	void update() override;
-
+	float Test;
+	Vec3  RevolutionPos;
+	float fRadius;
+	UINT  iSliceCount;
+	float fTheta;
 private:
 	void Idle() override;
 	void Move() override;
@@ -16,6 +20,10 @@ private:
 	void Death() override;
 public:
 	CLONE(CTestMonsterScript);
+
+	virtual void SaveToScene(FILE* _pFile);
+	virtual void LoadFromScene(FILE* _pFile);
+
 public:
 	CTestMonsterScript();
 	~CTestMonsterScript();

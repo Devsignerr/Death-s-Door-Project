@@ -6,7 +6,8 @@
 #include "CGameObject.h"
 
 CEventMgr::CEventMgr()
-	: m_bEvent(false)
+	: m_bEvent(false),
+	m_bDeadEventExist(false)
 {
 
 }
@@ -35,6 +36,7 @@ void CEventMgr::update()
 			
 			delete m_vecDeadObj[i];
 		}		
+		m_bDeadEventExist = true;
 	}
 	m_vecDeadObj.clear();
 
@@ -42,7 +44,18 @@ void CEventMgr::update()
 	// ==========
 	// Event 처리
 	// ==========
-	m_bEvent = false;
+
+	//만약 객체를 지우는 이벤트가 있었다면 
+	if (m_bDeadEventExist)
+	{
+		m_bEvent = true;
+		m_bDeadEventExist = false;
+	}
+	else 
+	{
+		m_bEvent = false;
+	}
+		
 
 	while (!m_event.empty())
 	{

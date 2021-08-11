@@ -15,6 +15,8 @@ void CCameraEx::finalupdate()
 	CalViewMat();
 	CalProjMat();
 	CalRay();
+
+	m_frustum.finalupdate();
 		
 	if (KEY_TAP(KEY_TYPE::LBTN))
 	{

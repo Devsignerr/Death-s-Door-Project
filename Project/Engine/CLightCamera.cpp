@@ -210,7 +210,9 @@ void CLightCamera::render_shadowmap()
 			}
 			else
 			{
+				CInstancingBuffer::GetInst()->SingleUpdate();
 				instObj.pObj->MeshRender()->render_shadowmap(instObj.iMtrlIdx);
+				CInstancingBuffer::GetInst()->SingleClear();
 			}
 		}
 	}

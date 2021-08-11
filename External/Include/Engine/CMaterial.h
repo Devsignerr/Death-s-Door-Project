@@ -35,8 +35,11 @@ public:
         m_tInfo.iAnim3D[1] = _iBoneCount;
     }
 
+    tMtrlInfo& GetMtrlInfo() { return m_tInfo; }
+
 
     void SetDefault() { m_bDefault = true; }
+    bool IsDefault() { return m_bDefault; }
     void* GetData(SHADER_PARAM _eType);
     void UpdateData(int _iInstancing = 0);
     void Clear();

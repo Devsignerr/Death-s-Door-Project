@@ -32,13 +32,15 @@
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
-	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
+	, m_frustum(this)
+	, m_eProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_vScale(Vec2(1.f, 1.f))
 	, m_fFOV(XM_PI / 2.f)
 	, m_tRay{}
 	, m_fFar(1000.f)
 	, m_iLayerCheck(0)
 {
+	m_frustum.init();
 	POINT ptRes = CDevice::GetInst()->GetBufferResolution();
 	m_vProjRange = Vec2((float)ptRes.x, (float)ptRes.y);
 }
@@ -59,6 +61,8 @@ void CCamera::finalupdate()
 	CalProjMat();
 
 	CalRay();
+
+	m_frustum.finalupdate();
 
 	CRenderMgr::GetInst()->RegisterCamera(this);
 }
@@ -115,8 +119,15 @@ void CCamera::SortObject()
 				}
 
 
-				// 절두체 테스트(미구현)
-
+				// 절두체 테스트(구현)
+				if (vecObj[j]->IsFrustum())
+				{
+					Vec3 vWorldPos = vecObj[j]->Transform()->GetWorldPos();
+					if (!m_frustum.CheckFrustum(vWorldPos))
+					{
+						continue;
+					}
+				}
 
 				UINT iMtrlCount = 0;
 
@@ -478,6 +489,8 @@ void CCamera::CalProjMat()
 		POINT ptRes = CCore::GetInst()->GetWndResolution();
 		m_matProj = XMMatrixOrthographicLH(m_vProjRange.x * m_vScale.x, m_vProjRange.y * m_vScale.y, 1.f, m_fFar);
 	}
+
+	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 }
 
 void CCamera::CalRay()
@@ -511,6 +524,7 @@ void CCamera::SaveToScene(FILE* _pFile)
 	fwrite(&m_vScale, sizeof(Vec2), 1, _pFile);
 	fwrite(&m_fFOV, sizeof(float), 1, _pFile);
 	fwrite(&m_iLayerCheck, sizeof(UINT), 1, _pFile);
+	fwrite(&m_fFar, sizeof(float), 1, _pFile);
 }
 
 void CCamera::LoadFromScene(FILE* _pFile)
@@ -521,4 +535,5 @@ void CCamera::LoadFromScene(FILE* _pFile)
 	fread(&m_vScale, sizeof(Vec2), 1, _pFile);
 	fread(&m_fFOV, sizeof(float), 1, _pFile);
 	fread(&m_iLayerCheck, sizeof(UINT), 1, _pFile);
+	fread(&m_fFar, sizeof(float), 1, _pFile);
 }

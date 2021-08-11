@@ -22,13 +22,12 @@
 #include <Engine\CSceneMgr.h>
 #include <Engine/CEventMgr.h>
 #include <Engine/CCollider3D.h>
+#include <Engine/CAnimator3D.h>
 
 #include <Script\CPlayerScript.h>
 #include <Script\CMonsterScript.h>
-#include <Script\CMissileScript.h>
 #include <Script\CSkyBoxScript.h>
 #include <Script/CCameraScript.h>
-#include <Script/CHsh.h>
 
 #include<Engine/CLayer.h>
 
@@ -69,8 +68,11 @@ void CreateTestScene()
 	Ptr<CTexture> pSkyBoxTex = CResMgr::GetInst()->Load<CTexture>(L"SkyBox_01", L"texture\\skybox\\Sky02.jpg");
 	Ptr<CTexture> pSkyBoxTexArr = CResMgr::GetInst()->Load<CTexture>(L"SkyBox_Cube_Water", L"texture\\skybox\\SkyWater.dds");
 	CResMgr::GetInst()->Load<CTexture>(L"SkyBox_Cube_Dawn", L"texture\\skybox\\SkyDawn.dds");
+	CResMgr::GetInst()->Load<CTexture>(L"Room_MainHall-mat3-_Emissive", L"texture\\FBXTexture\\Room_MainHall-mat3-_Emissive.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Room_Right_Emis", L"texture\\FBXTexture\\Room_Right_Emis.png");
 
-
+	if(nullptr==CResMgr::GetInst()->FindRes<CTexture>(L"Lantern_Emis"))
+		CResMgr::GetInst()->Load<CTexture>(L"Lantern_Emis", L"texture\\FBXTexture\\Lantern_Emis.png");
 
 	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"SkyBoxMtrl");
 	pMtrl->SetData(SHADER_PARAM::TEX_0, pSkyBoxTex.Get());
@@ -86,7 +88,7 @@ void CreateTestScene()
 	pObj->AddComponent(new CCameraScript);
 
 	pObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	pObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	pObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pObj->Camera()->SetFar(1000000.f);
 	pObj->Camera()->SetLayerAllCheck();
 
@@ -111,11 +113,6 @@ void CreateTestScene()
 
 	pCurScene->AddObject(pObj, 0);
 
-	// Clone
-	/*pObj = pObj->Clone();
-	pObj->Light3D()->SetDiffusePow(Vec3(1.f, 1.f, 1.f));
-	pObj->Transform()->SetLocalPos(Vec3(400.f, 200.f, 500.f));
-	pCurScene->AddObject(pObj, 0);*/
 
 	// =============
 	// SkyBox Object
@@ -133,143 +130,13 @@ void CreateTestScene()
 
 	pCurScene->AddObject(pObj, 0);
 
-
-	// ==============
-	// Player Object
-	// ==============
-	//pObj = new CGameObject;
-	//pObj->SetName(L"Plane");
-	//pObj->SetDynamicShadow(true);
-
-	//pObj->AddComponent(new CTransform);
-	//pObj->AddComponent(new CMeshRender);
-	////pObj->AddComponent(new CPlayerScript);
-
-	//pObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	//pObj->Transform()->SetLocalScale(Vec3(4000.f, 4000.f, 100.f));
-	//pObj->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
-	//pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	////CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl")->SetData(SHADER_PARAM::TEX_0, pTileTex.Get());
-	////CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl")->SetData(SHADER_PARAM::TEXCUBE_0, pSkyBoxTexArr.Get());
-
-	//pCurScene->AddObject(pObj, 0);
-
-
-	// ============
-	// FBX Loading
-	// ============
-	// ========
-	// FBX Load
-	// ========
-
-	//D3DXIntersectTri();
-
-	//CResMgr::GetInst()->Load<CTexture>(L"bruteTex2", L"texture\\FBXTexture\\bruteGruntTexture_Multi2.png");
-
-	//wstring FileName = { L"Monster" };
-	//
-	//Ptr<CMeshData> pMeshData = nullptr;
-	//
-	////CResMgr::GetInst()->LoadFBX(FileName + L".fbx");
-	////vector<CMeshData*>& pVecMeshData = CResMgr::GetInst()->GetMeshDataVec();
-	//  
-	//int idx = 0;	
-	//
-	//while (true) {
-	//
-	//	if (nullptr == CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\"+ FileName + std::to_wstring(idx) + L".mdat"))
-	//		pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\" + FileName + std::to_wstring(idx) + L".mdat", L"meshdata\\" + FileName + std::to_wstring(idx) + L".mdat");
-	//	else
-	//	{
-	//		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\" + FileName + std::to_wstring(idx) + L".mdat");
-	//	}
-	//
-	//	if (pMeshData->IsLoadFail())
-	//		break;
-	//
-	//	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\Monster.mdat", L"meshdata\\Monster.mdat");
-	//	CGameObject* pObj = nullptr;
-	//
-	//	
-	//	for (int i = 0; i < 1; i++) {
-	//		wstring str = { L"Player Object" };
-	//		pObj = pMeshData->Instantiate();
-	//		pObj->SetName(str);
-	//		pObj->SetDynamicShadow(true);
-	//
-	//		pCurScene->AddObject(pObj,0);
-	//	}
-	//	idx++;	
-	//}
-
-	//CGameObject* pColObj = nullptr;
-	//pColObj = new CGameObject;
-	//pColObj->SetName(L"Coll1");
-	//pColObj->AddComponent(new CTransform);
-	//pColObj->AddComponent(new CCollider2D);
-	//pColObj->AddComponent(new CMeshRender);
-	//pColObj->Transform()->SetLocalScale(Vec3(10, 10, 10));
-	//pCurScene->AddObject(pColObj, 1);
-	//
-	//
-	//pColObj = new CGameObject;
-	//pColObj->SetName(L"Coll2");	
-	//pColObj->AddComponent(new CTransform);
-	//pColObj->AddComponent(new CCollider2D);
-	//pColObj->AddComponent(new CMeshRender);
-	//pColObj->Transform()->SetLocalScale(Vec3(20, 20, 20));
-	//pColObj->Transform()->SetLocalRot(Vec3(1.57, 0, 0));
-	//pCurScene->AddObject(pColObj, 2);
-	//
-	//CCollisionMgr::GetInst()->CollisionCheck(1,2);
-
-	// ===============
-	// Terrrain Object
-	// ===============
-	//pObj = new CGameObject;
-	//pObj->SetName(L"Terrain");
-
-	//pObj->AddComponent(new CTransform);	
-	//pObj->AddComponent(new CTerrain);
-	//
-	////Ptr<CTexture> pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap_01", L"texture\\HeightMap\\HeightMap_01.jpg");
-	////pObj->Terrain()->SetHeightMap(pHeightMap);
-	//pObj->Terrain()->CreateHeightMap(2048, 2048);
-	//pObj->Transform()->SetLocalPos(Vec3(-9600.f, 10.f, -9600.f));
-	//pObj->Transform()->SetLocalScale(Vec3(300.f, 1000.f, 300.f));	
-	//pObj->Terrain()->SetFace(64, 64);	
-
-	//pCurScene->AddObject(pObj, 0);
-
-
-
-	pObj = new CGameObject;
-	pObj->SetName(L"Plane");
-	pObj->SetDynamicShadow(true);
-	
-	pObj->AddComponent(new CTransform);
-	pObj->AddComponent(new CMeshRender);
-	
-	pObj->Transform()->SetLocalPos(Vec3(0.f, 0.0f, 0.f));
-	pObj->Transform()->SetLocalScale(Vec3(4000.f, 4000.f, 4000.f));
-	pObj->Transform()->SetLocalRot(Vec3(DirectX::XM_PI / 2.f, 0.f, 0.f));
-	
-	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	//JRESMGR::GetInst()->FindRes<JMATERIAL>(L"Std3DMaterial")->SetData(SHADER_PARAM::TEX_0, TileTex.Get());
-	//JRESMGR::GetInst()->FindRes<JMATERIAL>(L"Std3DMaterial")->SetData(SHADER_PARAM::TEXCUBE_0, SkyBoxTexArr.Get());
-	
-	pCurScene->AddObject(pObj, 0);
-
 	
 	pObj = new CGameObject;
 	pObj->SetName(L"Collider Object2");
 	
 	pObj->AddComponent(new CTransform);
 	pObj->AddComponent(new CMeshRender);
-	pObj->AddComponent(new CCollider3D);
+	//pObj->AddComponent(new CActorScript);
 	//pObj->AddComponent(new PLAYERSCRIPT);
 	//
 	pObj->Transform()->SetLocalPos(Vec3(800.f, 200.0f, 0.f));
@@ -278,38 +145,7 @@ void CreateTestScene()
 	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 	pCurScene->AddObject(pObj, 10);
-
-	pObj = new CGameObject;
-	pObj->SetName(L"Collider Object");
-
-	pObj->AddComponent(new CTransform);
-	pObj->AddComponent(new CMeshRender);
-	pObj->AddComponent(new CCollider3D);
-	//pObj->AddComponent(new PLAYERSCRIPT);
-	//
-	pObj->Transform()->SetLocalPos(Vec3(0.f, 200.0f, 0.f));
-	pObj->Transform()->SetLocalScale(Vec3(200.0f, 200.0f, 200.0f));
-
-	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-	pCurScene->AddObject(pObj, 11);
 	
-	//
-	//pObj = new JGAMEOBJECT;
-	//pObj->SetName(L"Collider Object");
-	//
-	//pObj ->AddComponent(new JTRANSFORM);
-	//pObj ->AddComponent(new JMESHRENDER);
-	//pObj ->AddComponent(new JCOLLIDER3D);
-	//pObj ->AddComponent(new TESTMONSTERSCRIPT);
-	//
-	//pObj->Transform()->SetLocalPos(Vec3(0.f, 0.0f, 0.f));
-	//pObj->Transform()->SetLocalScale(Vec3(200.0f, 200.0f, 200.0f));
-	//
-	//pObj ->MeshRender()->SetMesh(JRESMGR::GetInst()->FindRes<JMESH>(L"Cube_C3D_Mesh"));
-	//pObj ->MeshRender()->SetMaterial(JRESMGR::GetInst()->FindRes<JMATERIAL>(L"Collider3DMaterial"), 0);
-	//CurScene->AddObject(pObj, 10);
-
 
 	// Collision Check
 	CCollisionMgr::GetInst()->CollisionCheck(0, 1);

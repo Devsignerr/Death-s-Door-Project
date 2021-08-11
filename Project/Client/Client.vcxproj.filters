@@ -104,6 +104,12 @@
     <Filter Include="Manager\ImGUIMgr\ImGUI\Imguizmo">
       <UniqueIdentifier>{f99ed917-014f-480a-917c-aaeb7df09adf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\InspectorGUI\ComponentGUI\CameraGUI">
+      <UniqueIdentifier>{653cf6c2-ce66-41dd-bc4c-eea22fd57b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\InspectorGUI\ResInfoGUI\PrefabGUI">
+      <UniqueIdentifier>{3012a2c1-bbd9-4d8d-9a94-22a875596e23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -235,6 +241,12 @@
     <ClInclude Include="ImGuizmo.h">
       <Filter>Manager\ImGUIMgr\ImGUI\Imguizmo</Filter>
     </ClInclude>
+    <ClInclude Include="CameraGUI.h">
+      <Filter>GUI\InspectorGUI\ComponentGUI\CameraGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefabGUI.h">
+      <Filter>GUI\InspectorGUI\ResInfoGUI\PrefabGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -364,6 +376,12 @@
     </ClCompile>
     <ClCompile Include="ImGuizmo.cpp">
       <Filter>Manager\ImGUIMgr\ImGUI\Imguizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraGUI.cpp">
+      <Filter>GUI\InspectorGUI\ComponentGUI\CameraGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="PrefabGUI.cpp">
+      <Filter>GUI\InspectorGUI\ResInfoGUI\PrefabGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -43,6 +43,25 @@ void MaterialGUI::render()
 		ImGui::InputText("##ShaderName", (char*)strShaderName.c_str(), 100, ImGuiInputTextFlags_ReadOnly);
 		ImGui::SameLine();
 	}
+
+	ImGui::Text("Material Info");
+
+	tMtrlInfo& Info = pMtrl->GetMtrlInfo();
+
+    float fDiff[4] = { Info.vDiff.x,Info.vDiff.y,Info.vDiff.z,Info.vDiff.w };
+    float fSpec[4] = { Info.vSpec.x,Info.vSpec.y,Info.vSpec.z,Info.vSpec.w };
+    float fAmb[4] = { Info.vAmb.x,Info.vAmb.y,Info.vAmb.z,Info.vAmb.w };
+    float fEmis[4] = { Info.vEmis.x,Info.vEmis.y,Info.vEmis.z,Info.vEmis.w };
+
+	ImGui::InputFloat4("Diff", fDiff);
+	ImGui::InputFloat4("Spec", fSpec);
+	ImGui::InputFloat4("Amb", fAmb);
+	ImGui::InputFloat4("Emis", fEmis);
+
+	pMtrl->SetMaterialCoefficient(Vec4(fDiff[0], fDiff[1], fDiff[2], fDiff[3]),
+								  Vec4(fSpec[0], fSpec[1], fSpec[2], fSpec[3]),
+								  Vec4(fAmb[0], fAmb[1], fAmb[2], fAmb[3]),
+								  Vec4(fEmis[0], fEmis[1], fEmis[2], fEmis[3]));
 	
 
 	if (ImGui::Button("Select##Shader"))

@@ -1,10 +1,13 @@
 #pragma once
 #include "CComponent.h"
+#include "CFrustum.h"
 
 class CCamera :
     public CComponent
 {
 protected:
+    CFrustum        m_frustum; //카메라는 프러스텀 컬링용 객체를 가진다 
+
     PROJ_TYPE       m_eProjType;    
     Vec2            m_vScale;   // 직교투영 범위 배율
     Vec2            m_vProjRange;
@@ -22,8 +25,7 @@ protected:
 
     UINT            m_iLayerCheck;
 
-    //vector<CGameObject*>    m_vecDeferred;
-    //vector<CGameObject*>    m_vecForward;    
+    vector<CGameObject*>    m_vecDeferredParticle; //디퍼드 가장 마지막 단계에 그려질 파티클 물체 . 블룸 처리도 가능해짐 
     vector<CGameObject*>    m_vecParticle;
     vector<CGameObject*>    m_vecPostEffect;
     
@@ -48,10 +50,12 @@ public:
     Vec2 GetScale() { return m_vScale; }
     const tRay& GetRay() { return m_tRay; }
 
+    CFrustum& GetFrustum() { return m_frustum; }
+
     const Matrix& GetViewMat() { return m_matView; }
     const Matrix& GetViewInvMat() { return m_matViewInv; }
     const Matrix& GetProjMat() { return m_matProj; }
-
+    const Matrix& GetProjInvMat() { return m_matProjInv; }
 
 public:    
     void SortObject();

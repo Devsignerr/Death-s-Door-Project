@@ -7,20 +7,11 @@
     <ClInclude Include="framework.h">
       <Filter>Default</Filter>
     </ClInclude>
-    <ClInclude Include="CMissileScript.h">
-      <Filter>ScriptCode</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>ScriptCode</Filter>
-    </ClInclude>
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CCameraScript.h">
       <Filter>ScriptCode</Filter>
     </ClInclude>
     <ClInclude Include="CSkyBoxScript.h">
-      <Filter>ScriptCode</Filter>
-    </ClInclude>
-    <ClInclude Include="CHsh.h">
       <Filter>ScriptCode</Filter>
     </ClInclude>
     <ClInclude Include="CMonsterScript.h">
@@ -31,6 +22,87 @@
     </ClInclude>
     <ClInclude Include="CTestMonsterScript.h">
       <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>ScriptCode\Actor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CBatScript.h">
+      <Filter>ScriptCode\Actor\Monster\Bat</Filter>
+    </ClInclude>
+    <ClInclude Include="CBazookaBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Bazooka</Filter>
+    </ClInclude>
+    <ClInclude Include="CBazookaScript.h">
+      <Filter>ScriptCode\Actor\Monster\Bazooka</Filter>
+    </ClInclude>
+    <ClInclude Include="CNailScript.h">
+      <Filter>ScriptCode\Actor\Monster\Nail</Filter>
+    </ClInclude>
+    <ClInclude Include="CTongueScript.h">
+      <Filter>ScriptCode\Actor\Monster\Tongue</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpiderScript.h">
+      <Filter>ScriptCode\Actor\Monster\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpearManScript.h">
+      <Filter>ScriptCode\Actor\Monster\SpearMan</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkullScript.h">
+      <Filter>ScriptCode\Actor\Monster\Skull</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlantScript.h">
+      <Filter>ScriptCode\Actor\Monster\Plant</Filter>
+    </ClInclude>
+    <ClInclude Include="CIronmaceScript.h">
+      <Filter>ScriptCode\Actor\Monster\Ironmace</Filter>
+    </ClInclude>
+    <ClInclude Include="CTongueBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Tongue</Filter>
+    </ClInclude>
+    <ClInclude Include="CProjectile.h">
+      <Filter>ScriptCode\Actor\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlantBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Plant</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkullBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Skull</Filter>
+    </ClInclude>
+    <ClInclude Include="CTestMonsterAttackEffect.h">
+      <Filter>ScriptCode\Actor\Projectile\TestMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="CRandomMgrScript.h">
+      <Filter>ScriptCode\System</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerIdle.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerRun.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerCharge.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerSlash.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerRoll.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerHit.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerArrow.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerBomb.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerMagic.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerHook.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,25 +124,70 @@
     <Filter Include="ScriptCode\Actor\Monster\TestMonster">
       <UniqueIdentifier>{1ab8d4dd-d6c0-4419-ab1d-e77d1f6c105a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile">
+      <UniqueIdentifier>{2b10c0b4-c86e-45df-bdb3-254511d8d39a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Bazooka">
+      <UniqueIdentifier>{86c9704d-8160-496c-bf61-c7a2904ccd51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Plant">
+      <UniqueIdentifier>{d415f07f-f1a8-4004-96a3-7394e56de30f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Skull">
+      <UniqueIdentifier>{07c7b6f8-03c4-477e-aa7d-e0373319ff38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\TestMonster">
+      <UniqueIdentifier>{4c584150-1b87-4636-8d3b-87e2fcb5d1a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Tongue">
+      <UniqueIdentifier>{949b8665-a7aa-4f85-9f1e-65a0542d085a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Bazooka">
+      <UniqueIdentifier>{1ba42152-2fc3-4049-ac23-f77530b67c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Ironmace">
+      <UniqueIdentifier>{03a5b417-db83-449a-b287-b3b28cdde2e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Nail">
+      <UniqueIdentifier>{c970c519-e91f-4626-a2f8-ca16368b0452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Plant">
+      <UniqueIdentifier>{1fd80b94-55cb-43fd-8d40-8c4caef97a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Skull">
+      <UniqueIdentifier>{5f573f37-d609-465f-83b6-496cb0fe5584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\SpearMan">
+      <UniqueIdentifier>{e7491477-38e1-4176-b4b0-f57d0738ece4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Spider">
+      <UniqueIdentifier>{4b91a200-0bcc-4980-ae10-2d67e9600f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Tongue">
+      <UniqueIdentifier>{0ce63cea-7414-4560-adc3-9f16a8fd78d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Monster\Bat">
+      <UniqueIdentifier>{578eccf0-4633-4d9d-ad8c-4f8756debc65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System">
+      <UniqueIdentifier>{99b0343f-915d-415f-a01d-b46395c8b2e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\FSM">
+      <UniqueIdentifier>{9a7e1e0d-033e-49d5-aeed-fb3b01924e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\FSM\Player">
+      <UniqueIdentifier>{d0a34332-1bd0-466f-85d1-093f26d2d9ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
-    </ClCompile>
-    <ClCompile Include="CMissileScript.cpp">
-      <Filter>ScriptCode</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>ScriptCode</Filter>
     </ClCompile>
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="CCameraScript.cpp">
       <Filter>ScriptCode</Filter>
     </ClCompile>
     <ClCompile Include="CSkyBoxScript.cpp">
-      <Filter>ScriptCode</Filter>
-    </ClCompile>
-    <ClCompile Include="CHsh.cpp">
       <Filter>ScriptCode</Filter>
     </ClCompile>
     <ClCompile Include="CMonsterScript.cpp">
@@ -81,6 +198,87 @@
     </ClCompile>
     <ClCompile Include="CTestMonsterScript.cpp">
       <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>ScriptCode\Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CBatScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Bat</Filter>
+    </ClCompile>
+    <ClCompile Include="CBazookaBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Bazooka</Filter>
+    </ClCompile>
+    <ClCompile Include="CBazookaScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Bazooka</Filter>
+    </ClCompile>
+    <ClCompile Include="CNailScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Nail</Filter>
+    </ClCompile>
+    <ClCompile Include="CTongueScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Tongue</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpiderScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpearManScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\SpearMan</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkullScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Skull</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlantScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Plant</Filter>
+    </ClCompile>
+    <ClCompile Include="CIronmaceScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Ironmace</Filter>
+    </ClCompile>
+    <ClCompile Include="CTongueBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Tongue</Filter>
+    </ClCompile>
+    <ClCompile Include="CProjectile.cpp">
+      <Filter>ScriptCode\Actor\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlantBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Plant</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkullBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Skull</Filter>
+    </ClCompile>
+    <ClCompile Include="CTestMonsterAttackEffect.cpp">
+      <Filter>ScriptCode\Actor\Projectile\TestMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="CRandomMgrScript.cpp">
+      <Filter>ScriptCode\System</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerIdle.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerRun.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerCharge.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerSlash.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerRoll.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerHit.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerArrow.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerBomb.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerMagic.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerHook.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

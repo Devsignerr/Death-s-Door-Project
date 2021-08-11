@@ -10,8 +10,6 @@
 #include "CGameObject.h"
 #include "CAnimator3D.h"
 
-vector<CMeshData*> CMeshData::m_pVecMeshData = {};
-
 CMeshData::CMeshData()
 {
 }
@@ -21,47 +19,67 @@ CMeshData::~CMeshData()
 }
 
 
-CGameObject* CMeshData::Instantiate()
+CGameObject* CMeshData::Instantiate(FBXLOAD_TYPE _Type)
 {
-	// Mesh
-	// Material
-
-	CGameObject* pNewObj = new CGameObject;
-	pNewObj->AddComponent(new CTransform);
-	pNewObj->AddComponent(new CMeshRender);
-
-	pNewObj->MeshRender()->SetMesh(m_pMesh);
-
-	for (UINT i = 0; i < m_vecMtrl.size(); ++i)
+	if (_Type == FBXLOAD_TYPE::ANIMATION_LOAD)
 	{
-		pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
-	}
+		CGameObject* pNewObj = new CGameObject;
+		pNewObj->AddComponent(new CTransform);
+		pNewObj->AddComponent(new CMeshRender);
 
-	if (false == m_pMesh->IsAnimMesh())
+		pNewObj->MeshRender()->SetMesh(m_pMesh);
+
+		for (UINT i = 0; i < m_vecMtrl.size(); ++i)
+		{
+			pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
+		}
+
+		if (false == m_pMesh->IsAnimMesh())
+			return pNewObj;
+
+		CAnimator3D* pAnimator = new CAnimator3D;
+		pNewObj->AddComponent(pAnimator);
+
+		pAnimator->SetBones(m_pMesh->GetBones());
+		pAnimator->SetAnimClip((vector<tMTAnimClip>*)m_pMesh->GetAnimClip());
+
 		return pNewObj;
+	}
+	else 
+	{
+		CGameObject* pNewObj = new CGameObject;
+		pNewObj->AddComponent(new CTransform);
+		pNewObj->AddComponent(new CMeshRender);
 
-	CAnimator3D* pAnimator = new CAnimator3D;
-	pNewObj->AddComponent(pAnimator);
+		pNewObj->MeshRender()->SetMesh(m_pMesh);
 
-	pAnimator->SetBones(m_pMesh->GetBones());
-	pAnimator->SetAnimClip((vector<tMTAnimClip>*)m_pMesh->GetAnimClip());
-
-	return pNewObj;
+		for (UINT i = 0; i < m_vecMtrl.size(); ++i)
+		{
+			pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
+		}
+		return pNewObj;
+	}
 }
 
-vector<CMeshData*>& CMeshData::LoadFromFBX(const wstring& _strPath)
+void CMeshData::LoadFromFBX(const wstring& _strPath, FBXLOAD_TYPE _LoadType)
 {
 	wstring strFullPath = CPathMgr::GetResPath();
 	strFullPath += _strPath;
 
 	CFBXLoader loader;
 	loader.init();
-	loader.LoadFbx(strFullPath);
+	loader.LoadFbx(strFullPath, _LoadType);
+	
+	//로더에서 로드한 메쉬의 크기만큼 Cnt가 나온다
+	//위 Cnt 만큼 반복시켜 메쉬를 생성해 ResMgr에 넣어준다 
 
-	int ContainerCnt = loader.GetContainerCount();
+	CMesh::CreateFromContainer(loader, loader.GetContainerCount());
 
-	// 메쉬 가져오기
-	vector<CMesh*> pVecMesh = CMesh::CreateFromContainer(loader, ContainerCnt);
+	if(_LoadType==FBXLOAD_TYPE::NAVMESH_LOAD)
+		loader.CreateNavMesh();
+
+	//그렇게 생성한 메쉬 벡터를 받아온다 
+	vector<CMesh*> pVecMesh = CResMgr::GetInst()->GetMeshVec();
 
 	for (UINT j = 0; j < pVecMesh.size(); ++j) {
 		// ResMgr 에 메쉬 등록
@@ -85,14 +103,17 @@ vector<CMeshData*>& CMeshData::LoadFromFBX(const wstring& _strPath)
 			vecMtrl.push_back(pMtrl);
 		}
 
+		
 		CMeshData* pMeshData = new CMeshData;
 		pMeshData->m_pMesh = pVecMesh[j];
 		pMeshData->m_vecMtrl = vecMtrl;
+		if (_LoadType == FBXLOAD_TYPE::NAVMESH_LOAD)
+		{
+			pMeshData->m_pMesh->SetNavMesh(true);
+		}
 
-		m_pVecMeshData.push_back(pMeshData);
+		CResMgr::GetInst()->GetMeshDataVec().push_back(pMeshData);
 	}
-
-	return m_pVecMeshData;
 }
 
 void CMeshData::Save(const wstring& _strFilePath)

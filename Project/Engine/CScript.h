@@ -28,7 +28,7 @@ struct tDataDesc;
 class CScript :
     public CComponent
 {
-private:
+protected:
     int                 m_iScriptType;
     vector<tDataDesc>   m_vecDesc;
 

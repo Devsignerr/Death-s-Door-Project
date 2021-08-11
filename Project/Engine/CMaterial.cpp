@@ -13,6 +13,10 @@ CMaterial::CMaterial()
 	, m_pShader(nullptr)
 	, m_bDefault(false)
 {
+	SetMaterialCoefficient(Vec4(0.f, 0.f, 0.f, 0.f)
+		, Vec4(1.f, 1.f, 1.f, 1.f)
+		, Vec4(1.f, 1.f, 1.f, 1.f)
+		, Vec4(1.f, 1.f, 1.f, 1.f));
 }
 
 CMaterial::CMaterial(const CMaterial& _origin)

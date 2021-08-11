@@ -99,7 +99,7 @@ tLightColor CalLight(int _LightIdx, float3 _vViewNormal, float3 _vViewPos)
         float3 vReflect = normalize(vViewLightDir + 2 * (dot(-vViewLightDir, _vViewNormal)) * _vViewNormal);
         float3 vEye = normalize(_vViewPos);
         fSpecPow = saturate(dot(vReflect, -vEye));
-        fSpecPow = pow(fSpecPow, 20);
+        fSpecPow = pow(fSpecPow, 10); // 여기에 메테리얼 metalic 재질계수를 넘겨서 더 반짝이게 보이게 할수 있음 
     }
     
     // Point Light
@@ -268,5 +268,25 @@ void Skinning(inout float3 _vPos, inout float4 _vWeight, inout float4 _vIndices,
     }
     
     _vPos = info.vPos;
+}
+
+
+
+float encode(float4 _value)
+{
+    int rgba = (int(_value.x * 255.f) << 24) + (int(_value.y * 255.f) << 16) + (int(_value.z * 255.f) << 8) + int(_value.w * 255.f);
+    return asfloat(rgba);
+}
+
+float4 decode(float _value)
+{
+    int rgba = asint(_value);
+    
+    float r = (float) (rgba >> 24) / 255.f;
+    float g = (float) ((rgba & 0x00ff0000) >> 16) / 255.f;
+    float b = (float) ((rgba & 0x0000ff00) >> 8) / 255.f;
+    float a = (float) (rgba & 0x000000ff) / 255.f;
+    
+    return float4(r, g, b, a);
 }
 #endif

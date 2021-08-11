@@ -86,6 +86,32 @@ CGameObject* CScene::FindObjectByName(const wstring& _strName)
 	return nullptr;
 }
 
+CGameObject* CScene::FindObjectByLayer(const wstring& _strName, int _LayerIdx)
+{
+	const vector<CGameObject*>& vecObj = m_arrLayer[_LayerIdx]->GetObjects();
+
+	for (size_t j = 0; j < vecObj.size(); ++j)
+	{
+		if (vecObj[j]->GetName() == _strName)
+			return vecObj[j];
+	}
+
+	return nullptr;
+}
+
+CGameObject* CScene::FindParentObj(const wstring& _strName, int _Layer)
+{
+	const vector<CGameObject*>& vecObj = m_arrLayer[_Layer]->GetParentObj();
+
+	for (size_t j = 0; j < vecObj.size(); ++j)
+	{
+		if (vecObj[j]->GetName() == _strName)
+			return vecObj[j];
+	}
+
+	return nullptr;
+}
+
 void CScene::SaveToScene(FILE* _pFile)
 {
 	CEntity::SaveToScene(_pFile);

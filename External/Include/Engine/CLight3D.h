@@ -41,7 +41,7 @@ public:
     void SetAngle(float _fAngle) { m_info.fAngle = _fAngle; }
 
     const tLightInfo& GetInfo(){return m_info;}
-
+    void SetLightInfo(tLightInfo Info);
 public:
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);

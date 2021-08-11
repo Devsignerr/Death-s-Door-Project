@@ -47,6 +47,9 @@ public:
 	int GetAnimInstancingCount() { return m_iAnimInstCount; };
 	CStructuredBuffer* GetBoneBuffer() { return m_pBoneBuffer; }
 
+	void SingleUpdate() {m_pBoneBuffer->UpdateData(12);}
+	void SingleClear() { m_pBoneBuffer->Clear();}
+
 private:
 	void Resize(UINT _iCount);
 

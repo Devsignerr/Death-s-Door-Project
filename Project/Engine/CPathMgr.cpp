@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "CPathMgr.h"
+#include <io.h>
 
 wchar_t CPathMgr::g_szResPath[255] = {};
+vector<wstring> CPathMgr::g_VecFileName = {};
+vector<wstring> CPathMgr::g_VecFilePath = {};
+wstring CPathMgr::g_FilePath = {};
 
 void CPathMgr::init()
 {
@@ -51,4 +55,52 @@ std::wstring CPathMgr::GetFileName(std::wstring& _path)
 	}
 
 	return filename + 1;
+}
+
+void CPathMgr::GetAllFilePath(const std::wstring& _path, const std::wstring& _filter)
+{
+	const std::wstring szFile = _path + _filter;
+
+	_wfinddata_t fd;
+
+	intptr_t handle = _wfindfirst(szFile.c_str(), &fd);
+
+	if (handle == -1L)
+		return;
+	do
+	{
+		g_VecFilePath.push_back(fd.name);
+
+	} while (_wfindnext(handle, &fd) == 0);
+
+
+	_findclose(handle);
+
+}
+
+void CPathMgr::GetAllFileName(const std::wstring& _path, const std::wstring& _filter)
+{
+
+	const std::wstring szFile = _path + _filter;
+
+	_wfinddata_t fd;
+
+	intptr_t handle = _wfindfirst(szFile.c_str(), &fd);
+
+	if (handle == -1L)
+		return;
+	do
+	{
+		g_VecFileName.push_back(fd.name);
+
+	} while (_wfindnext(handle, &fd) == 0);
+
+	for (size_t i = 0; i < g_VecFileName.size(); ++i)
+	{
+		std::wstring::size_type stTmp;
+		stTmp = g_VecFileName[i].find(L".pref", 0);
+		g_VecFileName[i].erase(stTmp, 5);
+	}
+
+	_findclose(handle);
 }

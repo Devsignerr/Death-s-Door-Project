@@ -32,6 +32,25 @@ void CRenderMgr::CreateMRT()
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->Create(arrTex, arrClearColor, pDepthTex);
 
 
+	// =========
+	// Light MRT
+	// =========
+	{
+		Ptr<CTexture> pDiffuseLight = CResMgr::GetInst()->CreateTexture(L"DiffuseLightTargetTex", (UINT)vResolution.x, (UINT)vResolution.y
+			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
+		Ptr<CTexture> pSpecularLight = CResMgr::GetInst()->CreateTexture(L"SpecularLightTargetTex", (UINT)vResolution.x, (UINT)vResolution.y
+			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
+		Ptr<CTexture> arrTex[8] = { pDiffuseLight, pSpecularLight };
+		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f), };
+
+		m_arrMRT[(UINT)MRT_TYPE::LIGHT] = new CMRT;
+		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->SetName(L"Lights");
+		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Create(arrTex, arrClearColor, nullptr);
+	}
+
+
 	// ============
 	// Deferred MRT
 	// ============
@@ -45,31 +64,17 @@ void CRenderMgr::CreateMRT()
 		Ptr<CTexture> pPositionTex = CResMgr::GetInst()->CreateTexture(L"PositionTargetTex", (UINT)vResolution.x, (UINT)vResolution.y
 			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, DXGI_FORMAT_R32G32B32A32_FLOAT, true);
 
-		Ptr<CTexture> arrTex[8] = { pDiffuseTex, pNormalTex, pPositionTex };
-		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f) };
+		Ptr<CTexture> pDiffuseLight = CResMgr::GetInst()->FindDataTexture(L"DiffuseLightTargetTex");
+
+		// 디퍼드 단계에서 DiffLight 타겟도 같이 묶어줘서 라이트 정보를 미리 그릴수 있게 되었음 
+		Ptr<CTexture> arrTex[8] = { pDiffuseTex, pNormalTex, pPositionTex, pDiffuseLight };
+		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f) };
 
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED] = new CMRT;
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->SetName(L"Deferred");
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->Create(arrTex, arrClearColor, nullptr);
 	}
 
-	// =========
-	// Light MRT
-	// =========
-	{
-		Ptr<CTexture> pDiffuseLight = CResMgr::GetInst()->CreateTexture(L"DiffuseLightTargetTex", (UINT)vResolution.x, (UINT)vResolution.y
-			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, DXGI_FORMAT_R8G8B8A8_UNORM, true);
-
-		Ptr<CTexture> pSpecularLight = CResMgr::GetInst()->CreateTexture(L"SpecularLightTargetTex", (UINT)vResolution.x, (UINT)vResolution.y
-			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, DXGI_FORMAT_R8G8B8A8_UNORM, true);
-
-		Ptr<CTexture> arrTex[8] = { pDiffuseLight, pSpecularLight };
-		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),};
-
-		m_arrMRT[(UINT)MRT_TYPE::LIGHT] = new CMRT;
-		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->SetName(L"Lights");
-		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Create(arrTex, arrClearColor, nullptr);
-	}
 
 	// LightMergeMtrl 파라미터 셋팅
 	Ptr<CMaterial> pLightMergeMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"LightMergeMtrl");

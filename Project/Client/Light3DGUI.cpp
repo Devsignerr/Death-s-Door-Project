@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Light3DGUI.h"
+#include "InspectorGUI.h"
+#include "CImGUIMgr.h"
 #include <Engine/CLight3D.h>
 #include <Engine/CSceneMgr.h>
 #include <Engine/CTransform.h>
@@ -7,6 +9,7 @@
 #include <Engine/CPathMgr.h>
 #include <Engine/CCore.h>
 #include <Engine/CResMgr.h>
+#include <tchar.h>
 
 Light3DGUI::Light3DGUI() :
     ComponentGUI(COMPONENT_TYPE::LIGHT3D),
@@ -56,7 +59,6 @@ void Light3DGUI::render()
     ImGui::Text("eType      \t");  ImGui::SameLine(); ImGui::Combo("##eType", &item_current, items, IM_ARRAYSIZE(items));
 
 
-
     GetTargetObj()->Light3D()->SetAmbPow(temp.color.vAmb);
     GetTargetObj()->Light3D()->SetDiffusePow(temp.color.vDiff);
     GetTargetObj()->Light3D()->SetSpecPow(temp.color.vSpec);
@@ -72,6 +74,22 @@ void Light3DGUI::render()
 
     GetTargetObj()->Light3D()->SetRange(temp.fRange);
     GetTargetObj()->Light3D()->SetAngle(temp.fAngle);
+
+	ImGui::NewLine();
+
+	if (ImGui::Button("Save"))
+	{
+		SaveLightSetFile();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Load"))
+	{
+		LoadLightSetFile();
+	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
 
 
 	CLight3D* Light3D = GetTargetObj()->Light3D();
@@ -101,8 +119,103 @@ void Light3DGUI::render()
 
 	BakingShadowMap();
 
+
+
 	End();
 
+}
+
+void Light3DGUI::SaveLightSetFile()
+{
+	std::wstring Path = CPathMgr::GetResPath();
+	Path += L"LightSetting"; //
+
+	OPENFILENAME ofn;
+	static wchar_t fileName[MAX_PATH] = L"";
+	ZeroMemory(&ofn, sizeof(ofn));
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = CCore::GetInst()->GetWndHwnd();
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = sizeof(fileName);
+	ofn.lpstrFilter = L"All File\0*.*";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = L"LightSet";
+
+	std::wstring SaveFileName = {};
+	if (GetSaveFileName(&ofn))
+		SaveFileName = ofn.lpstrFile;
+
+	FILE* File = nullptr;
+	_wfopen_s(&File, SaveFileName.c_str(), L"wb");
+
+	if (!File)
+		return;
+
+	const tLightInfo& Info = GetTargetObj()->Light3D()->GetInfo();
+
+	fwrite(&Info, sizeof(tLightInfo), 1, File);
+
+	Vec3 LocalPos = GetTargetObj()->Transform()->GetLocalPos();
+	Vec3 LocalRot = GetTargetObj()->Transform()->GetLocalRot();
+
+	fwrite(&LocalPos, sizeof(Vec3), 1, File);
+	fwrite(&LocalRot, sizeof(Vec3), 1, File);
+
+	fclose(File);
+}
+
+void Light3DGUI::LoadLightSetFile()
+{
+	std::wstring Path = CPathMgr::GetResPath();
+	Path += L"LightSetting"; //
+
+	OPENFILENAME ofn;
+	wchar_t fileName[MAX_PATH] = L"";
+	ZeroMemory(&ofn, sizeof(ofn));
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = CCore::GetInst()->GetWndHwnd();
+	ofn.lpstrFilter = L"(*.*)";
+	ofn.lpstrFile = fileName;
+	ofn.lpstrInitialDir = Path.c_str();
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = nullptr;
+
+	std::wstring fileNameStr = {};
+
+	std::wstring SaveFileName = {};
+	if (GetOpenFileName(&ofn))
+		SaveFileName = ofn.lpstrFile;
+
+	FILE* File = nullptr;
+
+	_wfopen_s(&File, SaveFileName.c_str(), L"rb");
+
+	if (!File)
+		return;
+
+	tLightInfo Info = {};
+
+	fread(&Info, sizeof(tLightInfo), 1, File);
+
+	GetTargetObj()->Light3D()->SetLightInfo(Info);
+
+	Vec3 LocalPos = {};
+	Vec3 LocalRot = {};
+
+	fread(&LocalPos, sizeof(Vec3), 1, File);
+	fread(&LocalRot, sizeof(Vec3), 1, File);
+
+	GetTargetObj()->Transform()->SetLocalPos(LocalPos);
+	GetTargetObj()->Transform()->SetLocalRot(LocalRot);
+
+	fclose(File);
 }
 
 void Light3DGUI::BakingShadowMap()
@@ -141,7 +254,7 @@ void Light3DGUI::BakingShadowMap()
 void Light3DGUI::LoadShadowMap()
 {
 	std::wstring Path = CPathMgr::GetResPath();
-	Path += L"TEXTURE\\SHADOWMAP\\"; //
+	Path += L"texture\\ShadowMap\\"; //
 
 	OPENFILENAME ofn;
 	wchar_t fileName[MAX_PATH] = L"";
@@ -162,7 +275,7 @@ void Light3DGUI::LoadShadowMap()
 	if (GetOpenFileName(&ofn))
 		SaveFileName = ofn.lpstrFile;
 
-	fileNameStr = L"TEXTURE\\SHADOWMAP\\";
+	fileNameStr = L"texture\\ShadowMap\\";
 	SaveFileName = CPathMgr::GetFileName(SaveFileName);
 	fileNameStr += SaveFileName;
 	fileNameStr += L".dds";

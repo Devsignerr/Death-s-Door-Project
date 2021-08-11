@@ -20,6 +20,7 @@ enum class KEY_TYPE
 	ENTER,
 	LSHIFT,
 	LBTN,
+	MBTN,
 	RBTN,
 
 	KEY_UP,

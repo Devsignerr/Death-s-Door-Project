@@ -224,6 +224,7 @@ call ClientCopy.bat</Command>
   <ItemGroup>
     <ClInclude Include="Animator3DGUI.h" />
     <ClInclude Include="BtnGUI.h" />
+    <ClInclude Include="CameraGUI.h" />
     <ClInclude Include="CCameraEx.h" />
     <ClInclude Include="CGameObjectEx.h" />
     <ClInclude Include="CGridScript.h" />
@@ -246,6 +247,7 @@ call ClientCopy.bat</Command>
     <ClInclude Include="MeshRenderGUI.h" />
     <ClInclude Include="MRTGUI.h" />
     <ClInclude Include="Particle3DGUI.h" />
+    <ClInclude Include="PrefabGUI.h" />
     <ClInclude Include="ResGUI.h" />
     <ClInclude Include="ResInfoGUI.h" />
     <ClInclude Include="ScriptGUI.h" />
@@ -269,6 +271,7 @@ call ClientCopy.bat</Command>
   <ItemGroup>
     <ClCompile Include="Animator3DGUI.cpp" />
     <ClCompile Include="BtnGUI.cpp" />
+    <ClCompile Include="CameraGUI.cpp" />
     <ClCompile Include="CCameraEx.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />
     <ClCompile Include="CGridScript.cpp" />
@@ -290,6 +293,7 @@ call ClientCopy.bat</Command>
     <ClCompile Include="MeshRenderGUI.cpp" />
     <ClCompile Include="MRTGUI.cpp" />
     <ClCompile Include="Particle3DGUI.cpp" />
+    <ClCompile Include="PrefabGUI.cpp" />
     <ClCompile Include="ResGUI.cpp" />
     <ClCompile Include="ResInfoGUI.cpp" />
     <ClCompile Include="ScriptGUI.cpp" />

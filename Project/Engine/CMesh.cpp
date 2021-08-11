@@ -6,8 +6,9 @@
 
 #include "CStructuredBuffer.h"
 #include "CInstancingBuffer.h"
+#include "CResMgr.h"
 
-vector<CMesh*> CMesh::m_pVecMesh = {};
+#include <algorithm>
 
 CMesh::CMesh()
 	: m_tVBDesc{}
@@ -79,7 +80,7 @@ void CMesh::Reset(VTX* _pVTXSysmem, UINT _iVtxCount, UINT* _IdxSysmem, UINT _iId
 }
 
 
-vector<CMesh*>& CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerCnt)
+void CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerCnt)
 {
 	UINT ContainerIdx = _ContainerCnt;
 
@@ -104,7 +105,7 @@ vector<CMesh*>& CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerC
 		{
 			pSys[i].vPos = container->vecPos[i];
 			pSys[i].vUV = container->vecUV[i];
-			pSys[i].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+			pSys[i].vColor = Vec4(0.1f, 0.1f, 0.8f, 1.f);
 			pSys[i].vNormal = container->vecNormal[i];
 			pSys[i].vTangent = container->vecTangent[i];
 			pSys[i].vBinormal = container->vecBinormal[i];
@@ -120,6 +121,8 @@ vector<CMesh*>& CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerC
 
 		//글로벌 ID (entity ID) 가 증가하기 때문에 인스턴싱으로 인정이 안됨 
 		//메쉬를 검색해서 같은 메쉬라면 재활용해줄수 있는 구조로 가야함 
+
+
 		CMesh* pMesh = new CMesh;
 		pMesh->m_pVB = pVB;
 		pMesh->m_iVtxCount = iVtxCount;
@@ -159,7 +162,7 @@ vector<CMesh*>& CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerC
 
 		// Animation3D
 		if (!container->bAnimation)
-			m_pVecMesh.push_back(pMesh);
+			CResMgr::GetInst()->GetMeshVec().push_back(pMesh);
 
 		vector<tBone*>& vecBone = _loader.GetBones();
 		UINT iFrameCount = 0;
@@ -213,7 +216,7 @@ vector<CMesh*>& CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerC
 			tClip.iEndFrame = (int)vecAnimClip[i]->tEndTime.GetFrameCount(vecAnimClip[i]->eMode);
 			tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
 			tClip.bFinish = false;
-			tClip.bRepeat = true;
+			tClip.bStay = true;
 			tClip.eMode = vecAnimClip[i]->eMode;
 
 			pMesh->m_vecAnimClip.push_back(tClip);
@@ -247,11 +250,9 @@ vector<CMesh*>& CMesh::CreateFromContainer(CFBXLoader& _loader, UINT _ContainerC
 				, (UINT)vecOffset.size() * iFrameCount
 				, vecFrameTrans.data());
 
-			m_pVecMesh.push_back(pMesh);
+			CResMgr::GetInst()->GetMeshVec().push_back(pMesh);
 		}
 	}
-
-	return m_pVecMesh;
 }
 
 void CMesh::UpdateData(UINT _iSubset)
@@ -340,7 +341,7 @@ void CMesh::Save(const wstring& _strRelativePath)
 		fwrite(&m_vecAnimClip[i].iStartFrame, sizeof(int), 1, pFile);
 		fwrite(&m_vecAnimClip[i].iEndFrame, sizeof(int), 1, pFile);
 		fwrite(&m_vecAnimClip[i].iFrameLength, sizeof(int), 1, pFile);
-		fwrite(&m_vecAnimClip[i].bRepeat, sizeof(bool), 1, pFile);
+		fwrite(&m_vecAnimClip[i].bStay, sizeof(bool), 1, pFile);
 	}
 
 	iCount = (UINT)m_vecBones.size();
@@ -361,6 +362,33 @@ void CMesh::Save(const wstring& _strRelativePath)
 		{
 			fwrite(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
 		}
+	}
+
+	fwrite(&m_bNavMesh, sizeof(bool), 1, pFile);
+
+	if (m_bNavMesh)
+	{
+		UINT NodeCnt = m_vecMeshNode.size();
+
+		fwrite(&NodeCnt, sizeof(int), 1, pFile);
+
+		for (UINT i = 0; i < NodeCnt; ++i)
+		{
+			fwrite(&m_vecMeshNode[i].NodeIdx, sizeof(int), 1, pFile); 
+
+			fwrite(&m_vecMeshNode[i].VertexPosition[0], sizeof(Vec3), 1, pFile);
+			fwrite(&m_vecMeshNode[i].VertexPosition[1], sizeof(Vec3), 1, pFile);
+			fwrite(&m_vecMeshNode[i].VertexPosition[2], sizeof(Vec3), 1, pFile);
+
+			UINT NearNodeCnt = m_vecMeshNode[i].VecNearNodeIdx.size();
+
+			fwrite(&NearNodeCnt, sizeof(int), 1, pFile);
+
+			for (UINT j = 0; j < NearNodeCnt; ++j)
+			{
+				fwrite(&m_vecMeshNode[i].VecNearNodeIdx[j], sizeof(int), 1, pFile);
+			}		
+		}	
 	}
 
 
@@ -445,7 +473,7 @@ void CMesh::Load(const wstring& _strFilePath)
 		fread(&tClip.iStartFrame, sizeof(int), 1, pFile);
 		fread(&tClip.iEndFrame, sizeof(int), 1, pFile);
 		fread(&tClip.iFrameLength, sizeof(int), 1, pFile);
-		fread(&tClip. bRepeat, sizeof(bool), 1, pFile);
+		fread(&tClip. bStay, sizeof(bool), 1, pFile);
 
 		m_vecAnimClip.push_back(tClip);
 	}
@@ -504,6 +532,38 @@ void CMesh::Load(const wstring& _strFilePath)
 			, (UINT)vecOffset.size() * (UINT)_iFrameCount
 			, vecFrameTrans.data());
 	}
+
+	fread(&m_bNavMesh, sizeof(bool), 1, pFile);
+
+	if (m_bNavMesh)
+	{
+		UINT NodeCnt = 0;
+
+		fread(&NodeCnt, sizeof(int), 1, pFile);
+
+		m_vecMeshNode.resize(NodeCnt);
+
+		for (UINT i = 0; i < NodeCnt; ++i)
+		{
+			fread(&m_vecMeshNode[i].NodeIdx, sizeof(int), 1, pFile);
+			
+			fread(&m_vecMeshNode[i].VertexPosition[0], sizeof(Vec3), 1, pFile);
+			fread(&m_vecMeshNode[i].VertexPosition[1], sizeof(Vec3), 1, pFile);
+			fread(&m_vecMeshNode[i].VertexPosition[2], sizeof(Vec3), 1, pFile);
+
+			UINT NearNodeCnt = 0;
+
+			fread(&NearNodeCnt, sizeof(int), 1, pFile);
+
+			m_vecMeshNode[i].VecNearNodeIdx.resize(NearNodeCnt);
+
+			for (UINT j = 0; j < NearNodeCnt; ++j)
+			{
+				fread(&m_vecMeshNode[i].VecNearNodeIdx[j], sizeof(int), 1, pFile);
+			}
+		}
+	}
+
 
 	fclose(pFile);
 }

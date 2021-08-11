@@ -178,11 +178,20 @@
     <ClInclude Include="define.h">
       <Filter>Engine\00. Header</Filter>
     </ClInclude>
-    <ClInclude Include="CLightCamera.h">
-      <Filter>Engine\04. Component\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="CCollider3D.h">
       <Filter>Engine\04. Component\Collider3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CLightCamera.h">
+      <Filter>Engine\04. Component\Camera\LightCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Engine\04. Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CFSM.h">
+      <Filter>Engine\07. Module\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CState.h">
+      <Filter>Engine\07. Module\FSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,11 +369,20 @@
     <ClCompile Include="CInstancingBuffer.cpp">
       <Filter>Engine\02. Manager\InstancingBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="CLightCamera.cpp">
-      <Filter>Engine\04. Component\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="CCollider3D.cpp">
       <Filter>Engine\04. Component\Collider3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CLightCamera.cpp">
+      <Filter>Engine\04. Component\Camera\LightCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="CFrustum.cpp">
+      <Filter>Engine\04. Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CFSM.cpp">
+      <Filter>Engine\07. Module\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CState.cpp">
+      <Filter>Engine\07. Module\FSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -532,6 +550,12 @@
     </Filter>
     <Filter Include="Engine\04. Component\Collider3D">
       <UniqueIdentifier>{4a271797-a290-4ee6-8c9d-4c611b535426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04. Component\Camera\LightCamera">
+      <UniqueIdentifier>{a2bcfbfd-8b82-4889-896c-c5fc335dd5c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\07. Module\FSM">
+      <UniqueIdentifier>{0c160096-d2f9-4803-8ce0-bddf1f5b124f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

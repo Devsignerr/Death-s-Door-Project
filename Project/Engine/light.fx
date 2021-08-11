@@ -50,7 +50,7 @@ PS_OUT PS_DirLight(VS_DIR_OUT _in)
             
     float2 vScreenUV = _in.vPosition.xy / g_vResolution;
     
-    float3 vViewNormal = g_tex_0.Sample(g_sam_0, vScreenUV).xyz;
+    float4 vViewNormal = g_tex_0.Sample(g_sam_0, vScreenUV);
     float3 vViewPosition = g_tex_1.Sample(g_sam_0, vScreenUV).xyz;
     
     if (vViewPosition.z == 0.f)
@@ -58,7 +58,7 @@ PS_OUT PS_DirLight(VS_DIR_OUT _in)
         clip(-1);
     }     
     
-    tLightColor lightColor = CalLight(g_int_0, vViewNormal, vViewPosition);
+    tLightColor lightColor = CalLight(g_int_0, vViewNormal.xyz, vViewPosition);
     
         
     // 그림자 판정    
@@ -91,6 +91,13 @@ PS_OUT PS_DirLight(VS_DIR_OUT _in)
     
     output.vDiffuse = lightColor.vDiff + lightColor.vAmb;
     output.vSpecular = lightColor.vSpec;
+    
+    if (0.f != vViewNormal.a) //vViewNormal의 a자리를 이미시브 텍스처에서 뽑아낸 반사계수 rgb값을 압축하여 넣어 사용하기로 함 
+    {
+        float4 vSpecCoeff = decode(vViewNormal.a); //압축해놓은 rgb값을 되돌려서 계수로 넣어 spec값에 곱해서 적용 
+        
+        output.vSpecular *= vSpecCoeff;
+    }
     
     return output;    
 }

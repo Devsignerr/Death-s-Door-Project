@@ -43,6 +43,8 @@ public:
             m_pTargetObj = nullptr;
     }
 
+    CGameObject* GetTargetObject() { return m_pTargetObj; }
+
 public:
     InspectorGUI();
     ~InspectorGUI();

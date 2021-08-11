@@ -80,11 +80,11 @@ void MeshRenderGUI::render()
 	int iMtrlCount = pMeshRender->GetMtrlCount();
 	int item_current = m_iMaterialIdx;
 	vector<string> vecMtrl;
-	const char* strMtrl[10];
+	const char* strMtrl[20];
 
-	vecMtrl.resize(10);
+	vecMtrl.resize(20);
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 20; ++i)
 	{
 		if (i < iMtrlCount)
 		{

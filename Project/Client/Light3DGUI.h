@@ -14,6 +14,9 @@ public:
     virtual void finalupdate();
     virtual void render();
 
+    void SaveLightSetFile();
+    void LoadLightSetFile();
+
 private:
     void BakingShadowMap();
     void LoadShadowMap();

@@ -77,6 +77,17 @@ struct tAnimClip
 	FbxTime::EMode eMode;
 };
 
+//네비메쉬 정보 구조체
+struct tNavMesh 
+{
+	//네비메쉬 정점 3개의 값 
+	Vec3			  ArrPos[3];
+	//로드된 순서 
+	UINT			  iIdx;
+	//인접 네비메쉬 벡터 
+	vector<tNavMesh*> vecNearMesh;
+};
+
 
 
 class CMesh;
@@ -94,22 +105,33 @@ private:
 	vector<tBone*>					m_vecBone;
 	FbxArray<FbxString*>			m_arrAnimName;
 	vector<tAnimClip*>				m_vecAnimClip;
-	
+	vector<tNavMesh>				m_vecNavMesh;
+
+public:
+	void CreateNavMesh();
 
 public:
 	void init();
-	void LoadFbx(const wstring& _strPath);
+	void LoadFbx(const wstring& _strPath,FBXLOAD_TYPE _LoadType);
 
 public:
 	int GetContainerCount() { return (int)m_vecContainer.size(); }	
 	const tContainer& GetContainer(int _iIdx) { return m_vecContainer[_iIdx]; }
 	vector<tBone*>& GetBones() {return m_vecBone;}
 	vector<tAnimClip*>& GetAnimClip() { return m_vecAnimClip; }
+	vector<tNavMesh>& GetNevMeshVector() { return m_vecNavMesh; }
 	
 private:
-	void LoadMeshDataFromNode(FbxNode* _pRoot);
-	void LoadMesh(FbxMesh* _pFbxMesh);
-	void LoadMesh(FbxMesh* _pFbxMesh, FbxAMatrix _Mat);
+	void LoadMeshDataFromNode(FbxNode* _pRoot, FBXLOAD_TYPE _LoadType);
+
+	//네비메쉬 로드용 전용 함수 
+	void LoadNavMesh(FbxMesh* _FbxMesh ,FbxString _MeshName);
+	//애니메이션 로드용 전용 함수 
+	void LoadMesh(FbxMesh* _pFbxMesh, FbxString _MeshName);
+	//맵 로드용 전용 함수 
+	void LoadMesh(FbxMesh* _pFbxMesh, FbxAMatrix _Mat, FbxString _MeshName);
+
+
 	void LoadMaterial(FbxSurfaceMaterial* _pMtrlSur);
 
 	void GetTangent(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);

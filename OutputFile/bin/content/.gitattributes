@@ -1,0 +1,4 @@
+Room_Shaft.mesh0 filter=lfs diff=lfs merge=lfs -text
+Rock_Left.mesh0 filter=lfs diff=lfs merge=lfs -text
+Room_Shaft0.mesh filter=lfs diff=lfs merge=lfs -text
+Rock_Left0.mesh filter=lfs diff=lfs merge=lfs -text

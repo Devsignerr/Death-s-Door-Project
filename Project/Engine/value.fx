@@ -78,18 +78,18 @@ cbuffer GLOBAL_VALUE : register(b2)
     uint    iLight3DCount; // 3D±¤¿ø °³¼ö
 }
 
-Texture2D g_tex_0 : register(t0);
-Texture2D g_tex_1 : register(t1);
-Texture2D g_tex_2 : register(t2);
-Texture2D g_tex_3 : register(t3);
-Texture2D g_tex_4 : register(t4);
-Texture2D g_tex_5 : register(t5);
-Texture2D g_tex_6 : register(t6);
-Texture2D g_tex_7 : register(t7);
-Texture2DArray g_texarr_0 : register(t8);
-Texture2DArray g_texarr_1 : register(t9);
-TextureCube    g_texcube_0 : register(t10);
-TextureCube    g_texcube_1 : register(t11);
+Texture2D                g_tex_0 : register(t0);
+Texture2D                g_tex_1 : register(t1);
+Texture2D                g_tex_2 : register(t2);
+Texture2D                g_tex_3 : register(t3);
+Texture2D                g_tex_4 : register(t4);
+Texture2D                g_tex_5 : register(t5);
+Texture2D                g_tex_6 : register(t6);
+Texture2D                g_tex_7 : register(t7);
+Texture2DArray           g_texarr_0 : register(t8);
+Texture2DArray           g_texarr_1 : register(t9);
+TextureCube              g_texcube_0 : register(t10);
+TextureCube              g_texcube_1 : register(t11);
 StructuredBuffer<Matrix> g_arrFinalMat : register(t12);
 
 StructuredBuffer<tLightInfo> g_Light2DInfo : register(t61);

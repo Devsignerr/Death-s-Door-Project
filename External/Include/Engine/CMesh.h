@@ -5,10 +5,14 @@
 
 class CStructuredBuffer;
 
-struct NavMeshNode 
+struct tNavMeshNode 
 {
+    //네비메쉬 노드가 가지는 정점 3개의 위치 
     Vec3 VertexPosition[3];
-    list<NavMeshNode> NearNode;
+    //인접한 노드의 인덱스  
+    vector<int> VecNearNodeIdx;
+    //내 인덱스 
+    UINT  NodeIdx;
 };
 
 struct tIndexInfo
@@ -40,12 +44,18 @@ private:
     CStructuredBuffer*      m_pBoneOffset;	    // 각 뼈의 offset 행렬
 
     //==========================
+    
+    //네비메쉬 속성의 메쉬인가 
+    bool                     m_bNavMesh;
 
-    static vector<CMesh*>   m_pVecMesh;
-    NavMeshNode             m_tMeshNode;
+    //한개의 네비메쉬가 가지는 네비노드 벡터 .폴리곤의 갯수가 100개라면 , vector의 크기도 100이다 . 
+    vector<tNavMeshNode>     m_vecMeshNode;
 
 public:
-    static vector<CMesh*>& CreateFromContainer(CFBXLoader& _loader, UINT _ContainerCnt);
+    void SetNavMesh(bool _b) { m_bNavMesh = _b; }
+    bool IsNavMesh() { return m_bNavMesh; }
+public:
+    static void CreateFromContainer(CFBXLoader& _loader, UINT _ContainerCnt);
 
     void Create(VTX* _pVTXSysmem, UINT _iVtxCount, UINT* _IdxSysmem, UINT _iIdxCount);    
     void Reset(VTX* _pVTXSysmem, UINT _iVtxCount, UINT* _IdxSysmem, UINT _iIdxCount);
@@ -63,6 +73,8 @@ public:
 
     CStructuredBuffer* GetBoneFrameDataBuffer() { return m_pBoneFrameData; } // 전체 본 프레임 정보
     CStructuredBuffer* GetBoneOffsetBuffer() { return  m_pBoneOffset; }	   // 각 뼈의 offset 행렬	
+
+    vector<tNavMeshNode>& GetMeshNodeVec() { return m_vecMeshNode; }
 
 public:
     virtual void Save(const wstring& _strRelativePath);
