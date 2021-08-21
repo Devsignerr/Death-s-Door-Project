@@ -18,6 +18,9 @@ protected:
     Matrix          m_matProj;
     Matrix          m_matProjInv;
 
+    Matrix          m_matProjPers;
+    Matrix          m_matProjPersInv;
+
     tRay            m_tRay; // 카메라에서 마우스 방향을 향하는 직선
 
     float           m_fFOV;
@@ -48,6 +51,7 @@ public:
 
     PROJ_TYPE GetProjType() { return m_eProjType; }
     Vec2 GetScale() { return m_vScale; }
+    float GetFar() { return m_fFar; }
     const tRay& GetRay() { return m_tRay; }
 
     CFrustum& GetFrustum() { return m_frustum; }

@@ -19,12 +19,15 @@
 #include <Engine/CAnimator3D.h>
 #include <Engine/CCamera.h>
 #include <Engine/CLight3D.h>
+#include <Engine/CFrustumSphere.h>
 #include <Engine/CParticleSystem.h>
 #include <Engine/CEventMgr.h>
+#include <Engine/CCollisionMgr.h>
 #include "CSaveLoadMgr.h"
 
 #include <Engine/CScript.h>
 #include <Script/CScriptMgr.h>
+#include <Script/CMapChange.h>
 
 #include "MRTGUI.h"
 
@@ -221,11 +224,19 @@ void MenuGUI::render()
                     pObj->SetName(str);
 
                     
-                    //맵과 네비메쉬는 동적 그림자일 이유가 없으므로 제외 
-                    if ((FBXLOAD_TYPE)item_current_idx == FBXLOAD_TYPE::ANIMATION_LOAD ||
-                        (FBXLOAD_TYPE)item_current_idx == FBXLOAD_TYPE::OBJECT_LOAD)
+                    //네비메쉬는 동적 그림자일 이유가 없으므로 제외 
+                    if ((FBXLOAD_TYPE)item_current_idx != FBXLOAD_TYPE::NAVMESH_LOAD)
                     {
                         pObj->SetDynamicShadow(true);
+                    }
+                    else 
+                    {
+                        //씬에 존재하는 모든 네비메쉬 벡터
+                        vector<CGameObject*>& pVecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
+
+                        //메쉬는 ResMgr의 메쉬타입에도 등록이 되지만 Nav메쉬 벡터에도 등록이 된다 
+                        pVecNavMesh.push_back(pObj);
+                    
                     }
 
                     //자식 객체는 어차피 부모에 편입될거라 0번 레이어에 넣는다 
@@ -346,8 +357,8 @@ void MenuGUI::render()
                     if (nullptr == pTempObject->MeshRender())
                     {
                         pTempObject->AddComponent(new CMeshRender);
-                        pTempObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-                        pTempObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+                        pTempObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+                        pTempObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
                   
                     }                
                 }
@@ -366,9 +377,21 @@ void MenuGUI::render()
                     }
                 }
 
-                if (ImGui::MenuItem("ParticleSystem"))
-                {
+               // if (ImGui::MenuItem("ParticleSystem"))
+               // {
+               //
+               // }
 
+                if (ImGui::MenuItem("Frustum Sphere"))
+                {
+                    CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+                    InspectorGUI* pInspector = (InspectorGUI*)CImGUIMgr::GetInst()->FindGUI(L"Inspector");
+                    CGameObject* pTempObject = pInspector->GetTargetObject();
+
+                    if (nullptr == pTempObject->FrustumSphere())
+                    {
+                        pTempObject->AddComponent(new CFrustumSphere);
+                    }
                 }
 
                 //스크립트 붙여주는 메뉴 
@@ -443,6 +466,59 @@ void MenuGUI::render()
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Map Collider"))
+        {
+            if (ImGui::BeginMenu("Map Change Collider Create"))
+            {
+                static int ColliderCount = 0;
+                static int LayerIdx = 8;
+
+                //ImGui::Text("Setting Layer \t");
+                //ImGui::SameLine(200);
+                //ImGui::InputInt("##Layer Setting", &LayerIdx);
+
+                ImGui::Text("Setting Collider Count \t");
+                ImGui::SameLine(200);
+                ImGui::InputInt("##ColliderCount", &ColliderCount);
+
+                if (ImGui::Button("Confirm"))
+                {
+                    CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+
+                    for (int i = 0; i < ColliderCount; ++i)
+                    {
+                        CGameObject* pGameObject = new CGameObject;
+                        wchar_t Name[256] = { 0, };
+                        swprintf_s(Name, L"MapCol_%02d", i);
+
+                        wstring wstr = Name;
+
+                        pGameObject->SetName(wstr);
+                        pGameObject->AddComponent(new CTransform);
+                        pGameObject->AddComponent(new CMeshRender);
+                        pGameObject->AddComponent(new CCollider3D);
+                        pGameObject->AddComponent(new CMapChange);
+
+                        pGameObject->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
+                        pGameObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+                        pGameObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+                        tEvent even = {};
+
+                        even.eEvent = EVENT_TYPE::CREATE_OBJECT;
+                        even.lParam = (DWORD_PTR)pGameObject;
+                        even.wParam = LayerIdx;
+
+                        CEventMgr::GetInst()->AddEvent(even);
+                    }
+
+                    CCollisionMgr::GetInst()->CollisionCheck(8, 10);
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
+
 
         ImGui::EndMainMenuBar();
     }
@@ -500,8 +576,14 @@ void MenuGUI::ChangeSceneState(CScene* _pScene, SCENE_STATE _eState)
     {
         _pScene = new CScene;
 
+        //이전 씬에 있던 네비메쉬벡터를 클리어해준다 . 
+        //네비메쉬는 로드되면 스스로를 리소스 매니저에 등록한다 . 
+        CResMgr::GetInst()->GetNavMeshVec().clear();
+
         CSaveLoadMgr::LoadScene(_pScene, L"scene\\temp.scene");
         CSceneMgr::GetInst()->ChangeScene(_pScene);
+
+        
 
         // InspeactorGUI 의 타겟 오브젝트 무효화
         InspectorGUI* pInspector = (InspectorGUI*)CImGUIMgr::GetInst()->FindGUI(L"Inspector");

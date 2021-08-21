@@ -8,28 +8,39 @@ enum class PLAYER_STATE
 {
     IDLE, //아무런 동작도 하고 있지 않을때 
     RUN, //Walk 도 있지만 거의 뛰는듯 . Run으로 충분할듯함 
-    SLASH_CHARGE, // 차지어택은 좌우 한번씩 번갈아가며 애니메이션이 재생됨 
-    SLASH_CHARGE_MAX, //차지 중일때 
-    SLASH_CHARGE_ATTACK, //차지어택 . 그냥 마우스 중간키를 클릭하면 차지가 짧게 재생되고 바로 차지어택을 함 .
-    SLASH_ATTACK, // 단순히 좌클릭으로 하는 공격 . 좌우 번갈아가며 공격함 
+    SLASH_CHARGE_L, // 차지어택은 좌우 한번씩 번갈아가며 애니메이션이 재생됨 
+    SLASH_CHARGE_R, // 차지어택은 좌우 한번씩 번갈아가며 애니메이션이 재생됨 
+    SLASH_CHARGE_MAX_L, //차지 중일때 
+    SLASH_CHARGE_MAX_R, //차지 중일때 
+    SLASH_CHARGE_ATTACK_L, //차지어택 . 그냥 마우스 중간키를 클릭하면 차지가 짧게 재생되고 바로 차지어택을 함 .
+    SLASH_CHARGE_ATTACK_R, //차지어택 . 그냥 마우스 중간키를 클릭하면 차지가 짧게 재생되고 바로 차지어택을 함 .
+    SLASH_ATTACK_L, // 단순히 좌클릭으로 하는 공격 . 좌우 번갈아가며 공격함 
+    SLASH_ATTACK_R, // 단순히 좌클릭으로 하는 공격 . 좌우 번갈아가며 공격함 
     ROLL, //스페이스바 입력시 구름
     ROLL_SLASH, //ROLL 상태일때 마우스 중간키를 누르면 발동되는 공격 
-    LADDER_UP, //사다리 앞에서 E키 입력시 사다리 위로 올라타고 , 위로 올라가면 재생
-    LADDER_DOWN, //위와 비슷 
-    LADDER_TOP, //사다리를 전부 올라갔을때 
-    DANCE, //춤춘다
-    DROWN,//물에 빠졌을때
-    HOOK_SHOT, //훅 샷 조준시 이 애니메이션이 바로 재생됨
-    HOOK_SHOT_FLY, //훅샷 후 날라가는 상태 
+    LADDER_UP, //사다리 앞에서 E키 입력시 사다리 위로 올라타고 , 위로 올라가면 재생 X
+    LADDER_DOWN, //위와 비슷 X
+    LADDER_TOP, //사다리를 전부 올라갔을때 X
+    DANCE, //춤춘다 X
+    DROWN,//물에 빠졌을때 X
+    HOOK_SHOT, //훅 샷 조준시 이 애니메이션이 바로 재생됨 X
+    HOOK_SHOT_FLY, //훅샷 후 날라가는 상태 X
     ARROW , // 화살 장전하는 모션 . 애니메이션이 끝났는데도 마우스 입력중이면 마지막 프레임 유지하도록 
     MAGIC, //불마법 장전 중 . 시전시 그냥 바로 IDLE 상태로 되돌아간다 
     BOMB, // 폭탄마법 장전 중. 시전시 BOMB_END 애니메이션 재생
     BOMB_END , // 폭탄마법 발사 애니메이션. 끝나면 IDLE로 
     GET_ITEM, //무언가 얻었을때 
     HIT_BACK, // 얻어맞아서 날라갈때
-    HIT_IDLE, //얻어맞아서 누워있는중 . 아무키 안눌러도 알아서 일어난다 
     HIT_RECOVER, // 회복하고 다시 일어난다 
     END,
+};
+
+enum class PLAYER_PROJECTILE_TYPE
+{
+    ARROW,
+    MAGIC,
+    BOMB,
+    HOOK,
 };
 
 class CPlayerScript :
@@ -60,15 +71,32 @@ private:
     string              m_strState;
 
     //===============================
+    static Vec3 PlayerMovePos;
     static Vec3 PlayerPos;
+    static Vec3 PlayerPrePos;
+    static Vec3 vPlayerRot;
     static Vec3 vPlayerFront;
+    static Vec3 vPlayerUp;
+    static CPlayerScript* Player;
 
     //FSM클래스를  사용할 대상마다 map 의 KEY를 알맞게 정의해주면 된다 
     map<PLAYER_STATE ,wstring>	m_mapState;
 
+private:
+    PLAYER_PROJECTILE_TYPE m_PlayerProjectileType;
 public:
+    PLAYER_PROJECTILE_TYPE GetPlayerProjectileType() { return m_PlayerProjectileType; }
+
+private:
+    float m_Distance;
+
+public:
+    static Vec3 GetPlayerMovePos(){ return PlayerMovePos; }
     static Vec3 GetPlayerPos() { return PlayerPos; }
+    static Vec3 GetPlayerRot() { return vPlayerRot; }
     static Vec3 GetPlayerFront() { return vPlayerFront; }
+    static Vec3 GetPlayerUp() { return vPlayerUp; }
+    static CPlayerScript* GetPlayer() { return Player; }
 
 public:
     virtual void awake() override; //여기에서 FSM 초기화도 진행함 
@@ -83,7 +111,8 @@ private:
 
 public:
     void KeyInput();
-
+    Vec3 GetMouseClickPos();
+    void RotatetoClick(Vec3 _ClickPos);
 public:
     virtual void OnCollisionEnter(CGameObject* _pOther);
     virtual void OnCollision(CGameObject* _pOther);

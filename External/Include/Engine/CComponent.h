@@ -16,6 +16,13 @@ private:
     COMPONENT_TYPE  m_eComType;
     CGameObject*    m_pObject;
 
+ protected:
+    bool            m_bEnable;
+
+public:
+    bool IsEnable() { return m_bEnable; }
+    void Activate(bool _b) { m_bEnable = _b; }
+
 public:
     virtual void awake() {}
     virtual void start() {}

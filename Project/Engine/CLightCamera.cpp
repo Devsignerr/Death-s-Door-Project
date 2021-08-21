@@ -53,23 +53,6 @@ void CLightCamera::SortShadowObject()
 					continue;
 				}
 
-				// Terrain component 를 가진 경우
-				/*if (vecObj[j]->Terrain())
-				{
-					uInstID uID = {};
-					uID.llID = vecObj[j]->Terrain()->GetInstID(0);
-
-					map<ULONG64, vector<tInstObj>>::iterator iter = m_mapInstGroup_D->find(uID.llID);
-					if (iter == m_mapInstGroup_D->end())
-					{
-						m_mapInstGroup_D->insert(make_pair(uID.llID, vector<tInstObj>{tInstObj{ vecObj[j], iMtrl }}));
-					}
-					else
-					{
-						iter->second.push_back(tInstObj{ vecObj[j], 0 });
-					}
-				}*/
-
 				if (!vecObj[j]->IsDynamicShdow() ||
 					nullptr == vecObj[j]->MeshRender() ||
 					nullptr == vecObj[j]->MeshRender()->GetMesh())

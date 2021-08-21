@@ -123,18 +123,3 @@ void CTransform::LoadFromScene(FILE* _pFile)
 	fread(&m_vLocalRot, sizeof(Vec3), 1, _pFile);
 }
 
-
-//Vec3 CTransform::GetWorldRot()
-//{
-//	CGameObject* pParentObj = GetObj()->GetParent();
-//
-//	Matrix matWorldRot = m_matLocalRot;
-//
-//	while (nullptr != pParentObj)
-//	{
-//		matWorldRot *= pParentObj->Transform()->m_matLocalRot;
-//		pParentObj = pParentObj->GetParent();
-//	}
-//
-//	return Vec3(matWorldRot._11, matWorldRot._22, matWorldRot._33);
-//}

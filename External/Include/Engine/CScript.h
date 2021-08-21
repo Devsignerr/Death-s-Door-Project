@@ -31,7 +31,7 @@ class CScript :
 protected:
     int                 m_iScriptType;
     vector<tDataDesc>   m_vecDesc;
-
+   
 public:
     static void Instantiate(Ptr<CPrefab> _pPrefab, Vec3 _vWorldPos, int _iLayerIdx = 0);
     static void DeleteObject(CGameObject* _pTarget);

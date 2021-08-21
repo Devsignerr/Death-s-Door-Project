@@ -769,6 +769,15 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes<CGraphicsShader>(L"Std3D_DeferredShader", pShader);
 
+	// =================
+	// Fire Shader
+	// =================
+	pShader = new CGraphicsShader(SHADER_POV::DEFERRED);
+	pShader->CreateVertexShader(L"Shader\\Fire.fx", "VS_Fire");
+	pShader->CreatePixelShader(L"Shader\\Fire.fx", "PS_Fire");
+
+	AddRes(L"FireShader", pShader);
+
 	// ==============
 	// SkyBox Shader
 	// ==============
@@ -819,6 +828,21 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 
 	AddRes<CGraphicsShader>(L"PointLightShader", pShader);
+
+	// ==================
+	// Bloom Shader
+	// ==================
+	pShader = new CGraphicsShader(SHADER_POV::FORWARD);
+	pShader->CreateVertexShader(L"shader\\Bloom.fx", "VS_BLOOM");
+	pShader->CreatePixelShader(L"shader\\Bloom.fx", "PS_BLOOM");
+
+	// DS
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetBlendType(BLEND_TYPE::ONE_ONE);
+
+	AddRes<CGraphicsShader>(L"BloomShader", pShader);
+
+
 
 	// ==================
 	// Light Merge Shader
@@ -886,6 +910,19 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes<CGraphicsShader>(L"ParticleRenderShader", pShader);
 
+	// ===============================
+	// Deffered Particle Render Shader
+	// ===============================
+	pShader = new CGraphicsShader(SHADER_POV::DEFERRED_PARTICLE);
+
+	pShader->CreateVertexShader(L"shader\\std2d.fx", "VS_Particle");
+	pShader->CreateGeometryShader(L"shader\\std2d.fx", "GS_Particle");
+	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_Deffered_Particle");
+	pShader->SetBlendType(BLEND_TYPE::ALPHA_ONE);
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	AddRes<CGraphicsShader>(L"DefferedParticleRenderShader", pShader);
+
 	// ==================
 	// PostEffect Shader
 	// ==================
@@ -934,6 +971,8 @@ void CResMgr::CreateDefaultShader()
 }
 
 #include "CCopyShaderCS.h"
+#include "CHorizontalBlur.h"
+#include "CVerticalBlur.h"
 #include "CParticleUpdateShader.h"
 #include "CHeightMapShader.h"
 #include "CWeightShader.h"
@@ -949,6 +988,16 @@ void CResMgr::CreateComputeShader()
 	pCS = new CCopyShaderCS;
 	pCS->CreateComputeShader(L"shader\\CopyTexture.fx", "CS_CopyTex");
 	AddRes<CComputeShader>(L"CopyTextureShader", pCS);
+
+	// HoizontalBlurShader
+	pCS = new CHorizontalBlur;
+	pCS->CreateComputeShader(L"shader\\HorizontalBlur.fx", "CS_HorizontalBlur");
+	AddRes<CComputeShader>(L"HorizontalBlurShader", pCS);
+
+	// CopyTextureShader
+	pCS = new CVerticalBlur;
+	pCS->CreateComputeShader(L"shader\\VerticalBlur.fx", "CS_VerticalBlur");
+	AddRes<CComputeShader>(L"VerticalBlurShader", pCS);
 
 	// Particle Update Shader
 	pCS = new CParticleUpdateShader;
@@ -1025,6 +1074,7 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"PointLightShader"));
 	pMtrl->m_bDefault = true;
 	AddRes<CMaterial>(L"PointLightMtrl", pMtrl);
+
 		
 	// ==============
 	// LightMerge Mtrl
@@ -1068,6 +1118,16 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->m_bDefault = true;
 	AddRes<CMaterial>(L"ParticleRenderMtrl", pMtrl);
 
+
+
+	// =================================
+	// Deffered Particle Render Material
+	// =================================
+	pMtrl = new CMaterial;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DefferedParticleRenderShader"));
+	pMtrl->m_bDefault = true;
+	AddRes<CMaterial>(L"DefferedParticleRenderMtrl", pMtrl);
+
 	// ===================
 	// PostEffect Material
 	// ===================
@@ -1098,6 +1158,13 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->m_bDefault = true;
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
 	AddRes<CMaterial>(L"ShadowMapMtrl", pMtrl);
+
+
+	//FireMtrl
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"FireShader"));
+	AddRes<CMaterial>(L"FireMtrl", pMtrl);
 }
 
 

@@ -19,6 +19,14 @@ public:
 	COLLIDER3D_TYPE GetCollider3DType() { return m_Collider3DType; }
 	const Matrix& GetMatColWorld() { return m_MatColWorld; }
 	void SetCollider3DType(COLLIDER3D_TYPE _Type);
+	void SetOffSetPos(Vec3 _Pos) { m_OffsetPos = _Pos; }
+	void SetOffSetScale(Vec3 _Scale) { m_OffsetScale = _Scale; }
+
+	Vec3 GetOffSetPos() { return m_OffsetPos; }
+	Vec3 GetOffSetScale() { return m_OffsetScale; }
+
+	Ptr<CMesh> GetColMesh() { return m_Mesh; }
+	Ptr<CMaterial> GetColMaterial() { return m_Material; }
 public:
 	void finalupdate() override;
 	void UpdateData();
@@ -27,7 +35,7 @@ public:
 	// 충돌 진입 프레임 시 호출되는 함수
 	virtual void OnCollisionEnter(CCollider3D* _Other);
 	// 충돌 유지중에 호출되는 함수
-	virtual void OnCollisionStay(CCollider3D* _Other);
+	virtual void OnCollision(CCollider3D* _Other);
 	// 충돌이 해제되는 프레임 시 호출되는 함수
 	virtual void OnCollisionExit(CCollider3D* _Other);
 public:
@@ -40,7 +48,7 @@ public:
 
 public:
 	CCollider3D();
-	CCollider3D(const CCollider3D& _Origin);
+	CCollider3D(CCollider3D& _Origin);
 	~CCollider3D();
 };
 

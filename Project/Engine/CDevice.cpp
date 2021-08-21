@@ -170,14 +170,22 @@ void CDevice::CreateSamplerState()
 	tDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 	DEVICE->CreateSamplerState(&tDesc, m_arrSam[1].GetAddressOf());
 
-	ID3D11SamplerState* arrSam[2] = { m_arrSam[0].Get(), m_arrSam[1].Get() };
+	tDesc = {};
+	tDesc.AddressU = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
+	tDesc.AddressV = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
+	tDesc.AddressW = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
+	tDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	DEVICE->CreateSamplerState(&tDesc, m_arrSam[2].GetAddressOf());
 
-	CONTEXT->VSSetSamplers(0, 2, arrSam);
-	CONTEXT->HSSetSamplers(0, 2, arrSam);
-	CONTEXT->DSSetSamplers(0, 2, arrSam);
-	CONTEXT->GSSetSamplers(0, 2, arrSam);
-	CONTEXT->PSSetSamplers(0, 2, arrSam);
-	CONTEXT->CSSetSamplers(0, 2, arrSam);
+
+	ID3D11SamplerState* arrSam[3] = { m_arrSam[0].Get(), m_arrSam[1].Get() , m_arrSam[2].Get() };
+
+	CONTEXT->VSSetSamplers(0, 3, arrSam);
+	CONTEXT->HSSetSamplers(0, 3, arrSam);
+	CONTEXT->DSSetSamplers(0, 3, arrSam);
+	CONTEXT->GSSetSamplers(0, 3, arrSam);
+	CONTEXT->PSSetSamplers(0, 3, arrSam);
+	CONTEXT->CSSetSamplers(0, 3, arrSam);
 }
 
 void CDevice::CreateRSState()

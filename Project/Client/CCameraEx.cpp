@@ -6,6 +6,7 @@
 #include <Engine/CScene.h>
 #include <Engine/CSceneMgr.h>
 #include <Engine/CLayer.h>
+#include <Engine/CCore.h>
 
 #include "CImGUIMgr.h"
 #include "InspectorGUI.h"
@@ -54,8 +55,10 @@ void CCameraEx::ObjectSelectToRay()
 			Pos2.z /= Pos2.w;
 			Pos2.w /= Pos2.w;
 
-			Vec2 TransPT = Vec2((Pos.x + 1) * 1600.f / 2.f, ((Pos.y - 1) * 900.f / -2.f));
-			Vec2 TransPT2 = Vec2((Pos2.x + 1) * 1600.f / 2.f, ((Pos2.y - 1) * 900.f / -2.f));
+			POINT WINRES = CCore::GetInst()->GetWndResolution();
+
+			Vec2 TransPT = Vec2((Pos.x + 1) * WINRES.x / 2.f, ((Pos.y - 1) * WINRES.y / -2.f));
+			Vec2 TransPT2 = Vec2((Pos2.x + 1) * WINRES.x / 2.f, ((Pos2.y - 1) * WINRES.y / -2.f));
 
 			float fTrnaslength = TransPT.Distance(TransPT, TransPT2);
 

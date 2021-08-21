@@ -78,9 +78,6 @@ void MRTGUI::render()
 	// Light MRT
 	render_MRT(MRT_TYPE::LIGHT);
 
-	//
-
-
 	if (false == bOpen)
 	{
 		DeActivate();

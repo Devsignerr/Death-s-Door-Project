@@ -74,6 +74,9 @@ void CreateTestScene()
 	if(nullptr==CResMgr::GetInst()->FindRes<CTexture>(L"Lantern_Emis"))
 		CResMgr::GetInst()->Load<CTexture>(L"Lantern_Emis", L"texture\\FBXTexture\\Lantern_Emis.png");
 
+	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"weapon_emis"))
+		CResMgr::GetInst()->Load<CTexture>(L"weapon_emis", L"texture\\FBXTexture\\weapon_emis.png");
+
 	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"SkyBoxMtrl");
 	pMtrl->SetData(SHADER_PARAM::TEX_0, pSkyBoxTex.Get());
 	pMtrl->SetData(SHADER_PARAM::TEXCUBE_0, pSkyBoxTexArr.Get());
@@ -94,6 +97,44 @@ void CreateTestScene()
 
 	pCurScene->AddObject(pObj, 0);
 
+	// =============
+	// PostEffect
+	// =============
+	CGameObject* pPostEffect = new CGameObject;
+	pPostEffect->SetName(L"PostEffect Object");
+	
+	pPostEffect->AddComponent(new CTransform);
+	pPostEffect->AddComponent(new CMeshRender);
+	
+	pPostEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 100.f));
+	pPostEffect->Transform()->SetLocalScale(Vec3(5500.f, 3300.f, 1.f));
+	
+	pPostEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pPostEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl"),0);
+	
+	pCurScene->AddObject(pPostEffect, 1);
+
+
+	Ptr<CTexture> ParticleTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow50px");
+	if(nullptr ==ParticleTex )
+		ParticleTex = CResMgr::GetInst()->Load<CTexture>(L"Snow50px", L"texture\\particle\\Snow50px.png");
+
+	// ==================
+	// Particle System
+	// ==================
+	CGameObject* pParticle = new CGameObject;
+	pParticle->SetName(L"Particle System");
+
+	pParticle->AddComponent(new CTransform);
+	pParticle->AddComponent(new CParticleSystem);
+
+	pParticle->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
+
+	pParticle->ParticleSystem()->SetTexture(ParticleTex);
+	pCurScene->AddObject(pParticle, 1);
+
+
+	//
 	// ===============
 	// 3D Light Object
 	// ===============
@@ -122,12 +163,12 @@ void CreateTestScene()
 	pObj->AddComponent(new CTransform);
 	pObj->AddComponent(new CMeshRender);
 	pObj->AddComponent(new CSkyBoxScript);
-
+	
 	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyBoxMtrl"), 0);
-
+	
 	((CSkyBoxScript*)pObj->GetScript())->SetBoxType();
-
+	
 	pCurScene->AddObject(pObj, 0);
 
 	

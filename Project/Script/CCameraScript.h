@@ -11,18 +11,21 @@ class CCameraScript :
     public CScript
 {
 private:
-    CGameObject* m_pPlayerPivot;
+    CGameObject* m_pDirLight;
     CAMERA_MODE  m_eMode;
+
 public:
     virtual void update();
     virtual void start();
 public:
     CLONE(CCameraScript);
-
+public:
+    void CameraShake();
+    void MakeLightFollow(Vec3 _MovePos);
 private:
-    void SetCameraPos();
     void CameraFreeMove();
-    void FollowMove();
+    void CameraFollowMove();
+    void SetCameraPosRot(Vec3 _camPos , Vec3 _camRot);
 
 
     virtual void SaveToScene(FILE* _pFile);

@@ -14,6 +14,17 @@ void CCopyShaderCS::UpdateData()
 		static const CConstBuffer* pMtrlBuffer = CDevice::GetInst()->GetCB(CB_TYPE::MATERIAL);
 		tMtrlInfo info = {};
 		info.arrVec2[0] = Vec2(m_pDestTex->Width(), m_pDestTex->Height());
+
+		if (m_eCopyType == COPY_TYPE::BLOOM)
+		{
+			info.arrInt[0] = 1;
+		}
+
+		else if (m_eCopyType == COPY_TYPE::DOF)
+		{
+			info.arrInt[0] = 0;
+		}
+
 		pMtrlBuffer->SetData(&info);
 		pMtrlBuffer->UpdateData((UINT)PIPELINE_STAGE::PS_COMPUTE);
 	}	
@@ -21,15 +32,13 @@ void CCopyShaderCS::UpdateData()
 	if(nullptr != m_pSrcTex)
 		m_pSrcTex->UpdateData(13, (UINT)PIPELINE_STAGE::PS_COMPUTE);
 
-	if (nullptr != m_StaticShadowTex)
-		m_StaticShadowTex->UpdateData(14, (UINT)PIPELINE_STAGE::PS_COMPUTE);
+	
 }
 
 void CCopyShaderCS::Clear()
 {
 	CTexture::ClearRW(0);
 	CTexture::Clear(13, (UINT)PIPELINE_STAGE::PS_COMPUTE);	
-	CTexture::Clear(14, (UINT)PIPELINE_STAGE::PS_COMPUTE);
 }
 
 void CCopyShaderCS::Excute()

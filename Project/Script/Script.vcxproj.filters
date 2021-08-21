@@ -7,24 +7,8 @@
     <ClInclude Include="framework.h">
       <Filter>Default</Filter>
     </ClInclude>
-    <ClInclude Include="CScriptMgr.h" />
-    <ClInclude Include="CCameraScript.h">
-      <Filter>ScriptCode</Filter>
-    </ClInclude>
-    <ClInclude Include="CSkyBoxScript.h">
-      <Filter>ScriptCode</Filter>
-    </ClInclude>
-    <ClInclude Include="CMonsterScript.h">
-      <Filter>ScriptCode\Actor\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="CActorScript.h">
       <Filter>ScriptCode\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="CTestMonsterScript.h">
-      <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>ScriptCode\Actor\Player</Filter>
     </ClInclude>
     <ClInclude Include="CBatScript.h">
       <Filter>ScriptCode\Actor\Monster\Bat</Filter>
@@ -35,62 +19,176 @@
     <ClInclude Include="CBazookaScript.h">
       <Filter>ScriptCode\Actor\Monster\Bazooka</Filter>
     </ClInclude>
-    <ClInclude Include="CNailScript.h">
-      <Filter>ScriptCode\Actor\Monster\Nail</Filter>
+    <ClInclude Include="CBossScript.h">
+      <Filter>ScriptCode\Actor\Boss</Filter>
     </ClInclude>
-    <ClInclude Include="CTongueScript.h">
-      <Filter>ScriptCode\Actor\Monster\Tongue</Filter>
+    <ClInclude Include="CCameraScript.h">
+      <Filter>ScriptCode\System\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="CSpiderScript.h">
-      <Filter>ScriptCode\Actor\Monster\Spider</Filter>
+    <ClInclude Include="CCrowBatBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Crow</Filter>
     </ClInclude>
-    <ClInclude Include="CSpearManScript.h">
-      <Filter>ScriptCode\Actor\Monster\SpearMan</Filter>
+    <ClInclude Include="CCrowBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Crow</Filter>
     </ClInclude>
-    <ClInclude Include="CSkullScript.h">
-      <Filter>ScriptCode\Actor\Monster\Skull</Filter>
+    <ClInclude Include="CCrowEggBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Crow</Filter>
     </ClInclude>
-    <ClInclude Include="CPlantScript.h">
-      <Filter>ScriptCode\Actor\Monster\Plant</Filter>
+    <ClInclude Include="CCrowScript.h">
+      <Filter>ScriptCode\Actor\Boss\Crow</Filter>
     </ClInclude>
     <ClInclude Include="CIronmaceScript.h">
-      <Filter>ScriptCode\Actor\Monster\Ironmace</Filter>
+      <Filter>ScriptCode\Actor\Boss\Ironmace</Filter>
     </ClInclude>
-    <ClInclude Include="CTongueBullet.h">
-      <Filter>ScriptCode\Actor\Projectile\Tongue</Filter>
+    <ClInclude Include="CMonsterScript.h">
+      <Filter>ScriptCode\Actor\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="CProjectile.h">
-      <Filter>ScriptCode\Actor\Projectile</Filter>
+    <ClInclude Include="CNailScript.h">
+      <Filter>ScriptCode\Actor\Monster\Nail</Filter>
     </ClInclude>
     <ClInclude Include="CPlantBullet.h">
       <Filter>ScriptCode\Actor\Projectile\Plant</Filter>
     </ClInclude>
+    <ClInclude Include="CPlantScript.h">
+      <Filter>ScriptCode\Actor\Monster\Plant</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerArrow.h">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerBomb.h">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerMagic.h">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>ScriptCode\Actor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CProjectile.h">
+      <Filter>ScriptCode\Actor\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="CRandomMgrScript.h">
+      <Filter>ScriptCode\System\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="CScriptMgr.h">
+      <Filter>ScriptCode</Filter>
+    </ClInclude>
     <ClInclude Include="CSkullBullet.h">
       <Filter>ScriptCode\Actor\Projectile\Skull</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkullScript.h">
+      <Filter>ScriptCode\Actor\Monster\Skull</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkyBoxScript.h">
+      <Filter>ScriptCode\System\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpearManScript.h">
+      <Filter>ScriptCode\Actor\Monster\SpearMan</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpiderScript.h">
+      <Filter>ScriptCode\Actor\Monster\Spider</Filter>
     </ClInclude>
     <ClInclude Include="CTestMonsterAttackEffect.h">
       <Filter>ScriptCode\Actor\Projectile\TestMonster</Filter>
     </ClInclude>
-    <ClInclude Include="CRandomMgrScript.h">
-      <Filter>ScriptCode\System</Filter>
+    <ClInclude Include="CTestMonsterScript.h">
+      <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerIdle.h">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClInclude Include="CTongueBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Tongue</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerRun.h">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClInclude Include="CTongueScript.h">
+      <Filter>ScriptCode\Actor\Monster\Tongue</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerCharge.h">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClInclude Include="TCrowBatBullet.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerSlash.h">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClInclude Include="TCrowCutScene.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerRoll.h">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClInclude Include="TCrowDeath.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerHit.h">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClInclude Include="TCrowGuidedBullet.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowIdle.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowJump.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowLeftSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowRightSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowRun.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowSliding.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowSlidingReady.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowSlidingRot.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowSpitting.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowStandingDeath.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowStomp.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TCrowWalk.h">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronChopAttack.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronChopAttackCombo.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronChopAttackComboEnd.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronChopAttackEnd.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronCutScene.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronDeath.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronJumpAttack.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronJumpAttack2.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronJumpFinish.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronJumpReady.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronRunAttack.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronSpinAttack.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronSpinAttackCombo.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronWalk.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
     </ClInclude>
     <ClInclude Include="TPlayerArrow.h">
       <Filter>ScriptCode\FSM\Player</Filter>
@@ -98,11 +196,137 @@
     <ClInclude Include="TPlayerBomb.h">
       <Filter>ScriptCode\FSM\Player</Filter>
     </ClInclude>
-    <ClInclude Include="TPlayerMagic.h">
+    <ClInclude Include="TPlayerBomb_Finish.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerCharge_Attack_L.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerCharge_Attack_R.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerCharge_L.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerCharge_R.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerChargeMax_L.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerChargeMax_R.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerDance.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerDrown.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerGet_Item.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerHit_Back.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerHit_Recover.h">
       <Filter>ScriptCode\FSM\Player</Filter>
     </ClInclude>
     <ClInclude Include="TPlayerHook.h">
       <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerHookFly.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerIdle.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerLadder_Down.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerLadder_Top.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerLadder_Up.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerMagic.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerRoll.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerRollSlash.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerRun.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerSlash_Attack_L.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayerSlash_Attack_R.h">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CCastleScript.h">
+      <Filter>ScriptCode\Actor\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleCutScene.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleFly.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleFly_Finish.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleFly_Start.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleFly_Stay.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleLaser_Finish.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleLaser_Ready.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleLeftBack_HalfSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleLeftFront_HalfSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleMissile_Close.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleMissile_Open.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleRightBack_HalfSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleRightFront_HalfSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleSpin.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleWalk.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="CCastleBullet.h">
+      <Filter>ScriptCode\Actor\Projectile\Castle</Filter>
+    </ClInclude>
+    <ClInclude Include="CMapChange.h">
+      <Filter>ScriptCode\System\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="CFadeScript.h">
+      <Filter>ScriptCode\System\Camera\Fade</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleDeath.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +369,6 @@
     <Filter Include="ScriptCode\Actor\Monster\Bazooka">
       <UniqueIdentifier>{1ba42152-2fc3-4049-ac23-f77530b67c8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptCode\Actor\Monster\Ironmace">
-      <UniqueIdentifier>{03a5b417-db83-449a-b287-b3b28cdde2e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptCode\Actor\Monster\Nail">
       <UniqueIdentifier>{c970c519-e91f-4626-a2f8-ca16368b0452}</UniqueIdentifier>
     </Filter>
@@ -178,29 +399,61 @@
     <Filter Include="ScriptCode\FSM\Player">
       <UniqueIdentifier>{d0a34332-1bd0-466f-85d1-093f26d2d9ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ScriptCode\Actor\Boss">
+      <UniqueIdentifier>{a20ed7c5-7fee-49cc-848a-ff14f462e4dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Boss\Crow">
+      <UniqueIdentifier>{40fe09f5-1f13-4167-84a8-31e5531c3716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Boss\Ironmace">
+      <UniqueIdentifier>{4fd6f1b3-4edd-46b6-b4d6-d0b6bddf2eaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Crow">
+      <UniqueIdentifier>{4eb01e2d-8eda-4167-91d5-7ab79e680c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Player">
+      <UniqueIdentifier>{4155bc6c-50bd-4fc8-aead-d51032f6a020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\FSM\Boss">
+      <UniqueIdentifier>{c80aecef-f553-4b6b-b121-2624e815df4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\FSM\Boss\Crow">
+      <UniqueIdentifier>{720281f5-7ca5-476c-9ea0-25315dddeff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\FSM\Boss\Iron">
+      <UniqueIdentifier>{32cc9c48-a7f8-4d02-9a18-4523cf96ec3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\Camera">
+      <UniqueIdentifier>{bb22593d-6d21-455b-b487-311ceee5c673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\Random">
+      <UniqueIdentifier>{54c36434-fba0-41d9-863d-c97d141a181c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\SkyBox">
+      <UniqueIdentifier>{49c377c8-bec4-49ec-996d-00c35e1fa8da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Boss\Castle">
+      <UniqueIdentifier>{c3678373-01f0-432e-92d0-a6679cce46fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\FSM\Boss\Castle">
+      <UniqueIdentifier>{b25caa2f-3589-4250-b57e-6d7fbe3724ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Projectile\Castle">
+      <UniqueIdentifier>{a6614b01-f7dc-4ccf-986b-0e014eadfbc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\Map">
+      <UniqueIdentifier>{8846e00a-1868-4f90-a11e-cb450c512ce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\Camera\Fade">
+      <UniqueIdentifier>{a22b828e-cde1-4891-ac1f-384094a9a44b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
     </ClCompile>
-    <ClCompile Include="CScriptMgr.cpp" />
-    <ClCompile Include="CCameraScript.cpp">
-      <Filter>ScriptCode</Filter>
-    </ClCompile>
-    <ClCompile Include="CSkyBoxScript.cpp">
-      <Filter>ScriptCode</Filter>
-    </ClCompile>
-    <ClCompile Include="CMonsterScript.cpp">
-      <Filter>ScriptCode\Actor\Monster</Filter>
-    </ClCompile>
     <ClCompile Include="CActorScript.cpp">
       <Filter>ScriptCode\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="CTestMonsterScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>ScriptCode\Actor\Player</Filter>
     </ClCompile>
     <ClCompile Include="CBatScript.cpp">
       <Filter>ScriptCode\Actor\Monster\Bat</Filter>
@@ -211,62 +464,176 @@
     <ClCompile Include="CBazookaScript.cpp">
       <Filter>ScriptCode\Actor\Monster\Bazooka</Filter>
     </ClCompile>
-    <ClCompile Include="CNailScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\Nail</Filter>
+    <ClCompile Include="CBossScript.cpp">
+      <Filter>ScriptCode\Actor\Boss</Filter>
     </ClCompile>
-    <ClCompile Include="CTongueScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\Tongue</Filter>
+    <ClCompile Include="CCameraScript.cpp">
+      <Filter>ScriptCode\System\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="CSpiderScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\Spider</Filter>
+    <ClCompile Include="CCrowBatBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="CSpearManScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\SpearMan</Filter>
+    <ClCompile Include="CCrowBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="CSkullScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\Skull</Filter>
+    <ClCompile Include="CCrowEggBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="CPlantScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\Plant</Filter>
+    <ClCompile Include="CCrowScript.cpp">
+      <Filter>ScriptCode\Actor\Boss\Crow</Filter>
     </ClCompile>
     <ClCompile Include="CIronmaceScript.cpp">
-      <Filter>ScriptCode\Actor\Monster\Ironmace</Filter>
+      <Filter>ScriptCode\Actor\Boss\Ironmace</Filter>
     </ClCompile>
-    <ClCompile Include="CTongueBullet.cpp">
-      <Filter>ScriptCode\Actor\Projectile\Tongue</Filter>
+    <ClCompile Include="CMonsterScript.cpp">
+      <Filter>ScriptCode\Actor\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="CProjectile.cpp">
-      <Filter>ScriptCode\Actor\Projectile</Filter>
+    <ClCompile Include="CNailScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Nail</Filter>
     </ClCompile>
     <ClCompile Include="CPlantBullet.cpp">
       <Filter>ScriptCode\Actor\Projectile\Plant</Filter>
     </ClCompile>
+    <ClCompile Include="CPlantScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Plant</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerArrow.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerBomb.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerMagic.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>ScriptCode\Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CProjectile.cpp">
+      <Filter>ScriptCode\Actor\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="CRandomMgrScript.cpp">
+      <Filter>ScriptCode\System\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="CScriptMgr.cpp">
+      <Filter>ScriptCode</Filter>
+    </ClCompile>
     <ClCompile Include="CSkullBullet.cpp">
       <Filter>ScriptCode\Actor\Projectile\Skull</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkullScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Skull</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkyBoxScript.cpp">
+      <Filter>ScriptCode\System\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpearManScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\SpearMan</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpiderScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Spider</Filter>
     </ClCompile>
     <ClCompile Include="CTestMonsterAttackEffect.cpp">
       <Filter>ScriptCode\Actor\Projectile\TestMonster</Filter>
     </ClCompile>
-    <ClCompile Include="CRandomMgrScript.cpp">
-      <Filter>ScriptCode\System</Filter>
+    <ClCompile Include="CTestMonsterScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\TestMonster</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerIdle.cpp">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClCompile Include="CTongueBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Tongue</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerRun.cpp">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClCompile Include="CTongueScript.cpp">
+      <Filter>ScriptCode\Actor\Monster\Tongue</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerCharge.cpp">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClCompile Include="TCrowBatBullet.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerSlash.cpp">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClCompile Include="TCrowCutScene.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerRoll.cpp">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClCompile Include="TCrowDeath.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerHit.cpp">
-      <Filter>ScriptCode\FSM\Player</Filter>
+    <ClCompile Include="TCrowGuidedBullet.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowIdle.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowJump.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowLeftSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowRightSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowRun.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowSliding.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowSlidingReady.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowSlidingRot.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowSpitting.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowStandingDeath.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowStomp.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TCrowWalk.cpp">
+      <Filter>ScriptCode\FSM\Boss\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronChopAttack.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronChopAttackCombo.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronChopAttackComboEnd.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronChopAttackEnd.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronCutScene.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronDeath.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronJumpAttack.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronJumpAttack2.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronJumpFinish.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronJumpReady.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronRunAttack.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronSpinAttack.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronSpinAttackCombo.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronWalk.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
     </ClCompile>
     <ClCompile Include="TPlayerArrow.cpp">
       <Filter>ScriptCode\FSM\Player</Filter>
@@ -274,11 +641,137 @@
     <ClCompile Include="TPlayerBomb.cpp">
       <Filter>ScriptCode\FSM\Player</Filter>
     </ClCompile>
-    <ClCompile Include="TPlayerMagic.cpp">
+    <ClCompile Include="TPlayerBomb_Finish.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerCharge_Attack_L.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerCharge_Attack_R.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerCharge_L.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerCharge_R.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerChargeMax_L.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerChargeMax_R.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerDance.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerDrown.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerGet_Item.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerHit_Back.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerHit_Recover.cpp">
       <Filter>ScriptCode\FSM\Player</Filter>
     </ClCompile>
     <ClCompile Include="TPlayerHook.cpp">
       <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerHookFly.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerIdle.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerLadder_Down.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerLadder_Top.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerLadder_Up.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerMagic.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerRoll.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerRollSlash.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerRun.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerSlash_Attack_L.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayerSlash_Attack_R.cpp">
+      <Filter>ScriptCode\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CCastleScript.cpp">
+      <Filter>ScriptCode\Actor\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleCutScene.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleFly.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleFly_Finish.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleFly_Start.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleFly_Stay.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleLaser_Finish.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleLaser_Ready.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleLeftBack_HalfSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleLeftFront_HalfSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleMissile_Close.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleMissile_Open.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleRightBack_HalfSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleRightFront_HalfSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleSpin.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleWalk.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="CCastleBullet.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="CMapChange.cpp">
+      <Filter>ScriptCode\System\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="CFadeScript.cpp">
+      <Filter>ScriptCode\System\Camera\Fade</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleDeath.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

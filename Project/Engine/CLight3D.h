@@ -42,6 +42,8 @@ public:
 
     const tLightInfo& GetInfo(){return m_info;}
     void SetLightInfo(tLightInfo Info);
+
+    CGameObject* GetLightCam() { return m_pCamObj; }
 public:
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);

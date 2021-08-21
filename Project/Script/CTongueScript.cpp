@@ -10,15 +10,6 @@
 void CTongueScript::awake()
 {
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
-	Vec3 vRot = Transform()->GetLocalRot();
-	vRot.x = -XM_PI / 2.0f;
-	Transform()->SetLocalRot(vRot);
-
-	m_RotObj = new CGameObject;
-	m_RotObj->AddComponent(new CTransform);
-
-	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-	CurScene->AddObject(m_RotObj, 9);
 }
 
 void CTongueScript::update()
@@ -62,29 +53,18 @@ void CTongueScript::Move()
 	Vec3 vDiff = vPlayerPos - vPos;
 	vDiff.Normalize();
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * 650.0f;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * 650.0f;
+	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
+	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
 
-	MonsterRotateSystem(5.0f);
+	MonsterRotateSystem(m_ChaseRotSpeed);
 	Transform()->SetLocalPos(vPos);
 
-	if (RangeSearch(400.0f))
+	if (RangeSearch(m_GuardRange))
 	{
 		ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"Guard");
 
 		//ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"SpinDown");
 	}
-}
-
-void CTongueScript::Chase()
-{
-}
-
-void CTongueScript::ReadyAction()
-{
-	// 유도탄 발사 후 깨물기
-	// 플레이어가 가까이 있으면 한바퀴 돈 후 땅 찍기
-	// 그 후에도 가까이 있으면 백스텝으로 거리 벌린후 다시 Move 후 패턴 반복
 }
 
 void CTongueScript::Attack()
@@ -95,7 +75,7 @@ void CTongueScript::Attack()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true && CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName != L"LongDistance")
 	{
-		if (false == RangeSearch(1000.0f))
+		if (false == RangeSearch(m_ChaseRange))
 		{
 			ChangeState(MONSTERSTATE::MOVE, 0.2f, L"Chase");
 		}
@@ -103,6 +83,7 @@ void CTongueScript::Attack()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"SpinDown")
 	{
+		MonsterRotateSystem(3.0f);
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
 			ChangeState(MONSTERSTATE::FINISH_ACTION, 0.2f, L"SpinUp");
@@ -112,7 +93,7 @@ void CTongueScript::Attack()
 	{
 		if (273 <= CurAni->GetFrameIdx() && 320 >= CurAni->GetFrameIdx())
 		{
-			MonsterRotateSystem(2.0f);
+			MonsterRotateSystem(m_AttackRotSpeed);
 		}
 		if (338 == CurAni->GetFrameIdx())
 		{
@@ -124,7 +105,7 @@ void CTongueScript::Attack()
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 
 		}
-		else if (false == RangeSearch(1500.0f))
+		else if (false == RangeSearch(m_ChaseRange))
 		{
 			ChangeState(MONSTERSTATE::MOVE, 0.2f, L"Chase");
 		}
@@ -134,7 +115,7 @@ void CTongueScript::Attack()
 		if (1012 > CurAni->GetFrameIdx())
 		{
 			m_AttackDir = CPlayerScript::GetPlayerPos() - Transform()->GetLocalPos();
-			MonsterRotateSystem(2.0f);
+			MonsterRotateSystem(m_AttackRotSpeed);
 		}
 		if (1008 <= CurAni->GetFrameIdx() && 1016 >= CurAni->GetFrameIdx())
 		{
@@ -175,15 +156,15 @@ void CTongueScript::FinishAction()
 	{
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
-			if (RangeSearch(400.0f))
+			if (RangeSearch(m_BackStepRange))
 			{
 				ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep2");
 			}
-			else if (false == RangeSearch(400.0f) && true == RangeSearch(1000.0f))
+			else if (false == RangeSearch(m_BackStepRange) && true == RangeSearch(m_ChaseRange))
 			{
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 			}
-			else if (false == RangeSearch(1000.0f))
+			else if (false == RangeSearch(m_ChaseRange))
 			{
 				ChangeState(MONSTERSTATE::MOVE, 0.2f, L"Chase");
 			}
@@ -224,7 +205,7 @@ void CTongueScript::SpecialAction()
 	{
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
-			m_Test = 0;
+			m_SpinCount = 0;
 			ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"GuardStay");
 		}
 	}
@@ -237,9 +218,9 @@ void CTongueScript::SpecialAction()
 		//플레이어는 내 왼쪽에 있다 
 		else if (dot > 200.0)
 		{
-			++m_Test;
+			++m_SpinCount;
 
-			if (1 == m_Test)
+			if (1 == m_SpinCount)
 			{
 				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"LeftSpin");
 			}
@@ -249,9 +230,9 @@ void CTongueScript::SpecialAction()
 		//플레이어는 내 오른쪽에 있다 
 		else if (dot < -200.0)
 		{
-			++m_Test;
+			++m_SpinCount;
 
-			if (1 == m_Test)
+			if (1 == m_SpinCount)
 			{
 				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"RightSpin");
 			}
@@ -261,7 +242,7 @@ void CTongueScript::SpecialAction()
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"LeftSpin")
 	{
 		
-		m_Test = 0;
+		m_SpinCount = 0;
 		Rot.y -= CTimeMgr::GetInst()->GetfDT() * 1.0f;
 		Transform()->SetLocalRot(Rot);
 
@@ -273,7 +254,7 @@ void CTongueScript::SpecialAction()
 
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightSpin")
 	{
-		m_Test = 0;
+		m_SpinCount = 0;
 		Rot.y += CTimeMgr::GetInst()->GetfDT() * 1.0f;
 		Transform()->SetLocalRot(Rot);
 		if (dot > -5.0 && dot < 5.0 && dist < 1.f)
@@ -285,7 +266,7 @@ void CTongueScript::SpecialAction()
 	{
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
-			if (RangeSearch(400.0f))
+			if (RangeSearch(m_SpinDownRange))
 			{
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"SpinDown");
 			}
@@ -331,6 +312,43 @@ void CTongueScript::Death()
 {
 }
 
+void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
+{
+	// 플레이어의 공격을 받은경우
+	CGameObject* Obj = _pOther;
+
+	if (11 == Obj->GetLayerIndex())
+	{
+		CAnimator3D* CurAni = Animator3D();
+		UINT iCurClipIdx = CurAni->GetClipIdx();
+
+		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"GuardStay" ||
+			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"LeftSpin" ||
+			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightSpin")
+		{
+			--m_ShieldPoint;
+
+			if (0 == m_ShieldPoint)
+			{
+				m_ShieldPoint = 3;
+				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.05f, L"GuardBreak");
+			}
+		}
+		else
+		{
+			--m_MonsterInfo.Hp;
+		}
+	}
+}
+
+void CTongueScript::OnCollision(CGameObject* _pOther)
+{
+}
+
+void CTongueScript::OnCollisionExit(CGameObject* _pOther)
+{
+}
+
 void CTongueScript::LongDistanceAttack()
 {
 	if (m_BulletLimit == false)
@@ -372,12 +390,21 @@ void CTongueScript::CalAttackDistance()
 }
 
 CTongueScript::CTongueScript()
-	: m_Test(0)
+	: m_SpinCount(0)
 	, m_fTheta(0.0f)
 	, m_AttackDir{}
 	, m_BulletLimit(false)
+	, m_ShieldPoint(3)
+	, m_ChaseSpeed(650.0f)
+	, m_GuardRange(400.0f)
+	, m_BackStepRange(400.0f)
+	, m_ChaseRange(1200.0f)
+	, m_SpinDownRange(600.0f)
+	, m_ChaseRotSpeed(5.0f)
+	, m_AttackRotSpeed(2.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::TONGUESCRIPT;
+	m_MonsterInfo.Hp = 8;
 }
 
 CTongueScript::~CTongueScript()

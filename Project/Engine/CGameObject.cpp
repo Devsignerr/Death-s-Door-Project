@@ -12,6 +12,7 @@
 #include "CAnimator3D.h"
 #include "CCollider2D.h"
 #include "CCollider3D.h"
+#include "CFrustumSphere.h"
 #include "CCamera.h"
 #include "CLight2D.h"
 #include "CLight3D.h"
@@ -21,10 +22,11 @@ CGameObject::CGameObject()
 	: m_arrCom{}
 	, m_iLayerIdx(-1)
 	, m_pParentObj(nullptr)
-	, m_bFrustum(false)
+	, m_bFrustum(true)
 	, m_bDynamicShadow(false)
 	, m_bDead(false)
 {
+	
 }
 
 CGameObject::CGameObject(CGameObject& _origin)
@@ -432,4 +434,17 @@ void CGameObject::LoadFromScene(FILE* _pFile)
 		AddChild(pChild);
 		pChild->m_iLayerIdx = iLayerIdx;
 	}
+
+	//만약 내가 참조하던 메쉬가 네비메쉬였다면 리소스 매니저에 스스로를 등록한다 
+	if(MeshRender())
+	{
+		if (nullptr != MeshRender()->GetMesh())
+		{
+			CMesh* pMesh = MeshRender()->GetMesh().Get();
+
+			if (pMesh->IsNavMesh())
+				CResMgr::GetInst()->GetNavMeshVec().push_back(this);
+		}		
+	}
+
 }

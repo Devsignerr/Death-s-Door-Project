@@ -42,13 +42,13 @@ void CTongueBullet::update()
 		if (m_fTimetoCheckPlayerPos < 1.0f)
 		{
 
-			Pos.x += fDT * vRelative.x * 800.0f;
-			Pos.z += fDT * vRelative.z * 800.0f;
+			Pos.x += fDT * vRelative.x * 1000.0f;
+			Pos.z += fDT * vRelative.z * 1000.0f;
 
 		}
 		else
 		{
-			Pos += (vFront / 0.95f) * fDT * 800.f;
+			Pos += (vFront / 0.95f) * fDT * 1000.f;
 		}
 
 

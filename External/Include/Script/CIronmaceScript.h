@@ -1,20 +1,46 @@
 #pragma once
-#include "CMonsterScript.h"
-class CIronmaceScript :
-	public CMonsterScript
+#include "CBossScript.h"
+
+class CFSM;
+class CIronmaceScript : public CBossScript
 {
+private:
+	enum class IRONMACE_STATE
+	{
+		CUTSCENE,
+		IDLE,
+		WALK,
+		RUN_ATTACK,
+		JUMPREADY,
+		JUMPFINISH,
+		JUMPATTACK,
+		JUMPATTACK2,
+		CHOPATTACK,
+		CHOPATTACKEND,
+		CHOPATTACKCOMBO,
+		CHOPATTACKCOMBOEND,
+		SPINATTACK,
+		SPINATTACKCOMBO,
+		DEATH,
+		END
+
+	};
+
+private:
+	CFSM*							m_pFSM;
+	IRONMACE_STATE					m_eState;	
+	map<IRONMACE_STATE, wstring>	m_mapState;
+	int								m_Hp;
+
+private:
+	void ChangeState(IRONMACE_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);
 public:
 	void awake() override;
 	void update() override;
-private:
-	void Idle() override;
-	void Move() override;
-	void Chase() override;
-	void ReadyAction() override;
-	void Attack() override;
-	void FinishAction() override;
-	void Jump() override;
-	void Death() override;
+public:
+	void OnCollisionEnter(CGameObject* _pOther) override;
+	void OnCollision(CGameObject* _pOther) override;
+	void OnCollisionExit(CGameObject* _pOther) override;
 public:
 
 	virtual void SaveToScene(FILE* _pFile);

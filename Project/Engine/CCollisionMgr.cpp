@@ -166,8 +166,8 @@ void CCollisionMgr::CollisionGroup(int _iLeft, int _iRight)
 					}
 					else
 					{
-						VecLeft[i]->Collider3D()->OnCollisionStay(VecRight[j]->Collider3D());
-						VecRight[j]->Collider3D()->OnCollisionStay(VecLeft[i]->Collider3D());
+						VecLeft[i]->Collider3D()->OnCollision(VecRight[j]->Collider3D());
+						VecRight[j]->Collider3D()->OnCollision(VecLeft[i]->Collider3D());
 					}
 
 				}

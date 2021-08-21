@@ -35,6 +35,8 @@ private:
     Vec4                        m_vEndColor;
     Vec3                        m_vStartScale;
     Vec3                        m_vEndScale;
+    SHADER_POV                  m_ePOV;
+
 
 public:
     virtual void awake();
@@ -75,6 +77,10 @@ public:
     Vec3    GetEndScale() { return m_vEndScale; }
 
     Ptr<CMaterial> GetMaterial() { return m_pMtrl; }
+
+public:
+    SHADER_POV GetPOV() { return m_ePOV; }
+    void SetPOV(SHADER_POV _Pov) { m_ePOV = _Pov; }
 
 public:
     virtual void SaveToScene(FILE* _pFile);

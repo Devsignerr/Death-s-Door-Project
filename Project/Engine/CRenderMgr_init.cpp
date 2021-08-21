@@ -17,7 +17,7 @@ void CRenderMgr::CreateMRT()
 
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)pTex2D.GetAddressOf());
 	Ptr<CTexture> pRTTex = CResMgr::GetInst()->CreateTexture(L"SwapChainRenderTargetTex", pTex2D, true);
-	assert(pRTTex.Get());		
+	assert(pRTTex.Get());
 
 	// DepthStencl Texture 생성
 	Vec2 vResolution = Vec2((float)CDevice::GetInst()->GetBufferResolution().x, (float)CDevice::GetInst()->GetBufferResolution().y);
@@ -31,7 +31,6 @@ void CRenderMgr::CreateMRT()
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->SetName(L"SwapChain");
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->Create(arrTex, arrClearColor, pDepthTex);
 
-
 	// =========
 	// Light MRT
 	// =========
@@ -42,14 +41,29 @@ void CRenderMgr::CreateMRT()
 		Ptr<CTexture> pSpecularLight = CResMgr::GetInst()->CreateTexture(L"SpecularLightTargetTex", (UINT)vResolution.x, (UINT)vResolution.y
 			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, DXGI_FORMAT_R8G8B8A8_UNORM, true);
 
+
+	
 		Ptr<CTexture> arrTex[8] = { pDiffuseLight, pSpecularLight };
-		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f), };
+		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f) };
 
 		m_arrMRT[(UINT)MRT_TYPE::LIGHT] = new CMRT;
 		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->SetName(L"Lights");
 		m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Create(arrTex, arrClearColor, nullptr);
 	}
 
+	// ===============
+	// Bloom , DOF Tex
+	// ================
+
+	{
+		Ptr<CTexture> pBloomLight = CResMgr::GetInst()->CreateTexture(L"BloomLightTargetTex", (UINT)vResolution.x/4.f, (UINT)vResolution.y/4.f
+			, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
+		
+		Ptr<CTexture> pSwapChianDownSample = CResMgr::GetInst()->CreateTexture(L"DownSampleTex", (UINT)vResolution.x / 4.f, (UINT)vResolution.y / 4.f
+			, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
+	}
 
 	// ============
 	// Deferred MRT
@@ -66,9 +80,14 @@ void CRenderMgr::CreateMRT()
 
 		Ptr<CTexture> pDiffuseLight = CResMgr::GetInst()->FindDataTexture(L"DiffuseLightTargetTex");
 
+		Ptr<CTexture> pDOFDepthTex = CResMgr::GetInst()->CreateTexture(L"DOFTex"
+			, vResolution.x, vResolution.y
+			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE
+			, DXGI_FORMAT_R32_FLOAT, true);
+
 		// 디퍼드 단계에서 DiffLight 타겟도 같이 묶어줘서 라이트 정보를 미리 그릴수 있게 되었음 
-		Ptr<CTexture> arrTex[8] = { pDiffuseTex, pNormalTex, pPositionTex, pDiffuseLight };
-		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f) };
+		Ptr<CTexture> arrTex[8] = { pDiffuseTex, pNormalTex, pPositionTex, pDiffuseLight ,pDOFDepthTex };
+		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f),  Vec4(0.f, 0.f, 0.f, 0.f), Vec4(0.f, 0.f, 0.f, 0.f) };
 
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED] = new CMRT;
 		m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->SetName(L"Deferred");
@@ -76,11 +95,14 @@ void CRenderMgr::CreateMRT()
 	}
 
 
+
 	// LightMergeMtrl 파라미터 셋팅
 	Ptr<CMaterial> pLightMergeMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"LightMergeMtrl");
 	pLightMergeMtrl->SetData(SHADER_PARAM::TEX_0, CResMgr::GetInst()->FindDataTexture(L"DiffuseTargetTex").Get());
 	pLightMergeMtrl->SetData(SHADER_PARAM::TEX_1, CResMgr::GetInst()->FindDataTexture(L"DiffuseLightTargetTex").Get());
 	pLightMergeMtrl->SetData(SHADER_PARAM::TEX_2, CResMgr::GetInst()->FindDataTexture(L"SpecularLightTargetTex").Get());
+
+	
 
 
 	// ==============
@@ -99,16 +121,11 @@ void CRenderMgr::CreateMRT()
 			, D3D11_BIND_DEPTH_STENCIL
 			, DXGI_FORMAT_D32_FLOAT, true);
 
-
-		Ptr<CTexture> FinalShadowMapTex = CResMgr::GetInst()->CreateTexture(L"FinalShadowMapTargetTex"
-			, ptShadowMapResolution.x, ptShadowMapResolution.y
-			, D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE
-			, DXGI_FORMAT_R32_FLOAT, true);
-
 		Ptr<CTexture> arrTex[8] = { pShadowMapTex , };
 		Vec4 arrClearColor[8] = { Vec4(0.f, 0.f, 0.f, 0.f), };
 
 		m_arrMRT[(UINT)MRT_TYPE::DYNAMIC_SHADDOWMAP] = new CMRT;
+		m_arrMRT[(UINT)MRT_TYPE::DYNAMIC_SHADDOWMAP]->SetName(L"shadow MRT");
 		m_arrMRT[(UINT)MRT_TYPE::DYNAMIC_SHADDOWMAP]->Create(arrTex, arrClearColor, pShadowMapDepthTex);
 	}
 }

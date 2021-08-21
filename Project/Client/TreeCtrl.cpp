@@ -2,6 +2,7 @@
 #include "TreeCtrl.h"
 
 #include "CImGUIMgr.h"
+#include "InspectorGUI.h"
 #include "imgui.h"
 #include "GUI.h"
 
@@ -155,6 +156,8 @@ void TreeCtrl::render()
 			CImGUIMgr::GetInst()->AddCallBackEvent(event);
 
 			//(*m_pCallBackInst.*m_pCallBack)(&m_pBeginItem->data, &m_pDroppedItem->data);
+
+
 		}
 
 		if (DRAG_DROP_MOD::SWAP == m_eMod)

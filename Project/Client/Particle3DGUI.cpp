@@ -34,12 +34,24 @@ void Particle3DGUI::render()
     Vec4  EndColor= pPaticle->GetEndColor();
     Vec4  StartScale=  Vec4(pPaticle->GetStartScale(),1.f);
     Vec4  EndScale= Vec4(pPaticle->GetEndScale(),1.f);
-    
+      
     ImGuiColorEditFlags misc_flags = 0;
 
     Start();
 
-    ImGui::Text("MaxCount    \t");  ImGui::SameLine(); ImGui::DragInt("##MaxCount    ", &maxcount);
+    if (ImGui::Button("Normal"))
+    {
+        pPaticle->SetPOV(SHADER_POV::PARTICLE);
+    }
+
+    if (ImGui::Button("Deffered"))
+    {
+        pPaticle->SetPOV(SHADER_POV::DEFERRED_PARTICLE);
+    }
+    
+      
+
+    ImGui::Text("MaxCount    \t");  ImGui::SameLine(); ImGui::DragInt("##MaxCount    ", &maxcount,1,0);
     ImGui::Text("AliveCount  \t");  ImGui::SameLine(); ImGui::DragInt("##AliveCount  ", &AliveCount);
     ImGui::Text("MinlifeCount\t");  ImGui::SameLine(); ImGui::DragFloat("##MinlifeCount", &MinLifeTime);
     ImGui::Text("MaxLifeTime \t");  ImGui::SameLine(); ImGui::DragFloat("##MaxLifeTime ", &MaxLifeTime);
@@ -57,10 +69,12 @@ void Particle3DGUI::render()
     End();
 
 
-     
+    if (maxcount < 0)
+        maxcount = 0;
+
      pPaticle->SetMaxParticleCount(maxcount);
      pPaticle->SetMaxCount(maxcount);
-     pPaticle->SetAliveCount(AliveCount);
+     //pPaticle->SetAliveCount(AliveCount);
      pPaticle->SetMinLifeTime(MinLifeTime);
      pPaticle->SetMaxLifeTime(MaxLifeTime);
      pPaticle->SetMinSpeed(MinSpeed);

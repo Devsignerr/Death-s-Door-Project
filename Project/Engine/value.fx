@@ -76,6 +76,9 @@ cbuffer GLOBAL_VALUE : register(b2)
     
     uint    iLight2DCount; // 2D±¤¿ø °³¼ö
     uint    iLight3DCount; // 3D±¤¿ø °³¼ö
+    
+    float   fDOFDistance;
+    int     Padding[3];
 }
 
 Texture2D                g_tex_0 : register(t0);
@@ -102,7 +105,7 @@ Texture2D g_animtex : register(t73);
 
 SamplerState g_sam_0 : register(s0); // anisotropic
 SamplerState g_sam_1 : register(s1); // point
-
+SamplerState g_sam_2 : register(s2); // ?
 
 
 

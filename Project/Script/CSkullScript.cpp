@@ -7,9 +7,6 @@
 void CSkullScript::awake()
 {
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
-	Vec3 vRot = Transform()->GetLocalRot();
-	vRot.x = -XM_PI / 2.0f;
-	Transform()->SetLocalRot(vRot);
 }
 
 void CSkullScript::update()
@@ -27,6 +24,26 @@ void CSkullScript::update()
 	case CMonsterScript::MONSTERSTATE::JUMP: Jump(); break;
 	case CMonsterScript::MONSTERSTATE::DEATH: Death(); break;
 	}
+}
+
+void CSkullScript::OnCollisionEnter(CGameObject* _pOther)
+{
+	// 플레이어의 공격을 받은경우
+	CGameObject* Obj = _pOther;
+
+	if (11 == Obj->GetLayerIndex())
+	{
+		--m_MonsterInfo.Hp;
+	}
+
+}
+
+void CSkullScript::OnCollision(CGameObject* _pOther)
+{
+}
+
+void CSkullScript::OnCollisionExit(CGameObject* _pOther)
+{
 }
 
 void CSkullScript::LongDistanceAttack()
@@ -64,11 +81,6 @@ void CSkullScript::Idle()
 	}
 }
 
-void CSkullScript::Move()
-{
-	
-}
-
 void CSkullScript::Chase()
 {
 	// 초기 상태
@@ -79,35 +91,26 @@ void CSkullScript::Chase()
 	Vec3 vDiff = vPlayerPos - vPos;
 	vDiff.Normalize();
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * 450.0f;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * 450.0f;
+	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
+	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
 
-	MonsterRotateSystem(5.0f);
+	MonsterRotateSystem(m_RotSpeed);
 	Transform()->SetLocalPos(vPos);
 
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
-	if (RangeSearch(800.0f))
+	if (RangeSearch(m_MeleeAttackRange))
 	{
 		ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 	}
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-		if (false == RangeSearch(2000.0f))
+		if (false == RangeSearch(m_LongDistanceAttackRange))
 		{
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 		}
 	}
-}
-
-void CSkullScript::ReadyAction()
-{
-	// 플레이어가 근접공격 범위내에 들어온경우 
-	// 엇박자로 2번 때림
-	// 1번 때린뒤에 플레이어가 범위를 벗어나면 후속타는 이어지지 않는다
-	// 플레이어와 거리가 너무 벌어진경우 원거리 공격
-
 }
 
 void CSkullScript::Attack()
@@ -119,7 +122,7 @@ void CSkullScript::Attack()
 	{
 		if (264 > CurAni->GetFrameIdx() || 274 < CurAni->GetFrameIdx())
 		{
-			MonsterRotateSystem(5.0f);
+			MonsterRotateSystem(m_RotSpeed);
 		}
 
 		if (264 <= CurAni->GetFrameIdx() && 266 >= CurAni->GetFrameIdx())
@@ -129,8 +132,8 @@ void CSkullScript::Attack()
 			Vec3 vDiff = vPlayerPos - vPos;
 			vDiff.Normalize();
 
-			vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * 900.0f;
-			vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * 900.0f;
+			vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_AttackMoveSpeed;
+			vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_AttackMoveSpeed;
 
 			Transform()->SetLocalPos(vPos);
 		}
@@ -142,15 +145,15 @@ void CSkullScript::Attack()
 		// LongDistance 아닐때
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
-			if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee" && RangeSearch(1000.0f))
+			if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee" && RangeSearch(m_MeleeAttack2Range))
 			{
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee2");
 			}
-			else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee2" && RangeSearch(800.0f))
+			else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee2" && RangeSearch(m_MeleeAttackRange))
 			{
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 			}
-			else if (false == RangeSearch(800.0f) && RangeSearch(2000.0f))
+			else if (false == RangeSearch(m_MeleeAttackRange) && RangeSearch(m_LongDistanceAttackRange))
 			{
 				ChangeState(MONSTERSTATE::CHASE, 0.2f, L"Chase");
 		
@@ -176,7 +179,7 @@ void CSkullScript::Attack()
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
 			m_BulletLimit = false;
-			if (RangeSearch(800.0f))
+			if (RangeSearch(m_MeleeAttackRange))
 			{
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 			}
@@ -189,22 +192,21 @@ void CSkullScript::Attack()
 
 }
 
-void CSkullScript::FinishAction()
-{
-}
-
-void CSkullScript::Jump()
-{
-}
-
 void CSkullScript::Death()
 {
 }
 
 CSkullScript::CSkullScript()
 	: m_BulletLimit(false)
+	, m_ChaseSpeed(450.0f)
+	, m_MeleeAttackRange(800.0f)
+	, m_MeleeAttack2Range(1000.0f)
+	, m_LongDistanceAttackRange(1800.0f)
+	, m_AttackMoveSpeed(900.0f)
+	, m_RotSpeed(5.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::SKULLSCRIPT;
+	m_MonsterInfo.Hp = 10;
 }
 
 CSkullScript::~CSkullScript()

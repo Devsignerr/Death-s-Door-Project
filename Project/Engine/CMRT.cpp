@@ -67,6 +67,7 @@ void CMRT::OMSet(bool _bUsePrevDepth)
 	CONTEXT->RSSetViewports(1, &m_tViewPort);;
 }
 
+
 void CMRT::Clear()
 {
 	for (int i = 0; i < 8; ++i)

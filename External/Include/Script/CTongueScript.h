@@ -9,22 +9,33 @@ public:
 	void awake() override;
 	void update() override;
 private:
-	CGameObject* m_RotObj;
 	bool		 m_Left;
-	int          m_Test;
+	int          m_SpinCount;
 	Vec3		 m_AttackDir;
 	float		 m_fTheta;
 	bool		 m_BulletLimit;
+	int			 m_ShieldPoint;
+	float		 m_ChaseSpeed;
+	float		 m_GuardRange;
+	float        m_BackStepRange;
+	float        m_ChaseRange;
+	float		 m_SpinDownRange;
+	float		 m_ChaseRotSpeed;
+	float		 m_AttackRotSpeed;
+
 private:
 	void Idle() override;
 	void Move() override;
-	void Chase() override;
-	void ReadyAction() override;
 	void Attack() override;
 	void FinishAction() override;
 	void SpecialAction() override;
 	void Jump() override;
 	void Death() override;
+
+public:
+	void OnCollisionEnter(CGameObject* _pOther) override;
+	void OnCollision(CGameObject* _pOther) override;
+	void OnCollisionExit(CGameObject* _pOther) override;
 
 private:
 	void LongDistanceAttack() override;

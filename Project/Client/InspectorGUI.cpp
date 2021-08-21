@@ -14,10 +14,12 @@
 #include "TransformGUI.h"
 #include "MeshRenderGUI.h"
 #include "Collider2DGUI.h"
+#include "Collider3DGUI.h"
 #include "ScriptGUI.h"
 #include "Animator3DGUI.h"
 #include "Light3DGUI.h"
 #include "Particle3DGUI.h"
+#include "FrustumGUI.h"
 #include "CameraGUI.h"
 
 
@@ -30,6 +32,7 @@ InspectorGUI::InspectorGUI()
     , m_arrResInfoGUI{}
     , m_pTargetObj(nullptr)
     , m_pTargetRes(nullptr)
+    , m_bItemChanged(false)
 {
 }
 
@@ -60,6 +63,12 @@ void InspectorGUI::init()
     pNew->SetSize(Vec2(0.f, 100.f));
     m_arrComGUI[(UINT)COMPONENT_TYPE::COLLIDER2D] = pNew;
 
+    pNew = new Collider3DGUI;
+
+    pNew->SetName(L"Collider3D");
+    pNew->SetSize(Vec2(0.f, 100.f));
+    m_arrComGUI[(UINT)COMPONENT_TYPE::COLLIDER3D] = pNew;
+
     pNew = new Light3DGUI;
 
     pNew->SetName(L"Light3DGUI");
@@ -81,8 +90,15 @@ void InspectorGUI::init()
     pNew = new CameraGUI;
 
     pNew->SetName(L"Camera");
-    pNew->SetSize(Vec2(0.f, 100.f));
+    pNew->SetSize(Vec2(0.f, 300.f));
     m_arrComGUI[(UINT)COMPONENT_TYPE::CAMERA] = pNew;
+
+    pNew = new FrustumGUI;
+
+    pNew->SetName(L"Frustum Sphere");
+    pNew->SetSize(Vec2(0.f, 100.f));
+    m_arrComGUI[(UINT)COMPONENT_TYPE::FRUSTUMSPHERE] = pNew;
+
 
     for (int i = 0; i < 10; ++i)
     {
@@ -162,6 +178,14 @@ void InspectorGUI::render()
         static bool DynamicShadow = false;
         static bool FrustumCulling = false;
 
+        if (m_bItemChanged)
+        {
+            DynamicShadow = m_pTargetObj->IsDynamicShdow();
+            FrustumCulling = m_pTargetObj->IsFrustum();
+
+            m_bItemChanged = false;
+        }
+
         ImGui::Checkbox("DynamicShadow", &DynamicShadow);
         if (true == DynamicShadow)
         {
@@ -211,7 +235,6 @@ void InspectorGUI::render()
             m_vecScriptGUI[i]->SetScript(vecScript[i]);
             m_vecScriptGUI[i]->render();
         }
-
 
         static char szEmpty[100] = {};
         ImGui::InputText("PrefabName", szEmpty, IM_ARRAYSIZE(szEmpty));

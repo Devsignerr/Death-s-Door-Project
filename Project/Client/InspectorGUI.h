@@ -21,10 +21,17 @@ private:
     CRes*           m_pTargetRes;
     RES_TYPE        m_eResType;
 
+    bool            m_bItemChanged;
+
 public:
     virtual void init();
     virtual void update();
     virtual void render();
+
+public:
+    void ItemChanged() { m_bItemChanged = true; }
+
+    ComponentGUI* GetGUI(COMPONENT_TYPE _Type) { return m_arrComGUI[(UINT)_Type]; }
 
 public:
     void SetTargetObject(CGameObject* _pObj)

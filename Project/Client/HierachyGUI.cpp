@@ -10,6 +10,8 @@
 
 #include "CImGUIMgr.h"
 #include "InspectorGUI.h"
+#include "MeshRenderGUI.h"
+#include "Collider3DGUI.h"
 
 HierachyGUI::HierachyGUI()
 {
@@ -105,4 +107,11 @@ void HierachyGUI::ItemSelectChanged(const tData* _selectData)
 	
 	InspectorGUI* pInspector = (InspectorGUI*)CImGUIMgr::GetInst()->FindGUI(L"Inspector");
 	pInspector->SetTargetObject(pTargetObj);
+	pInspector->ItemChanged();
+
+	MeshRenderGUI* pMeshRenderGUI =(MeshRenderGUI*) pInspector->GetGUI(COMPONENT_TYPE::MESHRENDER);
+	pMeshRenderGUI->ItemChanged();
+
+	Collider3DGUI* pColliderGUI = (Collider3DGUI*)pInspector->GetGUI(COMPONENT_TYPE::COLLIDER3D);
+	pColliderGUI->ItemChanged();
 }

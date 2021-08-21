@@ -29,6 +29,10 @@ private:
 	vector<CMeshData*>      m_pVecMeshData; // 메쉬데이터 생성을 위한 벡터 
 	vector<CMesh*>		    m_pVecMesh; 	//메쉬 생성을 위한 벡터 
 
+	//==================================
+
+	vector<CGameObject*>	m_pVecNavMesh;  //현재 씬에 존재하는 모든 네비메쉬 
+
 public:
 	vector<CMeshData*>& GetMeshDataVec() { return m_pVecMeshData; }
 	vector<CMesh*>& GetMeshVec() { return m_pVecMesh; }
@@ -59,6 +63,8 @@ public:
 	template<typename T>
 	Ptr<T> FindRes(const wstring& _strKey);
 	const map<wstring, CRes*>& GetRes(RES_TYPE _eType){return m_mapRes[(UINT)_eType];}
+
+	vector<CGameObject*>& GetNavMeshVec() { return m_pVecNavMesh; }
 
 	Ptr<CTexture> FindDataTexture(const wstring& _strKey);
 
@@ -96,7 +102,6 @@ RES_TYPE GetResType()
 		return RES_TYPE::MESHDATA;
 	else
 		return RES_TYPE::END;
-	
 }
 
 

@@ -193,6 +193,15 @@
     <ClInclude Include="CState.h">
       <Filter>Engine\07. Module\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="CHorizontalBlur.h">
+      <Filter>ShaderCode\ComputeShader\CopyTexture\Horizontal</Filter>
+    </ClInclude>
+    <ClInclude Include="CVerticalBlur.h">
+      <Filter>ShaderCode\ComputeShader\CopyTexture\Vertical</Filter>
+    </ClInclude>
+    <ClInclude Include="CFrustumSphere.h">
+      <Filter>Engine\04. Component\FrustumSphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -384,6 +393,15 @@
     <ClCompile Include="CState.cpp">
       <Filter>Engine\07. Module\FSM</Filter>
     </ClCompile>
+    <ClCompile Include="CHorizontalBlur.cpp">
+      <Filter>ShaderCode\ComputeShader\CopyTexture\Horizontal</Filter>
+    </ClCompile>
+    <ClCompile Include="CVerticalBlur.cpp">
+      <Filter>ShaderCode\ComputeShader\CopyTexture\Vertical</Filter>
+    </ClCompile>
+    <ClCompile Include="CFrustumSphere.cpp">
+      <Filter>Engine\04. Component\FrustumSphere</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -557,6 +575,15 @@
     <Filter Include="Engine\07. Module\FSM">
       <UniqueIdentifier>{0c160096-d2f9-4803-8ce0-bddf1f5b124f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ShaderCode\ComputeShader\CopyTexture\Vertical">
+      <UniqueIdentifier>{118d2fcf-aadd-4709-a4c4-7f053de60d51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderCode\ComputeShader\CopyTexture\Horizontal">
+      <UniqueIdentifier>{6aea4bd3-8dce-4a2a-9ea5-63aa1445b321}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04. Component\FrustumSphere">
+      <UniqueIdentifier>{8719b576-7f92-425a-a41d-f95b8e2c6504}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="std2d.fx">
@@ -609,6 +636,15 @@
     </FxCompile>
     <FxCompile Include="shadowmap.fx">
       <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="Fire.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="HorizontalBlur.fx">
+      <Filter>ShaderCode\ComputeShader\CopyTexture\Horizontal</Filter>
+    </FxCompile>
+    <FxCompile Include="VerticalBlur.fx">
+      <Filter>ShaderCode\ComputeShader\CopyTexture\Vertical</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

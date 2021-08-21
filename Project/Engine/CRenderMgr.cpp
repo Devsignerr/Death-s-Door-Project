@@ -11,6 +11,9 @@
 
 #include "CScene.h"
 #include "CSceneMgr.h"
+#include "CCopyShaderCS.h"
+#include "CHorizontalBlur.h"
+#include "CVerticalBlur.h"
 
 #include "CMRT.h"
 
@@ -20,7 +23,7 @@ CRenderMgr::CRenderMgr()
 	, m_pLight2DBuffer(nullptr)
 	, m_pLight3DBuffer(nullptr)
 	, m_pToolCam(nullptr)
-	, m_pAnim2DBuffer(nullptr)	
+	, m_pAnim2DBuffer(nullptr)
 	, m_arrMRT{}
 {
 }
@@ -35,7 +38,7 @@ CRenderMgr::~CRenderMgr()
 
 void CRenderMgr::init()
 {
-	Ptr<CTexture> pTex = nullptr;	
+	Ptr<CTexture> pTex = nullptr;
 	pTex = CResMgr::GetInst()->Load<CTexture>(L"texture\\noise\\noise_01.png", L"texture\\noise\\noise_01.png");
 	m_vecNoiseTex.push_back(pTex);
 	/*pTex = CResMgr::GetInst()->Load<CTexture>(L"texture\\noise\\noise_02.png", L"texture\\noise\\noise_02.png");
@@ -53,7 +56,7 @@ void CRenderMgr::init()
 	// Animation 2D Buffer
 	m_pAnim2DBuffer = new CStructuredBuffer;
 	m_pAnim2DBuffer->Create(sizeof(tAnim2D), 1, nullptr);
-		
+
 	// CopyTarget Texture Create
 	Vec2 vResolution = Vec2((float)CDevice::GetInst()->GetBufferResolution().x, (float)CDevice::GetInst()->GetBufferResolution().y);
 	m_pCopyTarget = CResMgr::GetInst()->CreateTexture(L"PostEffectTargetTex"
@@ -61,10 +64,15 @@ void CRenderMgr::init()
 		, D3D11_BIND_SHADER_RESOURCE
 		, DXGI_FORMAT_R8G8B8A8_UNORM, true);
 
+	m_pSwapChainTarget = CResMgr::GetInst()->CreateTexture(L"SwapChianPassTex"
+		, (UINT)vResolution.x, (UINT)vResolution.y
+		, D3D11_BIND_SHADER_RESOURCE
+		, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
 	// PostEffectMtrl 에 CopyTexture 전달
 	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl");
-	pMtrl->SetData(SHADER_PARAM::TEX_0, m_pCopyTarget.Get());
 
+	pMtrl->SetData(SHADER_PARAM::TEX_0, m_pCopyTarget.Get());
 
 	// MRT 생성
 	CreateMRT();
@@ -95,7 +103,7 @@ void CRenderMgr::update()
 	vector<tLightInfo> vecLight[2];
 	for (size_t i = 0; i < m_vecLight2D.size(); ++i)
 	{
-		vecLight[0].push_back(m_vecLight2D[i]->GetInfo());		
+		vecLight[0].push_back(m_vecLight2D[i]->GetInfo());
 	}
 	for (size_t i = 0; i < m_vecLight3D.size(); ++i)
 	{
@@ -113,7 +121,7 @@ void CRenderMgr::update()
 	// ==================
 	static const CConstBuffer* pGlobalBuffer = CDevice::GetInst()->GetCB(CB_TYPE::GLOBAL_VALUE);
 	pGlobalBuffer->SetData(&g_global);
-	pGlobalBuffer->UpdateData((UINT)PIPELINE_STAGE::PS_ALL);	
+	pGlobalBuffer->UpdateData((UINT)PIPELINE_STAGE::PS_ALL);
 }
 
 void CRenderMgr::render()
@@ -137,6 +145,7 @@ void CRenderMgr::render()
 	m_vecCam.clear();
 }
 
+
 void CRenderMgr::render_play()
 {
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
@@ -149,6 +158,11 @@ void CRenderMgr::render_play()
 		m_vecCam[i]->render_deferred();
 
 		CRenderMgr::GetInst()->render_shadowmap();
+
+		Ptr<CTexture> pSrcTex = CResMgr::GetInst()->FindDataTexture(L"DiffuseLightTargetTex");
+		Ptr<CTexture> pDstTex = CResMgr::GetInst()->FindDataTexture(L"BloomLightTargetTex");
+	
+		CustomCopy(pSrcTex, pDstTex, COPY_TYPE::BLOOM);
 
 		// Lighting
 		GetMRT(MRT_TYPE::LIGHT)->OMSet();
@@ -166,14 +180,20 @@ void CRenderMgr::render_play()
 		// 물체 색상, Lights Merge
 		GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 		LightMerge();
-
-		GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
-		m_vecCam[i]->render_forward();
 	}
 
+	
+	Ptr<CTexture> pSrcTex = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
+	Ptr<CTexture> pDstTex = CResMgr::GetInst()->FindDataTexture(L"DownSampleTex");
+	CONTEXT->CopyResource(m_pSwapChainTarget->GetTex2D().Get(), pSrcTex->GetTex2D().Get());
+
+	CustomCopy(m_pSwapChainTarget, pDstTex, COPY_TYPE::DOF);
+
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+
 	for (size_t i = 0; i < m_vecCam.size(); ++i)
 	{
+		m_vecCam[i]->render_forward();
 		m_vecCam[i]->render_posteffect();
 	}	
 }
@@ -189,12 +209,17 @@ void CRenderMgr::render_tool()
 	m_pToolCam->SortObject();
 
 	// Deferred 물체 그리기
-	GetMRT(MRT_TYPE::DEFERRED)->OMSet();	
+	GetMRT(MRT_TYPE::DEFERRED)->OMSet();
 	m_pToolCam->render_deferred();
 
 	// ShadowMap
 	CRenderMgr::GetInst()->render_shadowmap();
 
+	Ptr<CTexture> pSrcTex = CResMgr::GetInst()->FindDataTexture(L"DiffuseLightTargetTex");
+	Ptr<CTexture> pDstTex = CResMgr::GetInst()->FindDataTexture(L"BloomLightTargetTex");
+
+	CustomCopy(pSrcTex, pDstTex ,COPY_TYPE::BLOOM);
+	
 	// Lighting
 	GetMRT(MRT_TYPE::LIGHT)->OMSet();
 
@@ -212,10 +237,16 @@ void CRenderMgr::render_tool()
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 	LightMerge();
 
+	pSrcTex = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
+	pDstTex = CResMgr::GetInst()->FindDataTexture(L"DownSampleTex");
+	CONTEXT->CopyResource(m_pSwapChainTarget->GetTex2D().Get(), pSrcTex->GetTex2D().Get());
+
+	CustomCopy(m_pSwapChainTarget, pDstTex, COPY_TYPE::DOF);
+
 	// forward 물체 그리기
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 	m_pToolCam->render_forward();
-	m_pToolCam->render_posteffect();	
+	m_pToolCam->render_posteffect();
 }
 
 
@@ -237,9 +268,11 @@ void CRenderMgr::render_shadowmap()
 
 
 
+
 void CRenderMgr::CopyTarget()
-{	
-	CONTEXT->CopyResource(m_pCopyTarget->GetTex2D().Get(), CDevice::GetInst()->GetRenderTargetTex()->GetTex2D().Get());
+{
+	Ptr<CTexture> pRTTex = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
+	CONTEXT->CopyResource(m_pCopyTarget->GetTex2D().Get(), pRTTex->GetTex2D().Get());
 }
 
 
@@ -256,13 +289,27 @@ CCamera* CRenderMgr::GetCurCam()
 	else
 	{
 		return m_pToolCam;
-	}	
+	}
+}
+
+
+void CRenderMgr::CustomCopy(Ptr<CTexture> _SrcTex, Ptr<CTexture> _DstTex, COPY_TYPE _eType)
+{
+	CCopyShaderCS* CopyShader = (CCopyShaderCS*)CResMgr::GetInst()->GetRes(RES_TYPE::SHADER).find(L"CopyTextureShader")->second;
+
+	CopyShader->SetSrcTex(_SrcTex);
+	CopyShader->SetDestTex(_DstTex);
+
+	CopyShader->SetCopyType(_eType);
+	CopyShader->Excute();
+
+	CopyShader->Clear();
 }
 
 void CRenderMgr::LightMerge()
 {
 	static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-	static Ptr<CMaterial> pMergeMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"LightMergeMtrl");	
+	static Ptr<CMaterial> pMergeMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"LightMergeMtrl");
 
 	pMergeMtrl->UpdateData();
 
@@ -278,5 +325,5 @@ void CRenderMgr::UpdateLights(vector<tLightInfo>& _vec, CStructuredBuffer* _buff
 		_buffer->Create(sizeof(tLightInfo), (UINT)_vec.size(), nullptr);
 
 	_buffer->SetData(_vec.data(), sizeof(tLightInfo), (UINT)_vec.size());
-	_buffer->UpdateData(_iRegisterNum);	
+	_buffer->UpdateData(_iRegisterNum);
 }

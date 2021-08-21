@@ -33,78 +33,79 @@ CFBXLoader::~CFBXLoader()
 	}
 }
 
-void CFBXLoader::CreateNavMesh()
+void CFBXLoader::CreateNavMesh(int _iIdx)
 {
-	const tContainer* container = &GetContainer(0);
+	UINT ContainerCnt = _iIdx;
 
-	//정점 갯수 
-	UINT iVtxCount = (UINT)container->vecPos.size();
-
-	//NavMesh 는 딱1개 로드된다 
-	CMesh* pMesh = CResMgr::GetInst()->GetMeshVec()[0];
-
-	//메쉬 폴리곤의 갯수가 100개라면 아래 벡터의 크기도 100
-	vector<tNavMeshNode>& vecNavMeshNode = pMesh->GetMeshNodeVec();
-
-	UINT PolygonCnt = iVtxCount / 3;
-	vecNavMeshNode.resize(PolygonCnt);
-
-	//정점의 위치를 모두 온다 . 정점 3개당 NavMeshNode 구조체 1개에 들어간다 .
-	UINT VecIdx = 0;
-	UINT VTXPosIdx = 0;
-
-	for (UINT i = 0; i < iVtxCount; ++i)
+	for (UINT a = 0; a < ContainerCnt; ++a)
 	{
-		//네비메쉬 벡터 인덱스는 정점 3번당 1번씩 증가함 
-		//정점배열 인덱스는 정점 3번당 0으로 초기화됨 
-		if (0 != i)
+		const tContainer* container = &GetContainer(a);
+
+		//정점 갯수. 반드시 3의 배수여야 한다 . 
+		UINT iVtxCount = (UINT)container->vecPos.size();
+
+		CMesh* pMesh = CResMgr::GetInst()->GetMeshVec()[a];
+		pMesh->SetNavMesh(true);
+
+		//메쉬 폴리곤의 갯수가 100개라면 아래 벡터의 크기도 100
+		//현재 불러온 컨테이너의 네비메쉬 
+		vector<tNavMeshNode>& vecNavMeshNode = pMesh->GetMeshNodeVec();
+
+		vecNavMeshNode.clear();
+
+		UINT PolygonCnt = iVtxCount / 3;
+
+		//정점의 위치를 모두 받아온다 . 정점 3개당 NavMeshNode 구조체 1개에 들어간다 .
+		UINT VecIdx = 0;
+		UINT VTXPosIdx = 0;
+
+		for (UINT p = 0; p < PolygonCnt; ++p)
 		{
-			VecIdx = i / 3;
-			VTXPosIdx = i % 3;
+			//네비메쉬 벡터 인덱스는 정점 3번당 1번씩 증가함 
+			//정점배열 인덱스는 정점 3번당 0으로 초기화됨 
+				
+			tNavMeshNode Node = {};
+
+			for (UINT v = 0; v < 3; v++) 
+			{
+				UINT Idx = p *3 + v;
+
+				//정점의 위치를 벡터에 모두 입력함 			
+				Node.VertexPosition[v] = container->vecPos[Idx];
+				Node.NodeIdx = p;
+			}
+			//노드의 인덱스를 기준으로 정렬할것이다 . 
+			vecNavMeshNode.push_back(Node);
 		}
 
-		//정점의 위치를 벡터에 모두 입력함 
-		vecNavMeshNode[VecIdx].VertexPosition[VTXPosIdx] = container->vecPos[i];
-
-		//처음 한번 로드할때야 NearNode 의 주소를 안다 쳐도 , 다음번 Iniciate할때 
-		//그 주소를 알수 없으므로 Idx로 소속된 폴리곤과 NearNode의 정보를 기억시킨다 
-		//이 NodeIdx로 소속된 폴리곤의 정점의 위치를 받아올수 있다 
-		vecNavMeshNode[VecIdx].NodeIdx = VecIdx;
-	}
-
-	UINT CompareVecIdx = 0;
-	UINT CompareVTXPosIdx = 0;
-
-
-	for (UINT i = 0; i < PolygonCnt; ++i)
-	{
-		for (UINT j = 0; j < PolygonCnt; ++j)
+		for (UINT i = 0; i < PolygonCnt; ++i)
 		{
-			for (UINT k = 0; k < 3; k++)
+			for (UINT j = 0; j < PolygonCnt; ++j)
 			{
-				for (UINT m = 0; m < 3; m++)
+				for (UINT k = 0; k < 3; k++)
 				{
-					if (i != j && vecNavMeshNode[i].VertexPosition[k] == vecNavMeshNode[j].VertexPosition[m])
+					for (UINT m = 0; m < 3; m++)
 					{
-						vecNavMeshNode[i].VecNearNodeIdx.push_back(vecNavMeshNode[j].NodeIdx);
+						//자신과 비교하지 않으면서 , 다른 메쉬의 어떤 정점과 내 메쉬의 어떤 정점의 위치가 같을경우 인접노드다 .
+						if (i != j && vecNavMeshNode[i].VertexPosition[k] == vecNavMeshNode[j].VertexPosition[m])
+						{
+							vecNavMeshNode[i].VecNearNodeIdx.push_back(vecNavMeshNode[j].NodeIdx);
+						}
 					}
 				}
 			}
 		}
+
+		for (UINT n = 0; n < PolygonCnt; n++)
+		{
+			//중복 원소 제거 
+			vecNavMeshNode[n].VecNearNodeIdx.erase(std::unique(
+				vecNavMeshNode[n].VecNearNodeIdx.begin(),
+				vecNavMeshNode[n].VecNearNodeIdx.end()),
+				vecNavMeshNode[n].VecNearNodeIdx.end());
+		}
+
 	}
-
-	for (UINT n = 0; n < PolygonCnt; n++)
-	{
-		//중복 원소 제거 
-		vecNavMeshNode[n].VecNearNodeIdx.erase(std::unique(
-			vecNavMeshNode[n].VecNearNodeIdx.begin(),
-			vecNavMeshNode[n].VecNearNodeIdx.end()),
-			vecNavMeshNode[n].VecNearNodeIdx.end());
-	}
-
-	vecNavMeshNode;
-
-	int a = 10;
 }
 
 void CFBXLoader::init()
@@ -301,10 +302,10 @@ void CFBXLoader::LoadNavMesh(FbxMesh* _pFbxMesh, FbxString _MeshName)
 			int iIdx = _pFbxMesh->GetPolygonVertex(i, j);
 			arrIdx[j] = iIdx;
 
-			GetTangent(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetNormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j));
+			//GetTangent(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			//GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			//GetNormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			//GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j));
 
 			++iVtxOrder;
 		}

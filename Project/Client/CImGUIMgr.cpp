@@ -96,8 +96,8 @@ void CImGUIMgr::progress()
             pair.second->render();
     }
 
-   // bool open = true;
-   // ImGui::ShowDemoWindow(&open);
+    //bool open = true;
+    //ImGui::ShowDemoWindow(&open);
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

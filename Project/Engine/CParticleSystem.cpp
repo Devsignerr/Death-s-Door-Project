@@ -12,7 +12,7 @@
 
 CParticleSystem::CParticleSystem()
 	: CComponent(COMPONENT_TYPE::PARTICLE)
-	, m_iMaxCount(0)
+	, m_iMaxCount(100)
 	, m_iAliveCount(0)
 	, m_fMinLifeTime(0.5f)
 	, m_fMaxLifeTime(0.8f)
@@ -25,6 +25,7 @@ CParticleSystem::CParticleSystem()
 	, m_vEndColor(Vec4(1.f, 0.0f, 0.0f, 1.f))
 	, m_vStartScale(Vec3(40.f, 40.f, 1.f))
 	, m_vEndScale(Vec3(10.f, 10.f, 1.f))
+	, m_ePOV(SHADER_POV::PARTICLE)
 {
 	m_pMesh = CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh");
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
@@ -46,6 +47,14 @@ void CParticleSystem::awake()
 
 void CParticleSystem::finalupdate()
 {
+	if(m_ePOV==SHADER_POV::PARTICLE)
+		m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
+
+	else if (m_ePOV == SHADER_POV::DEFERRED_PARTICLE)
+		m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DefferedParticleRenderMtrl");
+
+
+
 	m_fAccTime += fDT;
 	if (m_fAccTime >= m_fFrequency)
 	{

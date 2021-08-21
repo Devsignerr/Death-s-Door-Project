@@ -16,6 +16,7 @@ CMesh::CMesh()
 	, m_pVtxSysMem(nullptr)
 	, m_pBoneFrameData(nullptr)
 	, m_pBoneOffset(nullptr)
+	, m_bNavMesh(false)
 {
 }
 

@@ -21,17 +21,20 @@
 struct VS_DIR_IN
 {
     float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
 };
 
 struct VS_DIR_OUT
 {
     float4 vPosition : SV_Position;
+    float2 vUV : TEXCOORD;
 };
 
 struct PS_OUT
 {
     float4 vDiffuse : SV_Target0;
     float4 vSpecular : SV_Target1;
+    //float4 vShadowLight : SV_Target2;
 };
 
 VS_DIR_OUT VS_DirLight(VS_DIR_IN _in)
@@ -40,7 +43,6 @@ VS_DIR_OUT VS_DirLight(VS_DIR_IN _in)
     
     output.vPosition.xy = _in.vPos * 2.f;
     output.vPosition.zw = 1.f;
-    
     return output;
 }
 
@@ -77,11 +79,12 @@ PS_OUT PS_DirLight(VS_DIR_OUT _in)
         && 0.01f < vShadowUV.y && vShadowUV.y < 0.99f)
         {
             float fShadowDepth = DYNAMIC_SHADOW_MAP.Sample(g_sam_0, vShadowUV).r;
-      
+                    
             // 그림자인 경우 빛을 약화시킨다.
             // 투영시킨 값이랑, 기록된 값이 같은경우는 그림자가 생기면 안되는데, 실수오차가 발생할 수 있기 때문에 보정값을 준다.
             if (fShadowDepth != 0.f && (fDepth > fShadowDepth + 0.00001f))
             {
+               // output.vShadowLight.x = 1.f;
                 lightColor.vDiff *= 0.1f;
                 lightColor.vSpec = (float4) 0.f;
             }
@@ -180,8 +183,8 @@ float4 PS_LightMerge(VS_DIR_OUT _in) : SV_Target
     float4 vDiffuseColor = g_tex_0.Sample(g_sam_0, vScreenUV);
     float4 vDiffuseLight = g_tex_1.Sample(g_sam_0, vScreenUV);
     float4 vSpeculLight = g_tex_2.Sample(g_sam_0, vScreenUV);
-    
-    float4 vColor = vDiffuseColor * vDiffuseLight + vSpeculLight;
+     
+    float4 vColor = vDiffuseColor * vDiffuseLight + vSpeculLight; //- vBlurShadowLight/2.f;
     vColor.a = 1.f;
     
     return vColor;

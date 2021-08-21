@@ -1,16 +1,18 @@
 #pragma once
-#include <Engine\CState.h>
+#include <Engine/CState.h>
+
+class CPlayerScript;
 class TPlayerIdle :
-    public CState
+	public CState
 {
 private:
-    int a ;
-public:
-    virtual void update();
-    virtual void lateupdate();
-public:
-    virtual void Enter(){};
-    virtual void Exit(){};
+    CPlayerScript* m_Script;
+private:
+    void update() override;
+
+    void Enter() override;
+    void Exit() override;
+
 public:
     TPlayerIdle();
     ~TPlayerIdle();

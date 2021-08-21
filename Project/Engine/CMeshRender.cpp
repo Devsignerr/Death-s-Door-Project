@@ -12,6 +12,7 @@
 CMeshRender::CMeshRender()
 	:CComponent(COMPONENT_TYPE::MESHRENDER)
 {
+	
 }
 
 CMeshRender::CMeshRender(CMeshRender& _origin)

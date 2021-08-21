@@ -132,7 +132,7 @@ tLightColor CalLight(int _LightIdx, float3 _vViewNormal, float3 _vViewPos)
     
     outcolor.vDiff = fDiffusePow * g_Light3DInfo[_LightIdx].color.vDiff * fDistRatio;
     outcolor.vSpec = fSpecPow * g_Light3DInfo[_LightIdx].color.vSpec * fDistRatio;
-    outcolor.vAmb = g_Light3DInfo[_LightIdx].color.vAmb;
+    outcolor.vAmb = g_Light3DInfo[_LightIdx].color.vAmb * fDistRatio;
     
     return outcolor;
 }
@@ -289,4 +289,27 @@ float4 decode(float _value)
     
     return float4(r, g, b, a);
 }
+
+
+float4 Fade_In_Out(float4 _Color, uint _Idx, float _Time)
+{
+    // 1 원본 0 검정
+    static float fRatio = 1.0f;
+
+	// 페이드 아웃
+
+    if (0 == _Idx)
+    {
+        fRatio -= sin(_Time);
+    }
+	// 페이드 인
+    else if (1 == _Idx)
+    {
+        fRatio -= cos(_Time);
+    }
+
+    return _Color * fRatio;
+}
+
+
 #endif

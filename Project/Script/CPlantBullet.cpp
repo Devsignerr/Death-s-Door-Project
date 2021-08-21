@@ -5,8 +5,8 @@ void CPlantBullet::update()
 {
 	Vec3 Pos = Transform()->GetLocalPos();
 	
-	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_BulletDir.x;
-	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_BulletDir.z;
+	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_BulletDir.x * 1000.0f;
+	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_BulletDir.z * 1000.0f;
 	
 	Transform()->SetLocalPos(Pos);
 }

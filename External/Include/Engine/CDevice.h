@@ -25,7 +25,7 @@ private:
 	POINT							m_ptBufferResolution;
 	bool							m_bWindow;
 
-	ComPtr<ID3D11SamplerState>		m_arrSam[2];
+	ComPtr<ID3D11SamplerState>		m_arrSam[3];
 
 	CConstBuffer*					m_arrCB[(UINT)CB_TYPE::END];
 

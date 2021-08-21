@@ -200,6 +200,11 @@ struct tGlobalValue
 	float fDeltaTime;
 	float fAcctime;
 
-	UINT iLight2DCount;
-	UINT iLight3DCount;
+	UINT    iLight2DCount; // 2D±¤¿ø °³¼ö
+	UINT    iLight3DCount; // 3D±¤¿ø °³¼ö
+
+	float   fDOFDistance;
+	int     Padding[3];
+
+
 };

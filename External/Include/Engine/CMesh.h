@@ -8,11 +8,11 @@ class CStructuredBuffer;
 struct tNavMeshNode 
 {
     //네비메쉬 노드가 가지는 정점 3개의 위치 
-    Vec3 VertexPosition[3];
+    Vec3 VertexPosition[3] = {};
     //인접한 노드의 인덱스  
-    vector<int> VecNearNodeIdx;
+    vector<int> VecNearNodeIdx = {};
     //내 인덱스 
-    UINT  NodeIdx;
+    UINT  NodeIdx=0;
 };
 
 struct tIndexInfo

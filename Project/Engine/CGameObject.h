@@ -13,6 +13,7 @@ class CParticleSystem;
 class CLight2D;
 class CLight3D;
 class CTerrain;
+class CFrustumSphere;
 
 class CScript;
 
@@ -29,6 +30,7 @@ private:
     bool                    m_bDead;
     bool                    m_bFrustum;
     bool                    m_bDynamicShadow;
+
 
 public:
     void awake();
@@ -53,6 +55,7 @@ public:
     CLight3D* Light3D() { return (CLight3D*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT3D]; }
     CAnimator2D* Animator2D() { return (CAnimator2D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR2D]; }
     CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
+    CFrustumSphere* FrustumSphere() { return (CFrustumSphere*)m_arrCom[(UINT)COMPONENT_TYPE::FRUSTUMSPHERE]; }
 
     CTerrain* Terrain() {return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];}
     CComponent* GetComponent(COMPONENT_TYPE _eType) {return m_arrCom[(UINT)_eType];}

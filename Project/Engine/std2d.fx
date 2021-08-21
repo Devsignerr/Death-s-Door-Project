@@ -95,6 +95,17 @@ float4 PS_Collider2D(float4 _vScreenPos : SV_Position) : SV_Target
 }
 
 
+struct PS_PARTICLE_OUT
+{
+    float4 vDiff : SV_Target0;
+    float4 vNormal : SV_Target1;
+    float4 vPosition : SV_Target2;
+    float4 vDiffLight : SV_Target3; //디퍼드 단계에서 미리 빛을 라이트 타겟에 넣어놓아 그림자에 걸릴일이 없어진다 . 
+                                    //또한 , 라이트 타겟을 가져와 블룸처리를 할수도 있다 
+    
+    float4 pDOFDepthTex : SV_Target4;
+};
+
 // =========================
 // Particle Rendering Shader
 // mesh : point mesh
@@ -120,6 +131,7 @@ struct GS_PARTICLE_OUT
     float2 vUV : TEXCOORD;
     float fInstID : FOG;
 };
+
 
 StructuredBuffer<tParticle> g_particelbuffer : register(t100);
 
@@ -191,9 +203,9 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
 }
 
 
-float4 PS_Particle(GS_PARTICLE_OUT _in) : SV_Target
+float4 PS_Particle(GS_PARTICLE_OUT _in) :SV_Target
 {
-    float4 vColor = (float4) 0.f;
+   float4 vColor = (float4) 0.f;
     
     uint iInst = (uint) _in.fInstID;
     
@@ -201,6 +213,34 @@ float4 PS_Particle(GS_PARTICLE_OUT _in) : SV_Target
     vColor = (g_vec4_3 - g_vec4_2) * fRatio + g_vec4_2;
         
     return g_tex_0.Sample(g_sam_0, _in.vUV) * vColor;
+   
+}
+
+
+PS_PARTICLE_OUT PS_Deffered_Particle(GS_PARTICLE_OUT _in) 
+{
+    PS_PARTICLE_OUT output = (PS_PARTICLE_OUT) 0.f;
+
+    
+    float4 vColor = (float4) 0.f;
+    
+    uint iInst = (uint) _in.fInstID;
+    
+    float fRatio = g_particelbuffer[iInst].m_fCurTime / g_particelbuffer[iInst].m_fMaxLife;
+    vColor = (g_vec4_3 - g_vec4_2) * fRatio + g_vec4_2;
+        
+    vColor= g_tex_0.Sample(g_sam_0, _in.vUV) * vColor;
+    
+    if (vColor.a != 0.f)
+    {
+        output.vDiff = vColor;
+        output.vDiffLight = vColor;
+    }
+    else
+        clip(-1);
+    
+    return output;
+    
 }
 
  

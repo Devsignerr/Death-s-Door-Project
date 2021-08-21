@@ -6,6 +6,7 @@
 #include <Engine/CSceneMgr.h>
 #include <Engine/CTransform.h>
 
+#include <Engine/CLightCamera.h>
 #include <Engine/CPathMgr.h>
 #include <Engine/CCore.h>
 #include <Engine/CResMgr.h>
@@ -92,33 +93,40 @@ void Light3DGUI::render()
 	ImGui::Separator();
 
 
-	CLight3D* Light3D = GetTargetObj()->Light3D();
+	//CLight3D* Light3D = GetTargetObj()->Light3D();
+	//
+	//Ptr<CTexture> ShadowTex = Light3D->GetStaticShadowTex();
+	//std::wstring TempShadowTexName = {};
+	//if (nullptr == ShadowTex)
+	//	TempShadowTexName = L"Empty";
+	//else
+	//	TempShadowTexName = ShadowTex->GetRelativePath();
+	//
+	//std::string ShadowTexName = GetString(TempShadowTexName);
+	//
+	//char szBuffer[255] = "";
+	//strcpy_s(szBuffer, 255, ShadowTexName.c_str());
+	//std::string LabelName = "##";
+	//LabelName += ShadowTexName;
+	//ImGui::Text("Cur ShadowMapTex");
+	//ImGui::PushItemWidth(150);
+	//ImGui::SameLine();
+	//ImGui::InputText(LabelName.c_str(), szBuffer, 255, ImGuiInputTextFlags_ReadOnly);
+	//ImGui::SameLine();
+	//if (ImGui::Button("Select##SelShadowMapTex"))
+	//{
+	//	LoadShadowMap();
+	//}
+	//
+	//BakingShadowMap();
 
-	Ptr<CTexture> ShadowTex = Light3D->GetStaticShadowTex();
-	std::wstring TempShadowTexName = {};
-	if (nullptr == ShadowTex)
-		TempShadowTexName = L"Empty";
-	else
-		TempShadowTexName = ShadowTex->GetRelativePath();
 
-	std::string ShadowTexName = GetString(TempShadowTexName);
+	ImGui::NewLine();
+	ImGui::Separator();
 
-	char szBuffer[255] = "";
-	strcpy_s(szBuffer, 255, ShadowTexName.c_str());
-	std::string LabelName = "##";
-	LabelName += ShadowTexName;
-	ImGui::Text("Cur ShadowMapTex");
-	ImGui::PushItemWidth(150);
-	ImGui::SameLine();
-	ImGui::InputText(LabelName.c_str(), szBuffer, 255, ImGuiInputTextFlags_ReadOnly);
-	ImGui::SameLine();
-	if (ImGui::Button("Select##SelShadowMapTex"))
-	{
-		LoadShadowMap();
-	}
+	ImGui::NewLine();
 
-	BakingShadowMap();
-
+	CGameObject* pLightCam = GetTargetObj()->Light3D()->GetLightCam();
 
 
 	End();

@@ -70,9 +70,24 @@ void TransformGUI::render()
         DrawGizmo(Mode);
     }
 
-    ImGui::Text("Position"); ImGui::SameLine(100);	ImGui::InputFloat3("##Position", ArrData[0], "%.2f", ImGuiSliderFlags_None);
+
+
+    float WorldPos[3] = { Transform->GetWorldPos().x,Transform->GetWorldPos().y,Transform->GetWorldPos().z };
+
+    ArrData[2][0] *= 180.f / XM_PI;
+    ArrData[2][1] *= 180.f / XM_PI;
+    ArrData[2][2] *= 180.f / XM_PI;
+
+    ImGui::Text("wPosition"); ImGui::SameLine(100);	ImGui::DragFloat3("##wPosition", WorldPos);
+    ImGui::Text("Position"); ImGui::SameLine(100);	ImGui::DragFloat3("##Position", ArrData[0]);
     ImGui::Text("Scale"); ImGui::SameLine(100); ImGui::InputFloat3("##Scale", ArrData[1], "%.2f", ImGuiSliderFlags_None);
-    ImGui::Text("Rotation"); ImGui::SameLine(100); ImGui::InputFloat3("##Rotation", ArrData[2], "%.2f", ImGuiSliderFlags_None);
+    ImGui::Text("Rotation"); ImGui::SameLine(100); ImGui::DragFloat3("##Rotation", ArrData[2]);
+
+    
+                               
+    ArrData[2][0] *= XM_PI/180.f;
+    ArrData[2][1] *= XM_PI/180.f;
+    ArrData[2][2] *= XM_PI/180.f;
 
     if (true == InputModeOnOff)
     {
@@ -147,11 +162,11 @@ void TransformGUI::DrawGizmo(int _Mode)
 
     CGameObject* pParent = GetTargetObj()->GetParent();
     Matrix ParentMatIvn = {};
-
+    
     if (nullptr != pParent)
     {
         Matrix ParentMatIvn = pParent->Transform()->GetWorldInvMat();
-
+    
         Matrix ChildMat =
         {
         objectMatrix[0],objectMatrix[1],objectMatrix[2],objectMatrix[3],
@@ -159,9 +174,9 @@ void TransformGUI::DrawGizmo(int _Mode)
         objectMatrix[8],objectMatrix[9],objectMatrix[10],objectMatrix[11],
         objectMatrix[12],objectMatrix[13],objectMatrix[14],objectMatrix[15],
         };
-
+    
         ChildMat *= ParentMatIvn;
-
+    
         objectMatrix[0] = ChildMat._11; objectMatrix[1] = ChildMat._12; objectMatrix[2] = ChildMat._13; objectMatrix[3] = ChildMat._14;
         objectMatrix[4] = ChildMat._21; objectMatrix[5] = ChildMat._22; objectMatrix[6] = ChildMat._23; objectMatrix[7] = ChildMat._24;
         objectMatrix[8] = ChildMat._31; objectMatrix[9] = ChildMat._32; objectMatrix[10] = ChildMat._33; objectMatrix[11] = ChildMat._34;

@@ -215,7 +215,10 @@ struct PS_OUT
     float4 vPosition : SV_Target2;
     float4 vDiffLight : SV_Target3; //디퍼드 단계에서 미리 빛을 라이트 타겟에 넣어놓아 그림자에 걸릴일이 없어진다 . 
                                     //또한 , 라이트 타겟을 가져와 블룸처리를 할수도 있다 
+    
+    float4 pDOFDepthTex : SV_Target4;
 };
+
 
 PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
 {
@@ -271,39 +274,58 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
     
     // 발광 맵이 있다면
     if (btex_3)
-    {
-        float4 vEmissive = g_tex_3.Sample(g_sam_0, _in.vUV);
+    {     
+        float4 vEmissive = g_tex_3.Sample(g_sam_0, _in.vUV.xy);    
         
-        if (vEmissive.x > 0.f || vEmissive.y > 0.f || vEmissive.z > 0.f)
-        {            
-            output.vDiffLight.x = g_vEmis.x * 2;
-            output.vDiffLight.y = g_vEmis.y * 2;
-            output.vDiffLight.z = g_vEmis.z * 2;
-        }
-        else
+        if (vEmissive.w > 0.f)
         {
-            output.vDiffLight.x = vEmissive * 2;
-            output.vDiffLight.y = vEmissive * 2;
-            output.vDiffLight.z = vEmissive * 2;
+            output.vDiffLight = vEmissive;         
         }
-               
-        //output.vDiffLight.xyz = vEmissive.xyz ;  //현재는 상수값이 곱해져 있지만 계수값을 넘겨 처리할수 있도록 한다 
     }
     
-   //if (g_vEmis.x > 0.1f || g_vEmis.y > 0.1f || g_vEmis.z > 0.1f )
-   //{
-   //    output.vDiffLight.x=  g_vEmis.x*2;
-   //    output.vDiffLight.y = g_vEmis.y*2;
-   //    output.vDiffLight.z = g_vEmis.z*2;
-   //}
+     // 페이퍼번
+    if (btex_4)
+    {
+        float2 FullUV = _in.vUV;
+        float Burnf = 0;
+        Burnf = g_float_0;
+        
+        float3 PaperBurn = g_tex_4.Sample(g_sam_0, FullUV).xyz;
+	    
+        float test = (PaperBurn.x + PaperBurn.y + PaperBurn.z) / 3.f;
+        
+        if (test < Burnf)
+            clip(-1);
+        else if (test < Burnf + 0.05f && test > Burnf - 0.05f)
+            vObjectColor = float4(1.0, 0.f, 0.f, 1.f);
+			
+    }
     
-    if (g_vDiff.x != 1.f || g_vDiff.y != 1.f || g_vDiff.z != 1.f)
-   {
-        output.vDiff.x = (output.vDiff.x * (1.f - g_vDiff.w)) + g_vDiff.x * g_vDiff.w;
-        output.vDiff.y = (output.vDiff.y * (1.f - g_vDiff.w)) + g_vDiff.y * g_vDiff.w;
-        output.vDiff.z = (output.vDiff.z * (1.f - g_vDiff.w)) + g_vDiff.z * g_vDiff.w;
+     {
+        //float4 vWorldPos = mul( , g_matViewInv); // 메인카메라 view 역행렬을 곱해서 월드좌표를 알아낸다.
+        float4 vProj = mul(float4(_in.vViewPos, 1.f), g_matProj); // 투영시킨 좌표 구하기
+        float fDepth = vProj.z / vProj.w; // w 로 나눠서 실제 투영좌표 z 값을 구한다.(올바르게 비교하기 위해서)
+        
+        
+        
+        float Distance = (float) fDOFDistance;
+        
+        if (fDOFDistance < fDepth)
+        {
+            float Diff = (fDepth - fDOFDistance) * 800.f;
+        //output.vDiff = float4(1.0f, 0.0f, 1.0f - Diff, 1.0f);
+            output.pDOFDepthTex.r = Diff;
+        }
+        
+
+    }
+
+ 
+    output.vDiff.x = output.vDiff.x * g_vDiff.x;
+    output.vDiff.y = output.vDiff.y * g_vDiff.y;
+    output.vDiff.z = output.vDiff.z * g_vDiff.z;
    
-   }
+   
     
     
     return output;

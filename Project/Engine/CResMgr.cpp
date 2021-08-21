@@ -114,6 +114,7 @@ void CResMgr::LoadFBX(const wstring& _strPath, FBXLOAD_TYPE _LoadType)
 		pMeshvec.clear();
 	}
 
+
 	CMeshData::LoadFromFBX(_strPath, _LoadType);
 
 	//메쉬데이터는 FBX파일 이름 + 인덱스 순서로 이름붙인다 

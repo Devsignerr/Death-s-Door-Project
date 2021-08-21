@@ -75,13 +75,13 @@ bool CFrustum::CheckFrustum(const Vec3& _vPos)
 	return true;
 }
 
-bool CFrustum::CheckFrustumSphere(const Vec3& _vPos, float _fRadius)
+bool CFrustum::CheckFrustumSphere(const Vec3& _vPos, Vec3& _vOffsetPos , float _fRadius)
 {
 	for (UINT i = 0; i < (UINT)FACE_TYPE::FT_END; ++i)
 	{
 		Vec3 vNormal = m_arrFace[i];
 
-		if (vNormal.Dot(_vPos) + m_arrFace[i].w > _fRadius)
+		if (vNormal.Dot(_vPos+ _vOffsetPos) + m_arrFace[i].w > _fRadius)
 			return false;
 	}
 

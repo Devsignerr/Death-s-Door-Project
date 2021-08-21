@@ -45,7 +45,18 @@ CGameObject* CMeshData::Instantiate(FBXLOAD_TYPE _Type)
 
 		return pNewObj;
 	}
-	else 
+	else if(_Type == FBXLOAD_TYPE::NAVMESH_LOAD)
+	{
+		CGameObject* pNewObj = new CGameObject;
+		pNewObj->AddComponent(new CTransform);
+		pNewObj->AddComponent(new CMeshRender);
+
+		pNewObj->MeshRender()->SetMesh(m_pMesh);		
+		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+		
+		return pNewObj;
+	}
+	else
 	{
 		CGameObject* pNewObj = new CGameObject;
 		pNewObj->AddComponent(new CTransform);
@@ -76,7 +87,7 @@ void CMeshData::LoadFromFBX(const wstring& _strPath, FBXLOAD_TYPE _LoadType)
 	CMesh::CreateFromContainer(loader, loader.GetContainerCount());
 
 	if(_LoadType==FBXLOAD_TYPE::NAVMESH_LOAD)
-		loader.CreateNavMesh();
+		loader.CreateNavMesh(loader.GetContainerCount());
 
 	//그렇게 생성한 메쉬 벡터를 받아온다 
 	vector<CMesh*> pVecMesh = CResMgr::GetInst()->GetMeshVec();
@@ -96,10 +107,10 @@ void CMeshData::LoadFromFBX(const wstring& _strPath, FBXLOAD_TYPE _LoadType)
 		vector<Ptr<CMaterial>> vecMtrl;
 
 		// 메테리얼 가져오기
-		for (UINT i = 0; i < loader.GetContainer(0).vecMtrl.size(); ++i)
+		for (UINT i = 0; i < loader.GetContainer(j).vecMtrl.size(); ++i)
 		{
 			// 예외처리 (material 이름이 입력 안되어있을 수도 있다.)
-			Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(loader.GetContainer(0).vecMtrl[i].strMtrlName);
+			Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(loader.GetContainer(j).vecMtrl[i].strMtrlName);
 			vecMtrl.push_back(pMtrl);
 		}
 
@@ -107,6 +118,7 @@ void CMeshData::LoadFromFBX(const wstring& _strPath, FBXLOAD_TYPE _LoadType)
 		CMeshData* pMeshData = new CMeshData;
 		pMeshData->m_pMesh = pVecMesh[j];
 		pMeshData->m_vecMtrl = vecMtrl;
+
 		if (_LoadType == FBXLOAD_TYPE::NAVMESH_LOAD)
 		{
 			pMeshData->m_pMesh->SetNavMesh(true);

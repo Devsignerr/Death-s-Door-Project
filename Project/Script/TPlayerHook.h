@@ -1,7 +1,17 @@
 #pragma once
-#include <Engine\CState.h>
+#include <Engine/CState.h>
+
 class TPlayerHook :
-    public CState
+	public CState
 {
+private:
+    void update() override;
+
+    void Enter() override;
+    void Exit() override;
+
+public:
+    TPlayerHook();
+    ~TPlayerHook();
 };
 

@@ -13,6 +13,7 @@ UINT g_Key[(UINT)KEY_TYPE::END] =
 	L'A', // KEY_A, // = 2
 	L'D', // KEY_D, // = 3
 	L'Z',
+	L'E',
 	L'M',
 	VK_SPACE,
 	VK_RETURN,
@@ -27,9 +28,10 @@ UINT g_Key[(UINT)KEY_TYPE::END] =
 	VK_RIGHT,	// KEY_RIGHT,			
 
 	VK_NUMPAD0,
-	VK_NUMPAD1,
-	VK_NUMPAD2,
-
+	L'1',
+	L'2',
+	L'3',
+	L'4',
 };
 
 
@@ -143,4 +145,8 @@ void CKeyMgr::MousePicking()
 
 
 
+}
+
+void CKeyMgr::MakeLightFollow()
+{
 }

@@ -8,6 +8,7 @@
 #include "CKeyMgr.h"
 
 #include "CRenderMgr.h"
+#include "CResMgr.h"
 #include "CSceneMgr.h"
 #include "CScene.h"
 #include "CLayer.h"
@@ -18,6 +19,7 @@
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
 #include "CTerrain.h"
+#include "CFrustumSphere.h"
 
 #include "CMaterial.h"
 #include "CGraphicsShader.h"
@@ -34,7 +36,7 @@ CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
 	, m_frustum(this)
 	, m_eProjType(PROJ_TYPE::ORTHOGRAPHIC)
-	, m_vScale(Vec2(1.f, 1.f))
+	, m_vScale(Vec2(3.2f, 3.2f))
 	, m_fFOV(XM_PI / 2.f)
 	, m_tRay{}
 	, m_fFar(1000.f)
@@ -91,6 +93,7 @@ void CCamera::SortObject()
 
 
 	m_vecParticle.clear();
+	m_vecDeferredParticle.clear();
 	m_vecPostEffect.clear();
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
@@ -105,10 +108,18 @@ void CCamera::SortObject()
 			{
 				if (vecObj[j]->ParticleSystem())
 				{
-					m_vecParticle.push_back(vecObj[j]);
-					continue;
-				}
+					if (vecObj[j]->ParticleSystem()->GetMaterial()->GetShader()->GetPOV() == SHADER_POV::PARTICLE)
+					{
+						m_vecParticle.push_back(vecObj[j]);
+						continue;
+					}
 
+					else if (vecObj[j]->ParticleSystem()->GetMaterial()->GetShader()->GetPOV() == SHADER_POV::DEFERRED_PARTICLE)
+					{
+						m_vecDeferredParticle.push_back(vecObj[j]);
+						continue;
+					}
+				}
 
 				if (nullptr == vecObj[j]->MeshRender() || nullptr == vecObj[j]->MeshRender()->GetMesh())
 				{
@@ -120,12 +131,18 @@ void CCamera::SortObject()
 
 
 				// 절두체 테스트(구현)
-				if (vecObj[j]->IsFrustum())
+				if (vecObj[j]->GetParent())
 				{
-					Vec3 vWorldPos = vecObj[j]->Transform()->GetWorldPos();
-					if (!m_frustum.CheckFrustum(vWorldPos))
+					if (vecObj[j]->GetParent()->FrustumSphere()&& vecObj[j]->GetParent()->IsFrustum())
 					{
-						continue;
+						Vec3 vWorldPos = vecObj[j]->Transform()->GetWorldPos();
+						Vec3 vOffSetPos = vecObj[j]->GetParent()->FrustumSphere()->GetOffSetPos();
+						float Radius = vecObj[j]->GetParent()->FrustumSphere()->GetRadius();
+
+						if (!m_frustum.CheckFrustumSphere(vWorldPos,vOffSetPos, Radius))
+						{
+							continue;
+						}
 					}
 				}
 
@@ -148,7 +165,7 @@ void CCamera::SortObject()
 					else if (vecObj[j]->Terrain())
 						pMtrl = vecObj[j]->Terrain()->GetSharedMaterial();
 
-					if (nullptr == pMtrl || pMtrl->GetShader() == nullptr)
+					if (nullptr == pMtrl || pMtrl->GetShader() == nullptr || false==vecObj[j]->MeshRender()->IsEnable())
 						continue;
 
 					// Shader 의 POV 에 따라서 인스턴싱 그룹을 분류한다.
@@ -160,7 +177,9 @@ void CCamera::SortObject()
 					else if (pMtrl->GetShader()->GetPOV() == SHADER_POV::POSTEFFECT)
 					{
 						m_vecPostEffect.push_back(vecObj[j]);
+						continue;
 					}
+			
 					else
 					{
 						assert(nullptr);
@@ -329,6 +348,13 @@ void CCamera::render_deferred()
 			}
 		}
 	}
+
+
+	for (UINT i = 0; i < m_vecDeferredParticle.size(); ++i)
+	{
+		//디퍼드 파티클 렌더
+		m_vecDeferredParticle[i]->ParticleSystem()->render();
+	}
 }
 
 void CCamera::render_forward()
@@ -430,7 +456,7 @@ void CCamera::render_forward()
 	for (size_t i = 0; i < m_vecParticle.size(); ++i)
 	{
 		m_vecParticle[i]->ParticleSystem()->render();
-
+		
 		if (m_vecParticle[i]->Collider2D())
 			m_vecParticle[i]->Collider2D()->render();
 	}
@@ -445,10 +471,15 @@ void CCamera::render_posteffect()
 	{
 		CRenderMgr::GetInst()->CopyTarget();
 
-		m_vecPostEffect[i]->MeshRender()->render();
+		Ptr<CTexture> pDownSampleTex = CResMgr::GetInst()->FindDataTexture(L"DownSampleTex");
+		Ptr<CTexture> pDOFDepthTex = CResMgr::GetInst()->FindDataTexture(L"DOFTex");
+		Ptr<CTexture> BloomTex = CResMgr::GetInst()->FindDataTexture(L"BloomLightTargetTex");
 
-		if (m_vecPostEffect[i]->Collider2D())
-			m_vecPostEffect[i]->Collider2D()->render();
+		m_vecPostEffect[0]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_1, pDownSampleTex.Get());
+		m_vecPostEffect[0]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_2, pDOFDepthTex.Get());
+		m_vecPostEffect[0]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_3, BloomTex.Get());
+
+		m_vecPostEffect[0]->MeshRender()->render();
 	}
 }
 
@@ -488,6 +519,11 @@ void CCamera::CalProjMat()
 	{
 		POINT ptRes = CCore::GetInst()->GetWndResolution();
 		m_matProj = XMMatrixOrthographicLH(m_vProjRange.x * m_vScale.x, m_vProjRange.y * m_vScale.y, 1.f, m_fFar);
+
+		POINT ptResolution = CDevice::GetInst()->GetBufferResolution();
+		float fAR = (float)ptResolution.x / (float)ptResolution.y;
+		m_matProjPers = XMMatrixPerspectiveFovLH(XM_PI / 2.f, fAR, 1.f, m_fFar);
+		m_matProjPersInv= XMMatrixInverse(nullptr, m_matProj);
 	}
 
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
@@ -495,25 +531,52 @@ void CCamera::CalProjMat()
 
 void CCamera::CalRay()
 {
-	// SwapChain 타겟의 ViewPort 정보
-	CMRT* pSwapChain = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
-	D3D11_VIEWPORT tVP = {};
-	pSwapChain->GetViewPort(&tVP);
+	if (PROJ_TYPE::PERSPECTIVE == m_eProjType)
+	{
+		// SwapChain 타겟의 ViewPort 정보
+		CMRT* pSwapChain = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
+		D3D11_VIEWPORT tVP = {};
+		pSwapChain->GetViewPort(&tVP);
 
-	//  현재 마우스 좌표
-	Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
+		//  현재 마우스 좌표
+		Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
 
-	// 직선은 카메라의 좌표를 반드시 지난다.
-	m_tRay.vPoint = Transform()->GetWorldPos();
 
-	// view space 에서의 방향
-	m_tRay.vDir.x = ((((vMousePos.x - tVP.TopLeftX) * 2.f / tVP.Width) - 1.f) - m_matProj._31) / m_matProj._11;
-	m_tRay.vDir.y = (-(((vMousePos.y - tVP.TopLeftY) * 2.f / tVP.Height) - 1.f) - m_matProj._32) / m_matProj._22;
-	m_tRay.vDir.z = 1.f;
+		// 직선은 카메라의 좌표를 반드시 지난다.
+		m_tRay.vPoint = Transform()->GetWorldPos();
 
-	// world space 에서의 방향
-	m_tRay.vDir = XMVector3TransformNormal(m_tRay.vDir, m_matViewInv);
-	m_tRay.vDir.Normalize();
+		// view space 에서의 방향
+		m_tRay.vDir.x = ((((vMousePos.x - tVP.TopLeftX) * 2.f / tVP.Width) - 1.f) - m_matProj._31) / m_matProj._11;
+		m_tRay.vDir.y = (-(((vMousePos.y - tVP.TopLeftY) * 2.f / tVP.Height) - 1.f) - m_matProj._32) / m_matProj._22;
+		m_tRay.vDir.z = 1.f;
+
+		// world space 에서의 방향
+		m_tRay.vDir = XMVector3TransformNormal(m_tRay.vDir, m_matViewInv);
+		m_tRay.vDir.Normalize();
+	}
+	else 
+	{
+		// SwapChain 타겟의 ViewPort 정보
+		CMRT* pSwapChain = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
+		D3D11_VIEWPORT tVP = {};
+		pSwapChain->GetViewPort(&tVP);
+
+		//  현재 마우스 좌표
+		Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
+
+
+		// 직선은 카메라의 좌표를 반드시 지난다.
+		m_tRay.vPoint = Transform()->GetWorldPos();
+
+		// view space 에서의 방향
+		m_tRay.vDir.x = ((((vMousePos.x - tVP.TopLeftX) * 2.f / tVP.Width) - 1.f) - m_matProjPers._31) / m_matProjPers._11;
+		m_tRay.vDir.y = (-(((vMousePos.y - tVP.TopLeftY) * 2.f / tVP.Height) - 1.f) - m_matProjPers._32) / m_matProjPers._22;
+		m_tRay.vDir.z = 1.f;
+
+		// world space 에서의 방향
+		m_tRay.vDir = XMVector3TransformNormal(m_tRay.vDir, m_matViewInv);
+		m_tRay.vDir.Normalize();
+	}
 }
 
 void CCamera::SaveToScene(FILE* _pFile)

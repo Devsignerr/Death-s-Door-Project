@@ -82,3 +82,4 @@ void CScript::SaveToScene(FILE* _pFile)
 
 	fwrite(&m_iScriptType, sizeof(UINT), 1, _pFile);
 }
+

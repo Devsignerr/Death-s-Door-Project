@@ -47,7 +47,18 @@ void CameraGUI::render()
 	ImGui::SameLine();
 	ImGui::InputFloat("##Setting CameraYScale", &CameraScale.y);
 	
-	pCamera->SetScale(CameraScale);
+	
+	ImGui::NewLine();
+	ImGui::Text("Camera Far");
+
+	static float CameraFar = pCamera->GetFar();
+
+	ImGui::DragFloat("##Setting Far", &CameraFar,1000.f,1000.f);
+
+	pCamera->SetFar(CameraFar);
+
+	ImGui::NewLine();
+
 	
 	ImGui::Text("View Type");
 	
@@ -61,6 +72,8 @@ void CameraGUI::render()
 	{
 		pCamera->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	}
+
+	pCamera->SetScale(CameraScale);
 	
 	End();
 }

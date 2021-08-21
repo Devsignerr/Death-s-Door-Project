@@ -1,16 +1,14 @@
 #pragma once
-#include <Engine\CState.h>
+#include <Engine/CState.h>
 class TPlayerRun :
-    public CState
+	public CState
 {
 private:
-    int a;
-public:
-    virtual void update();
+    void update() override;
 
-public:
-    virtual void Enter() {};
-    virtual void Exit() {};
+    void Enter() override;
+    void Exit() override;
+
 public:
     TPlayerRun();
     ~TPlayerRun();

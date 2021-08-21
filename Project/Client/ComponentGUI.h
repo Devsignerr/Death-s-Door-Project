@@ -11,6 +11,13 @@ private:
     COMPONENT_TYPE  m_eCT;
 
 protected:
+    bool            m_bItemChanged;
+
+
+public:
+    void ItemChanged() { m_bItemChanged = true; }
+
+protected:
     Vec2            m_vSize;
 
 public:

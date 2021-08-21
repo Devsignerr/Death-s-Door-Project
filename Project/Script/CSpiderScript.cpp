@@ -6,9 +6,6 @@
 void CSpiderScript::awake()
 {
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
-	Vec3 vRot = Transform()->GetLocalRot();
-	vRot.x = -XM_PI / 2.0f;
-	Transform()->SetLocalRot(vRot);
 }
 
 void CSpiderScript::update()
@@ -31,8 +28,6 @@ void CSpiderScript::update()
 
 void CSpiderScript::Idle()
 {
-
-
 	if (RangeSearch(1000.0f))
 	{
 		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"ReadyAction");
@@ -47,7 +42,7 @@ void CSpiderScript::Move()
 	// 플레이어가 특정 범위 안에 있는경우 공격
 	// 아마 벽에 일정시간 부딛히는 경우 점프하는것 같다	
 
-	MonsterRotateSystem(5.0f);
+	MonsterRotateSystem(m_RotSpeed);
 
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
@@ -62,7 +57,6 @@ void CSpiderScript::Move()
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightMove")
 	{
-		
 		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vPos = Transform()->GetLocalPos();
 
@@ -76,10 +70,10 @@ void CSpiderScript::Move()
 		Vec3 vDiff = vPlayerPos - vPos;
 		vDiff.Normalize();
 
-		vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * 450.0f;
-		vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * 450.0f;
+		vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_MoveSpeed;
+		vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_MoveSpeed;
 
-		MonsterRotateSystem(5.0f);
+		MonsterRotateSystem(m_RotSpeed);
 		Transform()->SetLocalPos(vPos);
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"BackMove")
@@ -90,10 +84,10 @@ void CSpiderScript::Move()
 		Vec3 vDiff = vPlayerPos - vPos;
 		vDiff.Normalize();
 
-		vPos.x -= CTimeMgr::GetInst()->GetfDT() * vDiff.x * 450.0f;
-		vPos.z -= CTimeMgr::GetInst()->GetfDT() * vDiff.z * 450.0f;
+		vPos.x -= CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_MoveSpeed;
+		vPos.z -= CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_MoveSpeed;
 
-		MonsterRotateSystem(5.0f);
+		MonsterRotateSystem(m_RotSpeed);
 		Transform()->SetLocalPos(vPos);
 
 		m_BackMoveTime += fDT;
@@ -116,33 +110,32 @@ void CSpiderScript::Move()
 	if (1.5f < m_MoveTime && false == m_BackMoveCheck)
 	{
 		m_MoveTime = 0.0f;
-		if (false == RangeSearch(400.0f) && RangeSearch(1000.0f))
+		if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
 		{
 			int Pattern = CRandomMgrScript::GetRandomintNumber(0, 2);
-			static int MoveCount = 0;
 		
-			if (0 == Pattern)
+			if (0 == Pattern && m_MoveCount <= 2)
 			{
 				ChangeState(MONSTERSTATE::MOVE, 0.2f, L"LeftMove");
-				++MoveCount;
+				++m_MoveCount;
 			}
-			else if (1 == Pattern)
+			else if (1 == Pattern && m_MoveCount <= 2)
 			{
 				ChangeState(MONSTERSTATE::MOVE, 0.2f, L"RightMove");
-				++MoveCount;
+				++m_MoveCount;
 			}
-			else if (2 == Pattern || MoveCount > 3)
+			else if (2 == Pattern || m_MoveCount > 2)
 			{
-				MoveCount = 0;
+				m_MoveCount = 0;
 				m_fTheta = -XM_PI / 2.f;
-				m_AttackDir = CPlayerScript::GetPlayerPos() - Transform()->GetLocalPos();
+				m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 			}
 		}
 	}
 
 	
-	if (false == RangeSearch(1000.0f) && CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
+	if (false == RangeSearch(m_FrontMoveRange) && CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		ChangeState(MONSTERSTATE::MOVE, 0.2f, L"FrontMove");
 	}
@@ -151,14 +144,10 @@ void CSpiderScript::Move()
 
 }
 
-void CSpiderScript::Chase()
-{
-}
-
 void CSpiderScript::ReadyAction()
 {
 	static bool Focus = false;
-	if (MonsterRotateSystem(5.0f))
+	if (MonsterRotateSystem(m_RotSpeed))
 		Focus = true;
 
 	CAnimator3D* CurAni = Animator3D();
@@ -169,17 +158,17 @@ void CSpiderScript::ReadyAction()
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 
-		if (RangeSearch(400.0f))
+		if (RangeSearch(m_BackStepRange))
 		{
 			SetMonsterJumpInfo(0.6f, 1000.0f);
 			ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep");
 		}
-		else if(false == RangeSearch(400.0f) && RangeSearch(1000.0f))
+		else if(false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
 		{
 			if (Focus)
 			{
 				m_fTheta = -XM_PI / 2.f;
-				m_AttackDir = CPlayerScript::GetPlayerPos() - Transform()->GetLocalPos();
+				m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 				Focus = false;
 			}
@@ -213,23 +202,23 @@ void CSpiderScript::Attack()
 
 	if (124 == CurAni->GetFrameIdx())
 	{
-		m_AttackDir = CPlayerScript::GetPlayerPos() - Transform()->GetLocalPos();
+		m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
 		m_fTheta = -XM_PI / 2.f;
 	}
 
-	if (154 < CurAni->GetFrameIdx() && 170 > CurAni->GetFrameIdx())
+	if (154 < CurAni->GetFrameIdx() && 160 > CurAni->GetFrameIdx())
 	{
 		CalAttackDistance();
 	}
 	
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-		if (RangeSearch(400.0f))
+		if (RangeSearch(m_BackStepRange))
 		{
 			m_BackMoveCheck = true;
 			ChangeState(MONSTERSTATE::MOVE, 0.2f, L"BackMove");
 		}
-		else if (false == RangeSearch(400.0f) && RangeSearch(1000.0f))
+		else if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
 		{
 			bool LeftMove = CRandomMgrScript::GetRandomintNumber(0, 1);
 
@@ -246,10 +235,6 @@ void CSpiderScript::Attack()
 	}
 }
 
-void CSpiderScript::FinishAction()
-{
-}
-
 void CSpiderScript::Jump()
 {
 	MonsterJumpSystem();
@@ -258,7 +243,7 @@ void CSpiderScript::Jump()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-		if (false == RangeSearch(400.0f) && RangeSearch(1000.0f))
+		if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
 		{
 			int Pattern = CRandomMgrScript::GetRandomintNumber(0, 2);
 
@@ -269,7 +254,7 @@ void CSpiderScript::Jump()
 			else if (2 == Pattern)
 			{
 				m_fTheta = -XM_PI / 2.f;
-				m_AttackDir = CPlayerScript::GetPlayerPos() - Transform()->GetLocalPos();
+				m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 			}
 		}
@@ -286,13 +271,32 @@ void CSpiderScript::Death()
 {
 }
 
+void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
+{
+	// 플레이어의 공격을 받은경우
+	CGameObject* Obj = _pOther;
+
+	if (11 == Obj->GetLayerIndex())
+	{
+		--m_MonsterInfo.Hp;
+	}
+}
+
+void CSpiderScript::OnCollision(CGameObject* _pOther)
+{
+}
+
+void CSpiderScript::OnCollisionExit(CGameObject* _pOther)
+{
+}
+
 void CSpiderScript::CalAttackDistance()
 {
 	Vec3 Pos = Transform()->GetLocalPos();
 	float Speed = -(sinf(m_fTheta)) * 2.0f;
 
-	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed;
-	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed;
+	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 2000.0f;
+	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 2000.0f;
 	m_fTheta += CTimeMgr::GetInst()->GetfDT() * XM_PI / 2.0f;
 
 	if ((XM_PI * 3 / 2) < m_fTheta)
@@ -309,12 +313,15 @@ CSpiderScript::CSpiderScript()
 	, m_AttackDir{}
 	, m_BackMoveTime(0.0f)
 	, m_BackMoveCheck(false)
+	, m_MoveCount(0)
+	, m_MoveSpeed(450.0f)
+	, m_RotSpeed(5.0f)
+	, m_FrontMoveRange(1000.0f)
+	, m_BackStepRange(400.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::SPIDERSCRIPT;
 
 	m_MonsterInfo.Hp = 3;
-	m_MonsterInfo.Speed = 200.0f;
-	m_MonsterInfo.RecognitionRange = 700.0f;
 }
 
 CSpiderScript::~CSpiderScript()

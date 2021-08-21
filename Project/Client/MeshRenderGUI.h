@@ -8,6 +8,8 @@ class MeshRenderGUI :
 {
 private:
     UINT      m_iMaterialIdx;  //현재 선택된 메테리얼 
+   
+
 public:    
     virtual void update();
     virtual void render();

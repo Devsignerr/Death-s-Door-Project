@@ -17,22 +17,31 @@ private:
 	float   m_MoveTime;
 
 private:
-	float m_fTheta;
+	float	m_fTheta;
 	Vec3	m_AttackDir;
-	float m_BackMoveTime;
-	bool  m_BackMoveCheck;
+	float	m_BackMoveTime;
+	bool	m_BackMoveCheck;
+	int		m_MoveCount;
 private:
 	void CalAttackDistance();
 
 private:
+	float m_MoveSpeed;
+	float m_RotSpeed;
+	float m_FrontMoveRange;
+	float m_BackStepRange;
+private:
 	void Idle() override;
 	void Move() override;
-	void Chase() override;
 	void ReadyAction() override;
 	void Attack() override;
-	void FinishAction() override;
 	void Jump() override;
 	void Death() override;
+public:
+	void OnCollisionEnter(CGameObject* _pOther) override;
+	void OnCollision(CGameObject* _pOther) override;
+	void OnCollisionExit(CGameObject* _pOther) override;
+
 public:
 	CLONE(CSpiderScript);
 

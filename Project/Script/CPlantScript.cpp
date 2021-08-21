@@ -24,25 +24,27 @@ void CPlantScript::update()
 	case CMonsterScript::MONSTERSTATE::DEATH: Death(); break;
 	}
 
-	if (KEY_TAP(KEY_TYPE::SPACE))
+	if (0 == m_MonsterInfo.Hp)
 	{
-		
-
+		ChangeState(MONSTERSTATE::DEATH,0.03f,L"Death",true);
 	}
 
 }
 
 void CPlantScript::Idle()
 {
-	
-	MonsterRotateSystem(2.0f);
+	MonsterRotateSystem(m_RotSpeed);
 
+	m_AttackDelayTime += CTimeMgr::GetInst()->GetfDT();
 
-	m_MonsterInfo.DelayNextActionTime -= CTimeMgr::GetInst()->GetfDT();
-	if (0.0f >= m_MonsterInfo.DelayNextActionTime)
+	if (m_AttackDelayTime > 0.75f)
 	{
-		ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
-		m_MonsterInfo.DelayNextActionTime = 0.75f;
+		m_AttackDelayTime = 0.0f;
+
+		if (RangeSearch(m_AttackRange))
+		{
+			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
+		}
 	
 	}
 }
@@ -55,10 +57,31 @@ void CPlantScript::Attack()
 
 	if (89 == CurAni->GetFrameIdx())
 	{
+		LongDistanceAttack();
+	}
+
+	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
+	{
+		m_BulletLimit = false;
+		ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
+	}
+}
+
+
+void CPlantScript::Death()
+{
+
+}
+
+void CPlantScript::LongDistanceAttack()
+{
+	if (m_BulletLimit == false)
+	{
+		m_BulletLimit = true;
 		Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 		Vec3 Pos = Transform()->GetLocalPos();
 
-		Vec3 Distance = PlayerPos - Pos;
+		Vec3 Dir = -Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
 		CGameObject* Obj = new CGameObject;
 		Obj->AddComponent(new CTransform);
@@ -71,32 +94,24 @@ void CPlantScript::Attack()
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 		CPlantBullet* Script = (CPlantBullet*)Obj->GetScript();
-		Script->SetBulletDir(Distance);
+		Script->SetBulletDir(Dir);
 
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, 10);
 	}
-	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
-	{
-		ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
-	}
-}
-
-
-void CPlantScript::Death()
-{
-
 }
 
 void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 {
 	// 플레이어의 공격을 받은경우
-	--m_MonsterInfo.Hp;
+	CGameObject* Obj = _pOther;
 
-	if (0 == m_MonsterInfo.Hp)
+	if (11 == Obj->GetLayerIndex())
 	{
-		ChangeState(MONSTERSTATE::DEATH);
+		--m_MonsterInfo.Hp;
 	}
+
+
 }
 
 void CPlantScript::OnCollision(CGameObject* _pOther)
@@ -109,13 +124,13 @@ void CPlantScript::OnCollisionExit(CGameObject* _pOther)
 
 
 CPlantScript::CPlantScript()
+	: m_BulletLimit(false)
+	, m_AttackDelayTime(0.0f)
+	, m_RotSpeed(5.0f)
+	, m_AttackRange(1000.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::PLANTSCRIPT;
 	m_MonsterInfo.Hp = 3;
-	m_MonsterInfo.Speed = 6.0f;
-	m_MonsterInfo.RecognitionRange = 700.0f;
-	m_MonsterInfo.DelayNextActionTime = 0.75f;
-		
 }
 
 CPlantScript::~CPlantScript()

@@ -15,8 +15,9 @@ enum class KEY_TYPE
 	KEY_A, // = 2
 	KEY_D, // = 3
 	KEY_Z, // = 3
+	KEY_E,
 	KEY_M,
-	SPACE, 
+	SPACE,
 	ENTER,
 	LSHIFT,
 	LBTN,
@@ -31,6 +32,8 @@ enum class KEY_TYPE
 	NUM_0,
 	NUM_1,
 	NUM_2,
+	NUM_3,
+	NUM_4,
 
 	END,
 };
@@ -60,6 +63,7 @@ public:
 
 public:
 	void MousePicking();
+	void MakeLightFollow();
 public:
 	Vec2 GetMousePos() { return m_vMousePos; }
 	Vec2 GetPrevMousePos() { return m_vPrevMousePos; }

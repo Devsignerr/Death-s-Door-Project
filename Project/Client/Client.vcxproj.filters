@@ -110,6 +110,12 @@
     <Filter Include="GUI\InspectorGUI\ResInfoGUI\PrefabGUI">
       <UniqueIdentifier>{3012a2c1-bbd9-4d8d-9a94-22a875596e23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\InspectorGUI\ComponentGUI\Collider3DGUI">
+      <UniqueIdentifier>{1af2dc85-a7ce-488e-859c-abfd49a186dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\InspectorGUI\ComponentGUI\FrustumGUI">
+      <UniqueIdentifier>{ef1062ee-216f-4c5a-92c7-21edcd869900}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -247,6 +253,12 @@
     <ClInclude Include="PrefabGUI.h">
       <Filter>GUI\InspectorGUI\ResInfoGUI\PrefabGUI</Filter>
     </ClInclude>
+    <ClInclude Include="Collider3DGUI.h">
+      <Filter>GUI\InspectorGUI\ComponentGUI\Collider3DGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="FrustumGUI.h">
+      <Filter>GUI\InspectorGUI\ComponentGUI\FrustumGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -382,6 +394,12 @@
     </ClCompile>
     <ClCompile Include="PrefabGUI.cpp">
       <Filter>GUI\InspectorGUI\ResInfoGUI\PrefabGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3DGUI.cpp">
+      <Filter>GUI\InspectorGUI\ComponentGUI\Collider3DGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumGUI.cpp">
+      <Filter>GUI\InspectorGUI\ComponentGUI\FrustumGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -108,7 +108,7 @@ private:
 	vector<tNavMesh>				m_vecNavMesh;
 
 public:
-	void CreateNavMesh();
+	void CreateNavMesh(int _iIdx);
 
 public:
 	void init();

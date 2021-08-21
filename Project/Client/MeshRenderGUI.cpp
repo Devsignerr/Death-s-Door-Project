@@ -89,7 +89,7 @@ void MeshRenderGUI::render()
 		if (i < iMtrlCount)
 		{
 			wstrName = pMeshRender->GetSharedMaterial(i)->GetKey();
-			vecMtrl[i] = (string(wstrName.begin(), wstrName.end()).c_str());
+			vecMtrl[i] = string(wstrName.begin(), wstrName.end());
 			strMtrl[i] = vecMtrl[i].c_str(); 
 		}
 		else
@@ -123,6 +123,23 @@ void MeshRenderGUI::render()
 	
 	m_iMaterialIdx = item_current;
 
+
+	//=======================MeshRender On Off =============
+
+	static bool Enable = false;
+	
+	if (m_bItemChanged)
+	{
+		Enable = GetTargetObj()->MeshRender()->IsEnable();
+		m_bItemChanged = false;
+	}
+	
+	ImGui::Checkbox("Enable", &Enable);
+	
+	if(nullptr!=GetTargetObj())
+		GetTargetObj()->MeshRender()->Activate(Enable);
+		
+	
 	End();
 }
 
@@ -141,10 +158,13 @@ void MeshRenderGUI::SelectListItem(ListGUI* _pListGUI, const char* _pSelectName)
 
 	CMeshRender* pMeshRender = GetTargetObj()->MeshRender();
 
+	Ptr<CMaterial> Temp = pMeshRender->GetSharedMaterial(m_iMaterialIdx);
+
 	if (_pListGUI->GetCaption() == "Mesh")
 	{
 		Ptr<CMesh> pMesh = CResMgr::GetInst()->FindRes<CMesh>(wstring(strSel.begin(), strSel.end()));
 		pMeshRender->SetMesh(pMesh);
+		pMeshRender->SetMaterial(Temp, m_iMaterialIdx);
 		ImGui::SetWindowFocus(nullptr); // 모든 ImGui window focus 해제
 	}
 	else if (_pListGUI->GetCaption() == "Material")
