@@ -28,19 +28,21 @@ PS_OUT PS_Fire(VTX_OUT _in)
     
     float3 vViewNormal = _in.vVeiwNormal;
     
-    float4 BrighterColor = float4(1.0f, 1.0f, 0.0f, 1.0f);
-    float4 MiddleColor = float4(1.0f, 0.5f, 0.0f, 1.0f);
-    float4 DarkerColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
+    float4 BrighterColor = g_vDiff;
+    float4 MiddleColor = g_vAmb;
+    float4 DarkerColor = g_vSpec;
   
-    float NoiseTex = g_tex_0.Sample(g_sam_0, _in.vUV + float2(0, g_AccTime)).x;
+    float2 UV = _in.vUV - float2(0, g_AccTime);   
+    
+    float NoiseTex = g_tex_0.Sample(g_sam_0, UV).x;
     float gradientValue = g_tex_1.Sample(g_sam_0, _in.vUV).x;
 
     float step1 = step(NoiseTex, gradientValue);
     float step2 = step(NoiseTex, gradientValue - 0.3);
     float step3 = step(NoiseTex, gradientValue - 0.5);
     
-    if (step1 == 0.0f)
-        clip(-1);
+    //if (step1 == 0.0f) 
+    //    clip(-1);
   
     float4 c = float4(lerp(BrighterColor, DarkerColor, step1 - step2));
     

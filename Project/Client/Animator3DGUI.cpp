@@ -493,6 +493,13 @@ void Animator3DGUI::FrameEdit(CAnimator3D* _TargetAni)
 			}
 
 			ImGui::SameLine();
+
+			if (ImGui::Button("Stop Animation"))
+			{
+				GetTargetObj()->Animator3D()->StopAnimation();
+			}
+
+			ImGui::SameLine();
 			if (ImGui::Button("Register"))
 			{
 				OpenName = !OpenName;
@@ -531,11 +538,11 @@ void Animator3DGUI::FrameEdit(CAnimator3D* _TargetAni)
 								++Iter;
 							}
 						}
-							
-
-						
+	
 					}
 				}
+
+				
 
 			}
 
@@ -817,13 +824,14 @@ void Animator3DGUI::LoadAniFile()
 
 	GetTargetObj()->Animator3D()->GetvecClipUpdateTime().resize(TempVecClip->size());
 
-	vector<CGameObject*> vecChild = GetTargetObj()->GetChild();
+	const vector<CGameObject*>& vecChild = GetTargetObj()->GetChild();
 
 	if (vecChild.size() > 0)
 	{
 		for (int i = 0; i < vecChild.size(); i++)
 		{
-			vecChild[i]->Animator3D()->GetvecClipUpdateTime().resize(TempVecClip->size());
+			if(vecChild[i]->Animator3D())
+				vecChild[i]->Animator3D()->GetvecClipUpdateTime().resize(TempVecClip->size());
 		}
 	}
 

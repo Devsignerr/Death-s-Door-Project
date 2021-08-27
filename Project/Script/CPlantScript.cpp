@@ -94,6 +94,7 @@ void CPlantScript::LongDistanceAttack()
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 		CPlantBullet* Script = (CPlantBullet*)Obj->GetScript();
+		Script->awake();
 		Script->SetBulletDir(Dir);
 
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();

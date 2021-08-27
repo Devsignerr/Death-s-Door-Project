@@ -90,12 +90,19 @@ void CSkullScript::Chase()
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
 	vDiff.Normalize();
+	Vec3 vMovePos = {};
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+
+	bool IsGround = GroundCheck(vPos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(vPos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(vPos + vMovePos);
 
 	MonsterRotateSystem(m_RotSpeed);
-	Transform()->SetLocalPos(vPos);
 
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
@@ -132,10 +139,18 @@ void CSkullScript::Attack()
 			Vec3 vDiff = vPlayerPos - vPos;
 			vDiff.Normalize();
 
-			vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_AttackMoveSpeed;
-			vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_AttackMoveSpeed;
+			Vec3 vMovePos = {};
 
-			Transform()->SetLocalPos(vPos);
+			vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_AttackMoveSpeed;
+			vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_AttackMoveSpeed;
+
+			bool IsGround = GroundCheck(vPos + vMovePos);
+			if (!IsGround)
+				IsGround = ResearchNode(vPos + vMovePos);
+
+			if (true == IsGround)
+				Transform()->SetLocalPos(vPos + vMovePos);
+
 		}
 
 	}

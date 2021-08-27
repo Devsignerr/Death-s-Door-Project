@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TPlayerSlash_Attack_R.h"
 #include "CPlayerScript.h"
+#include "CSlashEffect.h"
 
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
@@ -8,7 +9,6 @@
 
 void TPlayerSlash_Attack_R::update()
 {
-
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
@@ -27,13 +27,25 @@ void TPlayerSlash_Attack_R::update()
 
 	if (1150 > CurAni->GetFrameIdx())
 	{
-		Vec3 PlayerFront = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
+		Vec3 PlayerFront = ((CPlayerScript*)GetScript())->GetPlayerFront();
 		Vec3 Pos = GetObj()->Transform()->GetLocalPos();
 
-		Pos.x += PlayerFront.x * fDT * 200.0f;
-		Pos.z += PlayerFront.z * fDT * 200.0f;
+		Vec3 vMovePos = {  };
+		vMovePos.x += PlayerFront.x * fDT * 200.0f;
+		vMovePos.z += PlayerFront.z * fDT * 200.0f;
 
-		GetObj()->Transform()->SetLocalPos(Pos);
+
+		bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(Pos + vMovePos);
+
+		if (!IsGround)
+			IsGround = ((CPlayerScript*)GetScript())->ResearchNode(Pos + vMovePos);
+
+		if (true == IsGround)
+		{
+	
+			GetObj()->Transform()->SetLocalPos(Pos + vMovePos);
+		}
+
 
 	}
 
@@ -41,6 +53,11 @@ void TPlayerSlash_Attack_R::update()
 	{
 		if (m_IsLeftSlash)
 		{
+			((CSlashEffect*)CPlayerScript::m_pHorizonSlashR->GetScript())->SetActive(false);
+			((CSlashEffect*)CPlayerScript::m_pHorizonSlashL->GetScript())->SetActive(true);		
+			CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(true);
+			CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
+
 			GetFSM()->ChangeState(L"Slash_L", 0.01f, L"Slash_L", false);
 		}
 	}

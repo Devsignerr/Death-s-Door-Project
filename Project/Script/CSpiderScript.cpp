@@ -6,6 +6,7 @@
 void CSpiderScript::awake()
 {
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
+	// 백스텝, 프론트무브
 }
 
 void CSpiderScript::update()
@@ -52,29 +53,49 @@ void CSpiderScript::Move()
 		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vPos = Transform()->GetLocalPos();
 
-		vPos -= vRight;
-		Transform()->SetLocalPos(vPos);
+		Vec3 vMovePos = {};
+
+		vMovePos -= vRight;
+		bool IsGround = GroundCheck(vPos + vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(vPos + vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(vPos + vMovePos);
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightMove")
 	{
 		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vPos = Transform()->GetLocalPos();
+		Vec3 vMovePos = {};
 
-		vPos += vRight;
-		Transform()->SetLocalPos(vPos);
+		vMovePos += vRight;
+		bool IsGround = GroundCheck(vPos + vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(vPos + vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(vPos + vMovePos);
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"FrontMove")
 	{
 		Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 		Vec3 vPos = Transform()->GetLocalPos();
 		Vec3 vDiff = vPlayerPos - vPos;
+		Vec3 vMovePos = {};
 		vDiff.Normalize();
 
-		vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_MoveSpeed;
-		vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_MoveSpeed;
+		vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_MoveSpeed;
+		vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_MoveSpeed;
+
+		bool IsGround = GroundCheck(vPos + vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(vPos + vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(vPos + vMovePos);
 
 		MonsterRotateSystem(m_RotSpeed);
-		Transform()->SetLocalPos(vPos);
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"BackMove")
 	{
@@ -82,13 +103,20 @@ void CSpiderScript::Move()
 		Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 		Vec3 vPos = Transform()->GetLocalPos();
 		Vec3 vDiff = vPlayerPos - vPos;
+		Vec3 vMovePos = {};
 		vDiff.Normalize();
 
-		vPos.x -= CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_MoveSpeed;
-		vPos.z -= CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_MoveSpeed;
+		vMovePos.x -= CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_MoveSpeed;
+		vMovePos.z -= CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_MoveSpeed;
+
+		bool IsGround = GroundCheck(vPos + vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(vPos + vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(vPos + vMovePos);
 
 		MonsterRotateSystem(m_RotSpeed);
-		Transform()->SetLocalPos(vPos);
 
 		m_BackMoveTime += fDT;
 
@@ -294,9 +322,10 @@ void CSpiderScript::CalAttackDistance()
 {
 	Vec3 Pos = Transform()->GetLocalPos();
 	float Speed = -(sinf(m_fTheta)) * 2.0f;
+	Vec3 vMovePos = {};
 
-	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 2000.0f;
-	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 2000.0f;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 2000.0f;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 2000.0f;
 	m_fTheta += CTimeMgr::GetInst()->GetfDT() * XM_PI / 2.0f;
 
 	if ((XM_PI * 3 / 2) < m_fTheta)
@@ -304,7 +333,13 @@ void CSpiderScript::CalAttackDistance()
 		m_fTheta = -XM_PI / 2.f;
 	}
 
-	Transform()->SetLocalPos(Pos);
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
+
 }
 
 CSpiderScript::CSpiderScript()

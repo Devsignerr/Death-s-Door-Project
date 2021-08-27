@@ -9,6 +9,7 @@
 #include "CKeyMgr.h"
 #include "CCopyShaderCS.h"
 #include "CResMgr.h"
+#include "CEventMgr.h"
 
 CParticleSystem::CParticleSystem()
 	: CComponent(COMPONENT_TYPE::PARTICLE)
@@ -26,6 +27,11 @@ CParticleSystem::CParticleSystem()
 	, m_vStartScale(Vec3(40.f, 40.f, 1.f))
 	, m_vEndScale(Vec3(10.f, 10.f, 1.f))
 	, m_ePOV(SHADER_POV::PARTICLE)
+	, m_bRepeat(true)
+	, m_eType(PARTICLE_TYPE::UP)
+	, m_bDead(false)
+	, m_iSlow(20)
+	, m_iAccLiveCount(0)
 {
 	m_pMesh = CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh");
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
@@ -34,9 +40,43 @@ CParticleSystem::CParticleSystem()
 	m_pParticleBuffer = new CStructuredBuffer;
 }
 
+CParticleSystem::CParticleSystem(CParticleSystem& _origin)
+	: CComponent(COMPONENT_TYPE::PARTICLE)
+	, m_iMaxCount(_origin.m_iMaxCount)
+	, m_iAliveCount(_origin.m_iAliveCount)
+	, m_fMinLifeTime(_origin.m_fMinLifeTime)
+	, m_fMaxLifeTime(_origin.m_fMaxLifeTime)
+	, m_fMinSpeed(_origin.m_fMinSpeed)
+	, m_fMaxSpeed(_origin.m_fMaxSpeed)
+	, m_fFrequency(_origin.m_fFrequency)
+	, m_fAccTime(_origin.m_fAccTime)
+	, m_vCreateRange(_origin.m_vCreateRange)
+	, m_vStartColor(_origin.m_vStartColor)
+	, m_vEndColor(_origin.m_vEndColor)
+	, m_vStartScale(_origin.m_vStartScale)
+	, m_vEndScale(_origin.m_vEndScale)
+	, m_ePOV(_origin.m_ePOV)
+	, m_bRepeat(true)
+	, m_eType(_origin.m_eType)
+	, m_bDead(false)
+	, m_iSlow(20)
+	, m_iAccLiveCount(0)
+{
+	m_pTex = _origin.m_pTex;
+	m_pParticleBuffer = new CStructuredBuffer;
+	m_pMesh = _origin.m_pMesh;
+	m_pMtrl = _origin.m_pMtrl;
+	m_pUpdateShader = _origin.m_pUpdateShader;
+}
+
 CParticleSystem::~CParticleSystem()
 {
-	delete m_pParticleBuffer;
+	 SAFE_DELETE(m_pParticleBuffer);
+}
+
+void CParticleSystem::Activate(bool _b)
+{
+	m_bEnable = _b;
 }
 
 void CParticleSystem::awake()
@@ -47,12 +87,25 @@ void CParticleSystem::awake()
 
 void CParticleSystem::finalupdate()
 {
-	if(m_ePOV==SHADER_POV::PARTICLE)
-		m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
+	if (m_bDead)
+		return;
 
-	else if (m_ePOV == SHADER_POV::DEFERRED_PARTICLE)
-		m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DefferedParticleRenderMtrl");
+	//폭발 이펙트 한정 
+	m_fCurTime += fDT;
 
+	if (!m_bRepeat && m_fCurTime > m_fMaxLifeTime)
+	{
+		CGameObject* Obj = GetObj();
+
+		tEvent even = {};
+
+		even.eEvent = EVENT_TYPE::DELETE_OBJECT;
+		even.lParam = (DWORD_PTR)Obj;
+
+		CEventMgr::GetInst()->AddEvent(even);
+		m_bDead = true;
+		return;
+	}
 
 
 	m_fAccTime += fDT;
@@ -67,7 +120,8 @@ void CParticleSystem::finalupdate()
 	}
 
 	Vec3 vPos = Transform()->GetWorldPos();
-
+	m_pUpdateShader->SetSlow(m_iSlow);
+	m_pUpdateShader->SetParticleType(m_eType);
 	m_pUpdateShader->SetMaxParticle(m_iMaxCount);
 	m_pUpdateShader->SetAliveCount(m_iAliveCount);
 	m_pUpdateShader->SetMinLifeTime(m_fMinLifeTime);
@@ -80,6 +134,7 @@ void CParticleSystem::finalupdate()
 
 
 	m_pUpdateShader->Excute();
+
 }
 
 void CParticleSystem::render()
@@ -91,7 +146,6 @@ void CParticleSystem::render()
 	m_pMtrl->SetData(SHADER_PARAM::VEC4_1, &m_vEndScale);
 	m_pMtrl->SetData(SHADER_PARAM::VEC4_2, &m_vStartColor);
 	m_pMtrl->SetData(SHADER_PARAM::VEC4_3, &m_vEndColor);
-
 	m_pMtrl->SetData(SHADER_PARAM::TEX_0, m_pTex.Get());
 
 	// 리소스 바인딩
@@ -133,6 +187,8 @@ void CParticleSystem::SaveToScene(FILE* _pFile)
 	fwrite(&m_vEndColor, sizeof(Vec4), 1, _pFile);
 	fwrite(&m_vStartScale, sizeof(Vec4), 1, _pFile);
 	fwrite(&m_vEndScale, sizeof(Vec4), 1, _pFile);
+	fwrite(&m_ePOV, sizeof(SHADER_POV), 1, _pFile);
+	fwrite(&m_eType, sizeof(PARTICLE_TYPE), 1, _pFile);
 
 	SaveResRefInfo<CTexture>(m_pTex, _pFile);
 }
@@ -155,6 +211,8 @@ void CParticleSystem::LoadFromScene(FILE* _pFile)
 	fread(&m_vEndColor, sizeof(Vec4), 1, _pFile);
 	fread(&m_vStartScale, sizeof(Vec4), 1, _pFile);
 	fread(&m_vEndScale, sizeof(Vec4), 1, _pFile);
+	fread(&m_ePOV, sizeof(SHADER_POV), 1, _pFile);
+	fread(&m_eType, sizeof(PARTICLE_TYPE), 1, _pFile);
 
 	LoadResRefInfo<CTexture>(m_pTex, _pFile);
 }

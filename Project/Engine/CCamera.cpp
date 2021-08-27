@@ -106,7 +106,7 @@ void CCamera::SortObject()
 
 			for (size_t j = 0; j < vecObj.size(); ++j)
 			{
-				if (vecObj[j]->ParticleSystem())
+				if (vecObj[j]->ParticleSystem()&& vecObj[j]->ParticleSystem()->IsEnable())
 				{
 					if (vecObj[j]->ParticleSystem()->GetMaterial()->GetShader()->GetPOV() == SHADER_POV::PARTICLE)
 					{

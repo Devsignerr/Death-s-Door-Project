@@ -59,16 +59,11 @@ private:
     float               m_fRollSpeed;       //구르기 이동 시 스피드 
 
     float               m_fAttackCoolTime;
-    CGameObject*        m_Weapon;           //보통 두번째 자식이다 . 
-
-    Ptr<CPrefab>        m_pArrowPrefab;     //활 모션 시 생성할 프리팹 
-    Ptr<CPrefab>        m_pBombPrefab;      //폭탄 모션 시 생성할 프리팹
-    Ptr<CPrefab>        m_pMagicPrefab;     // 마법 모션 시 생성할 프리팹 
-                                            // HookShot은 프리팹이 아니라 MemoryPool 에서 얻어 상요할 예정. 사슬이 최소 2~30개는 될것이라 일일히 생성할순 없다 
 
     CFSM*               m_pFSM;
     PLAYER_STATE        m_eState;
     string              m_strState;
+
 
     //===============================
     static Vec3 PlayerMovePos;
@@ -82,6 +77,23 @@ private:
     //FSM클래스를  사용할 대상마다 map 의 KEY를 알맞게 정의해주면 된다 
     map<PLAYER_STATE ,wstring>	m_mapState;
 
+
+public:
+    static CGameObject* m_pMagic;
+    static CGameObject* m_pArrow;
+    static CGameObject* m_pBomb;
+    static CGameObject* m_pHook;
+
+    static CGameObject* m_pBow;
+    static CGameObject* m_Weapon;
+
+    static CGameObject* m_pRollSlash;
+    static CGameObject* m_pHorizonSlashL;
+    static CGameObject* m_pHorizonSlashR;
+
+    static CGameObject* m_pHeavySlashL;
+    static CGameObject* m_pHeavySlashR;
+
 private:
     PLAYER_PROJECTILE_TYPE m_PlayerProjectileType;
 public:
@@ -89,6 +101,7 @@ public:
 
 private:
     float m_Distance;
+
 
 public:
     static Vec3 GetPlayerMovePos(){ return PlayerMovePos; }

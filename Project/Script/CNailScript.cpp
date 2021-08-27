@@ -43,12 +43,19 @@ void CNailScript::Chase()
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
 	vDiff.Normalize();
+	Vec3 vMovePos = {};
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+														  
+	bool IsGround = GroundCheck(vPos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(vPos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(vPos + vMovePos);
 
 	MonsterRotateSystem(m_ChaseRotSpeed);
-	Transform()->SetLocalPos(vPos);
 
 	if (RangeSearch(m_NailAttackRange))
 	{
@@ -57,6 +64,7 @@ void CNailScript::Chase()
 	}
 	else if (false == RangeSearch(m_NailAttackRange) && true == RangeSearch(m_JumpAttackRange))
 	{
+		SetbJump(true);
 		ResetJumpAttackInfo();
 		CalJumpAttackDistance();
 		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"JumpAttackReady");
@@ -140,6 +148,7 @@ void CNailScript::Attack()
 
 		if (RangeSearch(m_BackStepRange))
 		{
+			SetbJump(true);
 			ChangeState(MONSTERSTATE::JUMP, 0.02f, L"BackStep");
 		}
 		else if (false == RangeSearch(m_BackStepRange) && true == RangeSearch(m_NailAttackRange))
@@ -162,6 +171,7 @@ void CNailScript::Attack()
 	{
 		if (RangeSearch(m_BackStepRange))
 		{
+			SetbJump(true);
 			ChangeState(MONSTERSTATE::JUMP, 0.005f, L"BackStep");
 		}
 		else if (false == RangeSearch(m_BackStepRange) && true == RangeSearch(m_NailAttackRange))
@@ -239,7 +249,7 @@ void CNailScript::OnCollisionExit(CGameObject* _pOther)
 void CNailScript::CalAttackDistance()
 {
 	Vec3 Pos = Transform()->GetLocalPos();
-
+	Vec3 vMovePos = {};
 	float Speed = (sinf(m_fTheta)) * 10.0f;
 
 	float Distance = Vec3::Distance(CPlayerScript::GetPlayerPos(), Pos);
@@ -251,8 +261,8 @@ void CNailScript::CalAttackDistance()
 	if (600.0f < ShiftAmount)
 		return;
 
-	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 1000.0f;
-	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 1000.0f;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 1000.0f;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 1000.0f;
 	m_fTheta += CTimeMgr::GetInst()->GetfDT() * (XM_PI / 2.0f);
 
 	if (XM_PI < m_fTheta)
@@ -260,20 +270,26 @@ void CNailScript::CalAttackDistance()
 		m_fTheta = XM_PI / 2.0f;
 	}
 
-	Transform()->SetLocalPos(Pos);
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
 }
 
 void CNailScript::CalBackStepDistance()
 {
 	// 186 ~ 200
 	Vec3 Pos = Transform()->GetLocalPos();
+	Vec3 vMovePos = {};
 	m_BackStepDir = -Transform()->GetLocalDir(DIR_TYPE::UP);
 	m_BackStepDir *= 1000.0f;
 
 	float Speed = (sinf(m_fBackStepTheta)) * 2.5f;
 
-	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.x * Speed;
-	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.z * Speed;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.x * Speed;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.z * Speed;
 	m_fBackStepTheta += CTimeMgr::GetInst()->GetfDT() * (XM_PI / 2.0f);
 
 	CAnimator3D* CurAni = Animator3D();
@@ -283,13 +299,13 @@ void CNailScript::CalBackStepDistance()
 	int a = CurAni->GetFrameIdx();
 	if (193 < CurAni->GetFrameIdx() && 207 >= CurAni->GetFrameIdx())
 	{
-		Pos.x -= CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.x * (Speed);
-		Pos.z -= CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.z * (Speed);
+		vMovePos.x -= CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.x * (Speed);
+		vMovePos.z -= CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.z * (Speed);
 	}
 	else
 	{
-		Pos.x += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.x * (Speed / 8.0f);
-		Pos.z += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.z * (Speed / 8.0f);
+		vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.x * (Speed / 8.0f);
+		vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_BackStepDir.z * (Speed / 8.0f);
 	}
 
 	if (XM_PI < m_fBackStepTheta)
@@ -297,7 +313,14 @@ void CNailScript::CalBackStepDistance()
 		m_fBackStepTheta = XM_PI / 2.0f;
 	}
 
-	Transform()->SetLocalPos(Pos);
+
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
+
 }
 
 void CNailScript::CalJumpAttackDistance()
@@ -326,29 +349,37 @@ void CNailScript::JumpAttackStay()
 {
 	m_Time += fDT;
 	Vec3 Pos = Transform()->GetLocalPos();
+	Vec3 vMovePos = {};
 
 	if (m_Time <= m_DestAttachTime)
 	{
-		float X = m_Pos.x + m_VelocityX * m_Time;
-		float Y = m_Pos.y + m_VelocityY * m_Time - 0.5f * m_Gravity * m_Time * m_Time;
-		float Z = m_Pos.z + m_VelocityZ * m_Time;
+		if (false == m_WallCheck)
+		{
+			vMovePos.x = m_Pos.x + m_VelocityX * m_Time;
+			vMovePos.z = m_Pos.z + m_VelocityZ * m_Time;
+		}
+		else
+		{
+			vMovePos.x = Pos.x;
+			vMovePos.z = Pos.z;
+		}
 
-		Pos.x = X;
-		Pos.y = Y;
-		Pos.z = Z;
+		vMovePos.y = m_Pos.y + m_VelocityY * m_Time - 0.5f * m_Gravity * m_Time * m_Time;
 
-		Transform()->SetLocalPos(Pos);
+		bool IsGround = GroundCheck( vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(vMovePos);
+		else
+			m_WallCheck = true;
 	}
 	else
 	{
-		float Y = m_Pos.y + m_VelocityY * m_Time - 0.5f * m_Gravity * m_Time * m_Time;
-		Pos.y = Y;
-
-		if (0.0f > Pos.y)
-			Pos.y = 0.0f;
-
-		Transform()->SetLocalPos(Pos);
+		m_WallCheck = false;
 	}
+
 }
 
 void CNailScript::ResetJumpAttackInfo()
@@ -391,6 +422,7 @@ CNailScript::CNailScript()
 	, m_MaxHeightTime(0.0f)
 	, m_MaxHeight(500.0f)
 	, m_ChaseSpeed(650.0f)
+	, m_WallCheck(false)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::NAILSCRIPT;
 	m_MonsterInfo.Hp = 6;

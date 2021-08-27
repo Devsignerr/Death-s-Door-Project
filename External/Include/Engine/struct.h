@@ -26,9 +26,8 @@ struct tParticle
 	float   m_fSpeed;
 
 	int		iAlive;
-
-private:
-	int     iPadding[2];
+	int		iLeftSpin;
+	int     iParticleType;
 };
 
 struct tParticleShared

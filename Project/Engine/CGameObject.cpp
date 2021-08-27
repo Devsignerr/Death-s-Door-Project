@@ -234,6 +234,38 @@ void CGameObject::SetFrustumCheck(bool _bTrue)
 	}
 }
 
+void CGameObject::SetAllColliderActive(bool _b)
+{
+	const vector<CGameObject*>& vecChild = GetChild();
+
+	UINT ChildCount = vecChild.size();
+
+	for (UINT i = 0; i < ChildCount; ++i)
+	{
+		if (vecChild[i]->Collider3D())
+			vecChild[i]->Collider3D()->Activate(_b);
+	}
+
+	if(Collider3D())
+		Collider3D()->Activate(_b);
+}
+
+void CGameObject::SetAllMeshrenderActive(bool _b)
+{
+	const vector<CGameObject*>& vecChild = GetChild();
+
+	UINT ChildCount = vecChild.size();
+
+	for (UINT i = 0; i < ChildCount; ++i)
+	{
+		if (vecChild[i]->MeshRender())
+			vecChild[i]->MeshRender()->Activate(_b);
+	}
+
+	if (MeshRender())
+		MeshRender()->Activate(_b);
+}
+
 void CGameObject::DisconnectWithParent()
 {
 	// 부모가 없는 오브젝트에 부모해제 함수 호출한 경우

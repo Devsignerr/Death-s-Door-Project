@@ -47,6 +47,7 @@ private:
 	float   m_VelocityZ;
 	float   m_MaxHeight;
 	float   m_MaxHeightTime;
+	bool    m_WallCheck;
 private:
 	void CalJumpAttackDistance();
 	void JumpAttackStay();

@@ -3,6 +3,8 @@
 #include "CScene.h"
 
 #include "CEventMgr.h"
+#include "CPathMgr.h"
+#include "CResMgr.h"
 
 CSceneMgr::CSceneMgr()
 	: m_pCurScene(nullptr)
@@ -45,4 +47,41 @@ void CSceneMgr::ChangeScene(CScene* _pNextScene)
 	evn.wParam = (DWORD_PTR)_pNextScene;
 
 	CEventMgr::GetInst()->AddEvent(evn);
+}
+
+
+void CSceneMgr::LoadScene(CScene* _pScene, const wstring& _strRelativePath)
+{
+	wstring strFilePath = CPathMgr::GetResPath();
+	strFilePath += _strRelativePath;
+
+	FILE* pFile = nullptr;
+	HRESULT hr = _wfopen_s(&pFile, strFilePath.c_str(), L"rb");
+
+	if (nullptr == pFile)
+	{
+		MessageBox(nullptr, L"Scene Load Failed", L"Error", MB_OK);
+		return;
+	}
+
+	_pScene->LoadFromScene(pFile);
+
+	fclose(pFile);
+}
+
+void CSceneMgr::SceneChange(const wstring& _SceneName)
+{
+	CResMgr::GetInst()->GetNavMeshVec().clear();
+
+	CScene* pScene = new CScene;
+
+	LoadScene(pScene, L"scene\\" + _SceneName + L".scene");
+
+	tEvent evn = {};
+	evn.eEvent = EVENT_TYPE::SCENE_CHANGE;
+	evn.lParam = (DWORD_PTR)m_pCurScene;
+	evn.wParam = (DWORD_PTR)pScene;
+
+	CEventMgr::GetInst()->AddEvent(evn);
+
 }

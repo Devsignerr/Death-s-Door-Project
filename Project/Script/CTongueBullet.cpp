@@ -16,40 +16,37 @@ void CTongueBullet::update()
 	m_fTimetoCheckPlayerPos += fDT;
 
 
-		//사이각 
-		m_fInternalRadianWithPlayer = vFront.Dot(vRelative);
+	//사이각 
+	m_fInternalRadianWithPlayer = vFront.Dot(vRelative);
 
-		Vec3 vCross = vFront.Cross(vRelative);
+	Vec3 vCross = vFront.Cross(vRelative);
 
-		float fDot = vCross.Dot(vUp);
+	float fDot = vCross.Dot(vUp);
 
-		//플레이어는 내 왼쪽에 있다 
-		if (fDot > 0.0f)
-			m_bPlayerMyLeft = true;
+	//플레이어는 내 왼쪽에 있다 
+	if (fDot > 0.0f)
+		m_bPlayerMyLeft = true;
 
-		//플레이어는 내 오른쪽에 있다 
-		else if (fDot < 0.0f)
-			m_bPlayerMyLeft = false;
+	//플레이어는 내 오른쪽에 있다 
+	else if (fDot < 0.0f)
+		m_bPlayerMyLeft = false;
 
+	if (m_bPlayerMyLeft)
+		Rot.y += CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
+	else
+		Rot.y -= CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
 
+	if (m_fTimetoCheckPlayerPos < 1.0f)
+	{
 
+		Pos.x += fDT * vRelative.x * 1000.0f;
+		Pos.z += fDT * vRelative.z * 1000.0f;
 
-		if (m_bPlayerMyLeft)
-			Rot.y += CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
-		else
-			Rot.y -= CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
-
-		if (m_fTimetoCheckPlayerPos < 1.0f)
-		{
-
-			Pos.x += fDT * vRelative.x * 1000.0f;
-			Pos.z += fDT * vRelative.z * 1000.0f;
-
-		}
-		else
-		{
-			Pos += (vFront / 0.95f) * fDT * 1000.f;
-		}
+	}
+	else
+	{
+		Pos += (vFront / 0.95f) * fDT * 1000.f;
+	}
 
 
 	Transform()->SetLocalPos(Pos);

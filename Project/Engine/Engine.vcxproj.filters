@@ -49,9 +49,6 @@
     <ClInclude Include="CGameObject.h">
       <Filter>Engine\03. GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="CComponent.h">
-      <Filter>Engine\04. Component</Filter>
-    </ClInclude>
     <ClInclude Include="CTransform.h">
       <Filter>Engine\04. Component\Transform</Filter>
     </ClInclude>
@@ -201,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="CFrustumSphere.h">
       <Filter>Engine\04. Component\FrustumSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="CComponent.h">
+      <Filter>Engine\04. Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -566,9 +566,6 @@
     <Filter Include="Engine\02. Manager\InstancingBuffer">
       <UniqueIdentifier>{b65249f6-3a9b-4b55-baad-db66bd79f765}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\04. Component\Collider3D">
-      <UniqueIdentifier>{4a271797-a290-4ee6-8c9d-4c611b535426}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\04. Component\Camera\LightCamera">
       <UniqueIdentifier>{a2bcfbfd-8b82-4889-896c-c5fc335dd5c0}</UniqueIdentifier>
     </Filter>
@@ -583,6 +580,9 @@
     </Filter>
     <Filter Include="Engine\04. Component\FrustumSphere">
       <UniqueIdentifier>{8719b576-7f92-425a-a41d-f95b8e2c6504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04. Component\Collider3D">
+      <UniqueIdentifier>{4a271797-a290-4ee6-8c9d-4c611b535426}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

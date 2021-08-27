@@ -328,6 +328,24 @@
     <ClInclude Include="TCastleDeath.h">
       <Filter>ScriptCode\FSM\Boss\Castle</Filter>
     </ClInclude>
+    <ClInclude Include="CSceneChange.h">
+      <Filter>ScriptCode\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CMemoryPoolScript.h">
+      <Filter>ScriptCode\System\MemoryPool</Filter>
+    </ClInclude>
+    <ClInclude Include="CEffectScript.h">
+      <Filter>ScriptCode\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerChain.h">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerHook.h">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CSlashEffect.h">
+      <Filter>ScriptCode\Effect\SlashEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -446,6 +464,24 @@
     </Filter>
     <Filter Include="ScriptCode\System\Camera\Fade">
       <UniqueIdentifier>{a22b828e-cde1-4891-ac1f-384094a9a44b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\Scene">
+      <UniqueIdentifier>{117e8836-5453-47c9-ba02-bb6d0e94a574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\MemoryPool">
+      <UniqueIdentifier>{324422c2-7c64-4d2e-8561-1a385b6d1233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Actor\Player\PlayerAttackEffect">
+      <UniqueIdentifier>{0267d837-b8f1-48b6-8663-6f56b132c435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Effect">
+      <UniqueIdentifier>{d3f9956f-9b47-4272-b5f1-47d9624f9372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Effect\PartcleScript">
+      <UniqueIdentifier>{ba96726f-859d-40d1-be58-257f90ada6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Effect\SlashEffect">
+      <UniqueIdentifier>{ec25432e-85b4-45ff-abf5-04d4445c70f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -772,6 +808,24 @@
     </ClCompile>
     <ClCompile Include="TCastleDeath.cpp">
       <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="CSceneChange.cpp">
+      <Filter>ScriptCode\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CMemoryPoolScript.cpp">
+      <Filter>ScriptCode\System\MemoryPool</Filter>
+    </ClCompile>
+    <ClCompile Include="CEffectScript.cpp">
+      <Filter>ScriptCode\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerChain.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerHook.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CSlashEffect.cpp">
+      <Filter>ScriptCode\Effect\SlashEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

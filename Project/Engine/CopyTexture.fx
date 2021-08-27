@@ -30,6 +30,16 @@ static float BlurWeights[13] =
 };
 
 
+static float gaussian5x5[25] =
+{
+    0.003765, 0.015019, 0.023792, 0.015019, 0.003765,
+    0.015019, 0.059912, 0.094907, 0.059912, 0.015019,
+    0.023792, 0.094907, 0.150342, 0.094907, 0.023792,
+    0.015019, 0.059912, 0.094907, 0.059912, 0.015019,
+    0.003765, 0.015019, 0.023792, 0.015019, 0.003765,
+};
+
+
 RWTexture2D<float4> g_DestTex : register(u0);
 Texture2D g_SrcTex : register(t13);
 
@@ -56,22 +66,40 @@ void CS_CopyTex(uint3 _iThreadIdx : SV_DispatchThreadID)
     
     if(g_int_0==0)
     {
-        for (; index < 13; ++index)
+        //for (; index < 13; ++index)
+        //{
+        //    Color += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.x), _fUv.y), 0) * BlurWeights[index];
+        //    Color += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x, _fUv.y + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.y)), 0) * BlurWeights[index];
+        //}
+        
+        for (int i = 0; i < 5; ++i)
         {
-            Color += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.x), _fUv.y), 0) * BlurWeights[index];
-            Color += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x, _fUv.y + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.y)), 0) * BlurWeights[index];
+            for (int j = 0; j < 5; ++j)
+            {
+                Color += g_SrcTex.SampleLevel(g_sam_0, _fUv + float2(i - 2, j - 2) / DOWNSAMPLE_RESOLUTION, 0) * gaussian5x5[i * 5 + j];
+            }
         }
+        
         
         g_DestTex[_iThreadIdx.xy] = Color;
     }
     
     else if (g_int_0==1)
     {
-       for (; index < 13; ++index)
-       {
-           Color.rgb += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.x), _fUv.y), 0).rgb * BlurWeights[index];
-           Color.rgb += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x, _fUv.y + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.y)), 0).rgb * BlurWeights[index];
-       }     
+       //for (; index < 13; ++index)
+       //{
+       //    Color.rgb += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.x), _fUv.y), 0).rgb * BlurWeights[index];
+       //    Color.rgb += g_SrcTex.SampleLevel(g_sam_0, float2(_fUv.x, _fUv.y + (PixelKernel[index].x / DOWNSAMPLE_RESOLUTION.y)), 0).rgb * BlurWeights[index];
+       //}     
+        
+        for (int i = 0; i < 5; ++i)
+        {
+            for (int j = 0; j < 5; ++j)
+            {
+                Color += g_SrcTex.SampleLevel(g_sam_0, _fUv + float2(i - 2, j - 2) / DOWNSAMPLE_RESOLUTION, 0) * gaussian5x5[i * 5 + j];
+            }
+        }
+        
                 
           //컬러 비율 
         float red = Color.r;

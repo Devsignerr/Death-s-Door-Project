@@ -161,7 +161,8 @@ void CAnimator3D::finalupdate()
 
 void CAnimator3D::Normalupdate()
 {	
-	m_vecClipUpdateTime[m_iCurClip] += fDT;
+	if(!m_bStop)
+		m_vecClipUpdateTime[m_iCurClip] += fDT;
 	
 	if (m_vecParentClip.at(m_iCurClip).bFinish == true)
 	{
@@ -193,7 +194,7 @@ void CAnimator3D::Normalupdate()
 	m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);	
 
 	
-	vector<CGameObject*> vecChild = GetObj()->GetChild();
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
 
 	for (int i = 0; i < vecChild.size(); ++i)
 	{
@@ -210,7 +211,8 @@ void CAnimator3D::Normalupdate()
 
 void CAnimator3D::ChangeAnimupdate()
 {
-	m_vecClipUpdateTime[m_iChangeClipIdx] += fDT;
+	if (!m_bStop)
+		m_vecClipUpdateTime[m_iChangeClipIdx] += fDT;
 
 	if (m_vecClipUpdateTime[m_iChangeClipIdx] > m_vecParentClip.at(m_iChangeClipIdx).dTimeLength)
 	{
@@ -233,7 +235,7 @@ void CAnimator3D::ChangeAnimupdate()
 		m_iNextFrameIdx = m_iChangeFrameIdx + 1;
 	}
 
-	vector<CGameObject*> vecChild = GetObj()->GetChild();
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
 	
 	for (int i = 0; i < vecChild.size(); i++)
 	{
@@ -251,9 +253,12 @@ void CAnimator3D::ChangeAnimupdate()
 
 void CAnimator3D::Stayingupdate()
 {
-	if (m_vecClipUpdateTime[m_iCurClip] < m_vecParentClip.at(m_iCurClip).dTimeLength)
+	if (!m_bStop)
 	{
-		m_vecClipUpdateTime[m_iCurClip] += fDT;
+		if (m_vecClipUpdateTime[m_iCurClip] < m_vecParentClip.at(m_iCurClip).dTimeLength)
+		{
+			m_vecClipUpdateTime[m_iCurClip] += fDT;
+		}
 	}
 
 	//at은 범위를 검사하여 범위 밖의 요소에 접근 시 예외처리를 발생
@@ -389,7 +394,7 @@ void CAnimator3D::SetClipTime(int _iClipIdx, float _fTime)
 {
 	 m_vecClipUpdateTime[_iClipIdx] = _fTime; 
 
-	vector<CGameObject*> vecChild = GetObj()->GetChild();
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
 
 	for (int i = 0; i < vecChild.size(); i++)
 	{
@@ -436,7 +441,7 @@ void CAnimator3D::UpdateChangeAnimation()
 {
 	m_fLerpUpdateTime += fDT;
 
-	vector<CGameObject*> vecChild = GetObj()->GetChild();
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
 
 	if (m_fLerpUpdateTime >= m_fLerpTime)
 	{

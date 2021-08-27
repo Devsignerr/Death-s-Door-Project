@@ -15,13 +15,21 @@ void TPlayerCharge_Attack_L::update()
 
 	if (1185 > CurAni->GetFrameIdx())
 	{
-		Vec3 PlayerFront = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
+		Vec3 PlayerFront = ((CPlayerScript*)GetScript())->GetPlayerFront();
 		Vec3 Pos = GetObj()->Transform()->GetLocalPos();
+		Vec3 vMovePos = {  };
+		vMovePos.x += PlayerFront.x * fDT * 100.0f;
+		vMovePos.z += PlayerFront.z * fDT * 100.0f;
+		bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(Pos + vMovePos);
+
+		if (!IsGround)
+			IsGround = ((CPlayerScript*)GetScript())->ResearchNode(Pos + vMovePos);
+
+		if (true == IsGround)
+		{
 	
-		Pos.x += PlayerFront.x * fDT * 100.0f;
-		Pos.z += PlayerFront.z * fDT * 100.0f;
-	
-		GetObj()->Transform()->SetLocalPos(Pos);
+			GetObj()->Transform()->SetLocalPos(Pos + vMovePos);
+		}
 	
 	}
 

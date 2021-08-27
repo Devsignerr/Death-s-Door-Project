@@ -3,6 +3,8 @@
 
 void CPlayerMagic::update()
 {
+	CProjectile::update();
+
 	Vec3 Pos = Transform()->GetLocalPos();
 	Pos += m_BulletDir * m_BulletSpeed * fDT;
 
@@ -26,6 +28,8 @@ CPlayerMagic::CPlayerMagic()
 	, m_BulletSpeed(5000.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::PLAYERMAGIC;
+	m_bMemoryObj = false;
+	m_fLifeTime = 2.0f;
 }
 
 CPlayerMagic::~CPlayerMagic()

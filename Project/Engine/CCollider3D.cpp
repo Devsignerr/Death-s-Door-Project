@@ -29,6 +29,9 @@ CCollider3D::CCollider3D(CCollider3D& _Origin)
 
 CCollider3D::~CCollider3D()
 {
+
+	int a = 0;
+	m_Material->SetData(SHADER_PARAM::INT_0, &a);
 }
 
 void CCollider3D::finalupdate()

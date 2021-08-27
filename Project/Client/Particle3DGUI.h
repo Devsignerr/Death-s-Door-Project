@@ -7,6 +7,10 @@ class Particle3DGUI :
 public:
 	Particle3DGUI();
 	~Particle3DGUI();
+
+private:
+	void SaveParticleFile();
+	void LoadParticleFile();
 public:
 	virtual void update();
 	virtual void render();

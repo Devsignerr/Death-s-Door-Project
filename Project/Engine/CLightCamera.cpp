@@ -47,11 +47,11 @@ void CLightCamera::SortShadowObject()
 
 			for (size_t j = 0; j < vecObj.size(); ++j)
 			{
-				if (vecObj[j]->ParticleSystem())
-				{
-					m_vecParticle.push_back(vecObj[i]);
-					continue;
-				}
+				//if (vecObj[j]->ParticleSystem())
+				//{
+				//	m_vecParticle.push_back(vecObj[i]);
+				//	continue;
+				//}
 
 				if (!vecObj[j]->IsDynamicShdow() ||
 					nullptr == vecObj[j]->MeshRender() ||

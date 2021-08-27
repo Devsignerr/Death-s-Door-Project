@@ -22,6 +22,6 @@ public:
 
 public:
 	CBossScript();
-	~CBossScript();
+	virtual ~CBossScript();
 };
 

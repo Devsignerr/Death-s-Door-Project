@@ -15,6 +15,8 @@ private:
 
 
 public:
+	void SetSlow(int i) { m_tInfo.arrInt[2] = i; }
+	void SetParticleType(PARTICLE_TYPE _eType) { m_tInfo.arrInt[1] = (UINT)_eType; }
 	void SetParticleBuffer(CStructuredBuffer* _pBuffer) { m_pParticleBuffer = _pBuffer; }
 	void SetAliveCount(int _iAliveCount) { m_iAliveCount = _iAliveCount; }
 	void SetMaxParticle(int _iMaxCount) {m_tInfo.arrInt[0] = _iMaxCount;}

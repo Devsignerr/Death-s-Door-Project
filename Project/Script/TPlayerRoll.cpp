@@ -18,16 +18,25 @@ void TPlayerRoll::update()
 		m_IsRollSlash = true;
 	}
 
-	Vec3 PlayerFront = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 PlayerFront = ((CPlayerScript*)GetScript())->GetPlayerFront();
 	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
+	Vec3 vMovePos = {  };
 
-	Pos.x += PlayerFront.x * fDT * 2000.0f;
-	Pos.z += PlayerFront.z * fDT * 2000.0f;
+	vMovePos.x += PlayerFront.x * fDT * 2000.0f;
+	vMovePos.z += PlayerFront.z * fDT * 2000.0f;
 
-	GetObj()->Transform()->SetLocalPos(Pos);
+	bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(Pos + vMovePos);
+
+	if (!IsGround)
+		IsGround = ((CPlayerScript*)GetScript())->ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+	{
 
 
-	
+		GetObj()->Transform()->SetLocalPos(Pos + vMovePos);
+	}
+
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		if (m_IsRollSlash)

@@ -36,6 +36,7 @@ friend class CSingleton;
 #define GET_SET(type, param) GET(type,param) \
 							 SET(type,param)
 
+
 #include "SimpleMath.h"
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -260,7 +261,7 @@ enum class FACE_TYPE
 	FT_END,
 };
 
-enum class LAYER_TYPE 
+enum class LAYER_TYPE
 {
 	CAMERA,
 	MAP,
@@ -286,7 +287,10 @@ enum class LAYER_TYPE
 	BOSS_COL,
 	BOSS_ATTACK_COL,
 
-	ITEM = 25
+	PLAYER_EFFECT_DONSAVE,
+
+	ITEM = 25,
+	SCENE_CHANGE_COL
 };
 
 
@@ -294,4 +298,33 @@ enum class COPY_TYPE
 {
 	DOF,
 	BLOOM,
+};
+
+enum class PARTICLE_TYPE
+{	
+	//====================
+	//위로 올라가는 타입 
+	// ======= 0 ==========
+
+	UP,
+	//====================
+	//땅으로 넓게 퍼지는 타입 
+	// ======= 1 ==========
+	SPREAD_XZ, //색 ,텍스처 ,스피드 등 바꿔가며 재사용. y축 제외 중심으로부터 퍼짐
+
+	//====================
+	//사방으로 넓게 퍼지는 타입 
+	// ======= 2 ==========
+	SPREAD_XYZ, //파이어볼 피격시 생기는 이펙트,성보스 빙글 돌며 땅 긁을때 나는 효과 
+
+	//====================
+	//가운데로 모이는 타입 
+	// ======= 3 =========
+	GATHER, // 폭탄 기모으기 
+
+	//====================
+	//제자리에서 머무는 타입
+	// ======= 4 ==========
+	STAY,
+
 };

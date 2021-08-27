@@ -59,7 +59,7 @@ public:
 public:
     CScript(int _iScriptType);
     CScript(const CScript& _origin);
-    ~CScript();
+    virtual ~CScript();
 
 public:
     typedef void(CScript::* SCRIPT_MEMFUNC)(void);

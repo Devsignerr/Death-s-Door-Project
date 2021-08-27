@@ -4,6 +4,41 @@
 #include <Engine/CGameObject.h>
 #include <Engine/CSceneMgr.h>
 #include <Engine/CTimeMgr.h>
+#include <Engine/CEventMgr.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+
+
+CGameObject* CActorScript::IstanciatePrefab(wstring _wstr, UINT _LayerIdx)
+{
+	Ptr<CPrefab> Prefab = CResMgr::GetInst()->FindRes<CPrefab>(_wstr);
+	if (nullptr == Prefab)
+	{
+		wstring PrefabPath = L"prefab\\" + _wstr + L".pref";
+		Ptr<CPrefab> Prefab = CResMgr::GetInst()->Load<CPrefab>(_wstr, PrefabPath);
+	}
+
+	CGameObject* pGameObject = Prefab->Instantiate();
+
+	int PrefabCount = 0;
+	wstring PrefabNumber = L"0";
+
+	while (nullptr != CSceneMgr::GetInst()->FindObjectByName(_wstr + PrefabNumber))
+	{
+		PrefabCount++;
+		wchar_t Str[10] = {};
+		_itow_s(PrefabCount, Str, 10);
+		PrefabNumber = wstring(Str);
+	}
+
+	pGameObject->SetName(_wstr + PrefabNumber);
+	pGameObject->awake();
+	pGameObject->start();
+	
+	CSceneMgr::GetInst()->GetCurScene()->AddObject(pGameObject, _LayerIdx);
+
+	return pGameObject;
+}
 
 
 //이 함수는 우선 이전 프레임에 위치했던 폴리곤(네비메쉬노드) 을 대상으로 레이충돌체크를 진행하고 , 
@@ -13,6 +48,7 @@
 //거기에서도 실패하면 씬에 존재하는 모든 네비메쉬에 대해 다시 한번 검사를 진행한다 . 
 
 //위 검사에서도 실패하면 맵에서 벗어난것이다 .
+
 
 bool CActorScript::GroundCheck()
 {
@@ -29,7 +65,7 @@ bool CActorScript::GroundCheck()
 	DirectX::XMVECTOR ObjCenter = ObjectPos;
 
 	//리소스 매니저에게서 현재 맵에 존재하는 모든 네비메쉬 벡터를 얻어온다 
-	vector<CGameObject*> VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
+	const vector<CGameObject*>& VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
 	
 	if (VecNavMesh.size() == 0)
 		return false;
@@ -109,7 +145,7 @@ bool CActorScript::ResearchNode()
 	DirectX::XMVECTOR ObjCenter = ObjectPos;
 
 	//리소스 매니저에게서 현재 맵에 존재하는 모든 네비메쉬 벡터를 얻어온다 
-	vector<CGameObject*> VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
+	const vector<CGameObject*>& VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
 
 	if (VecNavMesh.size() == 0)
 		return false;
@@ -117,7 +153,7 @@ bool CActorScript::ResearchNode()
 	//일단 내가 위치했던 네비메쉬인덱스로 접근해 검사를 진행해본다 .
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
 
-	vector<tNavMeshNode> vecNavMesh = pNavMesh->MeshRender()->GetMesh()->GetMeshNodeVec();
+	const vector<tNavMeshNode>& vecNavMesh = pNavMesh->MeshRender()->GetMesh()->GetMeshNodeVec();
 
 	const Matrix& MapMat = pNavMesh->Transform()->GetWorldMat();
 
@@ -185,7 +221,7 @@ bool CActorScript::ResearchNode()
 	return false;
 }
 
-bool CActorScript::GroundCheck(Vec3 _MovePos)
+bool CActorScript::GroundCheck(Vec3 _MovePos, int _RayDir)
 {
 	m_Dist = 0.f;
 	bool NodeCheck = false;
@@ -196,11 +232,11 @@ bool CActorScript::GroundCheck(Vec3 _MovePos)
 	ObjectPos.y += m_fOffSetPos;
 
 	//ray는 항상 아래방향을 향한다 
-	DirectX::XMVECTOR LayDir = Vec3(0.f, -1.f, 0.f);
+	DirectX::XMVECTOR LayDir = Vec3(0.f, _RayDir, 0.f);
 	DirectX::XMVECTOR ObjCenter = ObjectPos;
 
 	//리소스 매니저에게서 현재 맵에 존재하는 모든 네비메쉬 벡터를 얻어온다 
-	vector<CGameObject*> VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
+	const vector<CGameObject*>& VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
 
 	if (VecNavMesh.size() == 0)
 		return false;
@@ -209,7 +245,7 @@ bool CActorScript::GroundCheck(Vec3 _MovePos)
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
 
 	//이전 프레임에 내가 위치했던 메쉬의 모든 노드벡터 
-	vector<tNavMeshNode> vecNavMesh = pNavMesh->MeshRender()->GetMesh()->GetMeshNodeVec();
+	const vector<tNavMeshNode>& vecNavMesh = pNavMesh->MeshRender()->GetMesh()->GetMeshNodeVec();
 
 	//현재 네비메쉬의 월드매트릭스 
 	const Matrix& MapMat = pNavMesh->Transform()->GetWorldMat();
@@ -265,7 +301,7 @@ bool CActorScript::GroundCheck(Vec3 _MovePos)
 	return false;
 }
 
-bool CActorScript::ResearchNode(Vec3 _MovePos)
+bool CActorScript::ResearchNode(Vec3 _MovePos, int _RayDir)
 {
 	m_Dist = 0.f;
 	bool NodeCheck = false;
@@ -276,11 +312,11 @@ bool CActorScript::ResearchNode(Vec3 _MovePos)
 	ObjectPos.y += m_fOffSetPos;
 
 	//ray는 항상 아래방향을 향한다 
-	DirectX::XMVECTOR LayDir = Vec3(0.f, -1.f, 0.f);
+	DirectX::XMVECTOR LayDir = Vec3(0.f, _RayDir, 0.f);
 	DirectX::XMVECTOR ObjCenter = ObjectPos;
 
 	//리소스 매니저에게서 현재 맵에 존재하는 모든 네비메쉬 벡터를 얻어온다 
-	vector<CGameObject*> VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
+	const vector<CGameObject*>& VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
 
 	if (VecNavMesh.size() == 0)
 		return false;
@@ -288,7 +324,7 @@ bool CActorScript::ResearchNode(Vec3 _MovePos)
 	//일단 내가 위치했던 네비메쉬인덱스로 접근해 검사를 진행해본다 .
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
 
-	vector<tNavMeshNode> vecNavMesh = pNavMesh->MeshRender()->GetMesh()->GetMeshNodeVec();
+	vector<tNavMeshNode>& vecNavMesh = pNavMesh->MeshRender()->GetMesh()->GetMeshNodeVec();
 
 	const Matrix& MapMat = pNavMesh->Transform()->GetWorldMat();
 
@@ -367,24 +403,28 @@ void CActorScript::update()
 	 if (!IsGround)
 		 IsGround = ResearchNode();
 
-
-	 //만약 충돌했는데 거리가 100보다 가까우면 (경사를 올라갔다면 등)
-	 if (IsGround && m_Dist < 100.f)
+	 if (false == m_bJump)
 	 {
-		 float YMove = 100.f - m_Dist;
-		 Vec3 Pos = Transform()->GetLocalPos();
-		 Pos.y += YMove;
-		 Transform()->SetLocalPos(Pos);
+		 //만약 충돌했는데 거리가 100보다 가까우면 (경사를 올라갔다면 등)
+		 if (IsGround && m_Dist < 100.f)
+		 {
+			 float YMove = 100.f - m_Dist;
+			 Vec3 Pos = Transform()->GetLocalPos();
+			 Pos.y += YMove;
+			 Transform()->SetLocalPos(Pos);
+		 }
+
+		 //거리가 100보다 크면 
+
+		 if (m_Dist > 100.f)
+		 {
+			 float YMove = m_Dist - 100.f;
+			 Vec3 Pos = Transform()->GetLocalPos();
+			 Pos.y -= YMove;
+			 Transform()->SetLocalPos(Pos);
+		 }
 	 }
 
-	 //거리가 100보다 크면 
-	if (m_Dist>100.f)
-	{
-		float YMove = m_Dist - 100.f;
-		Vec3 Pos = Transform()->GetLocalPos();
-		Pos.y -= YMove;
-		Transform()->SetLocalPos(Pos);
-	}
 }
 
 void CActorScript::OnCollisionEnter(CGameObject* _pOther)
@@ -392,8 +432,10 @@ void CActorScript::OnCollisionEnter(CGameObject* _pOther)
 }
 
 CActorScript::CActorScript()
-	: CScript((UINT)SCRIPT_TYPE::ACTORSCRIPT),
-	m_fOffSetPos(10.f)
+	: CScript((UINT)SCRIPT_TYPE::ACTORSCRIPT)
+	, m_fOffSetPos(10.f)
+	, m_bJump(false)
+	, RayDir(-1)
 {
 
 }

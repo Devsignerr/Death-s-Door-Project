@@ -21,6 +21,8 @@ private:
 
 public:
     bool IsEnable() { return m_bEnable; }
+
+    //아래 함수는 최상위 부모가 대상이 아니라 자식에게 직접 명령을 내려야 한다 . 
     void Activate(bool _b) { m_bEnable = _b; }
 
 public:

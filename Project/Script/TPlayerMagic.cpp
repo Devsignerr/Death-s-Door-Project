@@ -12,24 +12,20 @@
 void TPlayerMagic::Attack()
 {
 	if (m_BulletLimit == false)
-	{
+	{		
+		((CPlayerMagic*)CPlayerScript::m_pMagic->GetScript())->SetBulletDir(((CPlayerScript*)GetScript())->GetPlayerFront());
+		((CPlayerMagic*)CPlayerScript::m_pMagic->GetScript())->SetActive(true);
+
+		Vec3 PlayerPos = GetObj()->Transform()->GetLocalPos();
+		PlayerPos.y += 110.f;
+
+		CPlayerScript::m_pMagic->Transform()->SetLocalPos(PlayerPos);
+
+		CPlayerScript::m_pMagic->DisconnectWithParent();
+		CPlayerScript::m_pMagic->RegisterAsParentObj();
+		CPlayerScript::m_pMagic = nullptr;
+
 		m_BulletLimit = true;
-		CGameObject* Obj = new CGameObject;
-		Obj->AddComponent(new CTransform);
-		Obj->AddComponent(new CMeshRender);
-		Obj->AddComponent(new CPlayerMagic);
-
-		Obj->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
-		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
-
-		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-		CPlayerMagic* Script = (CPlayerMagic*)Obj->GetScript();
-		Script->SetBulletDir(GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP));
-
-		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-		CurScene->AddObject(Obj, 9);
-		Obj->awake();
 	}
 }
 
@@ -54,11 +50,15 @@ void TPlayerMagic::update()
 void TPlayerMagic::Enter()
 {
 	m_Script = (CPlayerScript*)GetScript();
+
+	CPlayerScript::m_Weapon->MeshRender()->Activate(false);
 }
 
 void TPlayerMagic::Exit()
 {
 	m_BulletLimit = false;
+
+	CPlayerScript::m_Weapon->MeshRender()->Activate(true);
 }
 
 TPlayerMagic::TPlayerMagic()

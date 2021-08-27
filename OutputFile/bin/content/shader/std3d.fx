@@ -288,18 +288,19 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
     {
         float2 FullUV = _in.vUV;
         float Burnf = 0;
-        Burnf = g_float_0;
+        Burnf = g_vec4_0.w;
         
         float3 PaperBurn = g_tex_4.Sample(g_sam_0, FullUV).xyz;
 	    
-        float test = (PaperBurn.x + PaperBurn.y + PaperBurn.z) / 3.f;
+        //밝을수록 먼저 사라지도록 수정 
+        float test = (PaperBurn.x*4.f + PaperBurn.y*0.25f + PaperBurn.z*0.25f) / 3.f;
         
         if (test < Burnf)
             clip(-1);
         else if (test < Burnf + 0.05f && test > Burnf - 0.05f)
-            vObjectColor = float4(1.0, 0.f, 0.f, 1.f);
-			
+            output.vDiff = float4(g_vec4_0.x, g_vec4_0.y, g_vec4_0.z, 1.f);
     }
+    
     
      {
         //float4 vWorldPos = mul( , g_matViewInv); // 메인카메라 view 역행렬을 곱해서 월드좌표를 알아낸다.
@@ -310,14 +311,12 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
         
         float Distance = (float) fDOFDistance;
         
-        if (fDOFDistance < fDepth)
+        if (fDOFDistance+0.0015f < fDepth)
         {
-            float Diff = (fDepth - fDOFDistance) * 800.f;
+            float Diff = (fDepth - 0.0015f - fDOFDistance) * 2000.f;
         //output.vDiff = float4(1.0f, 0.0f, 1.0f - Diff, 1.0f);
             output.pDOFDepthTex.r = Diff;
-        }
-        
-
+        }      
     }
 
  
@@ -325,7 +324,10 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
     output.vDiff.y = output.vDiff.y * g_vDiff.y;
     output.vDiff.z = output.vDiff.z * g_vDiff.z;
    
-   
+    output.vDiffLight.x = output.vDiffLight.x * g_vEmis.x;
+    output.vDiffLight.y = output.vDiffLight.y * g_vEmis.y;
+    output.vDiffLight.z = output.vDiffLight.z * g_vEmis.z;
+    
     
     
     return output;

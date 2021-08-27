@@ -47,6 +47,20 @@ Vec3 CPlayerScript::vPlayerRot = {};
 Vec3 CPlayerScript::vPlayerFront = {};
 Vec3 CPlayerScript::vPlayerUp = {};
 
+CGameObject* CPlayerScript::m_pMagic = nullptr;
+CGameObject* CPlayerScript::m_pArrow = nullptr;
+CGameObject* CPlayerScript::m_pBomb = nullptr;
+CGameObject* CPlayerScript::m_pHook = nullptr;
+
+CGameObject* CPlayerScript::m_Weapon = nullptr;
+CGameObject* CPlayerScript::m_pBow = nullptr;
+
+CGameObject* CPlayerScript::m_pRollSlash =nullptr;
+CGameObject* CPlayerScript::m_pHorizonSlashL = nullptr;
+CGameObject* CPlayerScript::m_pHorizonSlashR = nullptr;
+
+CGameObject* CPlayerScript::m_pHeavySlashL = nullptr;
+CGameObject* CPlayerScript::m_pHeavySlashR = nullptr;
 
 CPlayerScript::CPlayerScript():
 	m_eState(PLAYER_STATE::IDLE),
@@ -59,26 +73,26 @@ CPlayerScript::CPlayerScript():
 
 CPlayerScript::~CPlayerScript()
 {
-	// 콜라이더 달기 - 
-	// 전투 다듬기 
-	// 애니메이션 파티클
-	// 네비 메쉬 달아주기
-	// 네비메쉬 편집
-
-	// 블룸 효과
-	// 외곽선
-	// 페이퍼 번 o
-
-	// 맵 충돌체 이동 시스템 o
-	// 카메라 페이드인 페이드아웃 o
 	delete m_pFSM;
+
+	 CPlayerScript::m_pMagic = nullptr;
+	 CPlayerScript::m_pArrow = nullptr;
+	 CPlayerScript::m_pBomb = nullptr;
+	 CPlayerScript::m_pHook = nullptr;
+	
+	 CPlayerScript::m_Weapon = nullptr;
+	 CPlayerScript::m_pBow = nullptr;
+	
+	 CPlayerScript::m_pRollSlash = nullptr;
+	 CPlayerScript::m_pHorizonSlashL = nullptr;
+	 CPlayerScript::m_pHorizonSlashR = nullptr;
+	 CPlayerScript::m_pHeavySlashL = nullptr;
+	 CPlayerScript::m_pHeavySlashR = nullptr;
+
 }
 
 void CPlayerScript::awake()
 {
-	vPlayerFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	vPlayerUp = Transform()->GetLocalDir(DIR_TYPE::UP);
-
 	if (nullptr != m_pFSM)
 		return;
 
@@ -191,6 +205,12 @@ void CPlayerScript::awake()
 	m_mapState.insert(make_pair(PLAYER_STATE::LADDER_UP, L"Ladder_Up"));
 	
 	ChangeState(PLAYER_STATE::IDLE, 0.04f, L"Idle",false);
+
+
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
+	//활
+	m_Weapon = vecChild[1];
+	m_pBow = vecChild[2];
 }
 
 void CPlayerScript::start()
@@ -210,8 +230,8 @@ void CPlayerScript::update()
 
 	g_global.fDOFDistance = m_Distance;
 
-	vPlayerFront = Transform()->GetLocalDir(DIR_TYPE::UP);
-	vPlayerUp = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	vPlayerFront = -Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	vPlayerUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	PlayerPos = Transform()->GetLocalPos();
 	vPlayerRot = Transform()->GetLocalRot();
 
@@ -235,7 +255,7 @@ void CPlayerScript::update()
 	m_pFSM->update();
 	
 	if (KEY_TAP(KEY_TYPE::KEY_E))
-	{
+	{		
 		ChangeState(PLAYER_STATE::HIT_BACK, 0.03f, L"Hit_Back", false);
 	}
 
@@ -345,13 +365,21 @@ Vec3 CPlayerScript::GetMouseClickPos()
 void CPlayerScript::RotatetoClick(Vec3 _ClickPos)
 {
 	Vec3 relativePos = _ClickPos - PlayerPos;
-	Vec3 vCross = relativePos.Cross(vPlayerFront);
+	Vec3 vCross = relativePos.Cross(GetPlayerFront());
 
-	float dot = vCross.Dot(vPlayerUp);
+	float dot = vCross.Dot(GetPlayerUp());
 	relativePos.Normalize();
 
-	float RotAngle = vPlayerFront.Dot(relativePos);
+	float RotAngle = GetPlayerFront().Dot(relativePos);
+
+	if (RotAngle > 1.f)
+		RotAngle = 1.f;
+	else if (RotAngle < -1.f)
+		RotAngle = -1.f;
+
+
 	RotAngle = acos(RotAngle);
+
 
 	//찍은 위치가 내 왼쪽에 있다 
 	if (dot > 0.0)

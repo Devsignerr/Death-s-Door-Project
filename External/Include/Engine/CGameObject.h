@@ -30,7 +30,8 @@ private:
     bool                    m_bDead;
     bool                    m_bFrustum;
     bool                    m_bDynamicShadow;
-
+    bool                    m_bAttackColObj;
+    bool                    m_bDamageColObj;
 
 public:
     void awake();
@@ -74,7 +75,13 @@ public:
     void SetLayerIndex(int _iIdx) { m_iLayerIdx = _iIdx; }
     int GetLayerIndex() { return m_iLayerIdx; }
 
-private:
+public:
+    //아래 두 함수는 최상위 부모 오브젝트에 명령을 내린다.
+    //그러면 자식을 탐색하여 해당 컴포넌트를 모두 끄거나 킨다.
+    void SetAllColliderActive(bool _b);
+    void SetAllMeshrenderActive(bool _b);
+
+public:
 
     // 부모 오브젝트와의 연결 해제
     void DisconnectWithParent(); 

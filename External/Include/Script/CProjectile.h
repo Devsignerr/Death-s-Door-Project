@@ -1,9 +1,23 @@
 #pragma once
 #include "CActorScript.h"
+
 class CProjectile : public CActorScript
 {
+protected: 
+	float m_fLifeTime;
+	float m_fCurTime;
+	bool  m_bActive;
+	bool  m_bDestroyed;
+	bool  m_bMemoryObj;
+
 public:
-	void update() override;
+	virtual void ActivateExplosionParticle() {}
+	virtual void ReturnToMemoryPool();
+
+	virtual void SetActive(bool _b) { m_bActive = _b; }
+
+public:
+	virtual void update() override;
 
 	CLONE(CProjectile);
 
@@ -13,6 +27,6 @@ public:
 
 public:
 	CProjectile();
-	~CProjectile();
+	virtual ~CProjectile();
 };
 

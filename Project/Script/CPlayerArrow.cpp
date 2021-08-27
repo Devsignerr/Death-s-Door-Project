@@ -3,6 +3,8 @@
 
 void CPlayerArrow::update()
 {
+	CProjectile::update();
+
 	Vec3 Pos = Transform()->GetLocalPos();
 	Pos += m_BulletDir * m_BulletSpeed * fDT;
 
@@ -26,6 +28,8 @@ CPlayerArrow::CPlayerArrow()
 	, m_BulletSpeed(5000.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::PLAYERARROW;
+	m_fLifeTime = 2.f;
+	m_bMemoryObj = false;
 }
 
 CPlayerArrow::~CPlayerArrow()

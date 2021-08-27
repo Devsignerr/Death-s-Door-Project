@@ -1,5 +1,6 @@
 #pragma once
 #include "CProjectile.h"
+
 class CPlantBullet : public CProjectile
 {
 private:
@@ -8,6 +9,7 @@ public:
 	void SetBulletDir(Vec3 _Dir) { m_BulletDir = _Dir; }
 public:
 	void update() override;
+	void awake() override;
 
 
 	virtual void SaveToScene(FILE* _pFile);

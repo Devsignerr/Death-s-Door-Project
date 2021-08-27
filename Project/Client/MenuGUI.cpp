@@ -377,10 +377,18 @@ void MenuGUI::render()
                     }
                 }
 
-               // if (ImGui::MenuItem("ParticleSystem"))
-               // {
-               //
-               // }
+                if (ImGui::MenuItem("ParticleSystem"))
+                {
+                    CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+                    InspectorGUI* pInspector = (InspectorGUI*)CImGUIMgr::GetInst()->FindGUI(L"Inspector");
+                    CGameObject* pTempObject = pInspector->GetTargetObject();
+
+                    if (nullptr == pTempObject->ParticleSystem())
+                    {
+                        pTempObject->AddComponent(new CParticleSystem);
+                    }
+               
+                }
 
                 if (ImGui::MenuItem("Frustum Sphere"))
                 {

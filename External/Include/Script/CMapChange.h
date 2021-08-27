@@ -10,6 +10,7 @@ private:
 private:
     int m_ThisCollNum;
     int m_ChangeCollNum;
+    bool m_MapChangeCheck;
 public:
     int GetThisColNum() { return m_ThisCollNum; }
 public:

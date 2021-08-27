@@ -10,7 +10,7 @@
 #include "CResMgr.h"
 
 CInstancingBuffer::CInstancingBuffer()
-	: m_iMaxCount(10)
+	: m_iMaxCount(100)
 	, m_iAnimInstCount(0)
 	, m_pBoneBuffer(nullptr)
 {

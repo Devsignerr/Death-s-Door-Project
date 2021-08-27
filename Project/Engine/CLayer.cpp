@@ -100,9 +100,16 @@ void CLayer::SaveToScene(FILE* _pFile)
 	CEntity::SaveToScene(_pFile);
 
 	UINT iCount = (UINT)m_vecParentObj.size();
+
+	//여기에 저장시키지 않을 레이어 입력
+	if (m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE)
+	{
+		iCount = 0;
+	}
+
 	fwrite(&iCount, sizeof(UINT), 1, _pFile);
 
-	for (size_t i = 0; i < m_vecParentObj.size(); ++i)
+	for (size_t i = 0; i < iCount; ++i)
 	{
 		m_vecParentObj[i]->SaveToScene(_pFile);
 	}

@@ -12,23 +12,20 @@ void TPlayerBomb_Finish::Attack()
 {
 	if (m_BulletLimit == false)
 	{
+		((CPlayerBomb*)CPlayerScript::m_pBomb->GetScript())->SetBulletDir(((CPlayerScript*)GetScript())->GetPlayerFront());
+		((CPlayerBomb*)CPlayerScript::m_pBomb->GetScript())->SetActive(true);
+
+		Vec3 PlayerPos = GetObj()->Transform()->GetLocalPos();
+		PlayerPos.y += 200.f;
+
+
+		CPlayerScript::m_pBomb->Transform()->SetLocalPos(PlayerPos);
+
+		CPlayerScript::m_pBomb->DisconnectWithParent();
+		CPlayerScript::m_pBomb->RegisterAsParentObj();
+		CPlayerScript::m_pBomb = nullptr;
+
 		m_BulletLimit = true;
-		CGameObject* Obj = new CGameObject;
-		Obj->AddComponent(new CTransform);
-		Obj->AddComponent(new CMeshRender);
-		Obj->AddComponent(new CPlayerBomb);
-
-		Obj->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
-		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
-
-		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-		CPlayerBomb* Script = (CPlayerBomb*)Obj->GetScript();
-		Script->SetBulletDir(GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP));
-
-		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-		CurScene->AddObject(Obj, 9);
-		Obj->awake();
 	}
 }
 
@@ -51,6 +48,7 @@ void TPlayerBomb_Finish::Enter()
 
 void TPlayerBomb_Finish::Exit()
 {
+	CPlayerScript::m_Weapon->MeshRender()->Activate(true);
 	m_BulletLimit = false;
 }
 

@@ -12,6 +12,7 @@
 #include "InspectorGUI.h"
 #include "MeshRenderGUI.h"
 #include "Collider3DGUI.h"
+#include "Particle3DGUI.h"
 
 HierachyGUI::HierachyGUI()
 {
@@ -33,10 +34,11 @@ void HierachyGUI::Reset()
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
 		CLayer* pLayer = pCurScene->GetLayer(i);
-		vector<CGameObject*> vecParent = pLayer->GetParentObj();
+		const vector<CGameObject*>& vecParent = pLayer->GetParentObj();
 
 		for (size_t j = 0; j < vecParent.size(); ++j)
 		{
+			if (false == vecParent[j]->IsDead())
 			AddGameObject(pDummyItem, vecParent[j]);
 		}
 	}	
@@ -114,4 +116,7 @@ void HierachyGUI::ItemSelectChanged(const tData* _selectData)
 
 	Collider3DGUI* pColliderGUI = (Collider3DGUI*)pInspector->GetGUI(COMPONENT_TYPE::COLLIDER3D);
 	pColliderGUI->ItemChanged();
+
+	Particle3DGUI* pParticleGUI = (Particle3DGUI*)pInspector->GetGUI(COMPONENT_TYPE::PARTICLE);
+	pParticleGUI->ItemChanged();
 }

@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "TPlayerHookFly.h"
+#include "CPlayerScript.h"
+#include "CPlayerHook.h"
 
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
@@ -7,24 +9,38 @@
 
 void TPlayerHookFly::update()
 {
-	CAnimator3D* CurAni = GetObj()->Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
+	Vec3 HookPos = ((CPlayerHook*)CPlayerScript::m_pHook->GetScript())->GetHookedPos();
+	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 
-	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
+	Vec3 Dir = HookPos - PlayerPos;
+	Dir.Normalize();
+	//Dir.y = 0.f;
+
+	PlayerPos += Dir * m_fFlySpeed*fDT;
+
+	CPlayerScript::GetPlayer()->Transform()->SetLocalPos(PlayerPos);
+
+	if (((CPlayerHook*)CPlayerScript::m_pHook->GetScript())->IsArrived())
 	{
-		//GetFSM()->ChangeState(L"Idle", 0.03f, L"Idle", false);
+		((CPlayerHook*)CPlayerScript::m_pHook->GetScript())->Destroy();
+		CPlayerScript::m_pHook = nullptr;
+
+		GetFSM()->ChangeState(L"Idle", 0.03f, L"Idle", false);
 	}
 }
 
 void TPlayerHookFly::Enter()
 {
+	m_Script = (CPlayerScript*)GetScript();
 }
 
 void TPlayerHookFly::Exit()
 {
+	CPlayerScript::m_Weapon->MeshRender()->Activate(true);
 }
 
-TPlayerHookFly::TPlayerHookFly()
+TPlayerHookFly::TPlayerHookFly():
+	m_fFlySpeed(4000.f)
 {
 }
 

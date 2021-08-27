@@ -160,7 +160,7 @@ void CMaterial::UpdateData(int _iInstancing)
 			m_tInfo.arrTexCheck[i] = 0;
 		}
 	}
-
+	m_bDefault;
 	static const CConstBuffer* pMtrlBuffer = CDevice::GetInst()->GetCB(CB_TYPE::MATERIAL);
 	pMtrlBuffer->SetData(&m_tInfo);
 	pMtrlBuffer->UpdateData((UINT)PIPELINE_STAGE::PS_ALL);

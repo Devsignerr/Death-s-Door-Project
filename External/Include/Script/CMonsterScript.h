@@ -18,6 +18,7 @@ private:
         float  VelocityY;
         float  VelocityZ;
         float  MaxHeightTime;
+        bool   bJump;
     };
 
 protected:
@@ -28,6 +29,7 @@ protected:
         float   Speed;
         float   RecognitionRange;
         float   DelayNextActionTime;
+
     };
 
     enum class MONSTERSTATE
@@ -87,5 +89,5 @@ public:
 
 public:
 	CMonsterScript();
-	~CMonsterScript();
+    virtual ~CMonsterScript();
 };

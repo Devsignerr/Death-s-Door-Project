@@ -3,14 +3,24 @@
 
 void CPlayerBomb::update()
 {
+	CProjectile::update();
+
 	Vec3 Pos = Transform()->GetLocalPos();
 	Pos += m_BulletDir * m_BulletSpeed * fDT;
 
 	Transform()->SetLocalPos(Pos);
 }
 
+void CPlayerBomb::ActivateExplosionParticle()
+{
+
+
+
+}
+
 void CPlayerBomb::OnCollisionEnter(CGameObject* _pOther)
 {
+	m_bDestroyed = true;
 }
 
 void CPlayerBomb::OnCollision(CGameObject* _pOther)

@@ -2,8 +2,16 @@
 #include "CBazookaBullet.h"
 
 #include "CPlayerScript.h"
+
+#include <Engine/CLight3D.h>
+
 void CBazookaBullet::awake()
 {
+
+
+
+
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = Transform()->GetLocalPos();
 

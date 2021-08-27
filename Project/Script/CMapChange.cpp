@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CMapChange.h"
 #include "CPlayerScript.h"
+#include "CFadeScript.h"
 
 vector<CGameObject*> CMapChange::FindCollNum = {};
 bool CMapChange::IsMapChange = false;
@@ -28,12 +29,37 @@ void CMapChange::awake()
 void CMapChange::update()
 {
 
+	if (true == m_MapChangeCheck)
+	{
+		if (true == CFadeScript::GetIsFadeInOut())
+		{
+			vector<CGameObject*>::iterator Iter = FindCollNum.begin();
+
+			for (; Iter != FindCollNum.end(); ++Iter)
+			{
+				CMapChange* ChangeCol = (CMapChange*)(*Iter)->GetScript();
+
+				if (ChangeCol->GetThisColNum() == m_ChangeCollNum)
+				{
+					Vec3 Pos = (*Iter)->Transform()->GetLocalPos();
+					Vec3 FrontDir = CPlayerScript::GetPlayerFront();;
+
+					Pos += FrontDir * 300.0f;
+
+					CPlayerScript::GetPlayer()->Transform()->SetLocalPos(Pos);
+					m_MapChangeCheck = false;
+					break;
+				}
+			}
+		}
+	}
 }
 
 CMapChange::CMapChange()
 	: CScript((UINT)SCRIPT_TYPE::MAPCHANGE)
 	, m_ThisCollNum(-1)
 	, m_ChangeCollNum(-1)
+	, m_MapChangeCheck(false)
 {
 }
 
@@ -47,24 +73,9 @@ void CMapChange::OnCollisionEnter(CGameObject* _pOther)
 
 	if (10 == Obj->GetLayerIndex())
 	{
-		vector<CGameObject*>::iterator Iter = FindCollNum.begin();
-
-		for (; Iter != FindCollNum.end(); ++Iter)
-		{
-			// 일정 시간뒤에 되도록 수정
-			CMapChange* ChangeCol = (CMapChange*)(*Iter)->GetScript();
-
-			if (ChangeCol->GetThisColNum() == m_ChangeCollNum)
-			{
-				Vec3 Pos = (*Iter)->Transform()->GetLocalPos();
-				Vec3 FrontDir = CPlayerScript::GetPlayerFront();;
-
-				Pos += FrontDir * 300.0f;
-
-				CPlayerScript::GetPlayer()->Transform()->SetLocalPos(Pos);
-				break;
-			}
-		}
+		CFadeScript::Fade_Out();
+		m_MapChangeCheck = true;
+		
 	}
 }
 
@@ -78,6 +89,8 @@ void CMapChange::OnCollisionExit(CGameObject* _pOther)
 
 	if (10 == Obj->GetLayerIndex())
 	{
+		CFadeScript::Fade_In();
+		m_MapChangeCheck = false;
 	}
 }
 

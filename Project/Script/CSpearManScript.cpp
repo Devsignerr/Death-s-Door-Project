@@ -43,11 +43,22 @@ void CSpearManScript::Chase()
 	Vec3 vDiff = vPlayerPos - vPos;
 	vDiff.Normalize();
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+	Vec3 vMovePos = {};
+
+	
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+
+	bool IsGround = GroundCheck(vPos + vMovePos);
+
+	if (!IsGround)
+		IsGround = ResearchNode(vPos + vMovePos);
+
+	if(IsGround==true)
+		Transform()->SetLocalPos(vPos + vMovePos);
+	
 
 	MonsterRotateSystem(m_ChaseRotSpeed);
-	Transform()->SetLocalPos(vPos);
 
 	if (RangeSearch(m_AttackRange))
 	{
@@ -107,10 +118,18 @@ void CSpearManScript::Attack()
 			Vec3 vPos = Transform()->GetLocalPos();
 			Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::UP);
 
-			vPos.x += CTimeMgr::GetInst()->GetfDT() * vFront.x * m_AttackMoveSpeed;
-			vPos.z += CTimeMgr::GetInst()->GetfDT() * vFront.z * m_AttackMoveSpeed;
 
-			Transform()->SetLocalPos(vPos);
+			Vec3 vMovePos = {};
+
+			vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vFront.x * m_AttackMoveSpeed;
+			vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vFront.z * m_AttackMoveSpeed;
+
+			bool IsGround = GroundCheck(vPos + vMovePos);
+			if (!IsGround)
+				IsGround = ResearchNode(vPos + vMovePos);
+
+			if (true == IsGround)
+				Transform()->SetLocalPos(vPos + vMovePos);
 		}
 
 
@@ -134,10 +153,17 @@ void CSpearManScript::Attack()
 			Vec3 vPos = Transform()->GetLocalPos();
 			Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::UP);
 
-			vPos.x += CTimeMgr::GetInst()->GetfDT() * vFront.x * m_AttackMoveSpeed;
-			vPos.z += CTimeMgr::GetInst()->GetfDT() * vFront.z * m_AttackMoveSpeed;
+			Vec3 vMovePos = {};
+			vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vFront.x * m_AttackMoveSpeed;
+			vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vFront.z * m_AttackMoveSpeed;
 
-			Transform()->SetLocalPos(vPos);
+			bool IsGround = GroundCheck(vPos + vMovePos);
+			if (!IsGround)
+				IsGround = ResearchNode(vPos + vMovePos);
+
+			if (true == IsGround)
+				Transform()->SetLocalPos(vPos + vMovePos);
+
 		}
 
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
@@ -193,11 +219,17 @@ void CSpearManScript::Jump()
 		Vec3 Pos = Transform()->GetLocalPos();
 		Vec3 RightDir = Transform()->GetLocalDir(DIR_TYPE::UP);
 		RightDir *= 1000.0f;
+		Vec3 vMovePos = {};
 
-		Pos.x += CTimeMgr::GetInst()->GetfDT() * RightDir.x;
-		Pos.z += CTimeMgr::GetInst()->GetfDT() * RightDir.z;
+		vMovePos.x += CTimeMgr::GetInst()->GetfDT() * RightDir.x;
+		vMovePos.z += CTimeMgr::GetInst()->GetfDT() * RightDir.z;
 
-		Transform()->SetLocalPos(Pos);
+		bool IsGround = GroundCheck(Pos + vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(Pos + vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(Pos + vMovePos);
 
 		// È¸Àü
 

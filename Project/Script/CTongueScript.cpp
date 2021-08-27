@@ -51,13 +51,20 @@ void CTongueScript::Move()
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
+	Vec3 vMovePos = {};
 	vDiff.Normalize();
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
+
+	bool IsGround = GroundCheck(vPos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(vPos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(vPos + vMovePos);
 
 	MonsterRotateSystem(m_ChaseRotSpeed);
-	Transform()->SetLocalPos(vPos);
 
 	if (RangeSearch(m_GuardRange))
 	{
@@ -283,9 +290,16 @@ void CTongueScript::Jump()
 {
 	Vec3 BackDir = -Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 Pos = Transform()->GetLocalPos();
-	Pos += fDT * BackDir * 1800.0f;
+	Vec3 vMovePos = {};
 
-	Transform()->SetLocalPos(Pos);
+	vMovePos += fDT * BackDir * 1800.0f;
+
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
 
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
@@ -380,12 +394,18 @@ void CTongueScript::CalAttackDistance()
 {
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vMovePos = {};
 	m_AttackDir.Normalize();
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * 2400.0f;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * 2400.0f;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * 2400.0f;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * 2400.0f;
 
-	Transform()->SetLocalPos(vPos);
+	bool IsGround = GroundCheck(vPos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(vPos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(vPos + vMovePos);
 
 }
 

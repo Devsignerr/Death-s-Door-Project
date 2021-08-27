@@ -7,6 +7,7 @@ class TPlayerIdle :
 {
 private:
     CPlayerScript* m_Script;
+
 private:
     void update() override;
 

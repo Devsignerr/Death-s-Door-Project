@@ -15,6 +15,12 @@ private:
     bool                    m_bDefault;
 
 public:
+    Ptr<CTexture> GetTexure(SHADER_PARAM _param) 
+    { 
+          return m_arrTex[(UINT)_param]; 
+    }
+
+public:
     void SetShader(Ptr<CGraphicsShader> _pShader) { m_pShader = _pShader; }
     Ptr<CGraphicsShader> GetShader() { return m_pShader; }
     void SetData(SHADER_PARAM _eType, const void* _pData);
@@ -23,6 +29,11 @@ public:
         m_tInfo.vDiff = _vDiff;
         m_tInfo.vAmb = _vAmb;
         m_tInfo.vSpec = _vSpec;
+        m_tInfo.vEmis = _vEmis;
+    }
+
+    void SetEmissive(Vec4 _vEmis)
+    {
         m_tInfo.vEmis = _vEmis;
     }
 

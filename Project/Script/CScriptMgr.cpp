@@ -13,22 +13,28 @@
 #include "CCrowBullet.h"
 #include "CCrowEggBullet.h"
 #include "CCrowScript.h"
+#include "CEffectScript.h"
 #include "CFadeScript.h"
 #include "CIronmaceScript.h"
 #include "CMapChange.h"
+#include "CMemoryPoolScript.h"
 #include "CMonsterScript.h"
 #include "CNailScript.h"
 #include "CPlantBullet.h"
 #include "CPlantScript.h"
 #include "CPlayerArrow.h"
 #include "CPlayerBomb.h"
+#include "CPlayerChain.h"
+#include "CPlayerHook.h"
 #include "CPlayerMagic.h"
 #include "CPlayerScript.h"
 #include "CProjectile.h"
 #include "CRandomMgrScript.h"
+#include "CSceneChange.h"
 #include "CSkullBullet.h"
 #include "CSkullScript.h"
 #include "CSkyBoxScript.h"
+#include "CSlashEffect.h"
 #include "CSpearManScript.h"
 #include "CSpiderScript.h"
 #include "CTestMonsterAttackEffect.h"
@@ -50,22 +56,28 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCrowBullet");
 	_vec.push_back(L"CCrowEggBullet");
 	_vec.push_back(L"CCrowScript");
+	_vec.push_back(L"CEffectScript");
 	_vec.push_back(L"CFadeScript");
 	_vec.push_back(L"CIronmaceScript");
 	_vec.push_back(L"CMapChange");
+	_vec.push_back(L"CMemoryPoolScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CNailScript");
 	_vec.push_back(L"CPlantBullet");
 	_vec.push_back(L"CPlantScript");
 	_vec.push_back(L"CPlayerArrow");
 	_vec.push_back(L"CPlayerBomb");
+	_vec.push_back(L"CPlayerChain");
+	_vec.push_back(L"CPlayerHook");
 	_vec.push_back(L"CPlayerMagic");
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CProjectile");
 	_vec.push_back(L"CRandomMgrScript");
+	_vec.push_back(L"CSceneChange");
 	_vec.push_back(L"CSkullBullet");
 	_vec.push_back(L"CSkullScript");
 	_vec.push_back(L"CSkyBoxScript");
+	_vec.push_back(L"CSlashEffect");
 	_vec.push_back(L"CSpearManScript");
 	_vec.push_back(L"CSpiderScript");
 	_vec.push_back(L"CTestMonsterAttackEffect");
@@ -100,12 +112,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCrowEggBullet;
 	if (L"CCrowScript" == _strScriptName)
 		return new CCrowScript;
+	if (L"CEffectScript" == _strScriptName)
+		return new CEffectScript;
 	if (L"CFadeScript" == _strScriptName)
 		return new CFadeScript;
 	if (L"CIronmaceScript" == _strScriptName)
 		return new CIronmaceScript;
 	if (L"CMapChange" == _strScriptName)
 		return new CMapChange;
+	if (L"CMemoryPoolScript" == _strScriptName)
+		return new CMemoryPoolScript;
 	if (L"CMonsterScript" == _strScriptName)
 		return new CMonsterScript;
 	if (L"CNailScript" == _strScriptName)
@@ -118,6 +134,10 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CPlayerArrow;
 	if (L"CPlayerBomb" == _strScriptName)
 		return new CPlayerBomb;
+	if (L"CPlayerChain" == _strScriptName)
+		return new CPlayerChain;
+	if (L"CPlayerHook" == _strScriptName)
+		return new CPlayerHook;
 	if (L"CPlayerMagic" == _strScriptName)
 		return new CPlayerMagic;
 	if (L"CPlayerScript" == _strScriptName)
@@ -126,12 +146,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CProjectile;
 	if (L"CRandomMgrScript" == _strScriptName)
 		return new CRandomMgrScript;
+	if (L"CSceneChange" == _strScriptName)
+		return new CSceneChange;
 	if (L"CSkullBullet" == _strScriptName)
 		return new CSkullBullet;
 	if (L"CSkullScript" == _strScriptName)
 		return new CSkullScript;
 	if (L"CSkyBoxScript" == _strScriptName)
 		return new CSkyBoxScript;
+	if (L"CSlashEffect" == _strScriptName)
+		return new CSlashEffect;
 	if (L"CSpearManScript" == _strScriptName)
 		return new CSpearManScript;
 	if (L"CSpiderScript" == _strScriptName)
@@ -187,6 +211,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::CROWSCRIPT:
 		return new CCrowScript;
 		break;
+	case (UINT)SCRIPT_TYPE::EFFECTSCRIPT:
+		return new CEffectScript;
+		break;
 	case (UINT)SCRIPT_TYPE::FADESCRIPT:
 		return new CFadeScript;
 		break;
@@ -195,6 +222,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::MAPCHANGE:
 		return new CMapChange;
+		break;
+	case (UINT)SCRIPT_TYPE::MEMORYPOOLSCRIPT:
+		return new CMemoryPoolScript;
 		break;
 	case (UINT)SCRIPT_TYPE::MONSTERSCRIPT:
 		return new CMonsterScript;
@@ -214,6 +244,12 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::PLAYERBOMB:
 		return new CPlayerBomb;
 		break;
+	case (UINT)SCRIPT_TYPE::PLAYERCHAIN:
+		return new CPlayerChain;
+		break;
+	case (UINT)SCRIPT_TYPE::PLAYERHOOK:
+		return new CPlayerHook;
+		break;
 	case (UINT)SCRIPT_TYPE::PLAYERMAGIC:
 		return new CPlayerMagic;
 		break;
@@ -226,6 +262,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::RANDOMMGRSCRIPT:
 		return new CRandomMgrScript;
 		break;
+	case (UINT)SCRIPT_TYPE::SCENECHANGE:
+		return new CSceneChange;
+		break;
 	case (UINT)SCRIPT_TYPE::SKULLBULLET:
 		return new CSkullBullet;
 		break;
@@ -234,6 +273,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::SKYBOXSCRIPT:
 		return new CSkyBoxScript;
+		break;
+	case (UINT)SCRIPT_TYPE::SLASHEFFECT:
+		return new CSlashEffect;
 		break;
 	case (UINT)SCRIPT_TYPE::SPEARMANSCRIPT:
 		return new CSpearManScript;
@@ -309,6 +351,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CCrowScript";
 		break;
 
+	case SCRIPT_TYPE::EFFECTSCRIPT:
+		return L"CEffectScript";
+		break;
+
 	case SCRIPT_TYPE::FADESCRIPT:
 		return L"CFadeScript";
 		break;
@@ -319,6 +365,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::MAPCHANGE:
 		return L"CMapChange";
+		break;
+
+	case SCRIPT_TYPE::MEMORYPOOLSCRIPT:
+		return L"CMemoryPoolScript";
 		break;
 
 	case SCRIPT_TYPE::MONSTERSCRIPT:
@@ -345,6 +395,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CPlayerBomb";
 		break;
 
+	case SCRIPT_TYPE::PLAYERCHAIN:
+		return L"CPlayerChain";
+		break;
+
+	case SCRIPT_TYPE::PLAYERHOOK:
+		return L"CPlayerHook";
+		break;
+
 	case SCRIPT_TYPE::PLAYERMAGIC:
 		return L"CPlayerMagic";
 		break;
@@ -361,6 +419,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CRandomMgrScript";
 		break;
 
+	case SCRIPT_TYPE::SCENECHANGE:
+		return L"CSceneChange";
+		break;
+
 	case SCRIPT_TYPE::SKULLBULLET:
 		return L"CSkullBullet";
 		break;
@@ -371,6 +433,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::SKYBOXSCRIPT:
 		return L"CSkyBoxScript";
+		break;
+
+	case SCRIPT_TYPE::SLASHEFFECT:
+		return L"CSlashEffect";
 		break;
 
 	case SCRIPT_TYPE::SPEARMANSCRIPT:

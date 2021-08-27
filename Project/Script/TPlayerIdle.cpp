@@ -3,9 +3,12 @@
 #include "TPlayerCharge_Attack_R.h"
 #include "CPlayerScript.h"
 
+#include "CSlashEffect.h"
+
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
+
 
 void TPlayerIdle::update()
 {
@@ -16,21 +19,40 @@ void TPlayerIdle::update()
 	{
 		GetFSM()->ChangeState(L"Run", 0.03f, L"Run", false);
 	}
-	else if (KEY_HOLD(KEY_TYPE::KEY_S))
+	if (KEY_HOLD(KEY_TYPE::KEY_S))
 	{
 		GetFSM()->ChangeState(L"Run", 0.03f, L"Run", false);
 	}
-	else if (KEY_HOLD(KEY_TYPE::KEY_A))
+	if (KEY_HOLD(KEY_TYPE::KEY_A))
 	{
 		GetFSM()->ChangeState(L"Run", 0.03f, L"Run", false);
 	}
-	else if (KEY_HOLD(KEY_TYPE::KEY_D))
+	if (KEY_HOLD(KEY_TYPE::KEY_D))
 	{
 		GetFSM()->ChangeState(L"Run", 0.03f, L"Run", false);
 	}
 
 	if (KEY_TAP(KEY_TYPE::LBTN))
 	{
+		if (nullptr == CPlayerScript::m_pHorizonSlashL)
+		{
+			CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalPos(Vec3(0.f, 45.f, -170.f));
+			GetObj()->AddChild(CPlayerScript::m_pHorizonSlashL);
+		}
+		
+		((CSlashEffect*)CPlayerScript::m_pHorizonSlashL->GetScript())->SetActive(true);
+		CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(true);
+
+		if (nullptr != CPlayerScript::m_pHorizonSlashR)
+		{
+			((CSlashEffect*)CPlayerScript::m_pHorizonSlashR->GetScript())->SetActive(false);
+			CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
+		}
+			
+
 		Vec3 Pos = m_Script->GetMouseClickPos();
 		m_Script->RotatetoClick(Pos);
 		GetFSM()->ChangeState(L"Slash_L", 0.1f, L"Slash_L", false);
@@ -57,23 +79,47 @@ void TPlayerIdle::update()
 		{
 		case PLAYER_PROJECTILE_TYPE::ARROW:
 			GetFSM()->ChangeState(L"Arrow", 0.03f, L"Arrow", true);
+
+			//CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerArrow",(UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);			
+			//CPlayerScript::m_pArrow->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
+			//CPlayerScript::m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+			//CPlayerScript::m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 150.f, -10.f));
+			//GetObj()->AddChild(CPlayerScript::m_pArrow);
+			
 			break;
 		case PLAYER_PROJECTILE_TYPE::MAGIC:
+		{
 			GetFSM()->ChangeState(L"Magic", 0.03f, L"Magic", true);
+
+			 CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerFire4", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			 CPlayerScript::m_pMagic->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			 CPlayerScript::m_pMagic->Transform()->SetLocalPos(Vec3(-60.f, 80.f, 40.f));
+			GetObj()->AddChild(CPlayerScript::m_pMagic);
+		}
+		
 			break;
 		case PLAYER_PROJECTILE_TYPE::BOMB:
 			GetFSM()->ChangeState(L"Bomb", 0.03f, L"Bomb", true);
+
+			CPlayerScript::m_pBomb = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerBomb", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			CPlayerScript::m_pBomb->Transform()->SetLocalPos(Vec3(0.f, 170.f, -100.f));
+
+			GetObj()->AddChild(CPlayerScript::m_pBomb);
+
 			break;
 		case PLAYER_PROJECTILE_TYPE::HOOK:
 			GetFSM()->ChangeState(L"Hook", 0.03f, L"Hook", true);
+
+			CPlayerScript::m_pHook = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerHook", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			CPlayerScript::m_pHook->Transform()->SetLocalPos(Vec3(0.f, 150.f, -40.f));
+
+			GetObj()->AddChild(CPlayerScript::m_pHook);
+
 			break;
 		default:
 			break;
 		}
 	}
-
-
-	
 
 	if (KEY_TAP(KEY_TYPE::SPACE))
 	{

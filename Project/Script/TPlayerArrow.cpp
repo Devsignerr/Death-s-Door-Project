@@ -11,25 +11,27 @@
 
 void TPlayerArrow::Attack()
 {
+	if (nullptr == CPlayerScript::m_pArrow)
+		return;
+
 	if (m_BulletLimit == false)
 	{
+		((CPlayerArrow*)CPlayerScript::m_pArrow->GetScript())->SetBulletDir(((CPlayerScript*)GetScript())->GetPlayerFront());
+		((CPlayerArrow*)CPlayerScript::m_pArrow->GetScript())->SetActive(true);
+		Vec3 PlayerPos = GetObj()->Transform()->GetLocalPos();
+		PlayerPos += CPlayerScript::GetPlayerUp() * 10.f;
+		PlayerPos.y += 120.f;
+
+		CPlayerScript::m_pArrow->Transform()->SetLocalPos(PlayerPos);
+
+		Vec3 Rot = CPlayerScript::GetPlayerRot();
+		CPlayerScript::m_pArrow->Transform()->SetLocalRot(Rot);
+
+		CPlayerScript::m_pArrow->DisconnectWithParent();
+		CPlayerScript::m_pArrow->RegisterAsParentObj();
+		CPlayerScript::m_pArrow = nullptr;
+		
 		m_BulletLimit = true;
-		CGameObject* Obj = new CGameObject;
-		Obj->AddComponent(new CTransform);
-		Obj->AddComponent(new CMeshRender);
-		Obj->AddComponent(new CPlayerArrow);
-
-		Obj->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
-		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
-
-		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-		CPlayerArrow* Script = (CPlayerArrow*)Obj->GetScript();
-		Script->SetBulletDir(GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP));
-
-		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-		CurScene->AddObject(Obj, 9);
-		Obj->awake();
 	}
 }
 
@@ -53,12 +55,22 @@ void TPlayerArrow::update()
 
 void TPlayerArrow::Enter()
 {
+	//칼
+	CPlayerScript::m_Weapon->MeshRender()->Activate(false);
 	m_Script = (CPlayerScript*)GetScript();
+
+	//활
+	CPlayerScript::m_pBow->MeshRender()->Activate(true);
 }
 
 void TPlayerArrow::Exit()
 {
 	m_BulletLimit = false;
+	//칼
+	CPlayerScript::m_Weapon->MeshRender()->Activate(true);
+	
+	//활
+	CPlayerScript::m_pBow->MeshRender()->Activate(false);
 }
 
 TPlayerArrow::TPlayerArrow()

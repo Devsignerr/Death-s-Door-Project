@@ -168,24 +168,46 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
     // 3 -- 2
     float fRatio = g_particelbuffer[instID].m_fCurTime / g_particelbuffer[instID].m_fMaxLife;    
     float fScale = (g_vec4_1 - g_vec4_0) * fRatio + g_vec4_0;   
+    float4 vSpin = 0.f;
+    float4 vSpin2 = 0.f;
     
-        
-    arrVTX[0].vPosition = _in[0].vViewPos + float4(-fScale / 2.f, fScale / 2, 0.f, 0.f);
+    
+    
+    if (g_particelbuffer[instID].iParticleType==0)
+    {  
+        if (g_particelbuffer[instID].iLeftSpin == 0)
+        {
+            vSpin = float4(cos(fRatio), sin(fRatio), 0.f, 0.f);
+            vSpin2 = float4(sin(fRatio), cos(fRatio), 0.f, 0.f);
+        }
+        else if (g_particelbuffer[instID].iLeftSpin == 1)
+        {
+            vSpin2 = float4(cos(fRatio), sin(fRatio), 0.f, 0.f);
+            vSpin = float4(sin(fRatio), cos(fRatio), 0.f, 0.f);
+        }
+    }
+    else
+    {
+        vSpin = 1.f;
+        vSpin2 = 1.f;
+    }
+    
+    arrVTX[0].vPosition = _in[0].vViewPos + float4(-fScale / 2.f, fScale / 2, 0.f, 0.f) * vSpin;
     arrVTX[0].vUV = float2(0.f, 0.f);
-    arrVTX[0].fInstID = (float)instID;
-    
-    arrVTX[1].vPosition = _in[0].vViewPos + float4(fScale / 2.f, fScale / 2, 0.f, 0.f);
+    arrVTX[0].fInstID = (float) instID;
+
+    arrVTX[1].vPosition = _in[0].vViewPos + float4(fScale / 2.f, fScale / 2, 0.f, 0.f) * vSpin2;
     arrVTX[1].vUV = float2(1.f, 0.f);
     arrVTX[1].fInstID = (float) instID;
-    
-    arrVTX[2].vPosition = _in[0].vViewPos + float4(fScale / 2.f, -fScale / 2, 0.f, 0.f);
+
+    arrVTX[2].vPosition = _in[0].vViewPos + float4(fScale / 2.f, -fScale / 2, 0.f, 0.f) * vSpin;
     arrVTX[2].vUV = float2(1.f, 1.f);
     arrVTX[2].fInstID = (float) instID;
-    
-    arrVTX[3].vPosition = _in[0].vViewPos + float4(-fScale / 2.f, -fScale / 2, 0.f, 0.f);
+
+    arrVTX[3].vPosition = _in[0].vViewPos + float4(-fScale / 2.f, -fScale / 2, 0.f, 0.f) * vSpin2;
     arrVTX[3].vUV = float2(0.f, 1.f);
     arrVTX[3].fInstID = (float) instID;
-    
+   
     for (int i = 0; i < 4; ++i)
     {
         arrVTX[i].vPosition = mul(arrVTX[i].vPosition, g_matProj);
@@ -205,14 +227,17 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
 
 float4 PS_Particle(GS_PARTICLE_OUT _in) :SV_Target
 {
-   float4 vColor = (float4) 0.f;
-    
+    float4 vColor = (float4) 0.f;
+    float4 vColor2 = (float4) 0.f;
     uint iInst = (uint) _in.fInstID;
     
     float fRatio = g_particelbuffer[iInst].m_fCurTime / g_particelbuffer[iInst].m_fMaxLife;
     vColor = (g_vec4_3 - g_vec4_2) * fRatio + g_vec4_2;
-        
-    return g_tex_0.Sample(g_sam_0, _in.vUV) * vColor;
+    vColor2 = g_tex_0.Sample(g_sam_0, _in.vUV);
+    vColor2.xyz *= vColor;
+    
+    
+    return vColor2;
    
 }
 
@@ -231,10 +256,12 @@ PS_PARTICLE_OUT PS_Deffered_Particle(GS_PARTICLE_OUT _in)
         
     vColor= g_tex_0.Sample(g_sam_0, _in.vUV) * vColor;
     
-    if (vColor.a != 0.f)
+    if (vColor.a > 0.1f)
     {
         output.vDiff = vColor;
-        output.vDiffLight = vColor;
+        output.vDiffLight.x = vColor.x * g_vEmis.x;
+        output.vDiffLight.x = vColor.y * g_vEmis.y;
+        output.vDiffLight.x = vColor.z * g_vEmis.z;
     }
     else
         clip(-1);

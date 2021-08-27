@@ -212,8 +212,8 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   StructuredBuffer g_srcMat;
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CopyTexture.fx(49,9-35): warning X3203: signed/unsigned mismatch, unsigned assumed
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CopyTexture.fx(49,40-66): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CopyTexture.fx(59,9-35): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CopyTexture.fx(59,40-66): warning X3203: signed/unsigned mismatch, unsigned assumed
   
   //
   // FX Version: fx_5_0
@@ -1291,6 +1291,7 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(170,11-60): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(237,5-25): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -2034,11 +2035,15 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   RWTexture2D WeightTex;
   StructuredBuffer g_PickPos;
   
-  CFrustumSphere.cpp
+  CCamera.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CGameObject.cpp
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(55,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(217,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(229,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(241,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(257,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CParticleSystem.cpp
   코드를 생성하고 있습니다...
   Engine.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Engine\Engine_debug.lib
   .\Project\Engine\CAnimation2D.h

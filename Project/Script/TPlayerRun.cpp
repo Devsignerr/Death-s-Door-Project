@@ -2,6 +2,7 @@
 #include "TPlayerRun.h"
 
 #include "CPlayerScript.h"
+#include "CSlashEffect.h"
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
@@ -20,23 +21,24 @@ void TPlayerRun::update()
     // 키 입력에 따른 이동
     Vec3 vPlayerPos = GetObj()->Transform()->GetLocalPos();
     Vec3 vPlayerRot = GetObj()->Transform()->GetLocalRot();
-    Vec3 vFDirPlayer = GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);
-    Vec3 vBDirPlayer = -GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP);
-    Vec3 vUDirPlayer = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+    Vec3 vFDirPlayer = ((CPlayerScript*)GetScript())->GetPlayerFront();
+    Vec3 vBDirPlayer = -((CPlayerScript*)GetScript())->GetPlayerFront();
+    Vec3 vUDirPlayer = ((CPlayerScript*)GetScript())->GetPlayerUp();
     Vec3 FDirCamera = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-    Vec3 vLDirCamera = -pCamera->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+
     FDirCamera.y = 0.f;
+
+    Vec3 vMovePos = {};
 
     Vec3 vWantToGoDir = {};
 
     if (KEY_HOLD(KEY_TYPE::KEY_A))
-    {      
+    {
+        Vec3 vLDirCamera = -pCamera->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
         vWantToGoDir += vLDirCamera;
 
         //Pos 이동파트
-        Vec3 vRight = pCamera->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-        vPlayerPos -= vRight * 600.f * fDT;
-
+        vMovePos += vLDirCamera * 600.f * fDT;
     }
 
     if (KEY_HOLD(KEY_TYPE::KEY_D))
@@ -46,9 +48,8 @@ void TPlayerRun::update()
 
         vWantToGoDir += vRDirCamera;
 
-
         //Pos 이동파트
-        vPlayerPos += vRDirCamera * 600.f * fDT;
+        vMovePos += vRDirCamera * 600.f * fDT;
     }
  
   if (KEY_HOLD(KEY_TYPE::KEY_W))
@@ -59,9 +60,8 @@ void TPlayerRun::update()
       Vec2 GoDir = Vec2(vFront.x, vFront.z);
       
       GoDir.Normalize();
-      vPlayerPos.x += GoDir.x * 600.f * fDT;
-      vPlayerPos.z += GoDir.y * 600.f * fDT;
- 
+      vMovePos.x += GoDir.x * 600.f * fDT;
+      vMovePos.z += GoDir.y * 600.f * fDT;
   }
  
   if (KEY_HOLD(KEY_TYPE::KEY_S))
@@ -72,8 +72,8 @@ void TPlayerRun::update()
       Vec2 GoDir = Vec2(vFront.x, vFront.z);
  
       GoDir.Normalize();
-      vPlayerPos.x -= GoDir.x * 600.f * fDT;
-      vPlayerPos.z -= GoDir.y * 600.f * fDT;
+      vMovePos.x -= GoDir.x * 600.f * fDT;
+      vMovePos.z -= GoDir.y * 600.f * fDT;
   }
 
 
@@ -88,6 +88,25 @@ void TPlayerRun::update()
 
 	if (KEY_TAP(KEY_TYPE::LBTN))
 	{
+        if (nullptr == CPlayerScript::m_pHorizonSlashL)
+        {
+            CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+            CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+            CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+            CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalPos(Vec3(0.f, 45.f, -170.f));
+            GetObj()->AddChild(CPlayerScript::m_pHorizonSlashL);
+        }
+
+        ((CSlashEffect*)CPlayerScript::m_pHorizonSlashL->GetScript())->SetActive(true);
+        CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(true);
+
+        if (nullptr != CPlayerScript::m_pHorizonSlashR)
+        {
+            ((CSlashEffect*)CPlayerScript::m_pHorizonSlashR->GetScript())->SetActive(false);
+            CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
+        }
+
+
 		GetFSM()->ChangeState(L"Slash_L", 0.1f, L"Slash_L", false);
 	}
 
@@ -120,9 +139,14 @@ void TPlayerRun::update()
         }
     }
 
+    bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(vPlayerPos + vMovePos);
+  
+    if (!IsGround)
+        IsGround =((CPlayerScript*)GetScript())->ResearchNode(vPlayerPos + vMovePos);
 
+    if(true==IsGround)
+         GetObj()->Transform()->SetLocalPos(vPlayerPos+ vMovePos);
 
-    GetObj()->Transform()->SetLocalPos(vPlayerPos);
     GetObj()->Transform()->SetLocalRot(vPlayerRot);
 }
 

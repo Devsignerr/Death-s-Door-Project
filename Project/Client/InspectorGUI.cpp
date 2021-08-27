@@ -162,6 +162,12 @@ void InspectorGUI::update()
 void InspectorGUI::render()
 {
     ImGui::Begin("Inspector");
+  
+    if (m_pTargetObj)
+    {
+        if (m_pTargetObj->IsDead() == true)
+            m_pTargetObj = nullptr;
+    }
 
     if (m_pTargetObj)
     {

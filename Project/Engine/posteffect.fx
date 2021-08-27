@@ -65,7 +65,7 @@ float4 PS_PostEffect(VTX_OUT _in) : SV_Target
     
     fDOFDepth = clamp(fDOFDepth, 0.1f, 0.8f);
     
-    vOriginalColor = lerp(vOriginalColor, vDownSampleColor * 0.6f, fDOFDepth);
+    vOriginalColor = lerp(vOriginalColor, vDownSampleColor * 0.81f, fDOFDepth);
     
     vOriginalColor += vBloomColor;
     

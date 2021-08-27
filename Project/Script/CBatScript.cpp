@@ -33,10 +33,19 @@ void CBatScript::Idle()
 
 	Vec3 vBatRot = Transform()->GetLocalRot();
 	Vec3 Pos = Transform()->GetLocalPos();
-	Pos += CTimeMgr::GetInst()->GetfDT() * (Transform()->GetLocalDir(DIR_TYPE::UP) / m_fRotRange) * m_Speed;
+	Vec3 vMovePos = {};
+
+	vMovePos += CTimeMgr::GetInst()->GetfDT() * (Transform()->GetLocalDir(DIR_TYPE::UP) / m_fRotRange) * m_Speed;
+
 	vBatRot.y += m_fDegreeToRot * fDT;
 	Transform()->SetLocalRot(vBatRot);
-	Transform()->SetLocalPos(Pos);
+
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
 
 	if (RangeSearch(m_AttackRange))
 	{
@@ -88,7 +97,7 @@ void CBatScript::Attack()
 		// 범위 밖이라면
 		if (false == RangeSearch(m_AttackRange))
 		{
-			ChangeState(MONSTERSTATE::CHASE, 0.1f, L"Chase");
+			ChangeState(MONSTERSTATE::CHASE, 0.05f, L"Chase");
 		}
 	}
 }
@@ -119,10 +128,11 @@ void CBatScript::OnCollisionExit(CGameObject* _pOther)
 void CBatScript::CalAttackDistance()
 {
 	Vec3 Pos = Transform()->GetLocalPos();
+	Vec3 vMovePos = {};
 	float Speed = (sinf(m_fTheta) + 1.f) * 5.0f;
 	
-	Pos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 7000.0f;
-	Pos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 7000.0f;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 7000.0f;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 7000.0f;
 	m_fTheta += CTimeMgr::GetInst()->GetfDT() * XM_PI / 2.0f;
 
 	if ((XM_PI* 3.0f/ 2.0f) < m_fTheta)
@@ -130,7 +140,14 @@ void CBatScript::CalAttackDistance()
 		m_fTheta = -XM_PI / 2.f;
 	}
 
-	Transform()->SetLocalPos(Pos);
+
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
+
 }
 
 void CBatScript::CalChaseMove()
@@ -144,6 +161,7 @@ void CBatScript::CalChaseMove()
 	Vec3 Pos = Transform()->GetLocalPos();
 	Vec3 Rot = Transform()->GetLocalRot();
 	Vec3 vRelative = PlayerPos - Pos;
+	Vec3 vMovePos = {};
 	vRelative.Normalize();
 
 	m_fTimetoCheckPlayerPos += fDT;
@@ -173,9 +191,16 @@ void CBatScript::CalChaseMove()
 	else
 		Rot.y -= CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
 
-	Pos += (vFront / 0.95f) * fDT * 500.f;
+	vMovePos += (vFront / 0.95f) * fDT * 500.f;
 
-	Transform()->SetLocalPos(Pos);
+
+	bool IsGround = GroundCheck(Pos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(Pos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(Pos + vMovePos);
+
 	Transform()->SetLocalRot(Rot);
 	
 }

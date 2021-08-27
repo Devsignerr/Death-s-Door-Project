@@ -45,83 +45,7 @@ void CMonsterScript::ChangeState(MONSTERSTATE _State, float _BlendingTime, const
 
 bool CMonsterScript::MonsterRotateSystem(float _fRotSpeed)
 {
-	//Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
-	//Vec3 Pos = Transform()->GetLocalPos();
-	//Vec3 relativePos = PlayerPos - Pos;
-	//
-	//Vec3 Rot = Transform()->GetLocalRot();
-	//
-	//float Rad = atan2((PlayerPos.x - Pos.x), (PlayerPos.z - Pos.z));
-	//Rad = Rad - 180.0f * XM_PI / 180.0f;
-	//float Degree = Rad * 180.0f / XM_PI;
-	//
-	//if (Degree > 180.0f) {
-	//	Degree -= 360.0f;
-	//}
-	//else if (Degree < -180.0f) {
-	//	Degree += 360.0f;
-	//}
-	//
-	//Rad = Degree * XM_PI / 180.0f;
-	//
-	//if (Rad > Rot.y)
-	//{
-	//	if (Rad >= 0.0f && 0.0f > Rot.y)
-	//	{
-	//		float AngleCheck = Rad + Rot.y;
-	//		if (Rad < -XM_PI || AngleCheck < XM_PI && AngleCheck < -XM_PI)
-	//			Rot.y += CTimeMgr::GetInst()->GetfDT() * m_MonsterInfo.Speed;
-	//		else
-	//		{
-	//			Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_MonsterInfo.Speed;
-	//			if (-0.1f >= Rot.y && relativePos.z < 0.0f)
-	//			{
-	//				Rot.y = 0.0f;
-	//			}
-	//		}
-	//
-	//
-	//	}
-	//	else
-	//		Rot.y += CTimeMgr::GetInst()->GetfDT() * m_MonsterInfo.Speed;
-	//}
-	//else
-	//{
-	//
-	//	if (Rad < 0.0f && 0.0f < Rot.y)
-	//	{
-	//		float AngleCheck = Rad + Rot.y;
-	//		if (Rad < -XM_PI || AngleCheck < XM_PI && AngleCheck > -XM_PI)
-	//		{
-	//			Rot.y += CTimeMgr::GetInst()->GetfDT() * m_MonsterInfo.Speed;
-	//			if (XM_PI >= Rot.y && relativePos.z < 0.0f)
-	//			{
-	//				Rot.y = 0.0f;
-	//			}
-	//		}
-	//		else
-	//			Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_MonsterInfo.Speed;
-	//	}
-	//	else
-	//		Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_MonsterInfo.Speed;
-	//}
-	//
-	//if (Rot.y > XM_PI)
-	//	Rot.y -= XM_2PI;
-	//else if (Rot.y < -XM_PI)
-	//	Rot.y += XM_2PI;
-	//
-	//
-	//if (Rot.y < Rad + 0.04f && Rot.y > Rad - 0.04f)
-	//{
-	//	return true;
-	//}
-	//else
-	//{
-	//	Transform()->SetLocalRot(Rot);
-	//	return false;
-	//}
-
+	
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 Pos = Transform()->GetLocalPos();
 	Vec3 relativePos = PlayerPos - Pos;
@@ -214,19 +138,37 @@ void CMonsterScript::SetMonsterJumpInfo(float _JumpTime, float _JumpHeight)
 void CMonsterScript::MonsterJumpSystem()
 {
 	m_MonsterJumpInfo.Time += fDT;
-
+	Vec3 vMovePos = {};
 	if (m_MonsterJumpInfo.Time <= m_MonsterJumpInfo.DestAttachTime)
 	{
 		float X = (m_MonsterJumpInfo.Pos.x + m_MonsterJumpInfo.VelocityX * m_MonsterJumpInfo.Time);
-		float Y = m_MonsterJumpInfo.Pos.y + m_MonsterJumpInfo.VelocityY * m_MonsterJumpInfo.Time - 0.5f * m_MonsterJumpInfo.Gravity * m_MonsterJumpInfo.Time * m_MonsterJumpInfo.Time;
 		float Z = (m_MonsterJumpInfo.Pos.z + m_MonsterJumpInfo.VelocityZ * m_MonsterJumpInfo.Time);
 
 		Vec3 Pos = Transform()->GetLocalPos();
-		Pos.x = X;
-		//Pos.y = Y;
-		Pos.z = Z;
 
-		Transform()->SetLocalPos(Pos);
+		if (false == m_MonsterJumpInfo.bJump)
+		{
+			vMovePos.x = (m_MonsterJumpInfo.Pos.x + m_MonsterJumpInfo.VelocityX * m_MonsterJumpInfo.Time);
+			vMovePos.z = (m_MonsterJumpInfo.Pos.z + m_MonsterJumpInfo.VelocityZ * m_MonsterJumpInfo.Time);
+		}
+		else
+		{
+			vMovePos.x = Pos.x;
+			vMovePos.z = Pos.z;
+		}
+
+		bool IsGround = GroundCheck(vMovePos);
+		if (!IsGround)
+			IsGround = ResearchNode(vMovePos);
+
+		if (true == IsGround)
+			Transform()->SetLocalPos(vMovePos);
+		else
+			m_MonsterJumpInfo.bJump = true;
+	}
+	else
+	{
+		m_MonsterJumpInfo.bJump = false;
 	}
 }
 

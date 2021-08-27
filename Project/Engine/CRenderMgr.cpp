@@ -182,20 +182,20 @@ void CRenderMgr::render_play()
 		LightMerge();
 	}
 
-	
-	Ptr<CTexture> pSrcTex = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
-	Ptr<CTexture> pDstTex = CResMgr::GetInst()->FindDataTexture(L"DownSampleTex");
-	CONTEXT->CopyResource(m_pSwapChainTarget->GetTex2D().Get(), pSrcTex->GetTex2D().Get());
-
-	CustomCopy(m_pSwapChainTarget, pDstTex, COPY_TYPE::DOF);
-
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 
-	for (size_t i = 0; i < m_vecCam.size(); ++i)
-	{
-		m_vecCam[i]->render_forward();
-		m_vecCam[i]->render_posteffect();
-	}	
+	//for (size_t i = 0; i < m_vecCam.size(); ++i)
+	//{
+	m_vecCam[0]->render_forward();
+
+	Ptr<CTexture> pSrcTex2 = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
+	Ptr<CTexture> pDstTex2 = CResMgr::GetInst()->FindDataTexture(L"DownSampleTex");
+	CONTEXT->CopyResource(m_pSwapChainTarget->GetTex2D().Get(), pSrcTex2->GetTex2D().Get());
+
+	CustomCopy(m_pSwapChainTarget, pDstTex2, COPY_TYPE::DOF);
+
+	m_vecCam[0]->render_posteffect();
+	//}	
 }
 
 void CRenderMgr::render_tool()
@@ -237,15 +237,16 @@ void CRenderMgr::render_tool()
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 	LightMerge();
 
+	// forward 물체 그리기
+	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+	m_pToolCam->render_forward();
+
 	pSrcTex = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
 	pDstTex = CResMgr::GetInst()->FindDataTexture(L"DownSampleTex");
 	CONTEXT->CopyResource(m_pSwapChainTarget->GetTex2D().Get(), pSrcTex->GetTex2D().Get());
 
 	CustomCopy(m_pSwapChainTarget, pDstTex, COPY_TYPE::DOF);
 
-	// forward 물체 그리기
-	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
-	m_pToolCam->render_forward();
 	m_pToolCam->render_posteffect();
 }
 

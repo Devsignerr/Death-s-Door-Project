@@ -4,6 +4,9 @@
 #include "CPlayerScript.h"
 #include "CBazookaBullet.h"
 
+#include <Engine/CLight3D.h>
+#include <Engine/CParticleSystem.h>
+
 void CBazookaScript::awake()
 {
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
@@ -41,12 +44,19 @@ void CBazookaScript::Chase()
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
 	vDiff.Normalize();
+	Vec3 vMovePos = {};
 
-	vPos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_Speed;
-	vPos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_Speed;
+	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_Speed;
+	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_Speed;
+
+	bool IsGround = GroundCheck(vPos + vMovePos);
+	if (!IsGround)
+		IsGround = ResearchNode(vPos + vMovePos);
+
+	if (true == IsGround)
+		Transform()->SetLocalPos(vPos + vMovePos);
 
 	MonsterRotateSystem(m_ChaseRotSpeed);
-	Transform()->SetLocalPos(vPos);
 	// 플레이어 따라오게 
 	if (RangeSearch(m_LongDistanceAttackRange))
 	{

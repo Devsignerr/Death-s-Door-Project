@@ -46,6 +46,7 @@ private:
 
 	//=================================
 	bool						m_bStaying;
+	bool						m_bStop;
 
 public:
 	bool IsParent() { return m_bParentObj; }
@@ -86,7 +87,10 @@ public:
 	const vector<tMTBone>* GetVecBones() { return m_pVecBones; }
 	vector<float>& GetvecClipUpdateTime() { return m_vecClipUpdateTime; }
 	void ResizeClipUpdateVec(int _size){ m_vecClipUpdateTime.resize(_size); }
+
 public : 
+	//아래 함수를 호출할때마다 정지/재생이 반복됨 
+	void StopAnimation() { m_bStop = m_bStop? false: true; }
 	void ChangeAnimation(int _iNextAnimIdx , float _fLerpTime , bool _Stay=false);
 	void UpdateChangeAnimation();
 private:

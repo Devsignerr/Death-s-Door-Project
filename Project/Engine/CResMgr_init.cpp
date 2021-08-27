@@ -764,6 +764,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->AddShaderParam(SHADER_PARAM::TEX_1, L"Normal Map");
 	pShader->AddShaderParam(SHADER_PARAM::TEX_2, L"Specular Map");
 	pShader->AddShaderParam(SHADER_PARAM::TEX_3, L"Emissive Map");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_4, L"PaperBurn Map");
 
 	pShader->AddShaderParam(SHADER_PARAM::TEXCUBE_0, L"CubeMap");
 
@@ -775,6 +776,9 @@ void CResMgr::CreateDefaultShader()
 	pShader = new CGraphicsShader(SHADER_POV::DEFERRED);
 	pShader->CreateVertexShader(L"Shader\\Fire.fx", "VS_Fire");
 	pShader->CreatePixelShader(L"Shader\\Fire.fx", "PS_Fire");
+
+	pShader->AddShaderParam(SHADER_PARAM::TEX_0, L"Noise Tex");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_1, L"Gradient Tex");
 
 	AddRes(L"FireShader", pShader);
 
@@ -904,9 +908,11 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexShader(L"shader\\std2d.fx", "VS_Particle");
 	pShader->CreateGeometryShader(L"shader\\std2d.fx", "GS_Particle");
 	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_Particle");
-	pShader->SetBlendType(BLEND_TYPE::ALPHA_ONE);
+	pShader->SetBlendType(BLEND_TYPE::ONE_ONE);
 	pShader->SetDSType(DS_TYPE::LESS_NO_WRITE);	
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	pShader->AddShaderParam(SHADER_PARAM::TEX_0, L"Fire Texture");
 
 	AddRes<CGraphicsShader>(L"ParticleRenderShader", pShader);
 
@@ -918,7 +924,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexShader(L"shader\\std2d.fx", "VS_Particle");
 	pShader->CreateGeometryShader(L"shader\\std2d.fx", "GS_Particle");
 	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_Deffered_Particle");
-	pShader->SetBlendType(BLEND_TYPE::ALPHA_ONE);
+	pShader->SetBlendType(BLEND_TYPE::ONE_ONE);
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	AddRes<CGraphicsShader>(L"DefferedParticleRenderShader", pShader);

@@ -25,12 +25,15 @@ void CFadeScript::Fade_Out()
 
 void CFadeScript::awake()
 {
+	m_FadeType = FADETYPE::FADE_IN;
+	m_Time = 0.0f;
+	m_FadeInOut = false;
 }
 
 void CFadeScript::update()
 {
 
-	if (KEY_HOLD(KEY_TYPE::NUM_3))
+	/*if (KEY_HOLD(KEY_TYPE::NUM_3))
 	{
 		m_FadeType = FADETYPE::FADE_IN;
 		m_Time = 0.0f;
@@ -41,7 +44,7 @@ void CFadeScript::update()
 		m_FadeType = FADETYPE::FADE_OUT;
 		m_Time = 0.0f;
 		m_FadeInOut = false;
-	}
+	}*/
 	m_Time += fDT * m_FadeTime;
 
 	if (m_Time > XM_PI / 2.0f)

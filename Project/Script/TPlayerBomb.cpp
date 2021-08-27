@@ -11,6 +11,17 @@ void TPlayerBomb::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	m_fCurTime += fDT;
+
+	if (m_fRotateTime > m_fCurTime)
+	{
+		float x = 0.f;
+		float y = 200.f - cos(m_fCurTime * 4) * m_fRadius;
+		float z = -20.f - sin(m_fCurTime * 4) * m_fRadius;
+		
+		CPlayerScript::m_pBomb->Transform()->SetLocalPos(Vec3(x, y, z));
+	}
+
 	if (KEY_HOLD(KEY_TYPE::RBTN))
 	{
 		Vec3 Pos = m_Script->GetMouseClickPos();
@@ -26,14 +37,19 @@ void TPlayerBomb::update()
 void TPlayerBomb::Enter()
 {
 	m_Script = (CPlayerScript*)GetScript();
+	
+	CPlayerScript::m_Weapon->MeshRender()->Activate(false);
 }
 
 void TPlayerBomb::Exit()
 {
+	m_fCurTime = 0.f;
 }
 
 TPlayerBomb::TPlayerBomb()
 	: m_Script(nullptr)
+	, m_fRotateTime(0.8f)
+	, m_fRadius(100.f)
 {
 }
 

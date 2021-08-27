@@ -19,7 +19,7 @@ public:
     static void Fade_In();
     static void Fade_Out();
     static void SetFadeTime(float _Time) { m_FadeTime = XM_PI * _Time; }
-
+    static bool GetIsFadeInOut() { return m_FadeInOut; }
 private:
     void Fade_in(float _FadeTime);
     void Fade_out(float _FadeTime);
