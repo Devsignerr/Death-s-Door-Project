@@ -30,7 +30,7 @@ void CIronmaceScript::ChangeState(IRONMACE_STATE _eState, float _BlendingTime, c
 {
 	m_eState = _eState;
 
-	wstring StateName = {}; 
+	wstring StateName = {};
 
 	//STATE 따라 이름 바꿔줘야 함 
 	map<IRONMACE_STATE, wstring>::iterator iter = m_mapState.find(_eState);
@@ -46,11 +46,15 @@ void CIronmaceScript::ChangeState(IRONMACE_STATE _eState, float _BlendingTime, c
 
 void CIronmaceScript::awake()
 {
+	CBossScript::awake();
+	CreateCol(L"IronMaceCol", Vec3(0.0f, 0.0f, 600.0f), Vec3(600.0f, 500.0f, 1200.0f), LAYER_TYPE::BOSS_COL);
+	CreateCol(L"IronMaceAttackCol", Vec3(-100.0f, 800.0f, 150.0f), Vec3(500.0f, 1100.0f, 300.0f), LAYER_TYPE::BOSS_ATTACK_COL);
+
 	if (nullptr != m_pFSM)
 		return;
 
 	m_pFSM = new CFSM;
-	m_pFSM->SetObject(GetObj());  
+	m_pFSM->SetObject(GetObj());
 
 	TIronCutScene* CutSceneState = new TIronCutScene;							//여기에서 스테이트 생성 , FSM에 추가시킴 
 	m_pFSM->AddState(L"CutScene", CutSceneState);								// FSM에 상태를 추가한다 
@@ -104,18 +108,40 @@ void CIronmaceScript::update()
 	CBossScript::update();
 	m_pFSM->update();
 
-	if (0 >= m_Hp)
-	{
-		ChangeState(IRONMACE_STATE::DEATH, 0.04f, L"Death", true);
-	}
+
 }
 
 void CIronmaceScript::OnCollisionEnter(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
-	if ((int)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
+
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_Hp;
+
+		if (0 == m_Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+					}
+				}
+			}
+
+			if (0 == m_Hp)
+			{
+				m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
+			}
+		}
 	}
 }
 

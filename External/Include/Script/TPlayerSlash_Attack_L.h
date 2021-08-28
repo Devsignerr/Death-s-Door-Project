@@ -9,6 +9,8 @@ private:
     CPlayerScript* m_Script;
     bool m_IsRightSlash;
     int  m_LimitAttackCount;
+    int m_ColOnOffCheck;
+
 private:
     void update() override;
 

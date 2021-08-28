@@ -7,10 +7,27 @@
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
 
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CCollider3D.h>
+#include <Engine/CMeshRender.h>
+
 void TPlayerCharge_Attack_R::update()
 {
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	if (1140 == CurAni->GetFrameIdx())
+	{
+		++m_ColOnOffCheck;
+	}
+
+	if (1 == m_ColOnOffCheck)
+	{
+		CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+		Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
 
 	if (1150 > CurAni->GetFrameIdx())
 	{
@@ -46,10 +63,15 @@ void TPlayerCharge_Attack_R::Enter()
 	m_Script->RotatetoClick(Pos);
 
 	m_IsChargeAttack = true;
+
+	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+	Obj->MeshRender()->Activate(true);
+	Obj->Collider3D()->Activate(true);
 }
 
 void TPlayerCharge_Attack_R::Exit()
 {
+	m_ColOnOffCheck = 0;
 }
 
 TPlayerCharge_Attack_R::TPlayerCharge_Attack_R()

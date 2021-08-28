@@ -1,10 +1,17 @@
 #include "pch.h"
 #include "CSpearManScript.h"
 #include "CPlayerScript.h"
+#include <Engine/CCollider3D.h>
 
 void CSpearManScript::awake()
 {
+	CMonsterScript::awake();
+
+	CreateCol(L"SpearManCol", Vec3(0.0f, 0.0f, 250.0f), Vec3(400.0f, 200.0f, 500.0f), LAYER_TYPE::MONSTER_COL);
+	CreateCol(L"SpearManAttackCol", Vec3(0.0f, 500.0f, 100.0f), Vec3(500.0f, 500.0f, 250.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
+
 }
 
 void CSpearManScript::update()
@@ -45,7 +52,7 @@ void CSpearManScript::Chase()
 
 	Vec3 vMovePos = {};
 
-	
+
 	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
 	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
 
@@ -54,9 +61,9 @@ void CSpearManScript::Chase()
 	if (!IsGround)
 		IsGround = ResearchNode(vPos + vMovePos);
 
-	if(IsGround==true)
+	if (IsGround == true)
 		Transform()->SetLocalPos(vPos + vMovePos);
-	
+
 
 	MonsterRotateSystem(m_ChaseRotSpeed);
 
@@ -112,6 +119,11 @@ void CSpearManScript::Attack()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"LeftCut")
 	{
+		if (378 == CurAni->GetFrameIdx())
+		{
+			OnOffAttackCol(true);
+		}
+
 		if (378 <= CurAni->GetFrameIdx() && 380 >= CurAni->GetFrameIdx())
 		{
 			Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
@@ -132,6 +144,11 @@ void CSpearManScript::Attack()
 				Transform()->SetLocalPos(vPos + vMovePos);
 		}
 
+		if (380 == CurAni->GetFrameIdx())
+		{
+			OnOffAttackCol(false);
+		}
+
 
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
@@ -147,6 +164,11 @@ void CSpearManScript::Attack()
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightCut")
 	{
+		if (448 == CurAni->GetFrameIdx())
+		{
+			OnOffAttackCol(true);
+		}
+
 		if (445 <= CurAni->GetFrameIdx() && 450 >= CurAni->GetFrameIdx())
 		{
 			Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
@@ -164,6 +186,11 @@ void CSpearManScript::Attack()
 			if (true == IsGround)
 				Transform()->SetLocalPos(vPos + vMovePos);
 
+		}
+
+		if (450 == CurAni->GetFrameIdx())
+		{
+			OnOffAttackCol(false);
 		}
 
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
@@ -243,6 +270,28 @@ void CSpearManScript::Jump()
 
 void CSpearManScript::Death()
 {
+	CAnimator3D* CurAni = Animator3D();
+	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	CurAni->Animator3D()->StopAnimation();
+
+	m_PaperBurnTime += fDT;
+
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->MeshRender())
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (1.0f < m_PaperBurnTime)
+	{
+		DeleteObject(GetGameObject());
+	}
 }
 
 void CSpearManScript::OnCollisionEnter(CGameObject* _pOther)
@@ -250,9 +299,30 @@ void CSpearManScript::OnCollisionEnter(CGameObject* _pOther)
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
-	if (11 == Obj->GetLayerIndex())
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_MonsterInfo.Hp;
+
+		if (0 == m_MonsterInfo.Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+					}
+				}
+			}
+
+			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
+		}
 	}
 }
 

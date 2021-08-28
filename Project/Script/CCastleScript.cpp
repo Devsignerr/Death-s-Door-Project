@@ -3,6 +3,10 @@
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
 #include <Engine/CState.h>
+#include <Engine/CCollider3D.h>
+#include <Engine/CScene.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CLayer.h>
 
 #include "CPlayerScript.h"
 #include "CRandomMgrScript.h"
@@ -44,8 +48,32 @@ void CCastleScript::ChangeState(CASTLE_STATE _eState, float _BlendingTime, const
 	m_pFSM->ChangeState(StateName, _BlendingTime, _AniName, _Stay);
 }
 
+void CCastleScript::CreateLaserPoint()
+{
+	CGameObject* Obj = new CGameObject;
+	Obj->SetName(L"LaserPoint");
+
+	Obj->AddComponent(new CTransform);
+	Obj->AddComponent(new CMeshRender);
+	Obj->AddComponent(new CCollider3D);
+
+	Obj->Transform()->SetLocalPos(Vec3(3560.0f, -4073.0f, 1113.0f));
+	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
+
+	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::INDETERMINATE);
+}
+
 void CCastleScript::awake()
 {
+	CBossScript::awake();
+	CreateLaserPoint();
+	CreateCol(L"CastleCol", Vec3(0.0f, -50000.0f, 0.0f), Vec3(140000.0f, 100000.0f, 40000.0f), LAYER_TYPE::BOSS_COL);
+	CreateCol(L"CastleAttackCol", Vec3(60000.0f, -10000.0f, 25000.0f), Vec3(50000.0f, 30000.0f, 50000.0f), LAYER_TYPE::BOSS_ATTACK_COL);
+
 	if (nullptr != m_pFSM)
 		return;
 
@@ -115,20 +143,15 @@ void CCastleScript::awake()
 	TCastleDeath* DeathState = new TCastleDeath;
 	m_pFSM->AddState(L"Death", DeathState);
 	m_mapState.insert(make_pair(CASTLE_STATE::DEATH, L"Death"));
-	
 
-	ChangeState(CASTLE_STATE::CUTSCENE, 0.04f, L"CutScene");
+
+	m_pFSM->ChangeState(L"CutScene", 0.04f, L"CutScene", false);
 }
 
 void CCastleScript::update()
 {
 	CBossScript::update();
 	m_pFSM->update();
-
-	if (0 >= m_Hp)
-	{
-		ChangeState(CASTLE_STATE::DEATH, 0.1f, L"Death",true);
-	}
 }
 
 void CCastleScript::CheckAttackDirection()
@@ -141,7 +164,7 @@ void CCastleScript::CheckAttackDirection()
 	relativePos.y = 0.0f;
 	Vec3 Rot = Transform()->GetLocalRot();
 
-	Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 vFront = -Transform()->GetLocalDir(DIR_TYPE::FRONT);
 	vFront.y = 0.0f;
 	vFront.Normalize();
 	relativePos.Normalize();
@@ -152,7 +175,7 @@ void CCastleScript::CheckAttackDirection()
 	// 위 값이 양수면 플레이어는 내 왼쪽 , 음수면 오른쪽에 있는 것 
 
 	//프론트를 얻어왔지만 회전시켜서 세웠으므로 업벡터로 쓰임 
-	Vec3 vUP = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vUP = Transform()->GetLocalDir(DIR_TYPE::UP);
 
 	float dot = vCross.Dot(vUP);
 	float dist = (-vFront + relativePos).Length();
@@ -161,7 +184,7 @@ void CCastleScript::CheckAttackDirection()
 	relativePos2.Normalize();
 	float Dot = vFront.Dot(relativePos2);
 	Dot = acos(Dot);
-	if (Dot > -XM_PI / 2.0f && Dot < XM_PI / 2.0f)
+	if (Dot > -(XM_PI / 2.0f) && Dot < (XM_PI / 2.0f))
 	{
 		// 앞쪽
 
@@ -194,19 +217,19 @@ void CCastleScript::CheckAttackDirection()
 	switch (AttackDir)
 	{
 	case CCastleScript::CASTLE_DIRECTION::FRONT_RIGHT:
-		ChangeState(CASTLE_STATE::RIGHTFRONT_HALFSPIN, 0.1f, L"RightFront_HalfSpin");
+		m_pFSM->ChangeState(L"RightFront_HalfSpin", 0.1f, L"RightFront_HalfSpin", false);
 		break;
 	case CCastleScript::CASTLE_DIRECTION::FRONT_LEFT:
-		ChangeState(CASTLE_STATE::LEFTFRONT_HALFSPIN, 0.1f, L"LeftFront_HalfSpin");
+		m_pFSM->ChangeState(L"LeftFront_HalfSpin", 0.1f, L"LeftFront_HalfSpin", false);
 		break;
 	case CCastleScript::CASTLE_DIRECTION::BACK_RIGHT:
-		ChangeState(CASTLE_STATE::RIGHTBACK_HALFSPIN, 0.1f, L"RightBack_HalfSpin");
+		m_pFSM->ChangeState(L"RightBack_HalfSpin", 0.1f, L"RightBack_HalfSpin", false);
 		break;
 	case CCastleScript::CASTLE_DIRECTION::BACK_LEFT:
-		ChangeState(CASTLE_STATE::LEFTBACK_HALFSPIN, 0.1f, L"LeftBack_HalfSpin");
+		m_pFSM->ChangeState(L"LeftBack_HalfSpin", 0.1f, L"LeftBack_HalfSpin", false);
 		break;
 	case CCastleScript::CASTLE_DIRECTION::ALLDIR:
-		ChangeState(CASTLE_STATE::SPIN, 0.1f, L"Spin");
+		m_pFSM->ChangeState(L"Spin", 0.1f, L"Spin", false);
 		break;
 	default:
 		break;
@@ -219,11 +242,11 @@ void CCastleScript::PatternChoice()
 
 	if (0 == Pattern)
 	{
-		ChangeState(CASTLE_STATE::FLY_START, 0.1f, L"Fly_Start");
+		m_pFSM->ChangeState(L"Fly_Start", 0.1f, L"Fly_Start", false);
 	}
 	else if (1 == Pattern)
 	{
-		ChangeState(CASTLE_STATE::FLY, 0.1f, L"Fly");
+		m_pFSM->ChangeState(L"Fly", 0.1f, L"Fly", false);
 	}
 }
 
@@ -233,6 +256,31 @@ void CCastleScript::OnCollisionEnter(CGameObject* _pOther)
 	if ((int)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_Hp;
+
+		if (0 == m_Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+					}
+				}
+			}
+
+			if (0 == m_Hp)
+			{
+				m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
+			}
+		}
+
 	}
 }
 

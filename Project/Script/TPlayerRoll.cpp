@@ -6,6 +6,10 @@
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
 
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CCollider3D.h>
+
 void TPlayerRoll::update()
 {
 
@@ -24,6 +28,8 @@ void TPlayerRoll::update()
 
 	vMovePos.x += PlayerFront.x * fDT * 2000.0f;
 	vMovePos.z += PlayerFront.z * fDT * 2000.0f;
+
+	vMovePos += CPlayerScript::GetOtherPower();
 
 	bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(Pos + vMovePos);
 
@@ -52,10 +58,17 @@ void TPlayerRoll::update()
 
 void TPlayerRoll::Enter()
 {
+	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerCol",(UINT)LAYER_TYPE::PLAYER_COL);
+	Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 0.0f, 0.5f));
+	Obj->MeshRender()->Activate(false);
+	Obj->Collider3D()->Activate(false);
 }
 
 void TPlayerRoll::Exit()
 {
+	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerCol", (UINT)LAYER_TYPE::PLAYER_COL);
+	Obj->MeshRender()->Activate(true);
+	Obj->Collider3D()->Activate(true);
 	m_IsRollSlash = false;
 }
 

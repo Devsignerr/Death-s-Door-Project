@@ -21,17 +21,28 @@ void TCastleFly_Stay::update()
 		if (TurnToLaserPoint(LaserPos, 5.0f))
 		{
 			Vec3 Pos = GetObj()->Transform()->GetLocalPos();
-			Vec3 Diff = LaserPos - Pos;
 
+			LaserPos.y = Pos.y;
+			Vec3 Diff = LaserPos - Pos;
+		
 			float Length = Diff.Length();
 
 			Diff.y = 0.0f;
 			Diff.Normalize();
 
+
 			if (Length > 5.0f)
 			{
-				Pos += Diff * fDT * 800.0f;
-				GetObj()->Transform()->SetLocalPos(Pos);
+				Vec3 vMovePos = {};
+
+				vMovePos = Diff * fDT * 800.0f;
+
+				bool IsGround = m_Script->GroundCheck(Pos + vMovePos);
+				if (!IsGround)
+					IsGround = m_Script->ResearchNode(Pos + vMovePos);
+
+				if (true == IsGround)
+					m_Script->Transform()->SetLocalPos(Pos + vMovePos);
 			}
 			else
 			{
@@ -41,8 +52,9 @@ void TCastleFly_Stay::update()
 	}
 	else
 	{
-		Vec3 LaserFrontDir = m_LaserPoint->Transform()->GetLocalDir(DIR_TYPE::UP);
-		if (TurnToLaserPoint(LaserFrontDir, 5.0f))
+		Vec3 LaserFrontDir = m_LaserPoint->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
+		if (TurnToLaserPoint((LaserFrontDir * -100000.0f), 5.0f))
 		{
 			GetFSM()->ChangeState(L"Fly_Finish", 0.1f, L"Fly_Finish", false);
 		}
@@ -51,11 +63,18 @@ void TCastleFly_Stay::update()
 
 void TCastleFly_Stay::Enter()
 {
+
+	if (nullptr == m_Script)
+	{
+		m_Script = (CCastleScript*)GetObj()->GetScript();
+	}
+
 	m_LaserPoint = CSceneMgr::GetInst()->GetCurScene()->FindObjectByName(L"LaserPoint");
 }
 
 void TCastleFly_Stay::Exit()
 {
+
 	m_IsRotLaserPoint = false;
 }
 
@@ -67,8 +86,8 @@ bool TCastleFly_Stay::TurnToLaserPoint(Vec3 _TargetPos, float _RotSpeed)
 	relativePos.Normalize();
 
 	Vec3 Rot = GetObj()->Transform()->GetLocalRot();
-	Vec3 vFront = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
-	Vec3 vUP = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vFront = -GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vUP = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
 
 	Vec3 vCross = relativePos.Cross(vFront);
 	float dot = vCross.Dot(vUP);
@@ -83,7 +102,7 @@ bool TCastleFly_Stay::TurnToLaserPoint(Vec3 _TargetPos, float _RotSpeed)
 
 	if (Dot > -XM_PI / 2.0f && Dot < XM_PI / 2.0f)
 	{
-		if (dot > -0.05f && dot < 0.05f)
+		if (dot > -0.01f && dot < 0.01f)
 		{
 			return true;
 		}
@@ -107,6 +126,7 @@ bool TCastleFly_Stay::TurnToLaserPoint(Vec3 _TargetPos, float _RotSpeed)
 TCastleFly_Stay::TCastleFly_Stay()
 	: m_LaserPoint(nullptr)
 	, m_IsRotLaserPoint(false)
+	, m_Script(nullptr)
 {
 }
 

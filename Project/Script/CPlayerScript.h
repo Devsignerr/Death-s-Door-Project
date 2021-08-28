@@ -66,6 +66,7 @@ private:
 
 
     //===============================
+    static Vec3 m_OtherPower;
     static Vec3 PlayerMovePos;
     static Vec3 PlayerPos;
     static Vec3 PlayerPrePos;
@@ -110,6 +111,9 @@ public:
     static Vec3 GetPlayerFront() { return vPlayerFront; }
     static Vec3 GetPlayerUp() { return vPlayerUp; }
     static CPlayerScript* GetPlayer() { return Player; }
+    static void SetOtherPower(Vec3 _Power) { m_OtherPower = _Power; }
+    static Vec3 GetOtherPower() { return m_OtherPower; }
+
 
 public:
     virtual void awake() override; //여기에서 FSM 초기화도 진행함 
@@ -121,11 +125,12 @@ public:
 private:
     void ChangeState(PLAYER_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay);
     PLAYER_STATE GetState() { return m_eState; }
-
+    void CreateCol();
 public:
     void KeyInput();
     Vec3 GetMouseClickPos();
     void RotatetoClick(Vec3 _ClickPos);
+    void SetState(PLAYER_STATE _eState) { m_eState = _eState; }
 public:
     virtual void OnCollisionEnter(CGameObject* _pOther);
     virtual void OnCollision(CGameObject* _pOther);

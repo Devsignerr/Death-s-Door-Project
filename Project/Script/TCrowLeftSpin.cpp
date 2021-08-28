@@ -33,7 +33,7 @@ void TCrowLeftSpin::update()
 	{
 
 		int Pattern = CRandomMgrScript::GetRandomintNumber(0, 4);
-
+		Pattern = 2;
 		if (0 == Pattern)
 		{
 			GetFSM()->ChangeState(L"Run", 0.03f, L"Run", false);

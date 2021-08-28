@@ -36,6 +36,11 @@ void TIronSpinAttackCombo::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (690 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(true);
+	if (692 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(false);
+
 	if (679 >= CurAni->GetFrameIdx())
 	{
 		Vec3 Rot = GetObj()->Transform()->GetLocalRot();
@@ -64,7 +69,8 @@ void TIronSpinAttackCombo::update()
 
 void TIronSpinAttackCombo::Enter()
 {
-	m_Script = (CIronmaceScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CIronmaceScript*)GetScript();
 }
 
 void TIronSpinAttackCombo::Exit()

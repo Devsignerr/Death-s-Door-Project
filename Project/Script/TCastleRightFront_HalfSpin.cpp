@@ -14,6 +14,17 @@ void TCastleRightFront_HalfSpin::update()
 	Vec3 Rot = GetObj()->Transform()->GetLocalRot();
 
 	static float RotValue = 0.0f;
+
+	if (605 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(true);
+		m_Script->TransColPos(Vec3(-60000.0f, -10000.0f, 25000.0f));
+	}
+	if (619 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(false);
+	}
+
 	// 605
 	if (605 <= CurAni->GetFrameIdx())
 	{
@@ -48,7 +59,8 @@ void TCastleRightFront_HalfSpin::update()
 
 void TCastleRightFront_HalfSpin::Enter()
 {
-	m_Script = (CCastleScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CCastleScript*)GetScript();
 }
 
 void TCastleRightFront_HalfSpin::Exit()

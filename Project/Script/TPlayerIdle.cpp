@@ -80,18 +80,18 @@ void TPlayerIdle::update()
 		case PLAYER_PROJECTILE_TYPE::ARROW:
 			GetFSM()->ChangeState(L"Arrow", 0.03f, L"Arrow", true);
 
-			//CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerArrow",(UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);			
-			//CPlayerScript::m_pArrow->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-			//CPlayerScript::m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-			//CPlayerScript::m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 150.f, -10.f));
-			//GetObj()->AddChild(CPlayerScript::m_pArrow);
+			CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerArrow",(UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);			
+			CPlayerScript::m_pArrow->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
+			CPlayerScript::m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+			CPlayerScript::m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 150.f, -10.f));
+			GetObj()->AddChild(CPlayerScript::m_pArrow);
 			
 			break;
 		case PLAYER_PROJECTILE_TYPE::MAGIC:
 		{
 			GetFSM()->ChangeState(L"Magic", 0.03f, L"Magic", true);
 
-			 CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerFire4", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			 CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerFire", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
 			 CPlayerScript::m_pMagic->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 			 CPlayerScript::m_pMagic->Transform()->SetLocalPos(Vec3(-60.f, 80.f, 40.f));
 			GetObj()->AddChild(CPlayerScript::m_pMagic);
@@ -120,6 +120,20 @@ void TPlayerIdle::update()
 			break;
 		}
 	}
+
+
+	Vec3 PlayerFront = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
+	Vec3 vPlayerPos = GetObj()->Transform()->GetLocalPos();
+	Vec3 vMovePos = {  };
+	vMovePos += CPlayerScript::GetOtherPower();
+	bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(vPlayerPos + vMovePos);
+	if (!IsGround)
+		IsGround = ((CPlayerScript*)GetScript())->ResearchNode(vPlayerPos + vMovePos);
+	if (true == IsGround)
+		GetObj()->Transform()->SetLocalPos(vPlayerPos + vMovePos);
+
+
 
 	if (KEY_TAP(KEY_TYPE::SPACE))
 	{

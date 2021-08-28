@@ -27,7 +27,7 @@ private:
 	};
 
 private:
-	CFSM*						m_pFSM;
+	CFSM* m_pFSM;
 	CROW_STATE					m_eState;
 	map<CROW_STATE, wstring>	m_mapState;
 	int							m_Hp;

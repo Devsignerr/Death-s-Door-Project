@@ -25,10 +25,20 @@ void TCastleLaser_Ready::update()
 		m_LaserPoint->Transform()->SetLocalPos(LaserPointPos);
 
 		// 플레이어가 일정 범위 안에 있는 경우 밀어 낸다
-		if (m_Script->RangeSearch(1000.0f))
+		if (m_Script->RangeSearch(1500.0f))
 		{
-			PlayerPos += GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT) * fDT * 200.0f;
-			CPlayerScript::GetPlayer()->Transform()->SetLocalPos(PlayerPos);
+			Vec3 PlayerPos2 = CPlayerScript::GetPlayerPos();
+			Vec3 Pos = GetObj()->Transform()->GetLocalPos();
+			PlayerPos2.y = 0.0f;
+			Pos.y = 0.0f;
+			float Distance = Vec3::Distance(PlayerPos2, Pos);
+			Distance *= 0.04f;
+
+			CPlayerScript::SetOtherPower(GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT) * fDT * (300.0f - Distance));
+		}
+		else
+		{
+			CPlayerScript::SetOtherPower(Vec3(0.0f, 0.0f, 0.0f));
 		}
 
 		m_LaserAimTime += fDT;

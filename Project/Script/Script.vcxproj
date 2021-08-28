@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug_Graphic|Win32">
@@ -268,6 +268,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CCrowEggBullet.h" />
     <ClInclude Include="CCrowScript.h" />
     <ClInclude Include="CEffectScript.h" />
+    <ClInclude Include="CExplosionParticle.h" />
     <ClInclude Include="CFadeScript.h" />
     <ClInclude Include="CIronmaceScript.h" />
     <ClInclude Include="CMapChange.h" />
@@ -385,6 +386,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CCrowEggBullet.cpp" />
     <ClCompile Include="CCrowScript.cpp" />
     <ClCompile Include="CEffectScript.cpp" />
+    <ClCompile Include="CExplosionParticle.cpp" />
     <ClCompile Include="CFadeScript.cpp" />
     <ClCompile Include="CIronmaceScript.cpp" />
     <ClCompile Include="CMapChange.cpp" />

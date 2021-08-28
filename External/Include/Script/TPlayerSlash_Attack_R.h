@@ -8,6 +8,8 @@ class TPlayerSlash_Attack_R :
 private:
     CPlayerScript* m_Script;
     bool m_IsLeftSlash;
+    int m_ColOnOffCheck;
+
 private:
     void update() override;
 

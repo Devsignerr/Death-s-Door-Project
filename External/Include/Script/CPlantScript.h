@@ -17,6 +17,9 @@ private:
 	void Death() override;
 
 	void LongDistanceAttack() override;
+	void CreateCol();
+
+	void Test();
 public:
 	void OnCollisionEnter(CGameObject* _pOther) override;
 	void OnCollision(CGameObject* _pOther) override;

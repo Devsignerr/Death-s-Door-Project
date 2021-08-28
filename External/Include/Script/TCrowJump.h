@@ -17,6 +17,10 @@ private:
 	float   m_MaxHeight;
 	float   m_MaxHeightTime;
 	CCrowScript* m_Script;
+
+	Vec3	m_LastPos;
+public:
+	Vec3 GetLastPos() { return m_LastPos; }
 private:
     void update() override;
 

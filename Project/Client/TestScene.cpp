@@ -388,14 +388,21 @@ void CreateTestScene()
 
 
 	// Collision Check
-	//CCollisionMgr::GetInst()->CollisionCheck(0, 1);
+	CCollisionMgr::GetInst()->CollisionCheck(2, 0); //test
+	CCollisionMgr::GetInst()->CollisionCheck(0, 1);
+	CCollisionMgr::GetInst()->CollisionCheck(10, 11);
 	CCollisionMgr::GetInst()->CollisionCheck(10, 26);
 	CCollisionMgr::GetInst()->CollisionCheck(10, 8);
-	CCollisionMgr::GetInst()->CollisionCheck(13, 22);
-	CCollisionMgr::GetInst()->CollisionCheck(0, 22);
 
-	CCollisionMgr::GetInst()->CollisionCheck(2, 3);
-	CCollisionMgr::GetInst()->CollisionCheck(1, 3);
+	// playercol - monsterattackcol
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_ATTACK_COL);
+	// playerattackcol - monstercol
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MONSTER_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
+
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
+
 
 	pCurScene->awake();
 

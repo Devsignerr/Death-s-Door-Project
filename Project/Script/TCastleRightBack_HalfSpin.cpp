@@ -15,6 +15,16 @@ void TCastleRightBack_HalfSpin::update()
 
 	static float RotValue = 0.0f;
 
+	if (560 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(true);
+		m_Script->TransColPos(Vec3(-60000.0f, -10000.0f, -25000.0f));
+	}
+	if (574 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(false);
+	}
+
 	if (560 <= CurAni->GetFrameIdx())
 	{
 		if (XM_PI > RotValue)
@@ -49,7 +59,8 @@ void TCastleRightBack_HalfSpin::update()
 
 void TCastleRightBack_HalfSpin::Enter()
 {
-	m_Script = (CCastleScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CCastleScript*)GetScript();
 }
 
 void TCastleRightBack_HalfSpin::Exit()

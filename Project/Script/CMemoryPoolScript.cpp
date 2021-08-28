@@ -1,14 +1,17 @@
 #include "pch.h"
 #include "CMemoryPoolScript.h"
 #include "CPlayerChain.h"
+#include "CExplosionParticle.h"
 
 #include <Engine/CSceneMgr.h>
 #include <Engine/CScene.h>
 
 
 int CMemoryPoolScript::m_iChainCount = 30;
+int CMemoryPoolScript::m_iExplosionPTC =10;
 
 std::queue<CGameObject*> CMemoryPoolScript::m_queueChain = {};
+std::queue<CGameObject*> CMemoryPoolScript::m_queueExplosionPTC = {};
 
 CMemoryPoolScript::CMemoryPoolScript()
     :CScript((UINT)SCRIPT_TYPE::MEMORYPOOLSCRIPT)
@@ -19,8 +22,47 @@ CMemoryPoolScript::CMemoryPoolScript()
 CMemoryPoolScript::~CMemoryPoolScript()
 {
 	m_queueChain = std::queue<CGameObject*>();
+	m_queueExplosionPTC = std::queue<CGameObject*>();
 }
 
+
+void CMemoryPoolScript::CreateExplosionPTC()
+{
+	if (m_queueExplosionPTC.size() >= m_iExplosionPTC)
+		return;
+
+	for (int i = 0; i < m_iExplosionPTC; ++i)
+	{
+		wstring PrefabName = L"ExplosionPTC";
+
+		Ptr<CPrefab> Prefab = CResMgr::GetInst()->FindRes<CPrefab>(PrefabName);
+		if (nullptr == Prefab)
+		{
+			wstring PrefabPath = L"prefab\\" + PrefabName + L".pref";
+			Ptr<CPrefab> Prefab = CResMgr::GetInst()->Load<CPrefab>(PrefabName, PrefabPath);
+		}
+
+		CGameObject* pGameObject = Prefab->Instantiate();
+		pGameObject->awake();
+
+		int PrefabCount = i;
+
+		wchar_t Str[10] = {};
+		_itow_s(PrefabCount, Str, 10);
+		wstring PrefabNumber = wstring(Str);
+
+		pGameObject->SetName(PrefabName + PrefabNumber);
+
+		CExplosionParticle* pScript = (CExplosionParticle*)pGameObject->GetScript();
+		pScript->SetName(L"CExplosionParticle");
+		m_queueExplosionPTC.push(pGameObject);
+
+		pScript->SetActive(false);
+
+		CSceneMgr::GetInst()->GetCurScene()->AddObject(pGameObject, (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+
+	}
+}
 
 void CMemoryPoolScript::CreateChain()
 {
@@ -29,7 +71,7 @@ void CMemoryPoolScript::CreateChain()
 
 	for (int i = 0; i < m_iChainCount; ++i)
 	{
-		wstring PrefabName = L"PlayerChain2";
+		wstring PrefabName = L"PlayerChain";
 
 		Ptr<CPrefab> Prefab = CResMgr::GetInst()->FindRes<CPrefab>(PrefabName);
 		if (nullptr == Prefab)
@@ -61,6 +103,21 @@ void CMemoryPoolScript::CreateChain()
 }
 
 
+CGameObject* CMemoryPoolScript::GetExplosionPTC()
+{
+	if (!m_queueExplosionPTC.empty())
+	{
+		CGameObject* pObj = m_queueExplosionPTC.front();
+
+		CExplosionParticle* pScript = (CExplosionParticle*)pObj->GetScript();
+		pScript->SetActive(true);
+
+		m_queueExplosionPTC.pop();
+		return pObj;
+	}
+	return nullptr;
+}
+
 CGameObject* CMemoryPoolScript::GetChain()
 {
 	if (!m_queueChain.empty())
@@ -79,7 +136,8 @@ CGameObject* CMemoryPoolScript::GetChain()
 
 void CMemoryPoolScript::awake()
 {
-	//CreateChain();
+	CreateChain();
+	//CreateExplosionPTC();
 }
 
 void CMemoryPoolScript::update()

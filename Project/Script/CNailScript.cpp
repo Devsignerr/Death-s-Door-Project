@@ -4,7 +4,13 @@
 
 void CNailScript::awake()
 {
+	CMonsterScript::awake();
+
+	CreateCol(L"NailCol", Vec3(0.0f, 0.0f, 150.0f), Vec3(200.0f, 150.0f, 300.0f), LAYER_TYPE::MONSTER_COL);
+	CreateCol(L"NailAttackCol", Vec3(0.0f, 250.0f, 150.0f), Vec3(200.0f, 150.0f, 200.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
+
 }
 
 void CNailScript::update()
@@ -47,7 +53,7 @@ void CNailScript::Chase()
 
 	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * vDiff.x * m_ChaseSpeed;
 	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * vDiff.z * m_ChaseSpeed;
-														  
+
 	bool IsGround = GroundCheck(vPos + vMovePos);
 	if (!IsGround)
 		IsGround = ResearchNode(vPos + vMovePos);
@@ -96,6 +102,7 @@ void CNailScript::ReadyAction()
 		&& CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"JumpAttackReady")
 	{
 		ResetBackStepInfo();
+
 		ChangeState(MONSTERSTATE::ATTACK, 0.02f, L"JumpAttack");
 	}
 
@@ -115,6 +122,41 @@ void CNailScript::Attack()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 	wstring Temp = CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName;
+
+	if (279 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(true);
+	}
+
+	if (281 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(false);
+
+	}
+
+
+	if (558 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(true);
+		TransColPos(Vec3(0.0f, 0.0f, 50.0f));
+		TransColScale(Vec3(350.0f, 350.0f, 100.0f));
+	}
+
+	if (545 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(false, LAYER_TYPE::MONSTER_COL);
+	}
+
+	if (562 == CurAni->GetFrameIdx())
+	{
+		TransColScale(Vec3(200.0f, 150.0f, 200.0f));
+		OnOffAttackCol(false);
+
+		OnOffAttackCol(true, LAYER_TYPE::MONSTER_COL);
+		TransColPos(Vec3(0.0f, 0.0f, 150.0f), LAYER_TYPE::MONSTER_COL);
+
+	}
+
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"NailAttack2")
 	{
 
@@ -130,6 +172,7 @@ void CNailScript::Attack()
 	}
 	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"JumpAttack")
 	{
+
 		JumpAttackStay();
 
 	}
@@ -169,6 +212,8 @@ void CNailScript::Attack()
 	else 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true
 		&& CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"JumpAttack")
 	{
+
+
 		if (RangeSearch(m_BackStepRange))
 		{
 			SetbJump(true);
@@ -328,6 +373,8 @@ void CNailScript::CalJumpAttackDistance()
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = Transform()->GetLocalPos();
 
+	m_MaxHeight = m_Pos.y + 500.0f;
+
 	m_MaxHeightTime = 0.3f;
 	float DestHeight = PlayerPos.y - m_Pos.y;
 
@@ -366,7 +413,7 @@ void CNailScript::JumpAttackStay()
 
 		vMovePos.y = m_Pos.y + m_VelocityY * m_Time - 0.5f * m_Gravity * m_Time * m_Time;
 
-		bool IsGround = GroundCheck( vMovePos);
+		bool IsGround = GroundCheck(vMovePos);
 		if (!IsGround)
 			IsGround = ResearchNode(vMovePos);
 
@@ -384,7 +431,6 @@ void CNailScript::JumpAttackStay()
 
 void CNailScript::ResetJumpAttackInfo()
 {
-	m_Pos = {};
 	m_Distance = 0.0f;
 	m_Time = 0.0f;
 	m_DestAttachTime = 0.0f;
@@ -393,7 +439,8 @@ void CNailScript::ResetJumpAttackInfo()
 	m_VelocityY = 0.0f;
 	m_VelocityZ = 0.0f;
 	m_MaxHeightTime = 0.0f;
-	m_MaxHeight = 500.0f;
+	m_MaxHeight = m_Pos.y + 500.0f;
+	m_Pos = {};
 }
 
 void CNailScript::ResetBackStepInfo()

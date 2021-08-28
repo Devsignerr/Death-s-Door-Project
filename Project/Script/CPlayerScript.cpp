@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "CPlayerScript.h"
-
 #include <Engine\CSceneMgr.h>
 #include <Engine\CScene.h>
+#include <Engine/CLayer.h>
 #include <Engine/CAnimator3D.h>
 #include <Engine/CCamera.h>
 #include <Engine/CFSM.h>
+#include <Engine/CCollider3D.h>
+#include <Engine/CState.h>
 
 #include <Script/CCameraScript.h>
 #include <Script/CFadeScript.h>
@@ -46,6 +48,7 @@ Vec3 CPlayerScript::PlayerPos = {};
 Vec3 CPlayerScript::vPlayerRot = {};
 Vec3 CPlayerScript::vPlayerFront = {};
 Vec3 CPlayerScript::vPlayerUp = {};
+Vec3 CPlayerScript::m_OtherPower = {};
 
 CGameObject* CPlayerScript::m_pMagic = nullptr;
 CGameObject* CPlayerScript::m_pArrow = nullptr;
@@ -93,6 +96,8 @@ CPlayerScript::~CPlayerScript()
 
 void CPlayerScript::awake()
 {
+	CreateCol();
+
 	if (nullptr != m_pFSM)
 		return;
 
@@ -294,6 +299,45 @@ void CPlayerScript::ChangeState(PLAYER_STATE _eState, float _BlendingTime, const
 }
 
 
+void CPlayerScript::CreateCol()
+{
+
+	{
+		Vec3 Pos = Transform()->GetLocalPos();
+		CGameObject* Obj = new CGameObject;
+		Obj->SetName(L"PlayerCol");
+		Obj->AddComponent(new CTransform);
+		Obj->AddComponent(new CMeshRender);
+		Obj->AddComponent(new CCollider3D);
+		Obj->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 1.0f));
+		Obj->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 2.0f));
+		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::PLAYER_COL);
+		AddChild(GetObj(), Obj);
+	}
+	{
+		Vec3 Pos = Transform()->GetLocalPos();
+		CGameObject* Obj = new CGameObject;
+		Obj->SetName(L"PlayerAttackCol");
+		Obj->AddComponent(new CTransform);
+		Obj->AddComponent(new CMeshRender);
+		Obj->AddComponent(new CCollider3D);
+		Obj->Transform()->SetLocalPos(Vec3(0.0f, 2.0f, 1.4f));
+		Obj->Transform()->SetLocalScale(Vec3(3.0f, 2.0f, 1.0f));
+		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+		Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 2.0f, 1.4f));
+		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+		AddChild(GetObj(), Obj);
+		//Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
+}
+
+
 void CPlayerScript::KeyInput()
 {
 	if (KEY_TAP(KEY_TYPE::LBTN))
@@ -399,10 +443,15 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 	{
 		ChangeState(PLAYER_STATE::GET_ITEM, 0.3f, L"GetItem", false);
 	}
-
-	if ((int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex())
+	if ((int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex() ||
+		(int)LAYER_TYPE::MONSTER_BULLET_COL == Obj->GetLayerIndex() ||
+		(int)LAYER_TYPE::BOSS_ATTACK_COL == Obj->GetLayerIndex() ||
+		(int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex())
 	{
-		ChangeState(PLAYER_STATE::HIT_BACK, 0.3f, L"Hit_Back", false);
+		if (m_eState != PLAYER_STATE::HIT_BACK && m_eState != PLAYER_STATE::HIT_RECOVER)
+		{
+			ChangeState(PLAYER_STATE::HIT_BACK, 0.3f, L"Hit_Back", false);
+		}
 	}
 }
 

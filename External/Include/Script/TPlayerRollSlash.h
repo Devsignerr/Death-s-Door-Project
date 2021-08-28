@@ -3,7 +3,8 @@
 
 class TPlayerRollSlash : public CState
 {
-
+private:
+    int m_ColOnOffCheck;
 private:
     void update() override;
 

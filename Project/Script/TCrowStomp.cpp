@@ -2,6 +2,7 @@
 #include "TCrowStomp.h"
 #include "CPlayerScript.h"
 #include "TCrowSliding.h"
+#include "TCrowJump.h"
 
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
@@ -37,18 +38,19 @@ void TCrowStomp::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
-
-
-
-	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
-	Vec3 Diff = CPlayerScript::GetPlayerPos() - GetObj()->Transform()->GetLocalPos();
-	Diff.Normalize();
+	Vec3 Pos = m_Pos;
+	Vec3 Diff = CPlayerScript::GetPlayerPos() - m_Pos;
 	Vec3 Front = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
 
 	if (682 >= CurAni->GetFrameIdx())
 	{
+		if (30.0f < abs(Diff.y))
+		{
+			Vec3 Down = -GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+			Pos.y += CTimeMgr::GetInst()->GetfDT() * Down.y * 2500.0f;
+		}
+
 		Pos.x += CTimeMgr::GetInst()->GetfDT() * Front.x * m_Speed * 2.0f;
-		Pos.y += CTimeMgr::GetInst()->GetfDT() * Diff.y *  2000.0f * 3.0f;
 		Pos.z += CTimeMgr::GetInst()->GetfDT() * Front.z * m_Speed * 2.0f;
 	}
 	else
@@ -68,7 +70,7 @@ void TCrowStomp::update()
 		m_Speed -= fDT * 1000.0f;
 	}
 	GetObj()->Transform()->SetLocalPos(Pos);
-
+	m_Pos = GetObj()->Transform()->GetLocalPos();
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
@@ -88,6 +90,12 @@ void TCrowStomp::update()
 void TCrowStomp::Enter()
 {
 	m_SlidingState = (TCrowSliding*)GetFSM()->FindState(L"Sliding");
+
+	m_JumpState = (TCrowJump*)GetFSM()->FindState(L"Jump");
+
+	m_Pos = m_JumpState->GetLastPos();
+
+	GetObj()->Transform()->SetLocalPos(m_Pos);
 }
 
 void TCrowStomp::Exit()
@@ -101,6 +109,7 @@ TCrowStomp::TCrowStomp()
 	: m_DirCheck(0)
 	, m_Speed(1500.0f)
 	, m_SlidingState(nullptr)
+	, m_JumpState(nullptr)
 {
 }
 

@@ -2,14 +2,20 @@
 #include <Engine/CState.h>
 
 class TCrowSliding;
+class TCrowJump;
 class TCrowStomp :
     public CState
 {
 private:
-    TCrowSliding* m_SlidingState;
+    TCrowSliding*   m_SlidingState;
+    TCrowJump*      m_JumpState;
+    int             m_DirCheck;
+    float           m_Speed;
+
+    Vec3            m_Pos;
+
+private:
     void CheckBehind();
-    int m_DirCheck;
-    float m_Speed;
 private:
     void update() override;
 

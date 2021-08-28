@@ -31,8 +31,16 @@ void TPlayerMagic::Attack()
 
 void TPlayerMagic::update()
 {
-	CAnimator3D* CurAni = GetObj()->Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
+	m_fCurTime += fDT;
+
+	if (m_fRotateTime > m_fCurTime)
+	{
+		float x = 20.f - sin(m_fCurTime*1.5f) * m_fRadius;
+		float y = 100.f;
+		float z = 40.f - cos(m_fCurTime*2.0f) * m_fRadius;
+
+		CPlayerScript::m_pMagic->Transform()->SetLocalPos(Vec3(x, y, z));
+	}
 
 	if (KEY_HOLD(KEY_TYPE::RBTN))
 	{
@@ -57,6 +65,7 @@ void TPlayerMagic::Enter()
 void TPlayerMagic::Exit()
 {
 	m_BulletLimit = false;
+	m_fCurTime = 0.f;
 
 	CPlayerScript::m_Weapon->MeshRender()->Activate(true);
 }
@@ -64,6 +73,8 @@ void TPlayerMagic::Exit()
 TPlayerMagic::TPlayerMagic()
 	: m_Script(nullptr)
 	, m_BulletLimit(false)
+	, m_fRotateTime(0.8f)
+	, m_fRadius(90.f)
 {
 }
 

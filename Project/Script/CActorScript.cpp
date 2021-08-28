@@ -427,6 +427,15 @@ void CActorScript::update()
 
 }
 
+void CActorScript::awake()
+{
+	m_PaperBurnTex = CResMgr::GetInst()->FindRes<CTexture>(L"PaperBurnTexture");
+
+	if (nullptr == m_PaperBurnTex)
+		m_PaperBurnTex = CResMgr::GetInst()->Load<CTexture>(L"PaperBurnTexture", L"texture\\PaperBurn\\PaperBurnTexture.jpg");
+
+}
+
 void CActorScript::OnCollisionEnter(CGameObject* _pOther)
 {
 }

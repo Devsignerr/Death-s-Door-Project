@@ -368,25 +368,49 @@ void CGameObject::SaveToScene(FILE* _pFile)
 		{
 			fwrite(&i, sizeof(UINT), 1, _pFile);
 			m_arrCom[i]->SaveToScene(_pFile);
-		}		
+		}
 	}
 
 	fwrite(&i, sizeof(UINT), 1, _pFile);
-	
+
 	UINT iScriptCount = (UINT)m_vecScript.size();
 	fwrite(&iScriptCount, sizeof(UINT), 1, _pFile);
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
 		g_pScriptSave(m_vecScript[i], _pFile);
-	}	
+	}
 
 	UINT iChildCount = (UINT)m_vecChild.size();
+	vector<int> saveIdx = {};
+
+	for (int k = 0; k < m_vecChild.size(); ++k)
+	{
+		if (m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_BULLET_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_ATTACK_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_BULLET_COL ||
+			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::INDETERMINATE)
+		{
+			--iChildCount;
+		}
+		else
+		{
+			saveIdx.push_back(k);
+		}
+	}
+
 	fwrite(&iChildCount, sizeof(UINT), 1, _pFile);
 
 	for (UINT i = 0; i < iChildCount; ++i)
 	{
-		m_vecChild[i]->SaveToScene(_pFile);
+		int idx = saveIdx[i];
+		m_vecChild[idx]->SaveToScene(_pFile);
 	}
 }
 

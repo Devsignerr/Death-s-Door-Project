@@ -7,11 +7,28 @@
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
 
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CMeshRender.h>
+#include <Engine/CCollider3D.h>
+
+
 void TPlayerSlash_Attack_R::update()
 {
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (1140 == CurAni->GetFrameIdx())
+	{
+		++m_ColOnOffCheck;
+	}
+
+	if (1 == m_ColOnOffCheck)
+	{
+		CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+		//Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
 
 	if (false == m_IsLeftSlash && KEY_TAP(KEY_TYPE::LBTN))
 	{
@@ -72,16 +89,21 @@ void TPlayerSlash_Attack_R::update()
 void TPlayerSlash_Attack_R::Enter()
 {
 	m_Script = (CPlayerScript*)GetScript();
+	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+	Obj->MeshRender()->Activate(true);
+	Obj->Collider3D()->Activate(true);
 }
 
 void TPlayerSlash_Attack_R::Exit()
 {
+	m_ColOnOffCheck = 0;
 	m_IsLeftSlash = false;
 }
 
 TPlayerSlash_Attack_R::TPlayerSlash_Attack_R()
 	: m_IsLeftSlash(false)
 	, m_Script(nullptr)
+	, m_ColOnOffCheck(0)
 {
 
 }

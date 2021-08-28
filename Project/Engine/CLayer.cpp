@@ -102,7 +102,16 @@ void CLayer::SaveToScene(FILE* _pFile)
 	UINT iCount = (UINT)m_vecParentObj.size();
 
 	//여기에 저장시키지 않을 레이어 입력
-	if (m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE)
+	if (m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_BULLET_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_ATTACK_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_BULLET_COL ||
+		m_iLayerIndex == (UINT)LAYER_TYPE::INDETERMINATE)
 	{
 		iCount = 0;
 	}

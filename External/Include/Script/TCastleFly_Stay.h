@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine/CState.h>
 
+class CCastleScript;
 class CGameObject;
 class TCastleFly_Stay :
 	public CState
@@ -8,6 +9,7 @@ class TCastleFly_Stay :
 private:
     CGameObject* m_LaserPoint;
     bool         m_IsRotLaserPoint;
+    CCastleScript* m_Script;
 private:
     bool TurnToLaserPoint(Vec3 _TargetPos, float _RotSpeed);
 private:

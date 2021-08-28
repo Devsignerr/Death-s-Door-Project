@@ -2,11 +2,13 @@
 #include "CCrowScript.h"
 #include "CCrowBullet.h"
 #include "CCrowBatBullet.h"
+#include "CCrowEggBullet.h"
 
 
 #include <Engine/CFSM.h>
 #include <Engine/CScene.h>
 #include <Engine/CSceneMgr.h>
+#include <Engine/CLayer.h>
 
 #pragma region CrowStateHeader
 
@@ -49,6 +51,9 @@ void CCrowScript::ChangeState(CROW_STATE _eState, float _BlendingTime, const wst
 
 void CCrowScript::awake()
 {
+	CBossScript::awake();
+	CreateCol(L"CrowBossCol", Vec3(0.0f, 50.0f, 100.0f), Vec3(150.0f, 250.0f, 100.0f), LAYER_TYPE::BOSS_COL);
+
 	if (nullptr != m_pFSM)
 		return;
 
@@ -59,13 +64,13 @@ void CCrowScript::awake()
 	m_pFSM->AddState(L"CutScene", CutSceneState);								// FSM에 상태를 추가한다 
 	m_mapState.insert(make_pair(CROW_STATE::CUTSCENE, L"CutScene"));			//내 상태와 , 상태이름을 맵으로 저장한다 
 
-	TCrowRun* RunState = new TCrowRun;							
-	m_pFSM->AddState(L"Run", RunState);							
-	m_mapState.insert(make_pair(CROW_STATE::RUN, L"Run"));		
+	TCrowRun* RunState = new TCrowRun;
+	m_pFSM->AddState(L"Run", RunState);
+	m_mapState.insert(make_pair(CROW_STATE::RUN, L"Run"));
 
 	TCrowStandingDeath* StandingDeathState = new TCrowStandingDeath;
 	m_pFSM->AddState(L"StandingDeath", StandingDeathState);
-	m_mapState.insert(make_pair(CROW_STATE::STANDINGDEATH, L"StandingDeath"));			
+	m_mapState.insert(make_pair(CROW_STATE::STANDINGDEATH, L"StandingDeath"));
 
 	TCrowWalk* WalkState = new TCrowWalk;
 	m_pFSM->AddState(L"Walk", WalkState);
@@ -121,7 +126,7 @@ void CCrowScript::awake()
 void CCrowScript::update()
 {
 	CBossScript::update();
-	m_pFSM->update();	
+	m_pFSM->update();
 
 	if (0 >= m_Hp)
 	{
@@ -140,6 +145,26 @@ void CCrowScript::OnCollisionEnter(CGameObject* _pOther)
 
 void CCrowScript::OnCollision(CGameObject* _pOther)
 {
+	CGameObject* Obj = _pOther;
+	if ((UINT)LAYER_TYPE::INDETERMINATE == Obj->GetLayerIndex())
+	{
+		vector<CGameObject*> Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
+
+		CCrowEggBullet* Script = nullptr;
+
+		for (size_t i = 0; i < Temp.size(); ++i)
+		{
+			Script = (CCrowEggBullet*)Temp[i]->GetScript();
+			if (Script)
+			{
+				if (false == Script->GetHead())
+				{
+					Script->FindToDeadCheck(Obj);
+					break;
+				}
+			}
+		}
+	}
 }
 
 void CCrowScript::OnCollisionExit(CGameObject* _pOther)

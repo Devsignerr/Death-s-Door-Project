@@ -139,6 +139,8 @@ void TPlayerRun::update()
         }
     }
 
+    vMovePos += CPlayerScript::GetOtherPower();
+
     bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(vPlayerPos + vMovePos);
   
     if (!IsGround)

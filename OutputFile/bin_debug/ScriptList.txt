@@ -11,6 +11,7 @@ CCrowBullet
 CCrowEggBullet
 CCrowScript
 CEffectScript
+CExplosionParticle
 CFadeScript
 CIronmaceScript
 CMapChange

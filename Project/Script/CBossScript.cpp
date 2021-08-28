@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "CBossScript.h"
 #include "CPlayerScript.h"
+#include <Engine/CCollider3D.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+
 
 bool CBossScript::RangeSearch(float _Range)
 {
@@ -40,7 +44,7 @@ bool CBossScript::RotateSysTem(float _RotSpeed)
 	if (dist > 1.9f)
 		Rot.y -= CTimeMgr::GetInst()->GetfDT() * (_RotSpeed * 2.0f);
 	//플레이어는 내 왼쪽에 있다 
-	else if (dot > 20.0) 
+	else if (dot > 20.0)
 		Rot.y -= CTimeMgr::GetInst()->GetfDT() * _RotSpeed;
 
 	//플레이어는 내 오른쪽에 있다 
@@ -55,8 +59,84 @@ bool CBossScript::RotateSysTem(float _RotSpeed)
 	return false;
 }
 
+void CBossScript::OnOffAttackCol(bool _OnOff, LAYER_TYPE _Type)
+{
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
+		{
+			childvec[i]->MeshRender()->Activate(_OnOff);
+			childvec[i]->Collider3D()->Activate(_OnOff);
+			break;
+		}
+	}
+}
+
+void CBossScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_TYPE _Type)
+{
+	Vec3 Pos = Transform()->GetLocalPos();
+
+	CGameObject* Obj = new CGameObject;
+	Obj->SetName(_Name);
+
+	Obj->AddComponent(new CTransform);
+	Obj->AddComponent(new CMeshRender);
+	Obj->AddComponent(new CCollider3D);
+
+	Obj->Transform()->SetLocalPos(_Pos);
+	Obj->Transform()->SetLocalScale(_Scale);
+
+	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	if (_Type == LAYER_TYPE::BOSS_ATTACK_COL)
+	{
+		Obj->Collider3D()->SetParentOffsetPos(_Pos);
+		Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
+
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+	CurScene->AddObject(Obj, (UINT)_Type);
+
+	AddChild(GetObj(), Obj);
+
+
+}
+
+void CBossScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
+{
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
+		{
+			childvec[i]->Transform()->SetLocalPos(_Pos);
+			break;
+		}
+	}
+}
+
+void CBossScript::TransColScale(Vec3 _Scale, LAYER_TYPE _Type)
+{
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
+		{
+			childvec[i]->Transform()->SetLocalScale(_Scale);
+			break;
+		}
+	}
+}
+
 void CBossScript::awake()
 {
+	CActorScript::awake();
 }
 
 void CBossScript::start()

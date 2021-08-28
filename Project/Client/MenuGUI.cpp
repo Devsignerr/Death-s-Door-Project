@@ -159,7 +159,7 @@ void MenuGUI::render()
             ImGui::Separator();
             ImGui::NewLine();
 
-            const char* items[] = {"NAVMESH_LOAD","OBJECT_LOAD","MAP_LOAD"," ANIMATION_LOAD"};
+            const char* items[] = {"NAVMESH_LOAD","OBJECT_LOAD","MAP_LOAD","ANIMATION_LOAD"};
             static int item_current_idx = 0;
             const char* combo_label = items[item_current_idx];  
 

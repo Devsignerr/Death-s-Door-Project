@@ -11,6 +11,7 @@ CCollider3D::CCollider3D()
 	, m_Collider3DType(COLLIDER3D_TYPE::CUBE)
 	, m_OffsetScale(Vec3(1.0f, 1.0f, 1.0f))
 	, m_OffsetPos(Vec3(0.0f, 0.0f, 1.0f))
+	, m_iCollisionCount(0)
 {
 	SetCollider3DType(m_Collider3DType);
 	m_Material = CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl");
@@ -21,15 +22,15 @@ CCollider3D::CCollider3D(CCollider3D& _Origin)
 	, m_Collider3DType(_Origin.m_Collider3DType)
 	, m_OffsetScale(_Origin.m_OffsetScale)
 	, m_OffsetPos(_Origin.m_OffsetPos)
+	, m_iCollisionCount(0)
 {
 	SetCollider3DType(m_Collider3DType);
-	m_Material = CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl");
+	m_Material = _Origin.m_Material;
 
 }
 
 CCollider3D::~CCollider3D()
 {
-
 	int a = 0;
 	m_Material->SetData(SHADER_PARAM::INT_0, &a);
 }
@@ -70,9 +71,22 @@ void CCollider3D::UpdateData()
 }
 
 void CCollider3D::OnCollisionEnter(CCollider3D* _Other)
-{
+{/*
 	if (!IsEnable())
 		return;
+
+	if (!_Other->IsEnable())
+		return;*/
+
+	if (0 == m_iCollisionCount)
+	{
+		Ptr <CMaterial> Mtrl = MeshRender()->GetCloneMaterial(0);
+		MeshRender()->SetMaterial(Mtrl, 0);
+	}
+
+	++m_iCollisionCount;
+
+	MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_iCollisionCount);
 
 	const vector<CScript*>& vecScript = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScript.size(); ++i)
@@ -88,14 +102,15 @@ void CCollider3D::OnCollisionEnter(CCollider3D* _Other)
 		}
 	}
 
-	int a = 1;
-	m_Material->SetData(SHADER_PARAM::INT_0, &a);
 }
 
 void CCollider3D::OnCollision(CCollider3D* _Other)
-{
+{/*
 	if (!IsEnable())
 		return;
+
+	if (!_Other->IsEnable())
+		return;*/
 
 	const vector<CScript*>& vecScript = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScript.size(); ++i)
@@ -110,14 +125,24 @@ void CCollider3D::OnCollision(CCollider3D* _Other)
 			GetObj()->GetParent()->GetScript()->OnCollision(_Other->GetObj());
 		}
 	}
-	int a = 1;
-	m_Material->SetData(SHADER_PARAM::INT_0, &a);
+	MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_iCollisionCount);
 }
 
 void CCollider3D::OnCollisionExit(CCollider3D* _Other)
-{
+{/*
 	if (!IsEnable())
 		return;
+
+	if (!_Other->IsEnable())
+		return;*/
+
+	--m_iCollisionCount;
+
+	if (0 == m_iCollisionCount)
+	{
+		Ptr <CMaterial> Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl");
+		MeshRender()->SetMaterial(Mtrl, 0);
+	}
 
 	const vector<CScript*>& vecScript = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScript.size(); ++i)
@@ -132,8 +157,33 @@ void CCollider3D::OnCollisionExit(CCollider3D* _Other)
 			GetObj()->GetParent()->GetScript()->OnCollisionExit(_Other->GetObj());
 		}
 	}
-	int a = 0;
-	m_Material->SetData(SHADER_PARAM::INT_0, &a);
+	MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_iCollisionCount);
+}
+
+
+void CCollider3D::Activate(bool _b)
+{
+	m_bEnable = _b;
+
+	CGameObject* Parent = GetObj()->GetParent();
+
+	if (nullptr != Parent)
+	{
+		if (m_bEnable)
+		{
+			Vec3 ParentLocalPos = GetObj()->GetParent()->Transform()->GetLocalPos();
+			Vec3 ParentFront = GetObj()->GetParent()->Transform()->GetLocalDir(DIR_TYPE::UP);
+			Vec3 LocalPos = Transform()->GetLocalPos();
+			LocalPos = m_ParentOffsetPos;
+			Transform()->SetLocalPos(LocalPos);
+		}
+		else if (!m_bEnable)
+		{
+			Vec3 LocalPos = Transform()->GetLocalPos();
+			LocalPos.y += 10000.f;
+			Transform()->SetLocalPos(LocalPos);
+		}
+	}
 }
 
 void CCollider3D::SaveToScene(FILE* _File)

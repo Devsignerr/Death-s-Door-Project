@@ -26,6 +26,7 @@ void Particle3DGUI::render()
     CTransform* pTransform = GetTargetObj()->Transform();
     CParticleSystem* pPaticle = GetTargetObj()->ParticleSystem();
 
+    int   maxLiveCount = pPaticle->GetMaxLiveCount();
     int   maxcount = pPaticle->GetMaxCount();   
     int   AliveCount= pPaticle->GetAliveCount();
     float MinLifeTime=  pPaticle->GetMinLifeTime();
@@ -123,10 +124,19 @@ void Particle3DGUI::render()
         GetTargetObj()->ParticleSystem()->Activate(!b);
     }
 
+    ImGui::SameLine();
+
     if (ImGui::Button("Reapet"))
     {
         bool br = GetTargetObj()->ParticleSystem()->IsRepeat();
         GetTargetObj()->ParticleSystem()->SetRepeat(!br);
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Reset"))
+    {
+        GetTargetObj()->ParticleSystem()->Reset();
     }
 
     ImGui::NewLine();
@@ -156,7 +166,7 @@ void Particle3DGUI::render()
 
     ImGui::NewLine();
     
-
+    ImGui::Text("MaxLiveCount\t");  ImGui::SameLine(); ImGui::DragInt("##MaxLiveCount", &maxLiveCount,1,0);
     ImGui::Text("MaxCount    \t");  ImGui::SameLine(); ImGui::DragInt("##MaxCount    ", &maxcount,1,0);
     ImGui::Text("AliveCount  \t");  ImGui::SameLine(); ImGui::DragInt("##AliveCount  ", &AliveCount);
     ImGui::Text("MinlifeCount\t");  ImGui::SameLine(); ImGui::DragFloat("##MinlifeCount", &MinLifeTime);
@@ -178,9 +188,9 @@ void Particle3DGUI::render()
     if (maxcount < 0)
         maxcount = 0;
 
+     pPaticle->SetMaxLiveCount(maxLiveCount);
      pPaticle->SetMaxParticleCount(maxcount);
      pPaticle->SetMaxCount(maxcount);
-     //pPaticle->SetAliveCount(AliveCount);
      pPaticle->SetMinLifeTime(MinLifeTime);
      pPaticle->SetMaxLifeTime(MaxLifeTime);
      pPaticle->SetMinSpeed(MinSpeed);

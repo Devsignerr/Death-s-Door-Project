@@ -2,9 +2,12 @@
 #include "CBatScript.h"
 
 #include "CPlayerScript.h"
+#include <Engine/CCollider3D.h>
 
 void CBatScript::awake()
 {
+	CActorScript::awake();
+	CreateCol();
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
 }
 
@@ -49,7 +52,7 @@ void CBatScript::Idle()
 
 	if (RangeSearch(m_AttackRange))
 	{
-		ChangeState(MONSTERSTATE::READY_ACTION,0.2f, L"Recognize");
+		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"Recognize");
 	}
 }
 
@@ -71,6 +74,7 @@ void CBatScript::ReadyAction()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
+
 		ChangeState(MONSTERSTATE::ATTACK, 0.1f, L"Attack");
 	}
 }
@@ -89,11 +93,19 @@ void CBatScript::Attack()
 
 	if (81 < CurAni->GetFrameIdx())
 	{
+
 		CalAttackDistance();
+	}
+
+	if (85 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(true);
 	}
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
+		OnOffAttackCol(false);
+
 		// 범위 밖이라면
 		if (false == RangeSearch(m_AttackRange))
 		{
@@ -104,6 +116,28 @@ void CBatScript::Attack()
 
 void CBatScript::Death()
 {
+	CAnimator3D* CurAni = Animator3D();
+	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	CurAni->Animator3D()->StopAnimation();
+
+	m_PaperBurnTime += fDT;
+
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->MeshRender())
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (1.0f < m_PaperBurnTime)
+	{
+		DeleteObject(GetGameObject());
+	}
 }
 
 void CBatScript::OnCollisionEnter(CGameObject* _pOther)
@@ -111,9 +145,33 @@ void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
-	if (11 == Obj->GetLayerIndex())
+
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_MonsterInfo.Hp;
+
+		if (0 == m_MonsterInfo.Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+					}
+				}
+			}
+
+			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
+		}
+
+
 	}
 }
 
@@ -130,12 +188,12 @@ void CBatScript::CalAttackDistance()
 	Vec3 Pos = Transform()->GetLocalPos();
 	Vec3 vMovePos = {};
 	float Speed = (sinf(m_fTheta) + 1.f) * 5.0f;
-	
+
 	vMovePos.x += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.x * Speed * 7000.0f;
 	vMovePos.z += CTimeMgr::GetInst()->GetfDT() * m_AttackDir.z * Speed * 7000.0f;
 	m_fTheta += CTimeMgr::GetInst()->GetfDT() * XM_PI / 2.0f;
 
-	if ((XM_PI* 3.0f/ 2.0f) < m_fTheta)
+	if ((XM_PI * 3.0f / 2.0f) < m_fTheta)
 	{
 		m_fTheta = -XM_PI / 2.f;
 	}
@@ -202,7 +260,59 @@ void CBatScript::CalChaseMove()
 		Transform()->SetLocalPos(Pos + vMovePos);
 
 	Transform()->SetLocalRot(Rot);
-	
+
+}
+
+void CBatScript::CreateCol()
+{
+	{
+		Vec3 Pos = Transform()->GetLocalPos();
+
+		CGameObject* Obj = new CGameObject;
+		Obj->SetName(L"BatCol");
+
+		Obj->AddComponent(new CTransform);
+		Obj->AddComponent(new CMeshRender);
+		Obj->AddComponent(new CCollider3D);
+
+		Obj->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 150.0f));
+		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 300.0f));
+
+		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_COL);
+
+		AddChild(GetObj(), Obj);
+	}
+
+	{
+		Vec3 Pos = Transform()->GetLocalPos();
+
+		CGameObject* Obj = new CGameObject;
+		Obj->SetName(L"BatAttackCol");
+
+		Obj->AddComponent(new CTransform);
+		Obj->AddComponent(new CMeshRender);
+		Obj->AddComponent(new CCollider3D);
+
+		Obj->Transform()->SetLocalPos(Vec3(0.0f, 150.0f, 100.0f));
+		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 200.0f));
+
+		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+		Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 150.0f, 100.0f));
+
+		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
+
+		AddChild(GetObj(), Obj);
+
+		Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
 }
 
 
@@ -211,7 +321,7 @@ CBatScript::CBatScript()
 	: m_fDegreeToRot(1.0f)
 	, m_fRotRange(1.0f)
 	, m_AttackDir{}
-	, m_fTheta(-XM_PI/2.f)
+	, m_fTheta(-XM_PI / 2.f)
 	, m_fTimetoCheckPlayerPos(0.f)
 	, m_fInternalRadianWithPlayer(0.f)
 	, m_AttackRange(700.0f)

@@ -29,9 +29,9 @@ CParticleSystem::CParticleSystem()
 	, m_ePOV(SHADER_POV::PARTICLE)
 	, m_bRepeat(true)
 	, m_eType(PARTICLE_TYPE::UP)
-	, m_bDead(false)
 	, m_iSlow(20)
 	, m_iAccLiveCount(0)
+	, m_iMaxLiveCount(20)
 {
 	m_pMesh = CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh");
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
@@ -58,9 +58,9 @@ CParticleSystem::CParticleSystem(CParticleSystem& _origin)
 	, m_ePOV(_origin.m_ePOV)
 	, m_bRepeat(true)
 	, m_eType(_origin.m_eType)
-	, m_bDead(false)
 	, m_iSlow(20)
 	, m_iAccLiveCount(0)
+	, m_iMaxLiveCount(_origin.m_iMaxLiveCount)
 {
 	m_pTex = _origin.m_pTex;
 	m_pParticleBuffer = new CStructuredBuffer;
@@ -87,37 +87,41 @@ void CParticleSystem::awake()
 
 void CParticleSystem::finalupdate()
 {
-	if (m_bDead)
-		return;
-
-	//폭발 이펙트 한정 
-	m_fCurTime += fDT;
-
-	if (!m_bRepeat && m_fCurTime > m_fMaxLifeTime)
-	{
-		CGameObject* Obj = GetObj();
-
-		tEvent even = {};
-
-		even.eEvent = EVENT_TYPE::DELETE_OBJECT;
-		even.lParam = (DWORD_PTR)Obj;
-
-		CEventMgr::GetInst()->AddEvent(even);
-		m_bDead = true;
-		return;
-	}
-
-
 	m_fAccTime += fDT;
-	if (m_fAccTime >= m_fFrequency)
+
+	//m_bRepeat == true 면 반복을 시킬 객체이므로 AccLiveCount같은 변수에 영향을 받지않는다 .
+	if (m_bRepeat)
 	{
-		m_fAccTime = 0.f;
-		m_iAliveCount = 2;
+		if (m_fAccTime >= m_fFrequency)
+		{
+			m_fAccTime = 0.f;
+			m_iAliveCount = 2;
+		}
+
+		else
+		{
+			m_iAliveCount = 0;
+		}
 	}
 	else
 	{
-		m_iAliveCount = 0;
+		//만약 누적 파티클 생성량이 총 생성량보다 작다면 
+		//( freqency를 아주 작게줘서 한번에 팍 생성시키고 이후 생성을 막음)
+		if (m_fAccTime >= m_fFrequency && m_iAccLiveCount < m_iMaxLiveCount)
+		{
+			m_fAccTime = 0.f;
+			m_iAliveCount = 2;
+		}
+
+		else
+		{
+			m_iAliveCount = 0;
+		}
 	}
+
+	
+
+	m_iAccLiveCount += m_iAliveCount;
 
 	Vec3 vPos = Transform()->GetWorldPos();
 	m_pUpdateShader->SetSlow(m_iSlow);
@@ -190,6 +194,11 @@ void CParticleSystem::SaveToScene(FILE* _pFile)
 	fwrite(&m_ePOV, sizeof(SHADER_POV), 1, _pFile);
 	fwrite(&m_eType, sizeof(PARTICLE_TYPE), 1, _pFile);
 
+	//fwrite(&m_bRepeat, sizeof(bool), 1, _pFile);
+	//fwrite(&m_iSlow, sizeof(int), 1, _pFile);
+	//fwrite(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
+
+
 	SaveResRefInfo<CTexture>(m_pTex, _pFile);
 }
 
@@ -213,6 +222,10 @@ void CParticleSystem::LoadFromScene(FILE* _pFile)
 	fread(&m_vEndScale, sizeof(Vec4), 1, _pFile);
 	fread(&m_ePOV, sizeof(SHADER_POV), 1, _pFile);
 	fread(&m_eType, sizeof(PARTICLE_TYPE), 1, _pFile);
+
+	//fread(&m_bRepeat, sizeof(bool), 1, _pFile);
+	//fread(&m_iSlow, sizeof(int), 1, _pFile);
+	//fread(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
 
 	LoadResRefInfo<CTexture>(m_pTex, _pFile);
 }

@@ -6,6 +6,13 @@ class CBossScript : public CActorScript
 public:
 	virtual bool RangeSearch(float _Range);
 	virtual bool RotateSysTem(float _RotSpeed);
+
+public:
+	virtual void OnOffAttackCol(bool _OnOff, LAYER_TYPE _Type = LAYER_TYPE::BOSS_ATTACK_COL);
+	virtual void CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_TYPE _Type);
+	virtual void TransColPos(Vec3 _Pos, LAYER_TYPE _Type = LAYER_TYPE::BOSS_ATTACK_COL);
+	virtual void TransColScale(Vec3 _Scale, LAYER_TYPE _Type = LAYER_TYPE::BOSS_ATTACK_COL);
+
 public:
 	virtual void awake();
 	virtual void start();

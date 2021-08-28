@@ -8,12 +8,21 @@ class CCollider3D : public CComponent
 private:
 	Vec3			m_OffsetScale; // 충돌체 크기 배율
 	Vec3			m_OffsetPos;   // 피봇 설정
+	int				m_iCollisionCount;
 
 private:
 	COLLIDER3D_TYPE m_Collider3DType;
 	Matrix			m_MatColWorld;
 	Ptr<CMesh>		m_Mesh;
 	Ptr<CMaterial>  m_Material;
+	Vec3			m_ParentOffsetPos;
+
+
+public:
+	virtual bool IsEnable() { return m_bEnable; }
+
+	//아래 함수는 최상위 부모가 대상이 아니라 자식에게 직접 명령을 내려야 한다 . 
+	virtual void Activate(bool _b);
 
 public:
 	COLLIDER3D_TYPE GetCollider3DType() { return m_Collider3DType; }
@@ -27,6 +36,8 @@ public:
 
 	Ptr<CMesh> GetColMesh() { return m_Mesh; }
 	Ptr<CMaterial> GetColMaterial() { return m_Material; }
+
+	void SetParentOffsetPos(Vec3 _Pos) { m_ParentOffsetPos = _Pos; }
 public:
 	void finalupdate() override;
 	void UpdateData();

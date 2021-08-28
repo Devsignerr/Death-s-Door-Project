@@ -75,6 +75,24 @@ CGameObject* CMeshData::Instantiate(FBXLOAD_TYPE _Type)
 void CMeshData::LoadFromFBX(const wstring& _strPath, FBXLOAD_TYPE _LoadType)
 {
 	wstring strFullPath = CPathMgr::GetResPath();
+
+	switch (_LoadType)
+	{
+	case FBXLOAD_TYPE::NAVMESH_LOAD:
+		strFullPath += L"NavMeshFBX\\";
+		break;
+	case FBXLOAD_TYPE::MAP_LOAD:
+		strFullPath += L"MapFBX\\";
+		break;
+	case FBXLOAD_TYPE::ANIMATION_LOAD:
+		strFullPath += L"AnimationFBX\\";
+		break;
+	case FBXLOAD_TYPE::OBJECT_LOAD:
+		strFullPath += L"ObjectsFBX\\";
+		break;
+	}
+	
+	//로드 타입에 따라 파일명 구분해서 로드할수 있도록 
 	strFullPath += _strPath;
 
 	CFBXLoader loader;

@@ -3,9 +3,15 @@
 #include "CPlayerScript.h"
 #include "CSkullBullet.h"
 
+#include <Engine/CCollider3D.h>
+
 
 void CSkullScript::awake()
 {
+	CMonsterScript::awake();
+	CreateCol(L"SkullCol", Vec3(0.0f, 0.0f, 250.0f), Vec3(400.0f, 400.0f, 500.0f), LAYER_TYPE::MONSTER_COL);
+	CreateCol(L"SkullAttackCol", Vec3(0.0f, 400.0f, 250.0f), Vec3(400.0f, 400.0f, 500.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
 }
 
@@ -31,9 +37,32 @@ void CSkullScript::OnCollisionEnter(CGameObject* _pOther)
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
-	if (11 == Obj->GetLayerIndex())
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_MonsterInfo.Hp;
+
+		if (0 == m_MonsterInfo.Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+					}
+				}
+			}
+
+			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
+		}
+
+
 	}
 
 }
@@ -124,6 +153,16 @@ void CSkullScript::Attack()
 {
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
+	if (260 == CurAni->GetFrameIdx() || 310 < CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(true);
+	}
+
+	if (270 == CurAni->GetFrameIdx() || 320 < CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(false);
+	}
+
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee")
 	{
@@ -155,7 +194,7 @@ void CSkullScript::Attack()
 
 	}
 
-	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName != L"LongDistance" )
+	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName != L"LongDistance")
 	{
 		// LongDistance 아닐때
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
@@ -171,20 +210,20 @@ void CSkullScript::Attack()
 			else if (false == RangeSearch(m_MeleeAttackRange) && RangeSearch(m_LongDistanceAttackRange))
 			{
 				ChangeState(MONSTERSTATE::CHASE, 0.2f, L"Chase");
-		
+
 			}
 			else
 			{
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 			}
-		
+
 		}
 	}
 	else
 	{
 		// LongDistance 일때
 		// 한번 던지고 따라가면서 점점 거리를 좁힌다
-		
+
 		if (378 == CurAni->GetFrameIdx())
 		{
 			LongDistanceAttack();
@@ -209,6 +248,28 @@ void CSkullScript::Attack()
 
 void CSkullScript::Death()
 {
+	CAnimator3D* CurAni = Animator3D();
+	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	CurAni->Animator3D()->StopAnimation();
+
+	m_PaperBurnTime += fDT;
+
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->MeshRender())
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (1.0f < m_PaperBurnTime)
+	{
+		DeleteObject(GetGameObject());
+	}
 }
 
 CSkullScript::CSkullScript()

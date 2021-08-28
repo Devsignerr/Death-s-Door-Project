@@ -14,6 +14,7 @@
 #include "CCrowEggBullet.h"
 #include "CCrowScript.h"
 #include "CEffectScript.h"
+#include "CExplosionParticle.h"
 #include "CFadeScript.h"
 #include "CIronmaceScript.h"
 #include "CMapChange.h"
@@ -57,6 +58,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCrowEggBullet");
 	_vec.push_back(L"CCrowScript");
 	_vec.push_back(L"CEffectScript");
+	_vec.push_back(L"CExplosionParticle");
 	_vec.push_back(L"CFadeScript");
 	_vec.push_back(L"CIronmaceScript");
 	_vec.push_back(L"CMapChange");
@@ -114,6 +116,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCrowScript;
 	if (L"CEffectScript" == _strScriptName)
 		return new CEffectScript;
+	if (L"CExplosionParticle" == _strScriptName)
+		return new CExplosionParticle;
 	if (L"CFadeScript" == _strScriptName)
 		return new CFadeScript;
 	if (L"CIronmaceScript" == _strScriptName)
@@ -213,6 +217,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::EFFECTSCRIPT:
 		return new CEffectScript;
+		break;
+	case (UINT)SCRIPT_TYPE::EXPLOSIONPARTICLE:
+		return new CExplosionParticle;
 		break;
 	case (UINT)SCRIPT_TYPE::FADESCRIPT:
 		return new CFadeScript;
@@ -353,6 +360,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::EFFECTSCRIPT:
 		return L"CEffectScript";
+		break;
+
+	case SCRIPT_TYPE::EXPLOSIONPARTICLE:
+		return L"CExplosionParticle";
 		break;
 
 	case SCRIPT_TYPE::FADESCRIPT:

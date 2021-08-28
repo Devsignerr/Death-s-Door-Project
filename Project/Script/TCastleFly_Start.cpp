@@ -24,6 +24,12 @@ void TCastleFly_Start::update()
 
 void TCastleFly_Start::Enter()
 {
+	if (nullptr == m_Script)
+	{
+		m_Script = (CCastleScript*)GetScript();
+	}
+	m_Script->OnOffAttackCol(false, LAYER_TYPE::BOSS_COL);
+
 }
 
 void TCastleFly_Start::Exit()
@@ -31,6 +37,7 @@ void TCastleFly_Start::Exit()
 }
 
 TCastleFly_Start::TCastleFly_Start()
+	: m_Script(nullptr)
 {
 }
 

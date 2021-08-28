@@ -10,6 +10,11 @@ void TIronChopAttackComboEnd::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (603 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(true);
+	if (605 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(false);
+
 	if (596 <= CurAni->GetFrameIdx() && 599 >= CurAni->GetFrameIdx())
 		m_Script->RotateSysTem(8.0f);
 	
@@ -26,7 +31,8 @@ void TIronChopAttackComboEnd::update()
 
 void TIronChopAttackComboEnd::Enter()
 {
-	m_Script = (CIronmaceScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CIronmaceScript*)GetScript();
 }
 
 void TIronChopAttackComboEnd::Exit()

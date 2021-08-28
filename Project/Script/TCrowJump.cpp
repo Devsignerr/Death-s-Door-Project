@@ -30,6 +30,7 @@ void TCrowJump::update()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
+		m_LastPos = GetObj()->Transform()->GetLocalPos();
 		GetFSM()->ChangeState(L"Stomp", 0.03f, L"Stomp", false);
 	}
 }
@@ -39,6 +40,8 @@ void TCrowJump::Enter()
 	m_Script = (CCrowScript*)GetScript();
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = GetObj()->Transform()->GetLocalPos();
+
+	m_MaxHeight = m_Pos.y + 800.0f;
 
 	// 최고점 도달 시간
 	m_MaxHeightTime = 0.7f;
@@ -72,7 +75,6 @@ void TCrowJump::Exit()
 	m_VelocityY = 0.0f;
 	m_VelocityZ = 0.0f;
 	m_MaxHeightTime = 0.0f;
-	m_MaxHeight = 800.0f;
 }
 
 TCrowJump::TCrowJump()
@@ -85,7 +87,7 @@ TCrowJump::TCrowJump()
 	, m_VelocityY(0.0f)
 	, m_VelocityZ(0.0f)
 	, m_MaxHeightTime(0.0f)
-	, m_MaxHeight(800.0f)
+	, m_MaxHeight(0.0f)
 	, m_Script(nullptr)
 {
 }

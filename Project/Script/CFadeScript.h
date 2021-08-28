@@ -11,10 +11,10 @@ class CFadeScript :public CScript
     };
 
 private:
-   static FADETYPE m_FadeType;
-   static bool m_FadeInOut;
-   static float m_Time;
-   static float m_FadeTime;
+    static FADETYPE m_FadeType;
+    static bool m_FadeInOut;
+    static float m_Time;
+    static float m_FadeTime;
 public:
     static void Fade_In();
     static void Fade_Out();

@@ -22,7 +22,7 @@ private:
     };
 
 protected:
-    
+
     struct MONSTERINFO
     {
         UINT    Hp;
@@ -48,6 +48,7 @@ protected:
     MONSTERINFO  m_MonsterInfo;
     MONSTERSTATE m_CurState;
     MONSTERJUMPINFO m_MonsterJumpInfo;
+    float m_PaperBurnTime;
 
 
 
@@ -59,6 +60,11 @@ protected:
     bool MonsterRotateSystem(float _fRotSpeed);
     void SetMonsterJumpInfo(float _JumpTime, float _JumpHeight);
     void MonsterJumpSystem();
+
+    virtual void OnOffAttackCol(bool _OnOff, LAYER_TYPE _Type = LAYER_TYPE::MONSTER_ATTACK_COL);
+    virtual void CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_TYPE _Type);
+    virtual void TransColPos(Vec3 _Pos, LAYER_TYPE _Type = LAYER_TYPE::MONSTER_ATTACK_COL);
+    virtual void TransColScale(Vec3 _Scale, LAYER_TYPE _Type = LAYER_TYPE::MONSTER_ATTACK_COL);
 
 protected:
     virtual void Idle() {};
@@ -75,7 +81,7 @@ protected:
 
 public:
     void awake() override;
-	void update()override;
+    void update()override;
 
     void OnCollisionEnter(CGameObject* _pOther) override {};
     void OnCollision(CGameObject* _pOther) override {};
@@ -85,9 +91,9 @@ public:
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);
 
-	CLONE(CMonsterScript);
+    CLONE(CMonsterScript);
 
 public:
-	CMonsterScript();
+    CMonsterScript();
     virtual ~CMonsterScript();
 };

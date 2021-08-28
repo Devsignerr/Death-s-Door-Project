@@ -17,19 +17,21 @@ class CMemoryPoolScript :
 private:
 
     static int     m_iChainCount;
+    static int     m_iExplosionPTC;
 
+    static std::queue<CGameObject*> m_queueExplosionPTC;
     static std::queue<CGameObject*> m_queueChain;
 
 
 public:
-
+    static void CreateExplosionPTC();
     static void CreateChain();
 
 public:
     static void ReturnObj(CGameObject* _Obj);
 
 public:
-
+    static CGameObject* GetExplosionPTC();
     static CGameObject* GetChain();
 
 

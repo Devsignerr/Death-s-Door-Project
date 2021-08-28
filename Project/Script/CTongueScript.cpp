@@ -6,9 +6,14 @@
 
 #include <Engine/CSceneMgr.h>
 #include <Engine/CScene.h>
+#include <Engine/CCollider3D.h>
 
 void CTongueScript::awake()
 {
+	CMonsterScript::awake();
+	CreateCol(L"TongueCol", Vec3(0.0f, 0.0f, 400.0f), Vec3(700.0f, 400.0f, 800.0f), LAYER_TYPE::MONSTER_COL);
+	CreateCol(L"TongueAttackCol", Vec3(0.0f, 500.0f, 200.0f), Vec3(600.0f, 400.0f, 400.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
 }
 
@@ -41,7 +46,7 @@ void CTongueScript::Idle()
 
 	if (false == RangeSearch(1000.0f))
 	{
-		ChangeState(MONSTERSTATE::MOVE,0.2f,L"Chase");
+		ChangeState(MONSTERSTATE::MOVE, 0.2f, L"Chase");
 	}
 }
 
@@ -68,6 +73,7 @@ void CTongueScript::Move()
 
 	if (RangeSearch(m_GuardRange))
 	{
+
 		ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"Guard");
 
 		//ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"SpinDown");
@@ -79,6 +85,15 @@ void CTongueScript::Attack()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (1011 == CurAni->GetFrameIdx() || 166 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(true);
+	}
+
+	if (1013 == CurAni->GetFrameIdx() || 168 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(false);
+	}
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true && CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName != L"LongDistance")
 	{
@@ -195,6 +210,25 @@ void CTongueScript::SpecialAction()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (534 == CurAni->GetFrameIdx())
+	{
+		m_ShieldPoint = 3;
+		TransColPos(Vec3(0.0f, 300.0f, 200.0f), LAYER_TYPE::MONSTER_COL);
+		TransColScale(Vec3(600.0f, 200.0f, 400.0f), LAYER_TYPE::MONSTER_COL);
+
+		OnOffAttackCol(true);
+		TransColPos(Vec3(0.0f, 300.0f, 200.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+		TransColScale(Vec3(600.0f, 200.0f, 400.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+	}
+
+	if (539 == CurAni->GetFrameIdx())
+	{
+		TransColPos(Vec3(0.0f, 500.0f, 200.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+		TransColScale(Vec3(600.0f, 400.0f, 400.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+		OnOffAttackCol(false);
+	}
+
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 Pos = Transform()->GetLocalPos();
 	Vec3 relativePos = PlayerPos - Pos;
@@ -231,7 +265,7 @@ void CTongueScript::SpecialAction()
 			{
 				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"LeftSpin");
 			}
-			
+
 		}
 
 		//플레이어는 내 오른쪽에 있다 
@@ -248,7 +282,7 @@ void CTongueScript::SpecialAction()
 	}
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"LeftSpin")
 	{
-		
+
 		m_SpinCount = 0;
 		Rot.y -= CTimeMgr::GetInst()->GetfDT() * 1.0f;
 		Transform()->SetLocalRot(Rot);
@@ -324,6 +358,28 @@ void CTongueScript::Jump()
 
 void CTongueScript::Death()
 {
+	CAnimator3D* CurAni = Animator3D();
+	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	CurAni->Animator3D()->StopAnimation();
+
+	m_PaperBurnTime += fDT;
+
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->MeshRender())
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (1.0f < m_PaperBurnTime)
+	{
+		DeleteObject(GetGameObject());
+	}
 }
 
 void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
@@ -351,6 +407,54 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 		else
 		{
 			--m_MonsterInfo.Hp;
+		}
+	}
+
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
+	{
+		CAnimator3D* CurAni = Animator3D();
+		UINT iCurClipIdx = CurAni->GetClipIdx();
+
+		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Guard" ||
+			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"GuardStay" ||
+			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"LeftSpin" ||
+			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightSpin")
+		{
+			--m_ShieldPoint;
+
+			if (0 == m_ShieldPoint)
+			{
+				m_ShieldPoint = 3;
+
+				TransColPos(Vec3(0.0f, 0.0f, 400.0f), LAYER_TYPE::MONSTER_COL);
+				TransColScale(Vec3(700.0f, 400.0f, 800.0f), LAYER_TYPE::MONSTER_COL);
+				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.05f, L"GuardBreak");
+			}
+		}
+		else
+		{
+			--m_MonsterInfo.Hp;
+
+			if (0 == m_MonsterInfo.Hp)
+			{
+				vector<CGameObject*> childvec = GetObj()->GetChild();
+
+				for (int i = 0; i < childvec.size(); ++i)
+				{
+					if (childvec[i]->MeshRender())
+					{
+						UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+						for (UINT j = 0; j < Count; ++j)
+						{
+							Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+							mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+							childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+						}
+					}
+				}
+
+				ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
+			}
 		}
 	}
 }

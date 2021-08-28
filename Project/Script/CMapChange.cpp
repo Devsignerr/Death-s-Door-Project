@@ -75,7 +75,7 @@ void CMapChange::OnCollisionEnter(CGameObject* _pOther)
 	{
 		CFadeScript::Fade_Out();
 		m_MapChangeCheck = true;
-		
+
 	}
 }
 

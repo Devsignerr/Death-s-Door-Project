@@ -39,13 +39,15 @@ private:
 	};
 
 private:
-	CFSM*						m_pFSM;
+	CFSM* m_pFSM;
 	CASTLE_STATE				m_eState;
 	map<CASTLE_STATE, wstring>	m_mapState;
 	int							m_Hp;
 
 private:
 	void ChangeState(CASTLE_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);
+	void CreateLaserPoint();
+
 public:
 	void awake() override;
 	void update() override;

@@ -13,6 +13,18 @@ void TCastleLeftBack_HalfSpin::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 	Vec3 Rot = GetObj()->Transform()->GetLocalRot();
 
+	if (520 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(true);
+		m_Script->TransColPos(Vec3(60000.0f, -10000.0f, -25000.0f));
+
+	}
+
+	if (534 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(false);
+	}
+
 	static float RotValue = 0.0f;
 
 	if (520 <= CurAni->GetFrameIdx())
@@ -39,6 +51,7 @@ void TCastleLeftBack_HalfSpin::update()
 		{
 			int Pattern = CRandomMgrScript::GetRandomintNumber(0, 3);
 
+
 			if (3 == Pattern)
 				m_Script->PatternChoice();
 			else
@@ -49,7 +62,8 @@ void TCastleLeftBack_HalfSpin::update()
 
 void TCastleLeftBack_HalfSpin::Enter()
 {
-	m_Script = (CCastleScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CCastleScript*)GetScript();
 }
 
 void TCastleLeftBack_HalfSpin::Exit()

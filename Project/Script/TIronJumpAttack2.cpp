@@ -10,6 +10,11 @@ void TIronJumpAttack2::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (631 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(true);
+	if (633 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(false);
+
 	if (624 <= CurAni->GetFrameIdx() && 631 >= CurAni->GetFrameIdx())
 		m_Script->RotateSysTem(8.0f);
 
@@ -21,7 +26,8 @@ void TIronJumpAttack2::update()
 
 void TIronJumpAttack2::Enter()
 {
-	m_Script = (CIronmaceScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CIronmaceScript*)GetScript();
 }
 
 void TIronJumpAttack2::Exit()

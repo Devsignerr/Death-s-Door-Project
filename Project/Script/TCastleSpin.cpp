@@ -14,13 +14,22 @@ void TCastleSpin::update()
 
 	Vec3 Rot = GetObj()->Transform()->GetLocalRot();
 
+	if (284 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(true);
+	}
+	if (320 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(false);
+	}
+
 	static float RotValue = 0.0f;
 
 	if (290 <= CurAni->GetFrameIdx())
 	{
 		if (XM_2PI > RotValue)
 		{
-			Rot.y += fDT * (XM_2PI * 1.2f);
+			Rot.y += fDT * (XM_2PI * 1.0f);
 			RotValue += fDT * (XM_2PI + 0.1f);
 		}
 	}
@@ -49,7 +58,9 @@ void TCastleSpin::update()
 
 void TCastleSpin::Enter()
 {
-	m_Script = (CCastleScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CCastleScript*)GetScript();
+	
 }
 
 void TCastleSpin::Exit()

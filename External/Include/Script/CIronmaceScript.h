@@ -27,8 +27,8 @@ private:
 	};
 
 private:
-	CFSM*							m_pFSM;
-	IRONMACE_STATE					m_eState;	
+	CFSM* m_pFSM;
+	IRONMACE_STATE					m_eState;
 	map<IRONMACE_STATE, wstring>	m_mapState;
 	int								m_Hp;
 

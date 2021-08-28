@@ -54,7 +54,7 @@ void CFadeScript::update()
 	{
 		if (FADETYPE::FADE_OUT == m_FadeType)
 		{
-			Fade_out(m_Time);	
+			Fade_out(m_Time);
 		}
 		else if (FADETYPE::FADE_IN == m_FadeType)
 		{

@@ -7,6 +7,11 @@ class TPlayerMagic : public CState
 private:
     CPlayerScript* m_Script;
     bool           m_BulletLimit;
+
+    float          m_fRotateTime;
+    float          m_fCurTime;
+    float          m_fRadius;
+
 private:
     void Attack();
 private:

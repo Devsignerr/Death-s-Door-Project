@@ -11,6 +11,7 @@
   .\Project\Script\CCrowEggBullet.h
   .\Project\Script\CCrowScript.h
   .\Project\Script\CEffectScript.h
+  .\Project\Script\CExplosionParticle.h
   .\Project\Script\CFadeScript.h
   .\Project\Script\CIronmaceScript.h
   .\Project\Script\CMapChange.h
@@ -111,7 +112,6 @@
   .\Project\Script\TPlayerRun.h
   .\Project\Script\TPlayerSlash_Attack_L.h
   .\Project\Script\TPlayerSlash_Attack_R.h
-  113개 파일이 복사되었습니다.
-  TPlayerIdle.cpp
-C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  114개 파일이 복사되었습니다.
+  CPlayerBomb.cpp
   Script.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Script\Script_debug.lib

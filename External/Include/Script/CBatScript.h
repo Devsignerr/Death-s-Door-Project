@@ -20,6 +20,7 @@ private:
 private:
 	void CalAttackDistance();
 	void CalChaseMove();
+	void CreateCol();
 public:
 	void awake() override;
 	void update() override;

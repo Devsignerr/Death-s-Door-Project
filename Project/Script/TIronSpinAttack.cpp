@@ -10,6 +10,11 @@ void TIronSpinAttack::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (528 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(true);
+	if (530 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(false);
+
 	if (526 >= CurAni->GetFrameIdx())
 		m_Script->RotateSysTem(8.0f);
 
@@ -22,7 +27,8 @@ void TIronSpinAttack::update()
 
 void TIronSpinAttack::Enter()
 {
-	m_Script = (CIronmaceScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CIronmaceScript*)GetScript();
 }
 
 void TIronSpinAttack::Exit()

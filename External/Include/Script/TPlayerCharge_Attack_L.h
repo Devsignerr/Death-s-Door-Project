@@ -8,6 +8,7 @@ class TPlayerCharge_Attack_L :
 
 private:
     CPlayerScript* m_Script;
+    int m_ColOnOffCheck;
 private:
     void update() override;
 

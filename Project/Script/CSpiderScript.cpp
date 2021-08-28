@@ -3,8 +3,14 @@
 #include "CRandomMgrScript.h"
 #include "CPlayerScript.h"
 
+#include <Engine/CCollider3D.h>
+
 void CSpiderScript::awake()
 {
+	CMonsterScript::awake();
+	CreateCol(L"SpiderCol", Vec3(0.0f, 50.0f, 100.0f), Vec3(200.0f, 200.0f, 200.0f), LAYER_TYPE::MONSTER_COL);
+	CreateCol(L"SpiderAttackCol", Vec3(0.0f, 300.0f, 100.0f), Vec3(200.0f, 200.0f, 200.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
+	OnOffAttackCol(false);
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
 	// 백스텝, 프론트무브
 }
@@ -130,7 +136,7 @@ void CSpiderScript::Move()
 				ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep");
 			}
 		}
-	
+
 	}
 
 	m_MoveTime += fDT;
@@ -141,7 +147,7 @@ void CSpiderScript::Move()
 		if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
 		{
 			int Pattern = CRandomMgrScript::GetRandomintNumber(0, 2);
-		
+
 			if (0 == Pattern && m_MoveCount <= 2)
 			{
 				ChangeState(MONSTERSTATE::MOVE, 0.2f, L"LeftMove");
@@ -162,7 +168,7 @@ void CSpiderScript::Move()
 		}
 	}
 
-	
+
 	if (false == RangeSearch(m_FrontMoveRange) && CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		ChangeState(MONSTERSTATE::MOVE, 0.2f, L"FrontMove");
@@ -191,7 +197,7 @@ void CSpiderScript::ReadyAction()
 			SetMonsterJumpInfo(0.6f, 1000.0f);
 			ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep");
 		}
-		else if(false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
+		else if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
 		{
 			if (Focus)
 			{
@@ -203,13 +209,13 @@ void CSpiderScript::ReadyAction()
 			else
 			{
 				bool LeftMove = CRandomMgrScript::GetRandomintNumber(0, 1);
-		
+
 				if (LeftMove)
 					ChangeState(MONSTERSTATE::MOVE, 0.2f, L"LeftMove");
 				else
 					ChangeState(MONSTERSTATE::MOVE, 0.2f, L"RightMove");
 			}
-		
+
 		}
 		else
 		{
@@ -238,7 +244,16 @@ void CSpiderScript::Attack()
 	{
 		CalAttackDistance();
 	}
-	
+
+	if (158 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(true);
+	}
+
+	if (166 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(false);
+	}
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		if (RangeSearch(m_BackStepRange))
@@ -297,6 +312,32 @@ void CSpiderScript::Jump()
 
 void CSpiderScript::Death()
 {
+
+	CAnimator3D* CurAni = Animator3D();
+	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	if (230 <= CurAni->GetFrameIdx())
+	{
+		CurAni->Animator3D()->StopAnimation();
+
+		m_PaperBurnTime += fDT;
+
+		vector<CGameObject*> childvec = GetObj()->GetChild();
+
+		for (int i = 0; i < childvec.size(); ++i)
+		{
+			if (childvec[i]->MeshRender())
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+
+			if (childvec[i]->Collider3D())
+				childvec[i]->Collider3D()->Activate(false);
+		}
+	}
+
+	if (1.5f < m_PaperBurnTime)
+	{
+		DeleteObject(GetGameObject());
+	}
 }
 
 void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
@@ -304,9 +345,32 @@ void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
-	if (11 == Obj->GetLayerIndex())
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_MonsterInfo.Hp;
+
+		if (0 == m_MonsterInfo.Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+					}
+				}
+			}
+
+			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
+		}
+
+
 	}
 }
 

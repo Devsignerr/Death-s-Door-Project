@@ -346,6 +346,9 @@
     <ClInclude Include="CSlashEffect.h">
       <Filter>ScriptCode\Effect\SlashEffect</Filter>
     </ClInclude>
+    <ClInclude Include="CExplosionParticle.h">
+      <Filter>ScriptCode\Effect\PartcleScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -826,6 +829,9 @@
     </ClCompile>
     <ClCompile Include="CSlashEffect.cpp">
       <Filter>ScriptCode\Effect\SlashEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="CExplosionParticle.cpp">
+      <Filter>ScriptCode\Effect\PartcleScript</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

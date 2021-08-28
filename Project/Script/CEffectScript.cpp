@@ -2,7 +2,8 @@
 #include "CEffectScript.h"
 
 CEffectScript::CEffectScript():
-	CScript((UINT)SCRIPT_TYPE::EFFECTSCRIPT)
+	CScript((UINT)SCRIPT_TYPE::EFFECTSCRIPT),
+	m_bActive(false)
 {
 }
 

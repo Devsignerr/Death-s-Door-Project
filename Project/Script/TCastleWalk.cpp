@@ -17,15 +17,22 @@ void TCastleWalk::update()
 		Vec3 Front = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 		Vec3 Pos = GetObj()->Transform()->GetLocalPos();
 
+		Vec3 vMovePos = {};
 
-		Pos.x += Front.x * 300.0f * fDT;
-		Pos.z += Front.z * 300.0f * fDT;
+		vMovePos.x += CTimeMgr::GetInst()->GetfDT() * Front.x * 300.0f;
+		vMovePos.z += CTimeMgr::GetInst()->GetfDT() * Front.z * 300.0f;
+
+		bool IsGround = m_Script->GroundCheck(Pos + vMovePos);
+		if (!IsGround)
+			IsGround = m_Script->ResearchNode(Pos + vMovePos);
+
+		if (true == IsGround)
+			m_Script->Transform()->SetLocalPos(Pos + vMovePos);
 
 		m_Script->RotateSysTem(1.0f);
-		GetObj()->Transform()->SetLocalPos(Pos);
 	}
 
-	if (m_Script->RangeSearch(1500.0f))
+	if (m_Script->RangeSearch(1000.0f))
 	{
 		m_Script->CheckAttackDirection();
 	}

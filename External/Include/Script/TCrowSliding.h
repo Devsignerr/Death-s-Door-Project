@@ -11,12 +11,17 @@ private:
     Vec3    m_SlidingDir;
     bool    m_SpecialPattern;
     int     m_SpecialPatternType;
-    int     m_SpecialPatrernSlidingCount;
     bool    m_SpecialPatternEndCheck;
     float   m_SlidingTime;
     int     m_PrevPoint;
     bool    m_IsSliding;
-    float   m_ChainMoveTime;
+
+    Vec3    m_PlayerPos;
+    float   m_Radius;
+    float   m_PlayerToBossDistance;
+    bool    m_ChainMoveEnd;
+    Vec3    m_Point;
+    int     m_SlidingTotalCount;
 private:
     void SlidingPosSet(int _Point);
     void DiagonalPattern(int _StartPoint);
@@ -26,6 +31,9 @@ private:
 public:
     bool GetIsSliding() { return m_IsSliding; }
     void StompEnd() { m_IsSliding = false; }
+private:
+    void CreateChain();
+    void ChainMoveEndCheck();
 private:
     void update() override;
 

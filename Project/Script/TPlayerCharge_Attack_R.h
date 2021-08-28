@@ -8,6 +8,8 @@ class TPlayerCharge_Attack_R :
 private:
     bool m_IsChargeAttack;
     CPlayerScript* m_Script;
+    int m_ColOnOffCheck;
+
 public:
     bool GetIsChargeAttack() { return m_IsChargeAttack; }
     void ResetIsChargeAttack() { m_IsChargeAttack = false; }

@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine/CScript.h>
 
+class CTexture;
 class CActorScript : public CScript
 {
 private:
@@ -18,6 +19,7 @@ private:
 
 protected:
 	float m_fOffSetPos;
+	Ptr<CTexture> m_PaperBurnTex;
 
 	float GetDist() { return m_Dist; }
 	void SetbJump(bool _bJump) { m_bJump = _bJump; }
@@ -35,6 +37,7 @@ public:
 
 public:
 	virtual void update();
+	virtual void awake();
 
 	virtual void OnCollisionEnter(CGameObject* _pOther);
 

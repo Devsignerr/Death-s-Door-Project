@@ -57,6 +57,7 @@ void TCastleMissile_Open::Exit()
 void TCastleMissile_Open::MissileCreate(Vec3 _Pos)
 {
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
+	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
 
 	CGameObject* Obj = new CGameObject;
 	Obj->AddComponent(new CTransform);
@@ -72,6 +73,7 @@ void TCastleMissile_Open::MissileCreate(Vec3 _Pos)
 
 	int HeightTime = CRandomMgrScript::GetRandomintNumber(7, 15);
 	float RealHeightTime = (float)HeightTime;
+	Script->SetMaxHeight(Pos.y + 2500.0f);
 	Script->SetMaxHeightTime(RealHeightTime * 0.1f);
 
 	int TargetPos = 0;

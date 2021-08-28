@@ -20,11 +20,17 @@ void TIronWalk::update()
 		Vec3 Diff = PlayerPos - Pos;
 
 		Diff.Normalize();
+		Vec3 vMovePos = {};
 
-		Pos.x += CTimeMgr::GetInst()->GetfDT() * Diff.x * 450.0f;
-		Pos.z += CTimeMgr::GetInst()->GetfDT() * Diff.z * 450.0f;
+		vMovePos.x += CTimeMgr::GetInst()->GetfDT() * Diff.x * 450.0f;
+		vMovePos.z += CTimeMgr::GetInst()->GetfDT() * Diff.z * 450.0f;
 
-		GetObj()->Transform()->SetLocalPos(Pos);
+		bool IsGround = m_Script->GroundCheck(Pos + vMovePos);
+		if (!IsGround)
+			IsGround = m_Script->ResearchNode(Pos + vMovePos);
+
+		if (true == IsGround)
+			m_Script->Transform()->SetLocalPos(Pos + vMovePos);
 	}
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
@@ -42,7 +48,8 @@ void TIronWalk::update()
 
 void TIronWalk::Enter()
 {
-	m_Script = (CIronmaceScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CIronmaceScript*)GetScript();
 }
 
 void TIronWalk::Exit()

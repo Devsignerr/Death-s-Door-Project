@@ -39,15 +39,14 @@ private:
     PARTICLE_TYPE               m_eType;
 
     bool                        m_bRepeat; //파티클 max카운트 달성시 반복시킬지 말지
-    bool                        m_bDead;
     int                         m_iSlow; //갈수록 느려짐 
 
-    float                       m_fCurTime;
     int                         m_iAccLiveCount;
-
+    int                         m_iMaxLiveCount; //한번 실행시 몇개까지 등장시킬건지 
 
 public:
     void Activate(bool _b);
+    void Reset() { m_iAccLiveCount = 0; m_fAccTime = 0.f; }
 
 public:
     virtual void awake();
@@ -59,10 +58,12 @@ public:
     void SetRepeat(bool _b) { m_bRepeat = _b; }
     bool IsRepeat() { return m_bRepeat; }
 
+    void SetAccLiveCount(int _count) { m_iAccLiveCount = _count; }
     void SetAliveCount(int _count) { m_iAliveCount = _count; }
     void SetTexture(Ptr<CTexture> _Tex) { m_pTex = _Tex; }
     void SetMaxParticleCount(int _iMaxCount);
     void SetMaxCount(int _count) { m_iMaxCount = _count; }
+    void SetMaxLiveCount(int _count) { m_iMaxLiveCount = _count; }
 
     void SetMinLifeTime(float _time) { m_fMinLifeTime = _time; }
     void SetMaxLifeTime(float _time) { m_fMaxLifeTime = _time; }
@@ -81,6 +82,8 @@ public:
 
     void SetType(PARTICLE_TYPE _Type) { m_eType = _Type; }
 
+    //한번에 몇개까지 생성시킬지 
+    int     GetMaxLiveCount() { return m_iMaxLiveCount; }
     int     GetMaxCount() { return m_iMaxCount; }
     int     GetAliveCount() { return m_iAliveCount; }
     float   GetMinLifeTime() { return m_fMinLifeTime; }

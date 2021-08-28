@@ -6,11 +6,27 @@
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CCollider3D.h>
+#include <Engine/CMeshRender.h>
 
 void TPlayerSlash_Attack_L::update()
 {
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
+
+	if (1175 == CurAni->GetFrameIdx())
+	{
+		++m_ColOnOffCheck;
+	}
+
+	if (1 == m_ColOnOffCheck)
+	{
+		CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+		//Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
 
 	if (false == m_IsRightSlash && KEY_TAP(KEY_TYPE::LBTN))
 	{
@@ -49,7 +65,7 @@ void TPlayerSlash_Attack_L::update()
 		{
 			if (nullptr == CPlayerScript::m_pHorizonSlashR)
 			{
-				CPlayerScript::m_pHorizonSlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_Rd", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+				CPlayerScript::m_pHorizonSlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_R", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalRot(Vec3(0.f, XM_PI, 0.f));
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalPos(Vec3(0.f, 30.f, -170.f));
@@ -77,6 +93,10 @@ void TPlayerSlash_Attack_L::Enter()
 {
 	++m_LimitAttackCount;
 	m_Script = (CPlayerScript*)GetScript();
+
+	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+	Obj->MeshRender()->Activate(true);
+	Obj->Collider3D()->Activate(true);
 }
 
 void TPlayerSlash_Attack_L::Exit()
@@ -87,12 +107,15 @@ void TPlayerSlash_Attack_L::Exit()
 	{
 		m_LimitAttackCount = 0;
 	}
+
+	m_ColOnOffCheck = 0;
 }
 
 TPlayerSlash_Attack_L::TPlayerSlash_Attack_L()
 	: m_IsRightSlash(false)
 	, m_LimitAttackCount(0)
 	, m_Script(nullptr)
+	, m_ColOnOffCheck(0)
 {
 
 }

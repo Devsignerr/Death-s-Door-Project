@@ -3,9 +3,13 @@
 
 #include "CPlayerScript.h"
 
+#include <Engine/CCollider3D.h>
+
+
 CMonsterScript::CMonsterScript()
 	: m_CurState(MONSTERSTATE::IDLE)
 	, m_MonsterJumpInfo{}
+	, m_PaperBurnTime(0.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::MONSTERSCRIPT;
 }
@@ -30,7 +34,7 @@ void CMonsterScript::ChangeState(MONSTERSTATE _State, float _BlendingTime, const
 {
 	m_CurState = _State;
 	CAnimator3D* CurAnim = Animator3D();
-	vector<tMTAnimClip>* vecAnimClip= CurAnim->GetMTAnimClip();
+	vector<tMTAnimClip>* vecAnimClip = CurAnim->GetMTAnimClip();
 	vector<tMTAnimClip>::iterator Iter = vecAnimClip->begin();
 
 	for (int i = 0; Iter != CurAnim->GetMTAnimClip()->end(); ++Iter, ++i)
@@ -45,7 +49,7 @@ void CMonsterScript::ChangeState(MONSTERSTATE _State, float _BlendingTime, const
 
 bool CMonsterScript::MonsterRotateSystem(float _fRotSpeed)
 {
-	
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 Pos = Transform()->GetLocalPos();
 	Vec3 relativePos = PlayerPos - Pos;
@@ -83,7 +87,7 @@ bool CMonsterScript::MonsterRotateSystem(float _fRotSpeed)
 	{
 		Rot.y += CTimeMgr::GetInst()->GetfDT() * _fRotSpeed;
 	}
-	
+
 	//플레이어를 똑바로 바라보고 있다 
 	else if (dot > -20.0 && dot < 20.0 && dist < 1.f)
 	{
@@ -172,8 +176,85 @@ void CMonsterScript::MonsterJumpSystem()
 	}
 }
 
+void CMonsterScript::OnOffAttackCol(bool _OnOff, LAYER_TYPE _Type)
+{
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
+		{
+			childvec[i]->MeshRender()->Activate(_OnOff);
+			childvec[i]->Collider3D()->Activate(_OnOff);
+			break;
+		}
+	}
+}
+
+void CMonsterScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_TYPE _Type)
+{
+	Vec3 Pos = Transform()->GetLocalPos();
+
+	CGameObject* Obj = new CGameObject;
+	Obj->SetName(_Name);
+
+	Obj->AddComponent(new CTransform);
+	Obj->AddComponent(new CMeshRender);
+	Obj->AddComponent(new CCollider3D);
+
+	Obj->Transform()->SetLocalPos(_Pos);
+	Obj->Transform()->SetLocalScale(_Scale);
+
+	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	if (_Type == LAYER_TYPE::MONSTER_ATTACK_COL)
+	{
+		Obj->Collider3D()->SetParentOffsetPos(_Pos);
+		//Obj->MeshRender()->Activate(false);
+		Obj->Collider3D()->Activate(false);
+	}
+
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+	CurScene->AddObject(Obj, (UINT)_Type);
+
+	AddChild(GetObj(), Obj);
+
+
+}
+
+void CMonsterScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
+{
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
+		{
+			childvec[i]->Transform()->SetLocalPos(_Pos);
+			break;
+		}
+	}
+}
+
+void CMonsterScript::TransColScale(Vec3 _Scale, LAYER_TYPE _Type)
+{
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
+		{
+			childvec[i]->Transform()->SetLocalScale(_Scale);
+			break;
+		}
+	}
+}
+
+
 void CMonsterScript::awake()
 {
+	CActorScript::awake();
 }
 
 void CMonsterScript::update()

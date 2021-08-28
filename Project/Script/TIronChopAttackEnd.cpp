@@ -33,7 +33,9 @@ void TIronChopAttackEnd::update()
 
 void TIronChopAttackEnd::Enter()
 {
-	m_Script = (CIronmaceScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CIronmaceScript*)GetScript();
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
 	Vec3 relativePos = PlayerPos - Pos;

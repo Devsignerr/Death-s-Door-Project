@@ -15,6 +15,16 @@ void TCastleLeftFront_HalfSpin::update()
 
 	static float RotValue = 0.0f;
 
+	if (670 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(true);
+	}
+	if (684 == CurAni->GetFrameIdx())
+	{
+		m_Script->OnOffAttackCol(false);
+	}
+
+
 	if (668 <= CurAni->GetFrameIdx())
 	{
 		if (XM_PI > RotValue)
@@ -38,7 +48,7 @@ void TCastleLeftFront_HalfSpin::update()
 		else
 		{
 			int Pattern = CRandomMgrScript::GetRandomintNumber(0, 3);
-
+		
 			if (3 == Pattern)
 				m_Script->PatternChoice();
 			else
@@ -49,7 +59,8 @@ void TCastleLeftFront_HalfSpin::update()
 
 void TCastleLeftFront_HalfSpin::Enter()
 {
-	m_Script = (CCastleScript*)GetScript();
+	if (nullptr == m_Script)
+		m_Script = (CCastleScript*)GetScript();
 }
 
 void TCastleLeftFront_HalfSpin::Exit()
