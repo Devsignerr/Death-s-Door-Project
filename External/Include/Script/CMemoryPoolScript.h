@@ -18,21 +18,30 @@ private:
 
     static int     m_iChainCount;
     static int     m_iExplosionPTC;
+    static int     m_iFireDamagePTC;
+    static int     m_iAttackImpact;
 
     static std::queue<CGameObject*> m_queueExplosionPTC;
+    static std::queue<CGameObject*> m_queueFireDamagePTC;
     static std::queue<CGameObject*> m_queueChain;
+    static std::queue<CGameObject*> m_queueAttackImpact;
+
 
 
 public:
+    static void CreateAttackImpact();
     static void CreateExplosionPTC();
+    static void CreateFireDamagePTC();
     static void CreateChain();
 
 public:
     static void ReturnObj(CGameObject* _Obj);
 
 public:
+    static CGameObject* GetAttackImpact();
     static CGameObject* GetExplosionPTC();
     static CGameObject* GetChain();
+    static CGameObject* GetFireDamagePTC();
 
 
 public:

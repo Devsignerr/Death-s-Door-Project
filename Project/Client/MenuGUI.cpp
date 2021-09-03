@@ -22,6 +22,7 @@
 #include <Engine/CFrustumSphere.h>
 #include <Engine/CParticleSystem.h>
 #include <Engine/CEventMgr.h>
+#include <Engine/CUI.h>
 #include <Engine/CCollisionMgr.h>
 #include "CSaveLoadMgr.h"
 
@@ -265,7 +266,7 @@ void MenuGUI::render()
             if (ImGui::BeginMenu("Create Empty Object"))
             {
                 static int LayerIdx = 0;
-                static char szObjectName[20] = {};
+                static char szEmpty[100] = {};
 
                 ImGui::Text("Setting Layer \t");
                 ImGui::SameLine();
@@ -273,7 +274,7 @@ void MenuGUI::render()
 
                 ImGui::Text("Setting ObjectName");
                 ImGui::SameLine();
-                ImGui::InputText("##NameSetting", szObjectName, 20);
+                ImGui::InputText("##NameSetting", szEmpty, IM_ARRAYSIZE(szEmpty));
 
 
                 if (ImGui::Button("Confirm"))
@@ -282,9 +283,9 @@ void MenuGUI::render()
 
                     CGameObject* pGameObject = new CGameObject;
 
-                    wstring wstr(szObjectName, &szObjectName[20]);
-
-                    pGameObject->SetName(wstr);
+                    int length = strlen(szEmpty);
+                    wstring ObjectName(szEmpty, &szEmpty[length]);
+                    pGameObject->SetName(ObjectName);
 
                     tEvent even = {};
 
@@ -374,6 +375,19 @@ void MenuGUI::render()
                     {
                         pTempObject->AddComponent(new CLight3D);
                         pTempObject->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+                    }
+                }
+
+                if (ImGui::MenuItem("UI"))
+                {
+
+                    CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+                    InspectorGUI* pInspector = (InspectorGUI*)CImGUIMgr::GetInst()->FindGUI(L"Inspector");
+                    CGameObject* pTempObject = pInspector->GetTargetObject();
+
+                    if (nullptr == pTempObject->UI())
+                    {
+                        pTempObject->AddComponent(new CUI);
                     }
                 }
 

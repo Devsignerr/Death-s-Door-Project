@@ -78,7 +78,9 @@ cbuffer GLOBAL_VALUE : register(b2)
     uint    iLight3DCount; // 3D±¤¿ø °³¼ö
     
     float   fDOFDistance;
-    int     Padding[3];
+    float3  g_CamWorldPos;
+    float3  g_vCamUp;
+    int     padding[1];
 }
 
 Texture2D                g_tex_0 : register(t0);

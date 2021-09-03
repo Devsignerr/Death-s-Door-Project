@@ -256,6 +256,7 @@ call CodeGen.exe</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CActorScript.h" />
+    <ClInclude Include="CAttackImpactScript.h" />
     <ClInclude Include="CBatScript.h" />
     <ClInclude Include="CBazookaBullet.h" />
     <ClInclude Include="CBazookaScript.h" />
@@ -268,10 +269,14 @@ call CodeGen.exe</Command>
     <ClInclude Include="CCrowEggBullet.h" />
     <ClInclude Include="CCrowScript.h" />
     <ClInclude Include="CEffectScript.h" />
+    <ClInclude Include="CEnding.h" />
     <ClInclude Include="CExplosionParticle.h" />
     <ClInclude Include="CFadeScript.h" />
+    <ClInclude Include="CFireDamageParticle.h" />
+    <ClInclude Include="CHpBar.h" />
     <ClInclude Include="CIronmaceScript.h" />
     <ClInclude Include="CMapChange.h" />
+    <ClInclude Include="CMapGimic.h" />
     <ClInclude Include="CMemoryPoolScript.h" />
     <ClInclude Include="CMonsterScript.h" />
     <ClInclude Include="CNailScript.h" />
@@ -295,8 +300,11 @@ call CodeGen.exe</Command>
     <ClInclude Include="CSpiderScript.h" />
     <ClInclude Include="CTestMonsterAttackEffect.h" />
     <ClInclude Include="CTestMonsterScript.h" />
+    <ClInclude Include="CTitle.h" />
     <ClInclude Include="CTongueBullet.h" />
     <ClInclude Include="CTongueScript.h" />
+    <ClInclude Include="CUpDownSwitch.h" />
+    <ClInclude Include="CWeaponType.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="TCastleCutScene.h" />
@@ -374,6 +382,7 @@ call CodeGen.exe</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CActorScript.cpp" />
+    <ClCompile Include="CAttackImpactScript.cpp" />
     <ClCompile Include="CBatScript.cpp" />
     <ClCompile Include="CBazookaBullet.cpp" />
     <ClCompile Include="CBazookaScript.cpp" />
@@ -386,10 +395,14 @@ call CodeGen.exe</Command>
     <ClCompile Include="CCrowEggBullet.cpp" />
     <ClCompile Include="CCrowScript.cpp" />
     <ClCompile Include="CEffectScript.cpp" />
+    <ClCompile Include="CEnding.cpp" />
     <ClCompile Include="CExplosionParticle.cpp" />
     <ClCompile Include="CFadeScript.cpp" />
+    <ClCompile Include="CFireDamageParticle.cpp" />
+    <ClCompile Include="CHpBar.cpp" />
     <ClCompile Include="CIronmaceScript.cpp" />
     <ClCompile Include="CMapChange.cpp" />
+    <ClCompile Include="CMapGimic.cpp" />
     <ClCompile Include="CMemoryPoolScript.cpp" />
     <ClCompile Include="CMonsterScript.cpp" />
     <ClCompile Include="CNailScript.cpp" />
@@ -413,8 +426,11 @@ call CodeGen.exe</Command>
     <ClCompile Include="CSpiderScript.cpp" />
     <ClCompile Include="CTestMonsterAttackEffect.cpp" />
     <ClCompile Include="CTestMonsterScript.cpp" />
+    <ClCompile Include="CTitle.cpp" />
     <ClCompile Include="CTongueBullet.cpp" />
     <ClCompile Include="CTongueScript.cpp" />
+    <ClCompile Include="CUpDownSwitch.cpp" />
+    <ClCompile Include="CWeaponType.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Graphic|x64'">Create</PrecompiledHeader>

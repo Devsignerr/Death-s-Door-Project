@@ -10,7 +10,7 @@
 #include "CResMgr.h"
 
 CInstancingBuffer::CInstancingBuffer()
-	: m_iMaxCount(100)
+	: m_iMaxCount(10)
 	, m_iAnimInstCount(0)
 	, m_pBoneBuffer(nullptr)
 {
@@ -95,7 +95,9 @@ void CInstancingBuffer::Resize(UINT _iCount)
 	tDesc.Usage = D3D11_USAGE_DYNAMIC;
 	tDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	if (FAILED(DEVICE->CreateBuffer(&tDesc, NULL, &m_pInstancingBuffer)))
+	HRESULT hr = DEVICE->CreateBuffer(&tDesc, NULL, m_pInstancingBuffer.GetAddressOf());
+
+	if (FAILED(hr))
 		assert(NULL);
 }
 

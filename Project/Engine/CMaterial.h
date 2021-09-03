@@ -50,6 +50,7 @@ public:
 
 
     void SetDefault() { m_bDefault = true; }
+    void SetNoDefault() { m_bDefault = false; }
     bool IsDefault() { return m_bDefault; }
     void* GetData(SHADER_PARAM _eType);
     void UpdateData(int _iInstancing = 0);

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CProjectile.h"
 #include "CMemoryPoolScript.h"
+
+#include <Engine/CCollider3D.h>
 #include <Engine/CEventMgr.h>
 
 
@@ -13,6 +15,8 @@ CProjectile::CProjectile():
 CProjectile::~CProjectile()
 {
 }
+
+
 
 void CProjectile::ReturnToMemoryPool()
 {

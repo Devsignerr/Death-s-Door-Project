@@ -7,6 +7,7 @@
 
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
+#include <Engine/CParticleSystem.h>
 #include <Engine/CFSM.h>
 
 
@@ -36,7 +37,7 @@ void TPlayerIdle::update()
 	{
 		if (nullptr == CPlayerScript::m_pHorizonSlashL)
 		{
-			CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalPos(Vec3(0.f, 45.f, -170.f));
@@ -55,7 +56,7 @@ void TPlayerIdle::update()
 
 		Vec3 Pos = m_Script->GetMouseClickPos();
 		m_Script->RotatetoClick(Pos);
-		GetFSM()->ChangeState(L"Slash_L", 0.1f, L"Slash_L", false);
+		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_ATTACK_L, 0.1f, L"Slash_L", false);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::MBTN))
@@ -80,10 +81,16 @@ void TPlayerIdle::update()
 		case PLAYER_PROJECTILE_TYPE::ARROW:
 			GetFSM()->ChangeState(L"Arrow", 0.03f, L"Arrow", true);
 
-			CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerArrow",(UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);			
+			if (nullptr == CPlayerScript::m_pArrow)
+			{
+				CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerArrow", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+			}
+			
 			CPlayerScript::m_pArrow->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
 			CPlayerScript::m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 			CPlayerScript::m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 150.f, -10.f));
+			CPlayerScript::m_pArrow->SetAllMeshrenderActive(true);
+			CPlayerScript::m_pArrow->SetAllColliderActive(true);
 			GetObj()->AddChild(CPlayerScript::m_pArrow);
 			
 			break;
@@ -91,9 +98,15 @@ void TPlayerIdle::update()
 		{
 			GetFSM()->ChangeState(L"Magic", 0.03f, L"Magic", true);
 
-			 CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerFire", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
-			 CPlayerScript::m_pMagic->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			if (nullptr == CPlayerScript::m_pMagic)
+			{
+				CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerFire", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+			}
+			 CPlayerScript::m_pMagic->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			 CPlayerScript::m_pMagic->Transform()->SetLocalPos(Vec3(-60.f, 80.f, 40.f));
+			 CPlayerScript::m_pMagic->ParticleSystem()->Activate(true);
+			 CPlayerScript::m_pMagic->SetAllColliderActive(true);
+
 			GetObj()->AddChild(CPlayerScript::m_pMagic);
 		}
 		
@@ -101,8 +114,13 @@ void TPlayerIdle::update()
 		case PLAYER_PROJECTILE_TYPE::BOMB:
 			GetFSM()->ChangeState(L"Bomb", 0.03f, L"Bomb", true);
 
-			CPlayerScript::m_pBomb = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerBomb", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			if (nullptr == CPlayerScript::m_pBomb)
+			{
+				CPlayerScript::m_pBomb = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerBomb", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+			}
 			CPlayerScript::m_pBomb->Transform()->SetLocalPos(Vec3(0.f, 170.f, -100.f));
+			CPlayerScript::m_pBomb->ParticleSystem()->Activate(true);
+			CPlayerScript::m_pBomb->SetAllColliderActive(true);
 
 			GetObj()->AddChild(CPlayerScript::m_pBomb);
 
@@ -110,7 +128,10 @@ void TPlayerIdle::update()
 		case PLAYER_PROJECTILE_TYPE::HOOK:
 			GetFSM()->ChangeState(L"Hook", 0.03f, L"Hook", true);
 
-			CPlayerScript::m_pHook = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerHook", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+			if (nullptr == CPlayerScript::m_pHook)
+			{
+				CPlayerScript::m_pHook = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerHook", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+			}
 			CPlayerScript::m_pHook->Transform()->SetLocalPos(Vec3(0.f, 150.f, -40.f));
 
 			GetObj()->AddChild(CPlayerScript::m_pHook);

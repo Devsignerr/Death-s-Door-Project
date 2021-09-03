@@ -20,6 +20,7 @@
 #include "CAnimator3D.h"
 #include "CTerrain.h"
 #include "CFrustumSphere.h"
+#include "CUI.h"
 
 #include "CMaterial.h"
 #include "CGraphicsShader.h"
@@ -41,6 +42,7 @@ CCamera::CCamera()
 	, m_tRay{}
 	, m_fFar(1000.f)
 	, m_iLayerCheck(0)
+	, m_eCamType(CAMERA_TYPE::NORMAL_CAM)
 {
 	m_frustum.init();
 	POINT ptRes = CDevice::GetInst()->GetBufferResolution();
@@ -62,11 +64,22 @@ void CCamera::finalupdate()
 
 	CalProjMat();
 
-	CalRay();
+	if (m_eCamType == CAMERA_TYPE::NORMAL_CAM)
+	{
+		CalRay();
 
-	m_frustum.finalupdate();
+		m_frustum.finalupdate();
 
-	CRenderMgr::GetInst()->RegisterCamera(this);
+		CRenderMgr::GetInst()->RegisterCamera(this);
+
+		g_global.g_CamWorldPos = Transform()->GetLocalPos();
+		g_global.g_vCamUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+	}
+	else if (m_eCamType == CAMERA_TYPE::UI_CAM)
+	{
+		CRenderMgr::GetInst()->RegisterUICamera(this);
+	}
+	
 }
 
 
@@ -91,7 +104,6 @@ void CCamera::SortObject()
 	for (auto& pair : m_mapInstGroup_F)
 		pair.second.clear();
 
-
 	m_vecParticle.clear();
 	m_vecDeferredParticle.clear();
 	m_vecPostEffect.clear();
@@ -106,6 +118,25 @@ void CCamera::SortObject()
 
 			for (size_t j = 0; j < vecObj.size(); ++j)
 			{
+				if (vecObj[j]->UI())
+				{
+					if (vecObj[j]->UI()->IsEnable())
+					{
+						//tool 혹은 vecCam[0]이 물체분류중 ui컴포넌트 객체를 만나면 ui카메라의 ui벡터에 넣음 
+						CCamera* pUICam = CRenderMgr::GetInst()->GetUICam();
+
+						if (pUICam)
+							pUICam->GetUIvector().push_back(vecObj[j]);
+
+						continue;
+					}
+					else
+					{
+						continue;
+					}
+
+				}
+
 				if (vecObj[j]->ParticleSystem()&& vecObj[j]->ParticleSystem()->IsEnable())
 				{
 					if (vecObj[j]->ParticleSystem()->GetMaterial()->GetShader()->GetPOV() == SHADER_POV::PARTICLE)
@@ -481,6 +512,19 @@ void CCamera::render_posteffect()
 
 		m_vecPostEffect[0]->MeshRender()->render();
 	}
+}
+
+void CCamera::render_UI()
+{
+	g_transform.matView = m_matView;
+	g_transform.matProj = m_matProj;
+
+	for (size_t i = 0; i < m_vecUI.size(); ++i)
+	{
+		m_vecUI[i]->MeshRender()->render();
+	}
+
+	m_vecUI.clear();
 }
 
 void CCamera::CalViewMat()

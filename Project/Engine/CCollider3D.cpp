@@ -71,13 +71,7 @@ void CCollider3D::UpdateData()
 }
 
 void CCollider3D::OnCollisionEnter(CCollider3D* _Other)
-{/*
-	if (!IsEnable())
-		return;
-
-	if (!_Other->IsEnable())
-		return;*/
-
+{
 	if (0 == m_iCollisionCount)
 	{
 		Ptr <CMaterial> Mtrl = MeshRender()->GetCloneMaterial(0);
@@ -105,13 +99,7 @@ void CCollider3D::OnCollisionEnter(CCollider3D* _Other)
 }
 
 void CCollider3D::OnCollision(CCollider3D* _Other)
-{/*
-	if (!IsEnable())
-		return;
-
-	if (!_Other->IsEnable())
-		return;*/
-
+{
 	const vector<CScript*>& vecScript = GetObj()->GetScripts();
 	for (size_t i = 0; i < vecScript.size(); ++i)
 	{
@@ -129,13 +117,7 @@ void CCollider3D::OnCollision(CCollider3D* _Other)
 }
 
 void CCollider3D::OnCollisionExit(CCollider3D* _Other)
-{/*
-	if (!IsEnable())
-		return;
-
-	if (!_Other->IsEnable())
-		return;*/
-
+{
 	--m_iCollisionCount;
 
 	if (0 == m_iCollisionCount)

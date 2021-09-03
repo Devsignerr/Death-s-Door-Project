@@ -27,6 +27,7 @@ protected:
 	
 
 public:
+	void CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos);
 	CGameObject* IstanciatePrefab(wstring _wstr,UINT _LayerIdx);
 	bool GroundCheck();
 	bool ResearchNode();
@@ -34,6 +35,9 @@ public:
 	//이 함수는 이동할 벡터량을 인자로 받아 네비메쉬를 벗어났다면 이동자체를 시키지 않는다 
 	bool GroundCheck(Vec3 _MovePos,int _RayDir =-1);
 	bool ResearchNode(Vec3 _MovePos, int _RayDir =-1);
+
+public:
+	virtual void ActivateImpactParticle(Vec3 Pos ,Vec3 Dir, int ActivateCount, float SpreadRange);
 
 public:
 	virtual void update();

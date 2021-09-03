@@ -14,11 +14,11 @@ void TPlayerHookFly::update()
 
 	Vec3 Dir = HookPos - PlayerPos;
 	Dir.Normalize();
-	//Dir.y = 0.f;
 
 	PlayerPos += Dir * m_fFlySpeed*fDT;
 
-	CPlayerScript::GetPlayer()->Transform()->SetLocalPos(PlayerPos);
+	CPlayerScript* pPlayer = CPlayerScript::GetPlayer();
+	GetObj()->Transform()->SetLocalPos(PlayerPos);
 
 	if (((CPlayerHook*)CPlayerScript::m_pHook->GetScript())->IsArrived())
 	{

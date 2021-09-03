@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CExplosionParticle.h"
-
+#include "CMemoryPoolScript.h"
+#include "CCameraScript.h"
 #include <Engine/CParticleSystem.h>
 
 CExplosionParticle::CExplosionParticle()
@@ -17,10 +18,35 @@ CExplosionParticle::~CExplosionParticle()
 void CExplosionParticle::awake()
 {
 	m_iMaxCount = GetObj()->ParticleSystem()->GetMaxCount();
+	GetObj()->ParticleSystem()->SetRepeat(false);
 }
 
 void CExplosionParticle::update()
 {
+	if (m_bActive)
+	{
+		CParticleSystem* pParticle = GetObj()->ParticleSystem();
+
+		int AccLiveCount = pParticle->GetAccLiveCount();
+		int MaxLiveCount = pParticle->GetMaxLiveCount();
+
+		if (AccLiveCount >= MaxLiveCount)
+		{
+			m_fCurTime += fDT;
+			float MaxLifeTime = pParticle->GetMaxLifeTime();
+
+			//다음번에 만든다면 .. 일정 시간후 해당 값을 초기화 시켜주는 함수를 만들자..
+			int Off = 0;
+			CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &Off);
+
+			if (m_fCurTime > MaxLifeTime)
+			{
+				SetActive(false);
+				m_fCurTime = 0.f;
+				CMemoryPoolScript::ReturnObj(GetObj());
+			}	
+		}
+	}
 }
 
 void CExplosionParticle::SetActive(bool _b)
@@ -29,19 +55,28 @@ void CExplosionParticle::SetActive(bool _b)
 	{
 		GetObj()->ParticleSystem()->SetMaxCount(0);
 		GetObj()->ParticleSystem()->Activate(false);
+		GetObj()->ParticleSystem()->SetAccLiveCount(0);
+		GetObj()->ParticleSystem()->SetAccTime(0.f);
 	}
 
 	if (_b == true && m_bActive == false)
 	{
 		GetObj()->ParticleSystem()->Activate(true);
-		GetObj()->ParticleSystem()->SetMaxCount(m_iMaxCount);
-		GetObj()->ParticleSystem()->SetAccLiveCount(0);
-		GetObj()->ParticleSystem()->SetAccTime(0.f);
-		
+		GetObj()->ParticleSystem()->SetMaxCount(m_iMaxCount);		
+		GetObj()->ParticleSystem()->Reset();
+
+		//다음번에 만든다면 .. 일정 시간후 해당 값을 초기화 시켜주는 함수를 만들자..
+		int On = 1;
+		CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &On);
 	}
 
 	m_bActive = _b;
 
+}
+
+void CExplosionParticle::Reset()
+{
+	GetObj()->ParticleSystem()->Reset();
 }
 
 

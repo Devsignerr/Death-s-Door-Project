@@ -52,7 +52,7 @@ void TPlayerCharge_Attack_R::update()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-		GetFSM()->ChangeState(L"Idle", 0.01f, L"Idle", false);
+		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::IDLE, 0.01f, L"Idle", false);
 	}
 }
 

@@ -588,6 +588,118 @@ void CResMgr::CreateDefaultMesh()
 	vecIdx.clear();
 
 
+	// ===========
+	// Low Sphere Mesh
+	// ===========
+	fRadius = 1.f;
+
+	// Top
+	v.vPos = Vec3(0.f, fRadius, 0.f);
+	v.vUV = Vec2(0.5f, 0.f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = v.vPos;
+	v.vNormal.Normalize();
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 0.f, 1.f);
+	vecVtx.push_back(v);
+
+	// Body
+	iStackCount = 10; // °¡·Î ºÐÇÒ °³¼ö
+	iSliceCount = 10; // ¼¼·Î ºÐÇÒ °³¼ö
+
+	fStackAngle = XM_PI / iStackCount;
+	fSliceAngle = XM_2PI / iSliceCount;
+
+	fUVXStep = 1.f / (float)iSliceCount;
+	fUVYStep = 1.f / (float)iStackCount;
+
+	for (UINT i = 1; i < iStackCount; ++i)
+	{
+		float phi = i * fStackAngle;
+
+		for (UINT j = 0; j <= iSliceCount; ++j)
+		{
+			float theta = j * fSliceAngle;
+
+			v.vPos = Vec3(fRadius * sinf(i * fStackAngle) * cosf(j * fSliceAngle)
+				, fRadius * cosf(i * fStackAngle)
+				, fRadius * sinf(i * fStackAngle) * sinf(j * fSliceAngle));
+			v.vUV = Vec2(fUVXStep * j, fUVYStep * i);
+			v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+			v.vNormal = v.vPos;
+			v.vNormal.Normalize();
+
+			v.vTangent.x = -fRadius * sinf(phi) * sinf(theta);
+			v.vTangent.y = 0.f;
+			v.vTangent.z = fRadius * sinf(phi) * cosf(theta);
+			v.vTangent.Normalize();
+
+			v.vTangent.Cross(v.vNormal, v.vBinormal);
+			v.vBinormal.Normalize();
+
+			vecVtx.push_back(v);
+		}
+	}
+
+	// Bottom
+	v.vPos = Vec3(0.f, -fRadius, 0.f);
+	v.vUV = Vec2(0.5f, 1.f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = v.vPos;
+	v.vNormal.Normalize();
+
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 0.f, -1.f);
+	vecVtx.push_back(v);
+
+	// ÀÎµ¦½º
+	// ºÏ±ØÁ¡
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(0);
+		vecIdx.push_back(i + 2);
+		vecIdx.push_back(i + 1);
+	}
+
+	// ¸öÅë
+	for (UINT i = 0; i < iStackCount - 2; ++i)
+	{
+		for (UINT j = 0; j < iSliceCount; ++j)
+		{
+			// + 
+			// | \
+			// +--+
+			vecIdx.push_back((iSliceCount + 1) * (i)+(j)+1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j)+1);
+
+			// +--+
+			//  \ |
+			//    +
+			vecIdx.push_back((iSliceCount + 1) * (i)+(j)+1);
+			vecIdx.push_back((iSliceCount + 1) * (i)+(j + 1) + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+		}
+	}
+
+	// ³²±ØÁ¡
+    iBottomIdx = (UINT)vecVtx.size() - 1;
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(iBottomIdx);
+		vecIdx.push_back(iBottomIdx - (i + 2));
+		vecIdx.push_back(iBottomIdx - (i + 1));
+	}
+
+	pMesh = new CMesh;
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	pMesh->SetName(L"Low_SphereMesh");
+	AddRes(pMesh->GetName(), pMesh);
+
+	vecVtx.clear();
+	vecIdx.clear();
+
+
 	{
 		fRadius = 1.f;
 
@@ -731,7 +843,6 @@ void CResMgr::CreateDefaultShader()
 	CGraphicsShader::AddInputLayout("WVP", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, true);
 
 	CGraphicsShader::AddInputLayout("ROWINDEX", 0, DXGI_FORMAT_R32_SINT, true);
-
 	
 	Ptr<CGraphicsShader> pShader;
 
@@ -1165,12 +1276,59 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
 	AddRes<CMaterial>(L"ShadowMapMtrl", pMtrl);
 
-
 	//FireMtrl
 	pMtrl = new CMaterial;
 	pMtrl->m_bDefault = true;
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"FireShader"));
 	AddRes<CMaterial>(L"FireMtrl", pMtrl);
+
+	//UIArrow	
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIShader"));
+	AddRes<CMaterial>(L"UIArrowMtrl", pMtrl);
+
+	//UIFire
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIShader"));
+	AddRes<CMaterial>(L"UIFireMtrl", pMtrl);
+
+	//UIBomb
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIShader"));
+	AddRes<CMaterial>(L"UIBombMtrl", pMtrl);
+
+	//UIHook
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIShader"));
+	AddRes<CMaterial>(L"UIHookMtrl", pMtrl);
+
+	//UITitle
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIShader"));
+	AddRes<CMaterial>(L"UITitleMtrl", pMtrl);
+
+	//UIEnding
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIShader"));
+	AddRes<CMaterial>(L"UIEndingMtrl", pMtrl);
+
+	//UIHP
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"HpShader"));
+	AddRes<CMaterial>(L"UIHPMtrl", pMtrl);
+
+	//UIFont
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIFontShader"));
+	AddRes<CMaterial>(L"UIFontMtrl", pMtrl);
 }
 
 

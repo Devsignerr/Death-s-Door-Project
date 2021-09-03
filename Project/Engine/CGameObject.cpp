@@ -17,6 +17,7 @@
 #include "CLight2D.h"
 #include "CLight3D.h"
 #include "CScript.h"
+#include "CUI.h"
 
 CGameObject::CGameObject()
 	: m_arrCom{}
@@ -266,6 +267,27 @@ void CGameObject::SetAllMeshrenderActive(bool _b)
 		MeshRender()->Activate(_b);
 }
 
+void CGameObject::ChangeLayerIdx(UINT _Idx)
+{
+	CGameObject* Parent = m_pParentObj;
+
+	if (Parent)
+	{
+		DisconnectWithParent();
+		SetLayerIndex(_Idx);
+		RegisterAsParentObj();
+		Parent->AddChild(this);
+	}
+		
+	else 
+	{
+		ReleaseAsParentObj();
+		SetLayerIndex(_Idx);
+		RegisterAsParentObj();
+	}
+
+}
+
 void CGameObject::DisconnectWithParent()
 {
 	// 부모가 없는 오브젝트에 부모해제 함수 호출한 경우
@@ -362,16 +384,22 @@ void CGameObject::SaveToScene(FILE* _pFile)
 	fwrite(&m_iLayerIdx, sizeof(int), 1, _pFile);
 
 	UINT i = 0;
+	wstring Name = {};
 	for (; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (m_arrCom[i] != nullptr)
 		{
-			fwrite(&i, sizeof(UINT), 1, _pFile);
+			Name = m_arrCom[i]->GetComponentName();
+			SaveWString(Name, _pFile);
+			//fwrite(&i, sizeof(UINT), 1, _pFile);
 			m_arrCom[i]->SaveToScene(_pFile);
 		}
 	}
 
-	fwrite(&i, sizeof(UINT), 1, _pFile);
+	//끝이라는걸 알리기 위해서 
+	//fwrite(&i, sizeof(UINT), 1, _pFile);
+	Name = L"END";
+	SaveWString(Name, _pFile);
 
 	UINT iScriptCount = (UINT)m_vecScript.size();
 	fwrite(&iScriptCount, sizeof(UINT), 1, _pFile);
@@ -386,16 +414,7 @@ void CGameObject::SaveToScene(FILE* _pFile)
 
 	for (int k = 0; k < m_vecChild.size(); ++k)
 	{
-		if (m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_BULLET_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_ATTACK_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_BULLET_COL ||
-			m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::INDETERMINATE)
+		if (DONTSAVEGOBJ)
 		{
 			--iChildCount;
 		}
@@ -423,43 +442,109 @@ void CGameObject::LoadFromScene(FILE* _pFile)
 	UINT i = 0;	
 	while (true)
 	{
-		fread(&i, sizeof(UINT), 1, _pFile);
+		//fread(&i, sizeof(UINT), 1, _pFile);
+		wstring wstrComponentName = {};
+		LoadWString(wstrComponentName, _pFile);
+
 		CComponent* pComponent = nullptr;
-		switch ((COMPONENT_TYPE)i)
+		//switch ((COMPONENT_TYPE)i)
+		//{
+		//case COMPONENT_TYPE::TRANSFORM:
+		//	pComponent = new CTransform;			
+		//	break;
+		//case COMPONENT_TYPE::MESHRENDER:
+		//	pComponent = new CMeshRender;			
+		//	break;
+		//case COMPONENT_TYPE::CAMERA:
+		//	pComponent = new CCamera;
+		//	break;
+		//case COMPONENT_TYPE::COLLIDER2D:
+		//	pComponent = new CCollider2D;
+		//	break;
+		//case COMPONENT_TYPE::COLLIDER3D:
+		//	pComponent = new CCollider3D;
+		//	break;
+		//case COMPONENT_TYPE::ANIMATOR2D:
+		//	pComponent = new CAnimator2D;
+		//	break;
+		//case COMPONENT_TYPE::ANIMATOR3D:
+		//	pComponent = new CAnimator3D;
+		//	break;
+		//case COMPONENT_TYPE::LIGHT2D:
+		//	pComponent = new CLight2D;
+		//	break;
+		//case COMPONENT_TYPE::LIGHT3D:
+		//	pComponent = new CLight3D;
+		//	break;
+		//case COMPONENT_TYPE::PARTICLE:
+		//	pComponent = new CParticleSystem;
+		//	break;			
+		//}
+
+		if (wstrComponentName == L"TRANSFORM")
 		{
-		case COMPONENT_TYPE::TRANSFORM:
-			pComponent = new CTransform;			
-			break;
-		case COMPONENT_TYPE::MESHRENDER:
-			pComponent = new CMeshRender;			
-			break;
-		case COMPONENT_TYPE::CAMERA:
-			pComponent = new CCamera;
-			break;
-		case COMPONENT_TYPE::COLLIDER2D:
-			pComponent = new CCollider2D;
-			break;
-		case COMPONENT_TYPE::COLLIDER3D:
-			pComponent = new CCollider3D;
-			break;
-		case COMPONENT_TYPE::ANIMATOR2D:
-			pComponent = new CAnimator2D;
-			break;
-		case COMPONENT_TYPE::ANIMATOR3D:
-			pComponent = new CAnimator3D;
-			break;
-		case COMPONENT_TYPE::LIGHT2D:
-			pComponent = new CLight2D;
-			break;
-		case COMPONENT_TYPE::LIGHT3D:
-			pComponent = new CLight3D;
-			break;
-		case COMPONENT_TYPE::PARTICLE:
-			pComponent = new CParticleSystem;
-			break;			
+			pComponent = new CTransform;
 		}
 
-		if (i == (UINT)COMPONENT_TYPE::END)
+		else if (wstrComponentName == L"MESHRENDER")
+		{
+			pComponent = new CMeshRender;
+		}
+
+		else if (wstrComponentName == L"CAMERA")
+		{
+			pComponent = new CCamera;
+		}
+
+		else if (wstrComponentName == L"COLLIDER2D")
+		{
+			pComponent = new CCollider2D;
+		}
+
+		else if (wstrComponentName == L"COLLIDER3D")
+		{
+			pComponent = new CCollider3D;
+		}
+
+		else if (wstrComponentName == L"ANIMATOR2D")
+		{
+			pComponent = new CAnimator2D;
+		}
+
+		else if (wstrComponentName == L"ANIMATOR3D")
+		{
+			pComponent = new CAnimator3D;
+		}
+
+		else if (wstrComponentName == L"LIGHT2D")
+		{
+			pComponent = new CLight2D;
+		}
+
+		else if (wstrComponentName == L"LIGHT3D")
+		{
+			pComponent = new CLight3D;
+		}
+
+		else if (wstrComponentName == L"PARTICLE")
+		{
+			pComponent = new CParticleSystem;
+		}
+
+
+		else if (wstrComponentName == L"FRUSTUMSPHERE")
+		{
+			pComponent = new CFrustumSphere;
+		}
+
+		else if (wstrComponentName == L"UI")
+		{
+			pComponent = new CUI;
+		}
+
+
+		//if (i == (UINT)COMPONENT_TYPE::END)
+		if (wstrComponentName == L"END")
 			break;
 		else
 		{
@@ -491,7 +576,7 @@ void CGameObject::LoadFromScene(FILE* _pFile)
 		pChild->m_iLayerIdx = iLayerIdx;
 	}
 
-	//만약 내가 참조하던 메쉬가 네비메쉬였다면 리소스 매니저에 스스로를 등록한다 
+	//만약 내가 네비메쉬였다면 리소스 매니저에 스스로를 등록한다 
 	if(MeshRender())
 	{
 		if (nullptr != MeshRender()->GetMesh())

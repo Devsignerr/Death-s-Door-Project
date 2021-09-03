@@ -47,6 +47,8 @@ public:
 
     CGameObject* GetObj() { return m_pObject; }
 
+    wstring GetComponentName();
+
 private:
     void SetGameObject(CGameObject* _pObject) { m_pObject = _pObject; }
     

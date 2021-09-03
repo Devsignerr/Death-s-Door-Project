@@ -40,6 +40,7 @@ public:
 	void Destroy();
 
 public:
+	void awake() override;
 	void update() override;
 
 public:

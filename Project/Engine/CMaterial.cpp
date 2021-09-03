@@ -200,6 +200,7 @@ void CMaterial::Save(const wstring& _strRelativePath)
 	FILE* pFile = nullptr;
 	_wfopen_s(&pFile, strFilePath.c_str(), L"wb");
 
+
 	errno_t err = GetLastError();
 	if (32 == err)
 	{
@@ -249,4 +250,5 @@ void CMaterial::Load(const wstring& _strFilePath)
 	}
 
 	LoadResRefInfo(m_pShader, pFile);
+	fclose(pFile);
 }

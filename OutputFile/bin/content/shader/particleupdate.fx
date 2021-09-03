@@ -20,6 +20,7 @@
 RWStructuredBuffer<tParticle> g_particlebuffer : register(u0);
 RWStructuredBuffer<tParticleShared> g_shared : register(u1);
 
+
 [numthreads(1024, 1, 1)]
 void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
 {
@@ -91,7 +92,13 @@ void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
         else if (g_int_1 == 4)                 
             g_particlebuffer[_ThreadIdx.x].vWorldDir = normalize(vPositionRange)/10.f;
         
-        
+  
+    	// 얇게 길어지며 퍼지는 타입 SPREAD_LONG
+        else if (g_int_1 == 5)
+        {
+            g_particlebuffer[_ThreadIdx.x].vWorldDir = normalize(vPositionRange);
+        }
+             
         
         g_particlebuffer[_ThreadIdx.x].m_fSpeed = g_float_2 + (g_float_3 - g_float_2) * vRand.x;
         
@@ -118,16 +125,28 @@ void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
         
        // 파티클 업데이트        
         g_particlebuffer[_ThreadIdx.x].m_fCurTime += g_DT;
+        
         if (g_particlebuffer[_ThreadIdx.x].m_fCurTime >= g_particlebuffer[_ThreadIdx.x].m_fMaxLife)
         {
             g_particlebuffer[_ThreadIdx.x].iAlive = 0;
             return;
         }
         
-        g_particlebuffer[_ThreadIdx.x].vWorldPos += g_particlebuffer[_ThreadIdx.x].vWorldDir * g_particlebuffer[_ThreadIdx.x].m_fSpeed * g_DT;
+        if (g_particlebuffer[_ThreadIdx.x].iParticleType==5)
+        {
+            //0~1 사이 값
+            float Ratio = g_particlebuffer[_ThreadIdx.x].m_fCurTime / g_particlebuffer[_ThreadIdx.x].m_fMaxLife;
+            float AdditionalSpeed = sin(Ratio * 3.1412);
+            AdditionalSpeed = pow(AdditionalSpeed, 3);
+            g_particlebuffer[_ThreadIdx.x].vWorldPos += g_particlebuffer[_ThreadIdx.x].vWorldDir * g_particlebuffer[_ThreadIdx.x].m_fSpeed * g_DT * AdditionalSpeed;
+        }
+        else
+        {
+            g_particlebuffer[_ThreadIdx.x].vWorldPos += g_particlebuffer[_ThreadIdx.x].vWorldDir * g_particlebuffer[_ThreadIdx.x].m_fSpeed * g_DT;
+        }
+        
     }       
 }
-
 
 
 

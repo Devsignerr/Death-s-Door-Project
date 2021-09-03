@@ -71,6 +71,11 @@ void CScene::AddObject(CGameObject* _pObject, int _iLayerIdx)
 	m_arrLayer[_iLayerIdx]->AddObject(_pObject, false);	
 }
 
+void CScene::AddObject(CGameObject* _pObject, LAYER_TYPE _iLayerType)
+{
+	m_arrLayer[(UINT)_iLayerType]->AddObject(_pObject, false);
+}
+
 CGameObject* CScene::FindObjectByName(const wstring& _strName)
 {
 	for (UINT i = 0; i < MAX_LAYER; ++i)

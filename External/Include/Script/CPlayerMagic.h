@@ -10,6 +10,7 @@ public:
 	void SetBulletDir(Vec3 _Dir) { m_BulletDir = _Dir; }
 	void SetBulletSpeed(float _Speed) { m_BulletSpeed = _Speed; }
 public:
+	void awake() override;
 	void update() override;
 
 public:

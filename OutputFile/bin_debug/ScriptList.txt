@@ -1,4 +1,5 @@
 CActorScript
+CAttackImpactScript
 CBatScript
 CBazookaBullet
 CBazookaScript
@@ -11,10 +12,14 @@ CCrowBullet
 CCrowEggBullet
 CCrowScript
 CEffectScript
+CEnding
 CExplosionParticle
 CFadeScript
+CFireDamageParticle
+CHpBar
 CIronmaceScript
 CMapChange
+CMapGimic
 CMemoryPoolScript
 CMonsterScript
 CNailScript
@@ -37,5 +42,8 @@ CSpearManScript
 CSpiderScript
 CTestMonsterAttackEffect
 CTestMonsterScript
+CTitle
 CTongueBullet
 CTongueScript
+CUpDownSwitch
+CWeaponType

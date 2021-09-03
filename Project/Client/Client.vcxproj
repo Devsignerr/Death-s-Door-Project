@@ -269,6 +269,7 @@ call ClientCopy.bat</Command>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="TreeCtrl.h" />
+    <ClInclude Include="UIGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator3DGUI.cpp" />
@@ -318,6 +319,7 @@ call ClientCopy.bat</Command>
     </ClCompile>
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TreeCtrl.cpp" />
+    <ClCompile Include="UIGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

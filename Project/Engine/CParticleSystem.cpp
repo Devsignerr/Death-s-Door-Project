@@ -10,6 +10,7 @@
 #include "CCopyShaderCS.h"
 #include "CResMgr.h"
 #include "CEventMgr.h"
+#include "CScript.h"
 
 CParticleSystem::CParticleSystem()
 	: CComponent(COMPONENT_TYPE::PARTICLE)
@@ -32,6 +33,7 @@ CParticleSystem::CParticleSystem()
 	, m_iSlow(20)
 	, m_iAccLiveCount(0)
 	, m_iMaxLiveCount(20)
+	, m_bDestroy(false)
 {
 	m_pMesh = CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh");
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
@@ -56,11 +58,12 @@ CParticleSystem::CParticleSystem(CParticleSystem& _origin)
 	, m_vStartScale(_origin.m_vStartScale)
 	, m_vEndScale(_origin.m_vEndScale)
 	, m_ePOV(_origin.m_ePOV)
-	, m_bRepeat(true)
+	, m_bRepeat(_origin.m_bRepeat)
 	, m_eType(_origin.m_eType)
 	, m_iSlow(20)
 	, m_iAccLiveCount(0)
 	, m_iMaxLiveCount(_origin.m_iMaxLiveCount)
+	, m_bDestroy(false)
 {
 	m_pTex = _origin.m_pTex;
 	m_pParticleBuffer = new CStructuredBuffer;
@@ -79,6 +82,34 @@ void CParticleSystem::Activate(bool _b)
 	m_bEnable = _b;
 }
 
+void CParticleSystem::LateDestroy()
+{
+	Transform()->SetLocalPos(Vec3(-9999999.f, -9999999.f, -9999999.f));
+
+	m_iAliveCount = 0;
+	m_fAccTime += fDT;
+
+	if (m_fAccTime > m_fMaxLifeTime)
+	{
+		if(false==GetObj()->IsDead())
+			CScript::DeleteObject(GetObj());
+	}
+
+	m_pUpdateShader->SetSlow(m_iSlow);
+	m_pUpdateShader->SetParticleType(m_eType);
+	m_pUpdateShader->SetMaxParticle(m_iMaxCount);
+	m_pUpdateShader->SetAliveCount(m_iAliveCount);
+	m_pUpdateShader->SetMinLifeTime(m_fMinLifeTime);
+	m_pUpdateShader->SetMaxLifeTime(m_fMaxLifeTime);
+	m_pUpdateShader->SetMinSpeed(m_fMinSpeed);
+	m_pUpdateShader->SetMaxSpeed(m_fMaxSpeed);
+	m_pUpdateShader->SetParticelCreateRange(m_vCreateRange);
+	m_pUpdateShader->SetParticleWorldPos(Transform()->GetWorldPos());
+	m_pUpdateShader->SetParticleBuffer(m_pParticleBuffer);
+
+	m_pUpdateShader->Excute();
+}
+
 void CParticleSystem::awake()
 {
 	int i = GetMaxCount();
@@ -87,6 +118,15 @@ void CParticleSystem::awake()
 
 void CParticleSystem::finalupdate()
 {
+	if (m_bDestroy)
+	{
+		LateDestroy();
+		return;
+	}
+
+	if (!m_bEnable)
+		return;
+
 	m_fAccTime += fDT;
 
 	//m_bRepeat == true 면 반복을 시킬 객체이므로 AccLiveCount같은 변수에 영향을 받지않는다 .
@@ -119,8 +159,6 @@ void CParticleSystem::finalupdate()
 		}
 	}
 
-	
-
 	m_iAccLiveCount += m_iAliveCount;
 
 	Vec3 vPos = Transform()->GetWorldPos();
@@ -138,7 +176,6 @@ void CParticleSystem::finalupdate()
 
 
 	m_pUpdateShader->Excute();
-
 }
 
 void CParticleSystem::render()
@@ -194,9 +231,9 @@ void CParticleSystem::SaveToScene(FILE* _pFile)
 	fwrite(&m_ePOV, sizeof(SHADER_POV), 1, _pFile);
 	fwrite(&m_eType, sizeof(PARTICLE_TYPE), 1, _pFile);
 
-	//fwrite(&m_bRepeat, sizeof(bool), 1, _pFile);
-	//fwrite(&m_iSlow, sizeof(int), 1, _pFile);
-	//fwrite(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
+	fwrite(&m_bRepeat, sizeof(bool), 1, _pFile);
+	fwrite(&m_iSlow, sizeof(int), 1, _pFile);
+	fwrite(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
 
 
 	SaveResRefInfo<CTexture>(m_pTex, _pFile);
@@ -223,9 +260,9 @@ void CParticleSystem::LoadFromScene(FILE* _pFile)
 	fread(&m_ePOV, sizeof(SHADER_POV), 1, _pFile);
 	fread(&m_eType, sizeof(PARTICLE_TYPE), 1, _pFile);
 
-	//fread(&m_bRepeat, sizeof(bool), 1, _pFile);
-	//fread(&m_iSlow, sizeof(int), 1, _pFile);
-	//fread(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
+	fread(&m_bRepeat, sizeof(bool), 1, _pFile);
+	fread(&m_iSlow, sizeof(int), 1, _pFile);
+	fread(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
 
 	LoadResRefInfo<CTexture>(m_pTex, _pFile);
 }

@@ -37,6 +37,40 @@ friend class CSingleton;
 							 SET(type,param)
 
 
+#define DONTSAVELAYER m_iLayerIndex == (UINT)LAYER_TYPE::MAP_GIMIC_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::UI|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_EFFECT|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_HOOK_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_EFFECT|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_BULLET_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_ATTACK_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_BULLET_COL|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_EFFECT|| \
+			          m_iLayerIndex == (UINT)LAYER_TYPE::INDETERMINATE
+
+
+#define DONTSAVEGOBJ m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MAP_GIMIC_COL|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::UI|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_EFFECT|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_HOOK_COL|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_EFFECT|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_COL|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL|| \
+					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_BULLET_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_ATTACK_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_BULLET_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_EFFECT|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::INDETERMINATE
+
+
 #include "SimpleMath.h"
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -115,6 +149,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,
 	LIGHT3D,
 
+	UI,
 	PARTICLE,
 
 	TERRAIN,
@@ -263,37 +298,36 @@ enum class FACE_TYPE
 
 enum class LAYER_TYPE
 {
-	CAMERA,
-	MAP,
-	MAP_GIMIC,
-	NAVMESH,
-	LIGHT,
-	PARTICLE,
-	POSTEFFECT,
+	MAP_GIMIC_COL,
 	UI,
-
-	PLAYER = 10,
 	PLAYER_EFFECT,
+	PLAYER_HOOK_COL,
 	PLAYER_COL,
-	PLAYER_ATTACK_COL,
-
-	MONSTER = 15,
+	PLAYER_ATTACK_COL  =  5,
 	MONSTER_EFFECT,
 	MONSTER_COL,
 	MONSTER_ATTACK_COL,
 	MONSTER_BULLET_COL,
-
-	BOSS = 20,
-	BOSS_EFFECT,
-	BOSS_COL,
+	BOSS_COL   =  10,
 	BOSS_ATTACK_COL,
 	BOSS_BULLET_COL,
+	BOSS_EFFECT,
+	INDETERMINATE,
 
-	PLAYER_EFFECT_DONSAVE,
-
-	ITEM = 25,
+	CAMERA  = 15,
+	MAP,
+	MAP_GIMIC,	
+	NAVMESH,
+	LIGHT,
+	PARTICLE =20,
+	POSTEFFECT,
+	PLAYER,
+	MONSTER,
+	BOSS,
 	SCENE_CHANGE_COL,
-	INDETERMINATE
+	MEMORYPOOL,
+	SKYBOX
+
 };
 
 
@@ -330,4 +364,15 @@ enum class PARTICLE_TYPE
 	// ======= 4 ==========
 	STAY,
 
+	//====================
+	// 얇게 길어지며 퍼지는 타입
+	// ======= 5 ==========
+	SPREAD_LONG,
+
+};
+
+enum class CAMERA_TYPE
+{
+	NORMAL_CAM,
+	UI_CAM
 };

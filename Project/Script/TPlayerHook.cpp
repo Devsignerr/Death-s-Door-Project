@@ -13,7 +13,7 @@ void TPlayerHook::Fly()
 	{
 		((CPlayerHook*)CPlayerScript::m_pHook->GetScript())->SetHookDir(((CPlayerScript*)GetScript())->GetPlayerFront());
 
-
+		((CPlayerHook*)CPlayerScript::m_pHook->GetScript())->SetActive(true);
 		Vec3 PlayerPos = GetObj()->Transform()->GetLocalPos();
 		PlayerPos.y += 130.f;
 
@@ -24,6 +24,7 @@ void TPlayerHook::Fly()
 
 		CPlayerScript::m_pHook->DisconnectWithParent();
 		CPlayerScript::m_pHook->RegisterAsParentObj();
+
 
 		m_BulletLimit = true;
 	}

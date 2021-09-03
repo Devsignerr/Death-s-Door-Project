@@ -82,7 +82,13 @@ void Particle3DGUI::render()
         //====================
         //제자리에서 머무는 타입
         // ======= 4 ==========
-        "STAY", };
+        "STAY", 
+    
+        //====================
+        // 얇게 길어지며 퍼지는 타입
+        // ======= 5 ==========
+        "SPREAD_LONG",
+    };
 
    
     static int item_current_idx = 0;
@@ -261,6 +267,10 @@ void Particle3DGUI::SaveParticleFile()
     SHADER_POV Pov = pParticle->GetPOV();
     PARTICLE_TYPE Type = pParticle->GetType();
 
+    bool bRepeat = pParticle->IsRepeat();
+    int  iSlow = pParticle->GetSlow();
+    int  iMaxLiveCount = pParticle->GetMaxLiveCount();
+
     Ptr<CTexture> Tex = pParticle->GetTexture();
 
     fwrite(&maxcount, sizeof(int), 1, File);
@@ -277,6 +287,10 @@ void Particle3DGUI::SaveParticleFile()
     fwrite(&EndScale, sizeof(Vec4), 1, File);
     fwrite(&Pov, sizeof(SHADER_POV), 1, File);
     fwrite(&Type, sizeof(PARTICLE_TYPE), 1, File);
+
+    fwrite(&bRepeat, sizeof(bool), 1, File);
+    fwrite(&iSlow, sizeof(int), 1, File);
+    fwrite(&iMaxLiveCount, sizeof(int), 1, File);
 
     SaveResRefInfo<CTexture>(Tex, File);
     
@@ -330,6 +344,9 @@ void Particle3DGUI::LoadParticleFile()
     Vec4  EndScale = {};
     SHADER_POV Pov = (SHADER_POV)0;
     PARTICLE_TYPE Type = (PARTICLE_TYPE)0;
+    bool bRepeat = false;
+    int  iSlow = 0;
+    int  iMaxLiveCount = 0;
 
     Ptr<CTexture> Tex = nullptr;
 
@@ -349,6 +366,10 @@ void Particle3DGUI::LoadParticleFile()
     fread(&Pov, sizeof(SHADER_POV), 1, _pFile);
     fread(&Type, sizeof(PARTICLE_TYPE), 1, _pFile);
 
+    fread(&bRepeat, sizeof(bool), 1, _pFile);
+    fread(&iSlow, sizeof(int), 1, _pFile);
+    fread(&iMaxLiveCount, sizeof(int), 1, _pFile);
+
     LoadResRefInfo<CTexture>(Tex, _pFile);
 
     pParticle->SetMaxParticleCount(maxcount);
@@ -366,6 +387,10 @@ void Particle3DGUI::LoadParticleFile()
     
     pParticle->SetPOV(Pov);
     pParticle->SetType(Type);
+
+    pParticle->SetRepeat(bRepeat);
+    pParticle->SetSlow(iSlow);
+    pParticle->SetMaxLiveCount(iMaxLiveCount);
 
     pParticle->SetTexture(Tex);
 

@@ -298,7 +298,7 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
         if (test < Burnf)
             clip(-1);
         else if (test < Burnf + 0.05f && test > Burnf - 0.05f)
-            output.vDiff = float4(g_vec4_0.x, g_vec4_0.y, g_vec4_0.z, 1.f);
+            output.vDiffLight = float4(g_vec4_0.x, g_vec4_0.y, g_vec4_0.z, 1.f);
     }
     
     
@@ -327,7 +327,6 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
     output.vDiffLight.x = output.vDiffLight.x * g_vEmis.x;
     output.vDiffLight.y = output.vDiffLight.y * g_vEmis.y;
     output.vDiffLight.z = output.vDiffLight.z * g_vEmis.z;
-    
     
     
     return output;

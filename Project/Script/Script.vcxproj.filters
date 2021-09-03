@@ -349,6 +349,30 @@
     <ClInclude Include="CExplosionParticle.h">
       <Filter>ScriptCode\Effect\PartcleScript</Filter>
     </ClInclude>
+    <ClInclude Include="CHpBar.h">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CWeaponType.h">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CTitle.h">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnding.h">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CMapGimic.h">
+      <Filter>ScriptCode\Map_Gimic</Filter>
+    </ClInclude>
+    <ClInclude Include="CUpDownSwitch.h">
+      <Filter>ScriptCode\Map_Gimic\UpDown_Switch</Filter>
+    </ClInclude>
+    <ClInclude Include="CFireDamageParticle.h">
+      <Filter>ScriptCode\Effect\PartcleScript</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttackImpactScript.h">
+      <Filter>ScriptCode\Effect\AttackImpact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -485,6 +509,18 @@
     </Filter>
     <Filter Include="ScriptCode\Effect\SlashEffect">
       <UniqueIdentifier>{ec25432e-85b4-45ff-abf5-04d4445c70f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\UI">
+      <UniqueIdentifier>{14da5653-a8ba-4a3a-a95d-e3685a12c8ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic">
+      <UniqueIdentifier>{f0b9c29a-833f-49d1-9f07-adabd770f10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\UpDown_Switch">
+      <UniqueIdentifier>{e98fff0c-edc4-4829-aeaf-f077dc4d6985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Effect\AttackImpact">
+      <UniqueIdentifier>{623b0d7d-473e-483e-9f3e-187c0a893c41}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -832,6 +868,30 @@
     </ClCompile>
     <ClCompile Include="CExplosionParticle.cpp">
       <Filter>ScriptCode\Effect\PartcleScript</Filter>
+    </ClCompile>
+    <ClCompile Include="CHpBar.cpp">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CWeaponType.cpp">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CEnding.cpp">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CTitle.cpp">
+      <Filter>ScriptCode\System\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CMapGimic.cpp">
+      <Filter>ScriptCode\Map_Gimic</Filter>
+    </ClCompile>
+    <ClCompile Include="CUpDownSwitch.cpp">
+      <Filter>ScriptCode\Map_Gimic\UpDown_Switch</Filter>
+    </ClCompile>
+    <ClCompile Include="CFireDamageParticle.cpp">
+      <Filter>ScriptCode\Effect\PartcleScript</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttackImpactScript.cpp">
+      <Filter>ScriptCode\Effect\AttackImpact</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

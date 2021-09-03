@@ -17,7 +17,7 @@ void TPlayerCharge_L::update()
 	{
 		if (KEY_NONE(KEY_TYPE::MBTN))
 		{
-			GetFSM()->ChangeState(L"Idle", 0.03f, L"Idle", false);
+			((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::IDLE, 0.03f, L"Idle", false);
 		}
 	}
 
@@ -32,7 +32,7 @@ void TPlayerCharge_L::update()
 		{
 			if (nullptr == CPlayerScript::m_pHeavySlashR)
 			{
-				CPlayerScript::m_pHeavySlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_HEAVY_R", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+				CPlayerScript::m_pHeavySlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_HEAVY_R", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 				CPlayerScript::m_pHeavySlashR->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 				CPlayerScript::m_pHeavySlashR->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 				CPlayerScript::m_pHeavySlashR->Transform()->SetLocalPos(Vec3(30.f, 50.f, -250.f));
@@ -54,14 +54,14 @@ void TPlayerCharge_L::update()
 
 
 
-			GetFSM()->ChangeState(L"Charge_Attack_R", 0.03f, L"Charge_Attack_R", false);
+			((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_CHARGE_ATTACK_R, 0.03f, L"Charge_Attack_R", false);
 		}
 	}
 
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-		GetFSM()->ChangeState(L"Charge_Max_L", 0.03f, L"Charge_Max_L", false);
+		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_CHARGE_MAX_L, 0.03f, L"Charge_Max_L", false);
 	}
 }
 

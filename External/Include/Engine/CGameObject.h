@@ -14,6 +14,7 @@ class CLight2D;
 class CLight3D;
 class CTerrain;
 class CFrustumSphere;
+class CUI;
 
 class CScript;
 
@@ -57,6 +58,7 @@ public:
     CAnimator2D* Animator2D() { return (CAnimator2D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR2D]; }
     CAnimator3D* Animator3D() { return (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D]; }
     CFrustumSphere* FrustumSphere() { return (CFrustumSphere*)m_arrCom[(UINT)COMPONENT_TYPE::FRUSTUMSPHERE]; }
+    CUI* UI() { return (CUI*)m_arrCom[(UINT)COMPONENT_TYPE::UI]; }
 
     CTerrain* Terrain() {return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN];}
     CComponent* GetComponent(COMPONENT_TYPE _eType) {return m_arrCom[(UINT)_eType];}
@@ -82,6 +84,7 @@ public:
     void SetAllMeshrenderActive(bool _b);
 
 public:
+    void ChangeLayerIdx(UINT _Idx);
 
     // 부모 오브젝트와의 연결 해제
     void DisconnectWithParent(); 

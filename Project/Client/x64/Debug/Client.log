@@ -76,7 +76,9 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -110,6 +112,4 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   {
   };
   
-  TestScene.cpp
-C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Client.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\Client.exe

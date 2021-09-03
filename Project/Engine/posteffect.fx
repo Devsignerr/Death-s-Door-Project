@@ -17,6 +17,8 @@
 #define FADETYPE     g_int_0
 #define FADETIME      g_float_0
 
+#define BLACKWHITE    g_int_1
+
 struct VTX_IN
 {
     float3 vLocalPos : POSITION;
@@ -68,6 +70,22 @@ float4 PS_PostEffect(VTX_OUT _in) : SV_Target
     vOriginalColor = lerp(vOriginalColor, vDownSampleColor * 0.81f, fDOFDepth);
     
     vOriginalColor += vBloomColor;
+    
+    //화면 흑백으로 강하게 대비 처리 
+    if (BLACKWHITE==1)
+    {
+        float Brigtness = (vOriginalColor.x + vOriginalColor.y + vOriginalColor.z) / 3.f;
+        
+        if (Brigtness > 0.5f)
+        {
+            vOriginalColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        else
+        {
+            vOriginalColor = float4(.0f, .0f, .0f, .0f);
+        }
+        
+    }
     
     return Fade_In_Out(vOriginalColor, FADETYPE, FADETIME);
 }

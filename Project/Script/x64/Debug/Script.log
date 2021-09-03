@@ -1,4 +1,5 @@
 ﻿  .\Project\Script\CActorScript.h
+  .\Project\Script\CAttackImpactScript.h
   .\Project\Script\CBatScript.h
   .\Project\Script\CBazookaBullet.h
   .\Project\Script\CBazookaScript.h
@@ -11,10 +12,14 @@
   .\Project\Script\CCrowEggBullet.h
   .\Project\Script\CCrowScript.h
   .\Project\Script\CEffectScript.h
+  .\Project\Script\CEnding.h
   .\Project\Script\CExplosionParticle.h
   .\Project\Script\CFadeScript.h
+  .\Project\Script\CFireDamageParticle.h
+  .\Project\Script\CHpBar.h
   .\Project\Script\CIronmaceScript.h
   .\Project\Script\CMapChange.h
+  .\Project\Script\CMapGimic.h
   .\Project\Script\CMemoryPoolScript.h
   .\Project\Script\CMonsterScript.h
   .\Project\Script\CNailScript.h
@@ -38,8 +43,11 @@
   .\Project\Script\CSpiderScript.h
   .\Project\Script\CTestMonsterAttackEffect.h
   .\Project\Script\CTestMonsterScript.h
+  .\Project\Script\CTitle.h
   .\Project\Script\CTongueBullet.h
   .\Project\Script\CTongueScript.h
+  .\Project\Script\CUpDownSwitch.h
+  .\Project\Script\CWeaponType.h
   .\Project\Script\TCastleCutScene.h
   .\Project\Script\TCastleDeath.h
   .\Project\Script\TCastleFly.h
@@ -112,6 +120,9 @@
   .\Project\Script\TPlayerRun.h
   .\Project\Script\TPlayerSlash_Attack_L.h
   .\Project\Script\TPlayerSlash_Attack_R.h
-  114개 파일이 복사되었습니다.
+  122개 파일이 복사되었습니다.
+  CExplosionParticle.cpp
+  CPlayerArrow.cpp
   CPlayerBomb.cpp
+  코드를 생성하고 있습니다...
   Script.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Script\Script_debug.lib

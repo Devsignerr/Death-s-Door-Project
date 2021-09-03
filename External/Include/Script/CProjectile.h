@@ -11,6 +11,7 @@ protected:
 	bool  m_bMemoryObj;
 
 public:
+	
 	virtual void ActivateExplosionParticle() {}
 	virtual void ReturnToMemoryPool();
 

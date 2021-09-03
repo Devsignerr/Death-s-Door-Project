@@ -43,6 +43,14 @@ void PrefabGUI::render()
 
 		CGameObject* pGameObject = Prefab->Instantiate();
 
+		UINT childcount = pGameObject->GetChild().size();
+
+		for (UINT i = 0; i < childcount; ++i)
+		{
+			int LayerIdx = Prefab->GetProtoObj()->GetChild()[i]->GetLayerIndex();
+			pGameObject->GetChild()[i]->SetLayerIndex(LayerIdx);
+		}
+
 		int PrefabCount = 0;
 		wstring PrefabNumber = L"0";
 

@@ -3,6 +3,7 @@
 
 #include "value.fx"
 #include "func.fx"
+static const float PI = 3.14159265f;
 
 struct VTX_INPUT
 {
@@ -166,12 +167,11 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
     // 0 -- 1
     // | \  |
     // 3 -- 2
-    float fRatio = g_particelbuffer[instID].m_fCurTime / g_particelbuffer[instID].m_fMaxLife;    
+    float fRatio = (g_particelbuffer[instID].m_fCurTime / g_particelbuffer[instID].m_fMaxLife) ;
     float fScale = (g_vec4_1 - g_vec4_0) * fRatio + g_vec4_0;   
-    float4 vSpin = 0.f;
-    float4 vSpin2 = 0.f;
     
-    
+    float4 vSpin = 1.f;
+    float4 vSpin2 = 1.f;
     
     if (g_particelbuffer[instID].iParticleType==0)
     {  
@@ -186,12 +186,8 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
             vSpin = float4(sin(fRatio), cos(fRatio), 0.f, 0.f);
         }
     }
-    else
-    {
-        vSpin = 1.f;
-        vSpin2 = 1.f;
-    }
     
+   
     arrVTX[0].vPosition = _in[0].vViewPos + float4(-fScale / 2.f, fScale / 2, 0.f, 0.f) * vSpin;
     arrVTX[0].vUV = float2(0.f, 0.f);
     arrVTX[0].fInstID = (float) instID;
@@ -207,7 +203,8 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
     arrVTX[3].vPosition = _in[0].vViewPos + float4(-fScale / 2.f, -fScale / 2, 0.f, 0.f) * vSpin2;
     arrVTX[3].vUV = float2(0.f, 1.f);
     arrVTX[3].fInstID = (float) instID;
-   
+    
+
     for (int i = 0; i < 4; ++i)
     {
         arrVTX[i].vPosition = mul(arrVTX[i].vPosition, g_matProj);

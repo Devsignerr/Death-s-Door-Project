@@ -75,13 +75,13 @@ void TPlayerSlash_Attack_R::update()
 			CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(true);
 			CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
 
-			GetFSM()->ChangeState(L"Slash_L", 0.01f, L"Slash_L", false);
+			((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_ATTACK_L, 0.01f, L"Slash_L", false);
 		}
 	}
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-		GetFSM()->ChangeState(L"Idle", 0.01f, L"Idle", false);
+		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::IDLE, 0.01f, L"Idle", false);
 	}
 
 }

@@ -8,6 +8,7 @@
 #include "CStructuredBuffer.h"
 #include "CCamera.h"
 #include "CLight3D.h"
+#include "CTransform.h"
 
 #include "CScene.h"
 #include "CSceneMgr.h"
@@ -33,6 +34,8 @@ CRenderMgr::~CRenderMgr()
 	SAFE_DELETE(m_pLight2DBuffer);
 	SAFE_DELETE(m_pLight3DBuffer);
 	SAFE_DELETE(m_pAnim2DBuffer);
+	CGameObject* pUICam = m_UICam->GetObj();
+	SAFE_DELETE(pUICam);
 	Safe_Delete_Array(m_arrMRT);
 }
 
@@ -184,8 +187,7 @@ void CRenderMgr::render_play()
 
 	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 
-	//for (size_t i = 0; i < m_vecCam.size(); ++i)
-	//{
+	
 	m_vecCam[0]->render_forward();
 
 	Ptr<CTexture> pSrcTex2 = CResMgr::GetInst()->FindDataTexture(L"SwapChainRenderTargetTex");
@@ -194,8 +196,21 @@ void CRenderMgr::render_play()
 
 	CustomCopy(m_pSwapChainTarget, pDstTex2, COPY_TYPE::DOF);
 
+
+	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+
 	m_vecCam[0]->render_posteffect();
-	//}	
+
+	if (nullptr != m_UICam)
+	{
+		m_UICam->Transform()->finalupdate();
+		m_UICam->finalupdate();
+		m_UICam->render_UI();
+	}
+
+	g_transform.matView = GetCurCam()->GetViewMat();
+	g_transform.matViewInv = GetCurCam()->GetViewInvMat();
+	g_transform.matProj = GetCurCam()->GetProjMat();
 }
 
 void CRenderMgr::render_tool()
@@ -247,7 +262,20 @@ void CRenderMgr::render_tool()
 
 	CustomCopy(m_pSwapChainTarget, pDstTex, COPY_TYPE::DOF);
 
+	GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+
 	m_pToolCam->render_posteffect();
+
+	if (nullptr != m_UICam)
+	{
+		m_UICam->Transform()->finalupdate();
+		m_UICam->finalupdate();
+		m_UICam->render_UI();
+	}
+		
+	g_transform.matView = GetCurCam()->GetViewMat();
+	g_transform.matViewInv = GetCurCam()->GetViewInvMat();
+	g_transform.matProj = GetCurCam()->GetProjMat();
 }
 
 

@@ -65,12 +65,15 @@ CScript* CSaveLoadMgr::LoadScript(FILE* _pFile)
     wstring strName;
     LoadWString(strName, _pFile);
 
-    int iScriptType = -1;
-    fread(&iScriptType, sizeof(UINT), 1, _pFile);
+    //int iScriptType = -1;
+    //fread(&iScriptType, sizeof(UINT), 1, _pFile);
 
-    CScript* pScript = CScriptMgr::GetScript(iScriptType);
+    wstring wstrScriptName;
+    LoadWString(wstrScriptName, _pFile);
+
+    CScript* pScript = CScriptMgr::GetScript(wstrScriptName);
     pScript->LoadFromScene(_pFile);
-    pScript->SetName(strName);
+    pScript->SetName(wstrScriptName);
 
     return pScript;
 }

@@ -13,6 +13,7 @@ public:
 
 public:
     virtual void SetActive(bool _b) override;
+    void Reset();
 
 public:
     CExplosionParticle();

@@ -8,9 +8,6 @@
 
 void TPlayerBomb::update()
 {
-	CAnimator3D* CurAni = GetObj()->Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
-
 	m_fCurTime += fDT;
 
 	if (m_fRotateTime > m_fCurTime)

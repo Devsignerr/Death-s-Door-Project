@@ -65,7 +65,7 @@ void TPlayerSlash_Attack_L::update()
 		{
 			if (nullptr == CPlayerScript::m_pHorizonSlashR)
 			{
-				CPlayerScript::m_pHorizonSlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_R", (UINT)LAYER_TYPE::PLAYER_EFFECT_DONSAVE);
+				CPlayerScript::m_pHorizonSlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_R", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalRot(Vec3(0.f, XM_PI, 0.f));
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalPos(Vec3(0.f, 30.f, -170.f));
@@ -78,7 +78,7 @@ void TPlayerSlash_Attack_L::update()
 			CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(true);
 			CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(false);
 			
-			GetFSM()->ChangeState(L"Slash_R", 0.01f, L"Slash_R", false);
+			((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_ATTACK_R, 0.01f, L"Slash_R", false);
 		}
 	}
 

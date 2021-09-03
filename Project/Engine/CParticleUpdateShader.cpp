@@ -16,7 +16,10 @@ CParticleUpdateShader::CParticleUpdateShader()
 CParticleUpdateShader::~CParticleUpdateShader()
 {
 	if (nullptr != m_pSharedBuffer)
+	{
 		delete m_pSharedBuffer;
+	}
+		
 }
 
 void CParticleUpdateShader::UpdateData()

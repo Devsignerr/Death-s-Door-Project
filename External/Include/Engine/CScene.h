@@ -21,6 +21,7 @@ public:
 
 public:
     void AddObject(CGameObject* _pObject, int _iLayerIdx);
+    void AddObject(CGameObject* _pObject, LAYER_TYPE _iLayerType);
     CLayer* GetLayer(int _iLayerIdx) 
     { 
         assert(!(_iLayerIdx < 0 || MAX_LAYER <= _iLayerIdx));

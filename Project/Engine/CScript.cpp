@@ -5,6 +5,7 @@
 #include "CScene.h"
 
 #include "CEventMgr.h"
+#include <Script/CScriptMgr.h>
 
 CScript::CScript(int _iScriptType)
 	: m_iScriptType(_iScriptType)
@@ -80,6 +81,8 @@ void CScript::SaveToScene(FILE* _pFile)
 {
 	CComponent::SaveToScene(_pFile);
 
-	fwrite(&m_iScriptType, sizeof(UINT), 1, _pFile);
+	wstring ScriptName = CScriptMgr::GetScriptName(this);
+	SaveWString(ScriptName, _pFile);
+	//fwrite(&m_iScriptType, sizeof(UINT), 1, _pFile);
 }
 

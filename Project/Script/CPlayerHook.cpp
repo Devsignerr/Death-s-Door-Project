@@ -28,18 +28,27 @@ void CPlayerHook::Destroy()
 {
 	returnAllChainToMemoryPool();
 
-	tEvent even = {};
-
-	even.eEvent = EVENT_TYPE::DELETE_OBJECT;
-	even.lParam = (DWORD_PTR)GetObj();
-
-	CEventMgr::GetInst()->AddEvent(even);
-
 	m_vecChain.clear();
+
+	if (false == GetObj()->IsDead())
+	{
+		GetObj()->SetAllMeshrenderActive(false);
+		GetObj()->SetAllColliderActive(false);
+		Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));	
+		DeleteObject(GetObj());
+	}
+}
+
+void CPlayerHook::awake()
+{
+	CreateCollider((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, Vec3(50.f, 50.f, 50.f), Vec3(0.f, 0.f, -50.f));
 }
 
 void CPlayerHook::update()
 {
+	if (false == m_bActive)
+		return;
+
 	//갈고리 날아가는중
 	if (!m_bHooked)
 		Spawnupdate();

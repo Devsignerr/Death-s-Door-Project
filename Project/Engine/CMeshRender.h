@@ -11,8 +11,6 @@ private:
     Ptr<CMesh>              m_pMesh;
     vector<Ptr<CMaterial>>  m_vecMtrl;
 
-
-
 public:
     virtual void update();
     virtual void finalupdate();

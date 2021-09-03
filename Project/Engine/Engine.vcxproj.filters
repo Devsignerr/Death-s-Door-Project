@@ -44,7 +44,7 @@
       <Filter>Engine\02. Manager\Device\ConstBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Ptr.h">
-      <Filter>Engine\07. Module\Ptr</Filter>
+      <Filter>Engine\06. Scene\07. Module\Ptr</Filter>
     </ClInclude>
     <ClInclude Include="CGameObject.h">
       <Filter>Engine\03. GameObject</Filter>
@@ -59,7 +59,7 @@
       <Filter>Engine\04. Component\Camera</Filter>
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
-      <Filter>Engine\07. Module\SinpleMath</Filter>
+      <Filter>Engine\06. Scene\07. Module\SinpleMath</Filter>
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>Engine\00. Header</Filter>
@@ -77,7 +77,7 @@
       <Filter>Engine\02. Manager\ResMgr</Filter>
     </ClInclude>
     <ClInclude Include="CEntity.h">
-      <Filter>Engine\07. Module</Filter>
+      <Filter>Engine\06. Scene\07. Module</Filter>
     </ClInclude>
     <ClInclude Include="CTexture.h">
       <Filter>Engine\05. Resource\Texture</Filter>
@@ -131,7 +131,7 @@
       <Filter>Engine\04. Component\Light2D</Filter>
     </ClInclude>
     <ClInclude Include="CInterface.h">
-      <Filter>Engine\07. Module</Filter>
+      <Filter>Engine\06. Scene\07. Module</Filter>
     </ClInclude>
     <ClInclude Include="CSound.h">
       <Filter>Engine\05. Resource\Sound</Filter>
@@ -158,7 +158,7 @@
       <Filter>Engine\05. Resource\MeshData</Filter>
     </ClInclude>
     <ClInclude Include="CFBXLoader.h">
-      <Filter>Engine\07. Module</Filter>
+      <Filter>Engine\06. Scene\07. Module</Filter>
     </ClInclude>
     <ClInclude Include="CAnimator3D.h">
       <Filter>Engine\04. Component\Animator3D</Filter>
@@ -185,10 +185,10 @@
       <Filter>Engine\04. Component\Camera</Filter>
     </ClInclude>
     <ClInclude Include="CFSM.h">
-      <Filter>Engine\07. Module\FSM</Filter>
+      <Filter>Engine\06. Scene\07. Module\FSM</Filter>
     </ClInclude>
     <ClInclude Include="CState.h">
-      <Filter>Engine\07. Module\FSM</Filter>
+      <Filter>Engine\06. Scene\07. Module\FSM</Filter>
     </ClInclude>
     <ClInclude Include="CHorizontalBlur.h">
       <Filter>ShaderCode\ComputeShader\CopyTexture\Horizontal</Filter>
@@ -201,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="CComponent.h">
       <Filter>Engine\04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CUI.h">
+      <Filter>Engine\04. Component\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,7 +244,7 @@
       <Filter>Engine\02. Manager\Device\ConstBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Ptr.cpp">
-      <Filter>Engine\07. Module\Ptr</Filter>
+      <Filter>Engine\06. Scene\07. Module\Ptr</Filter>
     </ClCompile>
     <ClCompile Include="CGameObject.cpp">
       <Filter>Engine\03. GameObject</Filter>
@@ -277,7 +280,7 @@
       <Filter>Engine\02. Manager\ResMgr</Filter>
     </ClCompile>
     <ClCompile Include="CEntity.cpp">
-      <Filter>Engine\07. Module</Filter>
+      <Filter>Engine\06. Scene\07. Module</Filter>
     </ClCompile>
     <ClCompile Include="CTexture.cpp">
       <Filter>Engine\05. Resource\Texture</Filter>
@@ -331,7 +334,7 @@
       <Filter>Engine\04. Component\Light2D</Filter>
     </ClCompile>
     <ClCompile Include="CInterface.cpp">
-      <Filter>Engine\07. Module</Filter>
+      <Filter>Engine\06. Scene\07. Module</Filter>
     </ClCompile>
     <ClCompile Include="CSound.cpp">
       <Filter>Engine\05. Resource\Sound</Filter>
@@ -364,7 +367,7 @@
       <Filter>Engine\05. Resource\MeshData</Filter>
     </ClCompile>
     <ClCompile Include="CFBXLoader.cpp">
-      <Filter>Engine\07. Module</Filter>
+      <Filter>Engine\06. Scene\07. Module</Filter>
     </ClCompile>
     <ClCompile Include="CAnimator3D.cpp">
       <Filter>Engine\04. Component\Animator3D</Filter>
@@ -388,10 +391,10 @@
       <Filter>Engine\04. Component\Camera</Filter>
     </ClCompile>
     <ClCompile Include="CFSM.cpp">
-      <Filter>Engine\07. Module\FSM</Filter>
+      <Filter>Engine\06. Scene\07. Module\FSM</Filter>
     </ClCompile>
     <ClCompile Include="CState.cpp">
-      <Filter>Engine\07. Module\FSM</Filter>
+      <Filter>Engine\06. Scene\07. Module\FSM</Filter>
     </ClCompile>
     <ClCompile Include="CHorizontalBlur.cpp">
       <Filter>ShaderCode\ComputeShader\CopyTexture\Horizontal</Filter>
@@ -401,6 +404,9 @@
     </ClCompile>
     <ClCompile Include="CFrustumSphere.cpp">
       <Filter>Engine\04. Component\FrustumSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="CUI.cpp">
+      <Filter>Engine\04. Component\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -443,12 +449,6 @@
     <Filter Include="Engine\02. Manager\Device\ConstBuffer">
       <UniqueIdentifier>{864c76d5-5c86-4482-b027-0b2264e16cfe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\07. Module">
-      <UniqueIdentifier>{0d0cf3a6-849b-4384-8f23-f6a01d648feb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\07. Module\Ptr">
-      <UniqueIdentifier>{a0ab5050-b6d9-41fa-9bc6-a970b03db606}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\05. Resource">
       <UniqueIdentifier>{cd3fd2b5-d284-4030-8295-2c70f77bbb07}</UniqueIdentifier>
     </Filter>
@@ -478,9 +478,6 @@
     </Filter>
     <Filter Include="Engine\04. Component\Particle">
       <UniqueIdentifier>{a2d03e29-88d3-4fea-b127-856d86f39a23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\07. Module\SinpleMath">
-      <UniqueIdentifier>{97646efe-8c4b-46d3-afad-0c3b963aa46b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\06. Scene">
       <UniqueIdentifier>{1c805a68-ce9b-48f5-963f-6f872fb490c9}</UniqueIdentifier>
@@ -569,9 +566,6 @@
     <Filter Include="Engine\04. Component\Camera\LightCamera">
       <UniqueIdentifier>{a2bcfbfd-8b82-4889-896c-c5fc335dd5c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\07. Module\FSM">
-      <UniqueIdentifier>{0c160096-d2f9-4803-8ce0-bddf1f5b124f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ShaderCode\ComputeShader\CopyTexture\Vertical">
       <UniqueIdentifier>{118d2fcf-aadd-4709-a4c4-7f053de60d51}</UniqueIdentifier>
     </Filter>
@@ -583,6 +577,21 @@
     </Filter>
     <Filter Include="Engine\04. Component\Collider3D">
       <UniqueIdentifier>{4a271797-a290-4ee6-8c9d-4c611b535426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\06. Scene\07. Module">
+      <UniqueIdentifier>{0d0cf3a6-849b-4384-8f23-f6a01d648feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\06. Scene\07. Module\Ptr">
+      <UniqueIdentifier>{a0ab5050-b6d9-41fa-9bc6-a970b03db606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\06. Scene\07. Module\SinpleMath">
+      <UniqueIdentifier>{97646efe-8c4b-46d3-afad-0c3b963aa46b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\06. Scene\07. Module\FSM">
+      <UniqueIdentifier>{0c160096-d2f9-4803-8ce0-bddf1f5b124f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\04. Component\UI">
+      <UniqueIdentifier>{0c5dfbe2-8a3d-4f37-811c-144db04daf4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -646,10 +655,19 @@
     <FxCompile Include="VerticalBlur.fx">
       <Filter>ShaderCode\ComputeShader\CopyTexture\Vertical</Filter>
     </FxCompile>
+    <FxCompile Include="Hp.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="UI.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="Font.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
-      <Filter>Engine\07. Module\SinpleMath</Filter>
+      <Filter>Engine\06. Scene\07. Module\SinpleMath</Filter>
     </None>
   </ItemGroup>
 </Project>

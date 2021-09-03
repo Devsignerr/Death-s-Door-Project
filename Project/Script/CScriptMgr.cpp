@@ -2,6 +2,7 @@
 #include "CScriptMgr.h"
 
 #include "CActorScript.h"
+#include "CAttackImpactScript.h"
 #include "CBatScript.h"
 #include "CBazookaBullet.h"
 #include "CBazookaScript.h"
@@ -14,10 +15,14 @@
 #include "CCrowEggBullet.h"
 #include "CCrowScript.h"
 #include "CEffectScript.h"
+#include "CEnding.h"
 #include "CExplosionParticle.h"
 #include "CFadeScript.h"
+#include "CFireDamageParticle.h"
+#include "CHpBar.h"
 #include "CIronmaceScript.h"
 #include "CMapChange.h"
+#include "CMapGimic.h"
 #include "CMemoryPoolScript.h"
 #include "CMonsterScript.h"
 #include "CNailScript.h"
@@ -40,12 +45,16 @@
 #include "CSpiderScript.h"
 #include "CTestMonsterAttackEffect.h"
 #include "CTestMonsterScript.h"
+#include "CTitle.h"
 #include "CTongueBullet.h"
 #include "CTongueScript.h"
+#include "CUpDownSwitch.h"
+#include "CWeaponType.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
 	_vec.push_back(L"CActorScript");
+	_vec.push_back(L"CAttackImpactScript");
 	_vec.push_back(L"CBatScript");
 	_vec.push_back(L"CBazookaBullet");
 	_vec.push_back(L"CBazookaScript");
@@ -58,10 +67,14 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCrowEggBullet");
 	_vec.push_back(L"CCrowScript");
 	_vec.push_back(L"CEffectScript");
+	_vec.push_back(L"CEnding");
 	_vec.push_back(L"CExplosionParticle");
 	_vec.push_back(L"CFadeScript");
+	_vec.push_back(L"CFireDamageParticle");
+	_vec.push_back(L"CHpBar");
 	_vec.push_back(L"CIronmaceScript");
 	_vec.push_back(L"CMapChange");
+	_vec.push_back(L"CMapGimic");
 	_vec.push_back(L"CMemoryPoolScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CNailScript");
@@ -84,14 +97,19 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CSpiderScript");
 	_vec.push_back(L"CTestMonsterAttackEffect");
 	_vec.push_back(L"CTestMonsterScript");
+	_vec.push_back(L"CTitle");
 	_vec.push_back(L"CTongueBullet");
 	_vec.push_back(L"CTongueScript");
+	_vec.push_back(L"CUpDownSwitch");
+	_vec.push_back(L"CWeaponType");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
 	if (L"CActorScript" == _strScriptName)
 		return new CActorScript;
+	if (L"CAttackImpactScript" == _strScriptName)
+		return new CAttackImpactScript;
 	if (L"CBatScript" == _strScriptName)
 		return new CBatScript;
 	if (L"CBazookaBullet" == _strScriptName)
@@ -116,14 +134,22 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCrowScript;
 	if (L"CEffectScript" == _strScriptName)
 		return new CEffectScript;
+	if (L"CEnding" == _strScriptName)
+		return new CEnding;
 	if (L"CExplosionParticle" == _strScriptName)
 		return new CExplosionParticle;
 	if (L"CFadeScript" == _strScriptName)
 		return new CFadeScript;
+	if (L"CFireDamageParticle" == _strScriptName)
+		return new CFireDamageParticle;
+	if (L"CHpBar" == _strScriptName)
+		return new CHpBar;
 	if (L"CIronmaceScript" == _strScriptName)
 		return new CIronmaceScript;
 	if (L"CMapChange" == _strScriptName)
 		return new CMapChange;
+	if (L"CMapGimic" == _strScriptName)
+		return new CMapGimic;
 	if (L"CMemoryPoolScript" == _strScriptName)
 		return new CMemoryPoolScript;
 	if (L"CMonsterScript" == _strScriptName)
@@ -168,10 +194,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CTestMonsterAttackEffect;
 	if (L"CTestMonsterScript" == _strScriptName)
 		return new CTestMonsterScript;
+	if (L"CTitle" == _strScriptName)
+		return new CTitle;
 	if (L"CTongueBullet" == _strScriptName)
 		return new CTongueBullet;
 	if (L"CTongueScript" == _strScriptName)
 		return new CTongueScript;
+	if (L"CUpDownSwitch" == _strScriptName)
+		return new CUpDownSwitch;
+	if (L"CWeaponType" == _strScriptName)
+		return new CWeaponType;
 	return nullptr;
 }
 
@@ -181,6 +213,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	{
 	case (UINT)SCRIPT_TYPE::ACTORSCRIPT:
 		return new CActorScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ATTACKIMPACTSCRIPT:
+		return new CAttackImpactScript;
 		break;
 	case (UINT)SCRIPT_TYPE::BATSCRIPT:
 		return new CBatScript;
@@ -218,17 +253,29 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::EFFECTSCRIPT:
 		return new CEffectScript;
 		break;
+	case (UINT)SCRIPT_TYPE::ENDING:
+		return new CEnding;
+		break;
 	case (UINT)SCRIPT_TYPE::EXPLOSIONPARTICLE:
 		return new CExplosionParticle;
 		break;
 	case (UINT)SCRIPT_TYPE::FADESCRIPT:
 		return new CFadeScript;
 		break;
+	case (UINT)SCRIPT_TYPE::FIREDAMAGEPARTICLE:
+		return new CFireDamageParticle;
+		break;
+	case (UINT)SCRIPT_TYPE::HPBAR:
+		return new CHpBar;
+		break;
 	case (UINT)SCRIPT_TYPE::IRONMACESCRIPT:
 		return new CIronmaceScript;
 		break;
 	case (UINT)SCRIPT_TYPE::MAPCHANGE:
 		return new CMapChange;
+		break;
+	case (UINT)SCRIPT_TYPE::MAPGIMIC:
+		return new CMapGimic;
 		break;
 	case (UINT)SCRIPT_TYPE::MEMORYPOOLSCRIPT:
 		return new CMemoryPoolScript;
@@ -296,11 +343,20 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::TESTMONSTERSCRIPT:
 		return new CTestMonsterScript;
 		break;
+	case (UINT)SCRIPT_TYPE::TITLE:
+		return new CTitle;
+		break;
 	case (UINT)SCRIPT_TYPE::TONGUEBULLET:
 		return new CTongueBullet;
 		break;
 	case (UINT)SCRIPT_TYPE::TONGUESCRIPT:
 		return new CTongueScript;
+		break;
+	case (UINT)SCRIPT_TYPE::UPDOWNSWITCH:
+		return new CUpDownSwitch;
+		break;
+	case (UINT)SCRIPT_TYPE::WEAPONTYPE:
+		return new CWeaponType;
 		break;
 	}
 	return nullptr;
@@ -312,6 +368,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 	{
 	case SCRIPT_TYPE::ACTORSCRIPT:
 		return L"CActorScript";
+		break;
+
+	case SCRIPT_TYPE::ATTACKIMPACTSCRIPT:
+		return L"CAttackImpactScript";
 		break;
 
 	case SCRIPT_TYPE::BATSCRIPT:
@@ -362,6 +422,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CEffectScript";
 		break;
 
+	case SCRIPT_TYPE::ENDING:
+		return L"CEnding";
+		break;
+
 	case SCRIPT_TYPE::EXPLOSIONPARTICLE:
 		return L"CExplosionParticle";
 		break;
@@ -370,12 +434,24 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CFadeScript";
 		break;
 
+	case SCRIPT_TYPE::FIREDAMAGEPARTICLE:
+		return L"CFireDamageParticle";
+		break;
+
+	case SCRIPT_TYPE::HPBAR:
+		return L"CHpBar";
+		break;
+
 	case SCRIPT_TYPE::IRONMACESCRIPT:
 		return L"CIronmaceScript";
 		break;
 
 	case SCRIPT_TYPE::MAPCHANGE:
 		return L"CMapChange";
+		break;
+
+	case SCRIPT_TYPE::MAPGIMIC:
+		return L"CMapGimic";
 		break;
 
 	case SCRIPT_TYPE::MEMORYPOOLSCRIPT:
@@ -466,12 +542,24 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CTestMonsterScript";
 		break;
 
+	case SCRIPT_TYPE::TITLE:
+		return L"CTitle";
+		break;
+
 	case SCRIPT_TYPE::TONGUEBULLET:
 		return L"CTongueBullet";
 		break;
 
 	case SCRIPT_TYPE::TONGUESCRIPT:
 		return L"CTongueScript";
+		break;
+
+	case SCRIPT_TYPE::UPDOWNSWITCH:
+		return L"CUpDownSwitch";
+		break;
+
+	case SCRIPT_TYPE::WEAPONTYPE:
+		return L"CWeaponType";
 		break;
 
 	}

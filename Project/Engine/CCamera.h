@@ -2,10 +2,13 @@
 #include "CComponent.h"
 #include "CFrustum.h"
 
+
+
 class CCamera :
     public CComponent
 {
 protected:
+    CAMERA_TYPE    m_eCamType;
     CFrustum        m_frustum; //카메라는 프러스텀 컬링용 객체를 가진다 
 
     PROJ_TYPE       m_eProjType;    
@@ -31,6 +34,7 @@ protected:
     vector<CGameObject*>    m_vecDeferredParticle; //디퍼드 가장 마지막 단계에 그려질 파티클 물체 . 블룸 처리도 가능해짐 
     vector<CGameObject*>    m_vecParticle;
     vector<CGameObject*>    m_vecPostEffect;
+    vector<CGameObject*>    m_vecUI;
     
     // 인스턴싱 버전
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	// Deferred
@@ -42,6 +46,7 @@ public:
     virtual void finalupdate();
 
 public:
+    void SetCameraType(CAMERA_TYPE _type) { m_eCamType = _type; }
     void SetProjType(PROJ_TYPE _eType) { m_eProjType = _eType; }
     void SetScale(Vec2 _vScale) {m_vScale = _vScale;}
     void SetFar(float _f) { m_fFar = _f; }
@@ -55,6 +60,7 @@ public:
     const tRay& GetRay() { return m_tRay; }
 
     CFrustum& GetFrustum() { return m_frustum; }
+    vector<CGameObject*>& GetUIvector() { return m_vecUI; }
 
     const Matrix& GetViewMat() { return m_matView; }
     const Matrix& GetViewInvMat() { return m_matViewInv; }
@@ -66,6 +72,7 @@ public:
     void render_deferred();
     void render_forward();
     void render_posteffect();
+    void render_UI();
 
 protected:
     void CalViewMat();

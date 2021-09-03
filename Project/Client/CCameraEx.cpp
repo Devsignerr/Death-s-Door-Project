@@ -18,7 +18,10 @@ void CCameraEx::finalupdate()
 	CalRay();
 
 	m_frustum.finalupdate();
-		
+
+	g_global.g_CamWorldPos = Transform()->GetLocalPos();
+	g_global.g_vCamUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+
 	if (KEY_TAP(KEY_TYPE::LBTN))
 	{
 		ObjectSelectToRay();

@@ -2035,9 +2035,7 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   RWTexture2D WeightTex;
   StructuredBuffer g_PickPos;
   
-  pch.cpp
   CAnimation2D.cpp
-  CAnimation3DShader.cpp
   CAnimator2D.cpp
   CAnimator3D.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2057,13 +2055,8 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26)
   CCollider3D.cpp
   CCollisionMgr.cpp
   CComponent.cpp
-  CComputeShader.cpp
-  CConstBuffer.cpp
-  CCopyBoneMatrixShader.cpp
-  CCopyShaderCS.cpp
   CCore.cpp
   CDevice.cpp
-  CEntity.cpp
   CEventMgr.cpp
   CFBXLoader.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(416,26): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2081,29 +2074,29 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(418,3
           [
               T=fbxsdk::FbxDouble
           ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(984,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(986,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
               T=fbxsdk::FbxDouble
           ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(984,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(986,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
               T=fbxsdk::FbxDouble
           ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(991,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(993,33): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
               T=fbxsdk::FbxDouble
           ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(991,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(993,23): warning C4244: '인수': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
               T=fbxsdk::FbxDouble
           ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(998,14): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(999,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(1000,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(1000,14): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(1001,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(1002,15): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
@@ -2146,27 +2139,22 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(129):
   CFSM.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CFrustum.cpp
-  컴파일하고 있습니다...
   CFrustumSphere.cpp
   CGameObject.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(217,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(229,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(241,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(257,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  CGraphicsShader.cpp
-  CHeightMapShader.cpp
-  CHorizontalBlur.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(218,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(230,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(242,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(258,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CInstancingBuffer.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CInstancingBuffer.cpp(64,37): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-  CInterface.cpp
   CKeyMgr.cpp
   CLayer.cpp
   CLight2D.cpp
+  컴파일하고 있습니다...
   CLight3D.cpp
   CLightCamera.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  CMRT.cpp
   CMaterial.cpp
   CMesh.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMesh.cpp(372,38): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2177,10 +2165,6 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26)
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMeshRender.cpp(263,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   CParticleSystem.cpp
-  CParticleUpdateShader.cpp
-  CPathMgr.cpp
-  컴파일하고 있습니다...
-  CPickingShader.cpp
   CPrefab.cpp
   CRenderMgr.cpp
   CRenderMgr_init.cpp
@@ -2190,14 +2174,11 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(63,112): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(84,32): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(84,17): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  CRes.cpp
   CResMgr.cpp
   CResMgr_init.cpp
   CScene.cpp
   CSceneMgr.cpp
   CScript.cpp
-  CShader.cpp
-  CSingleton.cpp
   CSound.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
@@ -2239,96 +2220,12 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CSound.cpp(95): mess
               _Alloc=std::allocator<char>
           ]
   CState.cpp
-  CStructuredBuffer.cpp
   CTerrain.cpp
   CTerrain_init.cpp
-  CTexture.cpp
   CTimeMgr.cpp
-  CTransform.cpp
   컴파일하고 있습니다...
-  CVerticalBlur.cpp
-  CWeightShader.cpp
-  Ptr.cpp
-  extern.cpp
-  func.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=wchar_t *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=wchar_t *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=wchar_t *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=wchar_t *
-          ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(27): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(27): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=const wchar_t *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=const wchar_t *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=const wchar_t *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=const wchar_t *
-          ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(34): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(34): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
+  CTransform.cpp
+  CUI.cpp
   Engine.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Engine\Engine.lib
   .\Project\Engine\CAnimation2D.h
   .\Project\Engine\CAnimation3DShader.h
@@ -2387,6 +2284,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(34): messag
   .\Project\Engine\CTexture.h
   .\Project\Engine\CTimeMgr.h
   .\Project\Engine\CTransform.h
+  .\Project\Engine\CUI.h
   .\Project\Engine\CVerticalBlur.h
   .\Project\Engine\CWeightShader.h
   .\Project\Engine\define.h
@@ -2397,7 +2295,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(34): messag
   .\Project\Engine\SimpleMath.h
   .\Project\Engine\struct.h
   .\Project\Engine\Temp.h
-  67개 파일이 복사되었습니다.
+  68개 파일이 복사되었습니다.
   .\Project\Engine\animation.fx
   .\Project\Engine\Bloom.fx
   .\Project\Engine\bonecopy.fx

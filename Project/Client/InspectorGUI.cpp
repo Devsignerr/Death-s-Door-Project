@@ -21,6 +21,7 @@
 #include "Particle3DGUI.h"
 #include "FrustumGUI.h"
 #include "CameraGUI.h"
+#include "UIGUI.h"
 
 
 #include "ResInfoGUI.h"
@@ -98,6 +99,12 @@ void InspectorGUI::init()
     pNew->SetName(L"Frustum Sphere");
     pNew->SetSize(Vec2(0.f, 100.f));
     m_arrComGUI[(UINT)COMPONENT_TYPE::FRUSTUMSPHERE] = pNew;
+
+    pNew = new UIGUI;
+
+    pNew->SetName(L"UI");
+    pNew->SetSize(Vec2(0.f, 100.f));
+    m_arrComGUI[(UINT)COMPONENT_TYPE::UI] = pNew;
 
 
     for (int i = 0; i < 10; ++i)
@@ -254,11 +261,13 @@ void InspectorGUI::render()
 
         if (ImGui::Button("make Prefab"))
         {
-            Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(m_pTargetObj->GetName());
+           // Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(m_pTargetObj->GetName());
+           //
+           // if (nullptr == pPrefab)
+           // {
+                Ptr<CPrefab> pPrefab = nullptr;
 
-            if (nullptr == pPrefab)
-            {
-                int Layer = m_pTargetObj->GetLayerIndex();
+                int Layer = m_pTargetObj->GetLayerIndex();         
 
                 CGameObject* ProtoObject = m_pTargetObj->Clone();
                 ProtoObject->SetName(m_pTargetObj->GetName());
@@ -268,8 +277,10 @@ void InspectorGUI::render()
                 for (UINT i = 0; i < ChildCount; ++i)
                 {
                     wstring ChildName = m_pTargetObj->GetChild()[i]->GetName();
+                    UINT ChildLayer = m_pTargetObj->GetChild()[i]->GetLayerIndex();
 
                     ProtoObject->GetChild()[i]->SetName(ChildName);
+                    ProtoObject->GetChild()[i]->SetLayerIndex(ChildLayer);
                 }
 
                 ProtoObject->SetLayerIndex(Layer);
@@ -279,17 +290,27 @@ void InspectorGUI::render()
                 Name = L"prefab\\" + Name + L".pref";
                 pPrefab->Save(Name);
                 CResMgr::GetInst()->AddRes<CPrefab>(m_pTargetObj->GetName(), pPrefab);
-            }
+            //}
         }
 
         int LayerIdx = m_pTargetObj->GetLayerIndex();
         char strIdx[10] = {};
         _itoa_s(LayerIdx, strIdx, 10);
 
+        static int CLayerIdx = m_pTargetObj->GetLayerIndex();
+
         ImGui::Text("Current Layer");
         ImGui::SameLine();
         ImGui::Text(strIdx);
 
+        ImGui::Text("Change LayerIdx");
+        ImGui::InputInt("##changeLabel", &CLayerIdx);
+        ImGui::SameLine();
+
+        if (ImGui::Button("Confirm Change"))
+        {
+            m_pTargetObj->ChangeLayerIdx(CLayerIdx);
+        }
 
 
 

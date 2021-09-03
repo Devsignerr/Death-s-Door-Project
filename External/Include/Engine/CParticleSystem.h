@@ -44,9 +44,11 @@ private:
     int                         m_iAccLiveCount;
     int                         m_iMaxLiveCount; //한번 실행시 몇개까지 등장시킬건지 
 
+    bool                        m_bDestroy;
 public:
     void Activate(bool _b);
     void Reset() { m_iAccLiveCount = 0; m_fAccTime = 0.f; }
+    void LateDestroy();
 
 public:
     virtual void awake();
@@ -55,6 +57,8 @@ public:
     void render();
 
 public:
+    void Destroy() { m_bDestroy = true; m_fAccTime = 0.f; }
+    void  SetSlow(int _i) { m_iSlow = _i; }
     void SetRepeat(bool _b) { m_bRepeat = _b; }
     bool IsRepeat() { return m_bRepeat; }
 
@@ -82,7 +86,9 @@ public:
 
     void SetType(PARTICLE_TYPE _Type) { m_eType = _Type; }
 
-    //한번에 몇개까지 생성시킬지 
+    //한번에 몇개까지 생성시킬지
+    int     GetSlow() { return m_iSlow; }
+    int     GetAccLiveCount() { return m_iAccLiveCount; }
     int     GetMaxLiveCount() { return m_iMaxLiveCount; }
     int     GetMaxCount() { return m_iMaxCount; }
     int     GetAliveCount() { return m_iAliveCount; }

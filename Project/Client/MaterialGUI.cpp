@@ -35,6 +35,15 @@ void MaterialGUI::render()
 	ImGui::Text("Shader"); 
 	ImGui::SameLine();
 
+	if (ImGui::Button("Save Material"))
+	{
+		wstring strRelativepath = L"material\\";
+		strRelativepath += pMtrl->GetKey();
+		strRelativepath += L".mtrl";
+		pMtrl->Save(strRelativepath);
+	}
+	
+
 	
 
 	if (nullptr != pShader)

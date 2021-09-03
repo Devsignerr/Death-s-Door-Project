@@ -139,19 +139,19 @@ void CPlayerScript::awake()
 	
 	TPlayerChargeMax_L* pChargrMaxLState = new TPlayerChargeMax_L;
 	m_pFSM->AddState(L"Charge_Max_L", pChargrMaxLState);
-	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_MAX_L, L"ChargeMax_L"));
+	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_MAX_L, L"Charge_Max_L"));
 	
 	TPlayerChargeMax_R* pChargrMaxRState = new TPlayerChargeMax_R;
 	m_pFSM->AddState(L"Charge_Max_R", pChargrMaxRState);
-	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_MAX_R, L"ChargeMax_R"));
+	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_MAX_R, L"Charge_Max_R"));
 	
 	TPlayerCharge_Attack_L* pChargrAttackLState = new TPlayerCharge_Attack_L;
 	m_pFSM->AddState(L"Charge_Attack_L", pChargrAttackLState);
-	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_ATTACK_L, L"ChargeAttack_L"));
+	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_ATTACK_L, L"Charge_Attack_L"));
 	
 	TPlayerCharge_Attack_R* pChargrAttackRState = new TPlayerCharge_Attack_R;
 	m_pFSM->AddState(L"Charge_Attack_R", pChargrAttackRState);
-	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_ATTACK_R, L"ChargeAttack_R"));
+	m_mapState.insert(make_pair(PLAYER_STATE::SLASH_CHARGE_ATTACK_R, L"Charge_Attack_R"));
 	
 	TPlayerArrow* pArrowState = new TPlayerArrow;
 	m_pFSM->AddState(L"Arrow", pArrowState);
@@ -216,6 +216,7 @@ void CPlayerScript::awake()
 	//Ȱ
 	m_Weapon = vecChild[1];
 	m_pBow = vecChild[2];
+	m_pBow->MeshRender()->Activate(false);
 }
 
 void CPlayerScript::start()
@@ -309,8 +310,8 @@ void CPlayerScript::CreateCol()
 		Obj->AddComponent(new CTransform);
 		Obj->AddComponent(new CMeshRender);
 		Obj->AddComponent(new CCollider3D);
-		Obj->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 1.0f));
-		Obj->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 2.0f));
+		Obj->Transform()->SetLocalPos(Vec3(0.0f, 100.0f, 0.0f));
+		Obj->Transform()->SetLocalScale(Vec3(100.0f, 200.0f, 100.0f));
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
@@ -324,11 +325,11 @@ void CPlayerScript::CreateCol()
 		Obj->AddComponent(new CTransform);
 		Obj->AddComponent(new CMeshRender);
 		Obj->AddComponent(new CCollider3D);
-		Obj->Transform()->SetLocalPos(Vec3(0.0f, 2.0f, 1.4f));
-		Obj->Transform()->SetLocalScale(Vec3(3.0f, 2.0f, 1.0f));
+		Obj->Transform()->SetLocalPos(Vec3(0.0f, 150.0f, -500.f));
+		Obj->Transform()->SetLocalScale(Vec3(500.0f, 150.0f, 400.0f));
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-		Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 2.0f, 1.4f));
+		Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 200.0f, -250.f));
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
 		AddChild(GetObj(), Obj);
@@ -340,15 +341,7 @@ void CPlayerScript::CreateCol()
 
 void CPlayerScript::KeyInput()
 {
-	if (KEY_TAP(KEY_TYPE::LBTN))
-	{
-		ChangeState(PLAYER_STATE::RUN, 0.2f, L"Run", false);
-	}
-
-	if (KEY_TAP(KEY_TYPE::RBTN))
-	{
-		ChangeState(PLAYER_STATE::IDLE, 0.2f, L"Idle", false);
-	}
+	
 }
 
 Vec3 CPlayerScript::GetMouseClickPos()
@@ -439,10 +432,10 @@ void CPlayerScript::RotatetoClick(Vec3 _ClickPos)
 void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
-	if ((int)LAYER_TYPE::ITEM == Obj->GetLayerIndex())
-	{
-		ChangeState(PLAYER_STATE::GET_ITEM, 0.3f, L"GetItem", false);
-	}
+	//if ((int)LAYER_TYPE::ITEM == Obj->GetLayerIndex())
+	//{
+	//	ChangeState(PLAYER_STATE::GET_ITEM, 0.3f, L"GetItem", false);
+	//}
 	if ((int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::MONSTER_BULLET_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::BOSS_ATTACK_COL == Obj->GetLayerIndex() ||
@@ -452,6 +445,18 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 		{
 			ChangeState(PLAYER_STATE::HIT_BACK, 0.3f, L"Hit_Back", false);
 		}
+	}
+
+
+	if ((int)LAYER_TYPE::MONSTER_COL == Obj->GetLayerIndex())
+	{
+		CCameraScript::SetCameraShake(0.2f, 100.f, 3.f);
+
+		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();
+
+		Vec3 vDiff = OtherPos - GetPlayerPos();
+
+		ActivateImpactParticle(OtherPos, vDiff, 15, 9);
 	}
 }
 

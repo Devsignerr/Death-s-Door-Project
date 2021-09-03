@@ -31,7 +31,7 @@ void CameraGUI::render()
 	Start();
 
 	CScene* pScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pCameraObj = pScene->FindParentObj(L"Camera Object", 0);
+	CGameObject* pCameraObj = pScene->FindParentObj(L"Camera Object", (UINT)LAYER_TYPE::CAMERA);
 	
 	CCameraScript* pCameraScript = (CCameraScript*)pCameraObj->GetScript();
 	CCamera* pCamera = pCameraScript->Camera();
@@ -59,8 +59,10 @@ void CameraGUI::render()
 
 	ImGui::NewLine();
 
+	ImGui::NewLine();
 	
 	ImGui::Text("View Type");
+
 	
 	
 	if (ImGui::Button("Orthographic"))

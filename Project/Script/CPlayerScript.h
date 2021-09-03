@@ -122,7 +122,7 @@ public:
     virtual void update() override;
     virtual void lateupdate() override;
 
-private:
+public:
     void ChangeState(PLAYER_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay);
     PLAYER_STATE GetState() { return m_eState; }
     void CreateCol();

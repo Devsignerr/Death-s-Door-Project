@@ -116,6 +116,9 @@
     <Filter Include="GUI\InspectorGUI\ComponentGUI\FrustumGUI">
       <UniqueIdentifier>{ef1062ee-216f-4c5a-92c7-21edcd869900}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\InspectorGUI\ComponentGUI\UIGUI">
+      <UniqueIdentifier>{614af379-5008-48f4-bf08-1dc00a8a12b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -259,6 +262,9 @@
     <ClInclude Include="FrustumGUI.h">
       <Filter>GUI\InspectorGUI\ComponentGUI\FrustumGUI</Filter>
     </ClInclude>
+    <ClInclude Include="UIGUI.h">
+      <Filter>GUI\InspectorGUI\ComponentGUI\UIGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -400,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="FrustumGUI.cpp">
       <Filter>GUI\InspectorGUI\ComponentGUI\FrustumGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIGUI.cpp">
+      <Filter>GUI\InspectorGUI\ComponentGUI\UIGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

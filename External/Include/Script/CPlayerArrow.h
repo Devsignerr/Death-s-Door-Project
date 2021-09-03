@@ -12,7 +12,7 @@ public:
 	void SetBulletSpeed(float _Speed) { m_BulletSpeed = _Speed; }
 public:
 	void update() override;
-
+	void awake() override; 
 public:
 	void OnCollisionEnter(CGameObject* _pOther) override;
 	void OnCollision(CGameObject* _pOther) override;

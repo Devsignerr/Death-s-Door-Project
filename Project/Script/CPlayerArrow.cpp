@@ -1,18 +1,61 @@
 #include "pch.h"
 #include "CPlayerArrow.h"
+#include "CCameraScript.h"
 
 void CPlayerArrow::update()
 {
-	CProjectile::update();
+	if (m_bActive)
+	{
+		m_fCurTime += fDT;
 
-	Vec3 Pos = Transform()->GetLocalPos();
-	Pos += m_BulletDir * m_BulletSpeed * fDT;
+		if (m_fCurTime > m_fLifeTime)
+		{
+			m_fCurTime = 0.f;
 
-	Transform()->SetLocalPos(Pos);
+			GetObj()->SetAllMeshrenderActive(false);
+			GetObj()->SetAllColliderActive(false);
+			Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+			SetActive(false);
+			m_bDestroyed = false;
+			DeleteObject(GetObj());
+		}
+
+		else if (m_bDestroyed)
+		{
+			m_fCurTime = 0.f;
+
+			GetObj()->SetAllMeshrenderActive(false);
+			GetObj()->SetAllColliderActive(false);
+			Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+			SetActive(false);
+			m_bDestroyed = false;
+			DeleteObject(GetObj());
+		}
+
+		Vec3 Pos = Transform()->GetLocalPos();
+		Pos += m_BulletDir * m_BulletSpeed * fDT;
+
+		Transform()->SetLocalPos(Pos);
+
+	}
+}
+
+void CPlayerArrow::awake()
+{
+	CreateCollider((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, Vec3(80.f, 80.f, 80.f), Vec3(0.f, 0.f, -50.f));
 }
 
 void CPlayerArrow::OnCollisionEnter(CGameObject* _pOther)
 {
+	m_bDestroyed = true;
+
+	Vec3 Pos = Transform()->GetLocalPos();
+
+	Vec3 Front = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
+	CCameraScript::SetCameraShake(0.3f, 100.f, 5.f);
+
+	ActivateImpactParticle(Pos, Front, 15, 9);
 }
 
 void CPlayerArrow::OnCollision(CGameObject* _pOther)
@@ -21,6 +64,7 @@ void CPlayerArrow::OnCollision(CGameObject* _pOther)
 
 void CPlayerArrow::OnCollisionExit(CGameObject* _pOther)
 {
+	
 }
 
 CPlayerArrow::CPlayerArrow()

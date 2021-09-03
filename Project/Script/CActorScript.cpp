@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "CActorScript.h"
+#include "CAttackImpactScript.h"
+#include "CRandomMgrScript.h"
+#include "CMemoryPoolScript.h"
 
 #include <Engine/CGameObject.h>
 #include <Engine/CSceneMgr.h>
@@ -7,7 +10,30 @@
 #include <Engine/CEventMgr.h>
 #include <Engine/CSceneMgr.h>
 #include <Engine/CScene.h>
+#include <Engine/CCollider3D.h>
 
+
+void CActorScript::CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos)
+{
+	CGameObject* Obj = new CGameObject;
+
+	Obj->SetName(L"PlayerCol");
+	Obj->AddComponent(new CTransform);
+	Obj->AddComponent(new CMeshRender);
+	Obj->AddComponent(new CCollider3D);
+
+	Obj->Transform()->SetLocalScale(_Scale);
+	Obj->Collider3D()->SetOffSetPos(OffsetPos);
+
+	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+	CurScene->AddObject(Obj, _LayerIdx);
+
+	AddChild(GetObj(), Obj);
+
+}
 
 CGameObject* CActorScript::IstanciatePrefab(wstring _wstr, UINT _LayerIdx)
 {
@@ -438,6 +464,71 @@ void CActorScript::awake()
 
 void CActorScript::OnCollisionEnter(CGameObject* _pOther)
 {
+}
+
+
+void CActorScript::ActivateImpactParticle(Vec3 _Pos ,Vec3 _Dir, int ActivateCount, float SpreadRange)
+{
+	for (int i = 0; i < ActivateCount; ++i)
+	{
+		CGameObject* pAttackImpact = CMemoryPoolScript::GetAttackImpact();
+
+		if (nullptr == pAttackImpact)
+			return;
+
+		Vec3 vUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+		Vec3 vRight = vUp.Cross(_Dir);
+
+
+		float iRand = CRandomMgrScript::GetRandomintNumber(-SpreadRange, SpreadRange);
+		iRand /= 10.f;
+
+		XMMATRIX matR = XMMatrixRotationAxis(vRight, iRand);
+
+		iRand = CRandomMgrScript::GetRandomintNumber(-SpreadRange, SpreadRange);
+		iRand /= 10.f;
+
+		XMMATRIX matU = XMMatrixRotationAxis(vUp, iRand);
+
+		Vec3 Dir = _Dir;
+
+		Dir = XMVector3TransformCoord(Dir, matU);
+		Dir = XMVector3TransformCoord(Dir, matR);
+
+
+		((CAttackImpactScript*)pAttackImpact->GetScript())->SetDir(Dir);
+
+
+		iRand = CRandomMgrScript::GetRandomintNumber(50, 200);
+
+		((CAttackImpactScript*)pAttackImpact->GetScript())->SetScale(iRand);
+
+		iRand = CRandomMgrScript::GetRandomintNumber(4000, 8000);
+
+		((CAttackImpactScript*)pAttackImpact->GetScript())->SetSpeed(iRand);
+
+		pAttackImpact->Transform()->SetLocalPos(_Pos);
+
+
+		Vec3 Rot = pAttackImpact->Transform()->GetLocalRot();
+		Vec3 vFront = pAttackImpact->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		Vec3 vCross = Dir.Cross(vFront);
+		Vec3 vUP = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
+
+		float dot = vCross.Dot(vUP);
+		Dir.Normalize();
+
+		float RotAngle = vFront.Dot(Dir);
+		RotAngle = acos(RotAngle);
+
+		if (dot > 0.0)
+			Rot.y -= RotAngle;
+
+		else if (dot < 0.0)
+			Rot.y += RotAngle;
+
+		pAttackImpact->Transform()->SetLocalRot(Rot);
+	}
 }
 
 CActorScript::CActorScript()

@@ -760,6 +760,8 @@ void CFBXLoader::CreateMaterial()
 				, m_vecContainer[i].vecMtrl[j].tMtrl.vAmb
 				, m_vecContainer[i].vecMtrl[j].tMtrl.vEmis);
 
+			pMaterial->SetNoDefault();
+
 			CResMgr::GetInst()->AddRes<CMaterial>(pMaterial->GetKey(), pMaterial);
 		}
 	}

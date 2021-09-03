@@ -10,7 +10,7 @@ struct tInstancingData
 	Matrix matWV;
 	Matrix matWVP;
 	int    iRowIdx;
-};
+};	
 
 class CTexture;
 class CStructuredBuffer;

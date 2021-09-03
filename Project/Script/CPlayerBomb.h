@@ -13,6 +13,7 @@ public:
 	void SetBulletSpeed(float _Speed) { m_BulletSpeed = _Speed; }
 
 public:
+	void awake() override;
 	void update() override;
 
 public:
