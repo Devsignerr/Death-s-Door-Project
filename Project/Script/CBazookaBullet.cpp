@@ -4,14 +4,10 @@
 #include "CPlayerScript.h"
 
 #include <Engine/CLight3D.h>
+#include <Engine/CParticleSystem.h>
 
 void CBazookaBullet::awake()
 {
-
-
-
-
-
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = Transform()->GetLocalPos();
 
@@ -43,7 +39,11 @@ void CBazookaBullet::start()
 
 void CBazookaBullet::update()
 {
+	if (false == m_bActive)
+		return;
+
 	m_Time += fDT;
+
 
 	if (m_Time <= m_DestAttachTime)
 	{
@@ -57,6 +57,16 @@ void CBazookaBullet::update()
 		Pos.z = Z;
 
 		Transform()->SetLocalPos(Pos);
+	}
+	//목표했던 위치로 옴
+	else
+	{
+		ActivateExplosionParticle();
+
+		GetObj()->SetAllColliderActive(false);
+		SetActive(false);
+		m_bDestroyed = false;
+		GetObj()->ParticleSystem()->Destroy();	
 	}
 }
 
@@ -73,6 +83,7 @@ CBazookaBullet::CBazookaBullet()
 	, m_MaxHeight(500.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::BAZOOKABULLET;
+	m_eType = EXPLOSION_PTC_TYPE::BAZOOKA_EXPLO_PTC;
 }
 
 CBazookaBullet::~CBazookaBullet()

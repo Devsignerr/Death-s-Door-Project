@@ -101,8 +101,9 @@ void CBossScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)_Type);
 
-	AddChild(GetObj(), Obj);
+	GetObj()->AddChild(Obj);
 
+	Obj->MeshRender()->Activate(false);
 
 }
 

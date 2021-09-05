@@ -2,6 +2,7 @@
 #include "CScriptMgr.h"
 
 #include "CActorScript.h"
+#include "CAnchor.h"
 #include "CAttackImpactScript.h"
 #include "CBatScript.h"
 #include "CBazookaBullet.h"
@@ -9,15 +10,18 @@
 #include "CBossScript.h"
 #include "CCameraScript.h"
 #include "CCastleBullet.h"
+#include "CCastleLaser.h"
 #include "CCastleScript.h"
 #include "CCrowBatBullet.h"
 #include "CCrowBullet.h"
 #include "CCrowEggBullet.h"
 #include "CCrowScript.h"
 #include "CEffectScript.h"
+#include "CElevator.h"
 #include "CEnding.h"
 #include "CExplosionParticle.h"
 #include "CFadeScript.h"
+#include "CFence.h"
 #include "CFireDamageParticle.h"
 #include "CHpBar.h"
 #include "CIronmaceScript.h"
@@ -43,6 +47,7 @@
 #include "CSlashEffect.h"
 #include "CSpearManScript.h"
 #include "CSpiderScript.h"
+#include "CSpinLaser.h"
 #include "CTestMonsterAttackEffect.h"
 #include "CTestMonsterScript.h"
 #include "CTitle.h"
@@ -54,6 +59,7 @@
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
 	_vec.push_back(L"CActorScript");
+	_vec.push_back(L"CAnchor");
 	_vec.push_back(L"CAttackImpactScript");
 	_vec.push_back(L"CBatScript");
 	_vec.push_back(L"CBazookaBullet");
@@ -61,15 +67,18 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CBossScript");
 	_vec.push_back(L"CCameraScript");
 	_vec.push_back(L"CCastleBullet");
+	_vec.push_back(L"CCastleLaser");
 	_vec.push_back(L"CCastleScript");
 	_vec.push_back(L"CCrowBatBullet");
 	_vec.push_back(L"CCrowBullet");
 	_vec.push_back(L"CCrowEggBullet");
 	_vec.push_back(L"CCrowScript");
 	_vec.push_back(L"CEffectScript");
+	_vec.push_back(L"CElevator");
 	_vec.push_back(L"CEnding");
 	_vec.push_back(L"CExplosionParticle");
 	_vec.push_back(L"CFadeScript");
+	_vec.push_back(L"CFence");
 	_vec.push_back(L"CFireDamageParticle");
 	_vec.push_back(L"CHpBar");
 	_vec.push_back(L"CIronmaceScript");
@@ -95,6 +104,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CSlashEffect");
 	_vec.push_back(L"CSpearManScript");
 	_vec.push_back(L"CSpiderScript");
+	_vec.push_back(L"CSpinLaser");
 	_vec.push_back(L"CTestMonsterAttackEffect");
 	_vec.push_back(L"CTestMonsterScript");
 	_vec.push_back(L"CTitle");
@@ -108,6 +118,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
 	if (L"CActorScript" == _strScriptName)
 		return new CActorScript;
+	if (L"CAnchor" == _strScriptName)
+		return new CAnchor;
 	if (L"CAttackImpactScript" == _strScriptName)
 		return new CAttackImpactScript;
 	if (L"CBatScript" == _strScriptName)
@@ -122,6 +134,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCameraScript;
 	if (L"CCastleBullet" == _strScriptName)
 		return new CCastleBullet;
+	if (L"CCastleLaser" == _strScriptName)
+		return new CCastleLaser;
 	if (L"CCastleScript" == _strScriptName)
 		return new CCastleScript;
 	if (L"CCrowBatBullet" == _strScriptName)
@@ -134,12 +148,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCrowScript;
 	if (L"CEffectScript" == _strScriptName)
 		return new CEffectScript;
+	if (L"CElevator" == _strScriptName)
+		return new CElevator;
 	if (L"CEnding" == _strScriptName)
 		return new CEnding;
 	if (L"CExplosionParticle" == _strScriptName)
 		return new CExplosionParticle;
 	if (L"CFadeScript" == _strScriptName)
 		return new CFadeScript;
+	if (L"CFence" == _strScriptName)
+		return new CFence;
 	if (L"CFireDamageParticle" == _strScriptName)
 		return new CFireDamageParticle;
 	if (L"CHpBar" == _strScriptName)
@@ -190,6 +208,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CSpearManScript;
 	if (L"CSpiderScript" == _strScriptName)
 		return new CSpiderScript;
+	if (L"CSpinLaser" == _strScriptName)
+		return new CSpinLaser;
 	if (L"CTestMonsterAttackEffect" == _strScriptName)
 		return new CTestMonsterAttackEffect;
 	if (L"CTestMonsterScript" == _strScriptName)
@@ -214,6 +234,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ACTORSCRIPT:
 		return new CActorScript;
 		break;
+	case (UINT)SCRIPT_TYPE::ANCHOR:
+		return new CAnchor;
+		break;
 	case (UINT)SCRIPT_TYPE::ATTACKIMPACTSCRIPT:
 		return new CAttackImpactScript;
 		break;
@@ -235,6 +258,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::CASTLEBULLET:
 		return new CCastleBullet;
 		break;
+	case (UINT)SCRIPT_TYPE::CASTLELASER:
+		return new CCastleLaser;
+		break;
 	case (UINT)SCRIPT_TYPE::CASTLESCRIPT:
 		return new CCastleScript;
 		break;
@@ -253,6 +279,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::EFFECTSCRIPT:
 		return new CEffectScript;
 		break;
+	case (UINT)SCRIPT_TYPE::ELEVATOR:
+		return new CElevator;
+		break;
 	case (UINT)SCRIPT_TYPE::ENDING:
 		return new CEnding;
 		break;
@@ -261,6 +290,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::FADESCRIPT:
 		return new CFadeScript;
+		break;
+	case (UINT)SCRIPT_TYPE::FENCE:
+		return new CFence;
 		break;
 	case (UINT)SCRIPT_TYPE::FIREDAMAGEPARTICLE:
 		return new CFireDamageParticle;
@@ -337,6 +369,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::SPIDERSCRIPT:
 		return new CSpiderScript;
 		break;
+	case (UINT)SCRIPT_TYPE::SPINLASER:
+		return new CSpinLaser;
+		break;
 	case (UINT)SCRIPT_TYPE::TESTMONSTERATTACKEFFECT:
 		return new CTestMonsterAttackEffect;
 		break;
@@ -370,6 +405,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CActorScript";
 		break;
 
+	case SCRIPT_TYPE::ANCHOR:
+		return L"CAnchor";
+		break;
+
 	case SCRIPT_TYPE::ATTACKIMPACTSCRIPT:
 		return L"CAttackImpactScript";
 		break;
@@ -398,6 +437,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CCastleBullet";
 		break;
 
+	case SCRIPT_TYPE::CASTLELASER:
+		return L"CCastleLaser";
+		break;
+
 	case SCRIPT_TYPE::CASTLESCRIPT:
 		return L"CCastleScript";
 		break;
@@ -422,6 +465,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CEffectScript";
 		break;
 
+	case SCRIPT_TYPE::ELEVATOR:
+		return L"CElevator";
+		break;
+
 	case SCRIPT_TYPE::ENDING:
 		return L"CEnding";
 		break;
@@ -432,6 +479,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::FADESCRIPT:
 		return L"CFadeScript";
+		break;
+
+	case SCRIPT_TYPE::FENCE:
+		return L"CFence";
 		break;
 
 	case SCRIPT_TYPE::FIREDAMAGEPARTICLE:
@@ -532,6 +583,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::SPIDERSCRIPT:
 		return L"CSpiderScript";
+		break;
+
+	case SCRIPT_TYPE::SPINLASER:
+		return L"CSpinLaser";
 		break;
 
 	case SCRIPT_TYPE::TESTMONSTERATTACKEFFECT:

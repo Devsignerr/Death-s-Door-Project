@@ -373,6 +373,21 @@
     <ClInclude Include="CAttackImpactScript.h">
       <Filter>ScriptCode\Effect\AttackImpact</Filter>
     </ClInclude>
+    <ClInclude Include="CAnchor.h">
+      <Filter>ScriptCode\Map_Gimic\Anchor</Filter>
+    </ClInclude>
+    <ClInclude Include="CFence.h">
+      <Filter>ScriptCode\Map_Gimic\Fence</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpinLaser.h">
+      <Filter>ScriptCode\Map_Gimic\SpinLaser</Filter>
+    </ClInclude>
+    <ClInclude Include="CElevator.h">
+      <Filter>ScriptCode\Map_Gimic\Elevator</Filter>
+    </ClInclude>
+    <ClInclude Include="CCastleLaser.h">
+      <Filter>ScriptCode\Actor\Projectile\Castle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -498,9 +513,6 @@
     <Filter Include="ScriptCode\System\MemoryPool">
       <UniqueIdentifier>{324422c2-7c64-4d2e-8561-1a385b6d1233}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptCode\Actor\Player\PlayerAttackEffect">
-      <UniqueIdentifier>{0267d837-b8f1-48b6-8663-6f56b132c435}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptCode\Effect">
       <UniqueIdentifier>{d3f9956f-9b47-4272-b5f1-47d9624f9372}</UniqueIdentifier>
     </Filter>
@@ -521,6 +533,18 @@
     </Filter>
     <Filter Include="ScriptCode\Effect\AttackImpact">
       <UniqueIdentifier>{623b0d7d-473e-483e-9f3e-187c0a893c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\Anchor">
+      <UniqueIdentifier>{b4d39bec-cc43-4517-a117-7a0d1e3f48bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\Elevator">
+      <UniqueIdentifier>{56f98844-8b24-4221-aaab-daa47f969ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\Fence">
+      <UniqueIdentifier>{337c7765-b151-4453-a8a1-9934f82fecf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\SpinLaser">
+      <UniqueIdentifier>{29d3c714-a1bf-497e-9103-fb2b48f27f73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -892,6 +916,21 @@
     </ClCompile>
     <ClCompile Include="CAttackImpactScript.cpp">
       <Filter>ScriptCode\Effect\AttackImpact</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnchor.cpp">
+      <Filter>ScriptCode\Map_Gimic\Anchor</Filter>
+    </ClCompile>
+    <ClCompile Include="CFence.cpp">
+      <Filter>ScriptCode\Map_Gimic\Fence</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpinLaser.cpp">
+      <Filter>ScriptCode\Map_Gimic\SpinLaser</Filter>
+    </ClCompile>
+    <ClCompile Include="CElevator.cpp">
+      <Filter>ScriptCode\Map_Gimic\Elevator</Filter>
+    </ClCompile>
+    <ClCompile Include="CCastleLaser.cpp">
+      <Filter>ScriptCode\Actor\Projectile\Castle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

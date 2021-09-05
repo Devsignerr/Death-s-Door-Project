@@ -37,6 +37,11 @@ public:
         m_tInfo.vEmis = _vEmis;
     }
 
+    void SetDiffuse(Vec4 _vDiff)
+    {
+        m_tInfo.vDiff = _vDiff;
+    }
+
     void SetAnim3D(bool _bTrue)
     {
         m_tInfo.iAnim3D[0] = (int)_bTrue;

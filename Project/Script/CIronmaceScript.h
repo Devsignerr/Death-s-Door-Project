@@ -35,6 +35,8 @@ private:
 private:
 	void ChangeState(IRONMACE_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);
 public:
+	void SetbDamaged() { m_bDamaged = false; }
+public:
 	void awake() override;
 	void update() override;
 public:

@@ -45,6 +45,11 @@ private:
     int                         m_iMaxLiveCount; //한번 실행시 몇개까지 등장시킬건지 
 
     bool                        m_bDestroy;
+
+    bool                        m_bPaperburnPTC;
+
+public:
+    void SetPaperburnPTC(bool _b) { m_bPaperburnPTC = _b; }
 public:
     void Activate(bool _b);
     void Reset() { m_iAccLiveCount = 0; m_fAccTime = 0.f; }
@@ -58,7 +63,7 @@ public:
 
 public:
     void Destroy() { m_bDestroy = true; m_fAccTime = 0.f; }
-    void  SetSlow(int _i) { m_iSlow = _i; }
+    void SetSlow(int _i) { m_iSlow = _i; }
     void SetRepeat(bool _b) { m_bRepeat = _b; }
     bool IsRepeat() { return m_bRepeat; }
 

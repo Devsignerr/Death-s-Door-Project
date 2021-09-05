@@ -7,7 +7,7 @@ void CSkullBullet::awake()
 {
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = Transform()->GetLocalPos();
-
+	m_MaxHeight = m_Pos.y + 500.0f;
 	// 최고점 도달 시간
 	m_MaxHeightTime = 0.3f;
 	// 도착점 높이

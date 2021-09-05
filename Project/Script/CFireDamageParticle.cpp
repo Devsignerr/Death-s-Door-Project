@@ -38,8 +38,15 @@ void CFireDamageParticle::update()
 			Vec3 LocalPos = m_pTarget->Transform()->GetLocalPos();
 			LocalPos.y += 100.f;
 			Transform()->SetLocalPos(LocalPos);
-		}
 
+			if (true == m_pTarget->IsDead())
+			{
+				m_pTarget = nullptr;
+
+				m_fCurTime = 0.f;
+				CMemoryPoolScript::ReturnObj(GetObj());
+			}
+		}
 	}
 }
 

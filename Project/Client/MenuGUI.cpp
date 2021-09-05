@@ -242,7 +242,7 @@ void MenuGUI::render()
 
                     //자식 객체는 어차피 부모에 편입될거라 0번 레이어에 넣는다 
                     //(사실 충돌체나 기타 판정은 최상위 부모 위주로 행해지므로 레이어가 크게 의미없긴하다 )
-                    pCurScene->AddObject(pObj, 0);
+                    pCurScene->AddObject(pObj, LayerIdx);
                     pParent->AddChild(pObj);
 
                     idx++;

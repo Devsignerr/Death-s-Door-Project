@@ -256,6 +256,7 @@ call CodeGen.exe</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CActorScript.h" />
+    <ClInclude Include="CAnchor.h" />
     <ClInclude Include="CAttackImpactScript.h" />
     <ClInclude Include="CBatScript.h" />
     <ClInclude Include="CBazookaBullet.h" />
@@ -263,15 +264,18 @@ call CodeGen.exe</Command>
     <ClInclude Include="CBossScript.h" />
     <ClInclude Include="CCameraScript.h" />
     <ClInclude Include="CCastleBullet.h" />
+    <ClInclude Include="CCastleLaser.h" />
     <ClInclude Include="CCastleScript.h" />
     <ClInclude Include="CCrowBatBullet.h" />
     <ClInclude Include="CCrowBullet.h" />
     <ClInclude Include="CCrowEggBullet.h" />
     <ClInclude Include="CCrowScript.h" />
     <ClInclude Include="CEffectScript.h" />
+    <ClInclude Include="CElevator.h" />
     <ClInclude Include="CEnding.h" />
     <ClInclude Include="CExplosionParticle.h" />
     <ClInclude Include="CFadeScript.h" />
+    <ClInclude Include="CFence.h" />
     <ClInclude Include="CFireDamageParticle.h" />
     <ClInclude Include="CHpBar.h" />
     <ClInclude Include="CIronmaceScript.h" />
@@ -298,6 +302,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CSlashEffect.h" />
     <ClInclude Include="CSpearManScript.h" />
     <ClInclude Include="CSpiderScript.h" />
+    <ClInclude Include="CSpinLaser.h" />
     <ClInclude Include="CTestMonsterAttackEffect.h" />
     <ClInclude Include="CTestMonsterScript.h" />
     <ClInclude Include="CTitle.h" />
@@ -382,6 +387,7 @@ call CodeGen.exe</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CActorScript.cpp" />
+    <ClCompile Include="CAnchor.cpp" />
     <ClCompile Include="CAttackImpactScript.cpp" />
     <ClCompile Include="CBatScript.cpp" />
     <ClCompile Include="CBazookaBullet.cpp" />
@@ -389,15 +395,18 @@ call CodeGen.exe</Command>
     <ClCompile Include="CBossScript.cpp" />
     <ClCompile Include="CCameraScript.cpp" />
     <ClCompile Include="CCastleBullet.cpp" />
+    <ClCompile Include="CCastleLaser.cpp" />
     <ClCompile Include="CCastleScript.cpp" />
     <ClCompile Include="CCrowBatBullet.cpp" />
     <ClCompile Include="CCrowBullet.cpp" />
     <ClCompile Include="CCrowEggBullet.cpp" />
     <ClCompile Include="CCrowScript.cpp" />
     <ClCompile Include="CEffectScript.cpp" />
+    <ClCompile Include="CElevator.cpp" />
     <ClCompile Include="CEnding.cpp" />
     <ClCompile Include="CExplosionParticle.cpp" />
     <ClCompile Include="CFadeScript.cpp" />
+    <ClCompile Include="CFence.cpp" />
     <ClCompile Include="CFireDamageParticle.cpp" />
     <ClCompile Include="CHpBar.cpp" />
     <ClCompile Include="CIronmaceScript.cpp" />
@@ -424,6 +433,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CSlashEffect.cpp" />
     <ClCompile Include="CSpearManScript.cpp" />
     <ClCompile Include="CSpiderScript.cpp" />
+    <ClCompile Include="CSpinLaser.cpp" />
     <ClCompile Include="CTestMonsterAttackEffect.cpp" />
     <ClCompile Include="CTestMonsterScript.cpp" />
     <ClCompile Include="CTitle.cpp" />

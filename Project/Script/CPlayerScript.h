@@ -126,6 +126,8 @@ public:
     void ChangeState(PLAYER_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay);
     PLAYER_STATE GetState() { return m_eState; }
     void CreateCol();
+    void ClearAllProjectile();
+
 public:
     void KeyInput();
     Vec3 GetMouseClickPos();

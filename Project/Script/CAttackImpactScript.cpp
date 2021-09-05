@@ -50,8 +50,8 @@ void CAttackImpactScript::update()
 	Vec3 LocalScale = Transform()->GetLocalScale();
 
 	LocalScale.z = m_fScale *pow(sin(Ratio * XM_PI),4);
-	LocalScale.y = 2.f;
-	LocalScale.x = 2.f;
+	LocalScale.y = 3.f;
+	LocalScale.x = 3.f;
 
 	Transform()->SetLocalScale(LocalScale);
 

@@ -3,6 +3,8 @@
 #include "CCrowBullet.h"
 #include "CCrowBatBullet.h"
 #include "CCrowEggBullet.h"
+#include "CCrowBullet.h"
+#include "CPlayerScript.h"
 
 
 #include <Engine/CFSM.h>
@@ -49,10 +51,34 @@ void CCrowScript::ChangeState(CROW_STATE _eState, float _BlendingTime, const wst
 	m_pFSM->ChangeState(StateName, _BlendingTime, _AniName, _Stay);
 }
 
+void CCrowScript::CreateCrowBullet(Vec3 _Pos, Vec3 _Dir)
+{
+	CGameObject* Obj = new CGameObject;
+
+	Obj->AddComponent(new CTransform);
+	Obj->AddComponent(new CMeshRender);
+	Obj->AddComponent(new CCrowBullet);
+
+	Obj->Transform()->SetLocalPos(_Pos);
+	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
+
+	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CCrowBullet* Script = (CCrowBullet*)Obj->GetScript();
+	Script->SetAwakeMoveDir(_Dir);
+
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
+	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+
+
+	Obj->awake();
+}
+
 void CCrowScript::awake()
 {
 	CBossScript::awake();
-	CreateCol(L"CrowBossCol", Vec3(0.0f, 50.0f, 100.0f), Vec3(150.0f, 250.0f, 100.0f), LAYER_TYPE::BOSS_COL);
+	CreateCol(L"CrowBossCol", Vec3(0.0f, 50.0f, 100.0f), Vec3(130.0f, 240.0f, 100.0f), LAYER_TYPE::BOSS_COL);
 
 	if (nullptr != m_pFSM)
 		return;
@@ -128,18 +154,24 @@ void CCrowScript::update()
 	CBossScript::update();
 	m_pFSM->update();
 
-	if (0 >= m_Hp)
-	{
-		ChangeState(CROW_STATE::DEATH, 0.1f, L"Death", true);
-	}
 }
 
 void CCrowScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
 	CGameObject* Obj = _pOther;
-	if ((int)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
+
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
+		CreateCrowBullet(Transform()->GetLocalPos(), CPlayerScript::GetPlayerFront());
+
 		--m_Hp;
+
+		if (0 == m_Hp)
+		{
+
+			m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
+		}
 	}
 }
 

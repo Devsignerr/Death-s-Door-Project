@@ -312,29 +312,40 @@ void CSpiderScript::Jump()
 
 void CSpiderScript::Death()
 {
-
+	//230
 	CAnimator3D* CurAni = Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
+	vector<CGameObject*> childvec = GetObj()->GetChild();
 
 	if (230 <= CurAni->GetFrameIdx())
 	{
-		CurAni->Animator3D()->StopAnimation();
+		if (false == CurAni->Animator3D()->GetbStop())
+			CurAni->Animator3D()->StopAnimation();
 
 		m_PaperBurnTime += fDT;
-
-		vector<CGameObject*> childvec = GetObj()->GetChild();
 
 		for (int i = 0; i < childvec.size(); ++i)
 		{
 			if (childvec[i]->MeshRender())
-				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+			{
+				Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, m_PaperBurnTime / 2.f);
+				int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
 
-			if (childvec[i]->Collider3D())
-				childvec[i]->Collider3D()->Activate(false);
+				EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+			}
+
 		}
 	}
 
-	if (1.5f < m_PaperBurnTime)
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (3.0f < m_PaperBurnTime)
 	{
 		DeleteObject(GetGameObject());
 	}
@@ -342,6 +353,7 @@ void CSpiderScript::Death()
 
 void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
@@ -360,12 +372,13 @@ void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
 					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
 					for (UINT j = 0; j < Count; ++j)
 					{
-						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetSharedMaterial(j);
 						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
-						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
 					}
 				}
 			}
+
+			m_bDamaged = false;
 
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}

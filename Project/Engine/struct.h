@@ -28,6 +28,9 @@ struct tParticle
 	int		iAlive;
 	int		iLeftSpin;
 	int     iParticleType;
+
+	float	RandValue;
+	int		padding[3];
 };
 
 struct tParticleShared

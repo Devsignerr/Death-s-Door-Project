@@ -2,6 +2,8 @@
 #include "CNailScript.h"
 #include "CPlayerScript.h"
 
+#include <Engine/CCollider3D.h>
+
 void CNailScript::awake()
 {
 	CMonsterScript::awake();
@@ -269,16 +271,80 @@ void CNailScript::Jump()
 
 void CNailScript::Death()
 {
+	//602
+
+	CAnimator3D* CurAni = Animator3D();
+	vector<CGameObject*> childvec = GetObj()->GetChild();
+
+	if (590 <= CurAni->GetFrameIdx())
+	{
+		if (false == CurAni->Animator3D()->GetbStop())
+			CurAni->Animator3D()->StopAnimation();
+
+		m_PaperBurnTime += fDT;
+
+		for (int i = 0; i < childvec.size(); ++i)
+		{
+			if (childvec[i]->MeshRender())
+			{
+				Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, m_PaperBurnTime / 2.f);
+				int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
+
+				EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+			}
+
+		}
+	}
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (3.0f < m_PaperBurnTime)
+	{
+		DeleteObject(GetGameObject());
+	}
 }
 
 void CNailScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
-	if (11 == Obj->GetLayerIndex())
+
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_MonsterInfo.Hp;
+
+		if (0 == m_MonsterInfo.Hp)
+		{
+			vector<CGameObject*> childvec = GetObj()->GetChild();
+
+			for (int i = 0; i < childvec.size(); ++i)
+			{
+				if (childvec[i]->MeshRender())
+				{
+					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+					for (UINT j = 0; j < Count; ++j)
+					{
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetSharedMaterial(j);
+						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
+					}
+				}
+			}
+
+			m_bDamaged = false;
+
+			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
+		}
+
+
 	}
 
 }

@@ -4,7 +4,6 @@
 #include "CPlantBullet.h"
 
 #include <Engine/CCollider3D.h>
-#include "CCrowEggBullet.h"
 #include <Engine/CLayer.h>
 
 void CPlantScript::awake()
@@ -30,12 +29,6 @@ void CPlantScript::update()
 	case CMonsterScript::MONSTERSTATE::JUMP: Jump(); break;
 	case CMonsterScript::MONSTERSTATE::DEATH: Death(); break;
 	}
-
-	if (KEY_TAP(KEY_TYPE::SPACE))
-	{
-		Test();
-	}
-
 }
 
 void CPlantScript::Idle()
@@ -78,27 +71,39 @@ void CPlantScript::Attack()
 void CPlantScript::Death()
 {
 	CAnimator3D* CurAni = Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
+	vector<CGameObject*> childvec = GetObj()->GetChild();
 
-	if (180 <= CurAni->GetFrameIdx())
+	if (190 <= CurAni->GetFrameIdx())
 	{
-		CurAni->Animator3D()->StopAnimation();
+		if (false == CurAni->Animator3D()->GetbStop())
+			CurAni->Animator3D()->StopAnimation();
 
 		m_PaperBurnTime += fDT;
-
-		vector<CGameObject*> childvec = GetObj()->GetChild();
 
 		for (int i = 0; i < childvec.size(); ++i)
 		{
 			if (childvec[i]->MeshRender())
-				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+			{
+				Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, m_PaperBurnTime / 2.f);
+				int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
 
-			if (childvec[i]->Collider3D())
-				childvec[i]->Collider3D()->Activate(false);
+				EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+			}
+
 		}
 	}
 
-	if (1.0f < m_PaperBurnTime)
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->Collider3D())
+			childvec[i]->Collider3D()->Activate(false);
+	}
+
+	if (3.0f < m_PaperBurnTime)
 	{
 		DeleteObject(GetGameObject());
 	}
@@ -120,7 +125,11 @@ void CPlantScript::LongDistanceAttack()
 		Obj->AddComponent(new CCollider3D);
 		Obj->AddComponent(new CPlantBullet);
 
-		Obj->Transform()->SetLocalPos(Transform()->GetLocalPos());
+		Vec3 FirePos = Transform()->GetLocalPos();
+
+		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset,1.f);
+
+		Obj->Transform()->SetLocalPos(OffsetPos);
 		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
 
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
@@ -152,33 +161,21 @@ void CPlantScript::CreateCol()
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 
+		//Obj->MeshRender()->Activate(false);
+
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_COL);
 
-		AddChild(GetObj(), Obj);
+		GetObj()->AddChild(Obj);
+
+		Obj->MeshRender()->Activate(false);
 	}
-}
-
-void CPlantScript::Test()
-{
-	Vec3 Pos = Transform()->GetLocalPos();
-
-	CGameObject* Obj = new CGameObject;
-	Obj->AddComponent(new CTransform);
-	Obj->AddComponent(new CCrowEggBullet);
-	Obj->Transform()->SetLocalPos(Transform()->GetLocalPos());
-
-	CCrowEggBullet* Script = (CCrowEggBullet*)Obj->GetScript();
-	Script->SetStartPos(Pos);
-	Script->SetRange(1000.0f);
-	Script->awake();
-
-	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::INDETERMINATE);
 }
 
 void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
+
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
@@ -197,12 +194,14 @@ void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
 					for (UINT j = 0; j < Count; ++j)
 					{
-						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetSharedMaterial(j);
 						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
-						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
 					}
 				}
 			}
+
+
+			m_bDamaged = false;
 
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
@@ -213,24 +212,6 @@ void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 
 void CPlantScript::OnCollision(CGameObject* _pOther)
 {
-	CGameObject* Obj = _pOther;
-	if ((UINT)LAYER_TYPE::INDETERMINATE == Obj->GetLayerIndex())
-	{
-		vector<CGameObject*> Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
-
-		CCrowEggBullet* Script = nullptr;
-
-		for (size_t i = 0; i < Temp.size(); ++i)
-		{
-			Script = (CCrowEggBullet*)Temp[i]->GetScript();
-			if (Script)
-			{
-				if (false == Script->GetHead())
-					Script->FindToDeadCheck(Obj);
-				break;
-			}
-		}
-	}
 }
 
 void CPlantScript::OnCollisionExit(CGameObject* _pOther)
@@ -246,6 +227,12 @@ CPlantScript::CPlantScript()
 {
 	m_iScriptType = (int)SCRIPT_TYPE::PLANTSCRIPT;
 	m_MonsterInfo.Hp = 3;
+
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "FrontOffset", &m_fFrontOffset));
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "UpOffset", &m_fUpOffset));
+
+	m_fFrontOffset = 360.0f;
+	m_fUpOffset = -600.0f;
 }
 
 CPlantScript::~CPlantScript()

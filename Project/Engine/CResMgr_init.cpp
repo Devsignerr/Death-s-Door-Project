@@ -1024,6 +1024,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	pShader->AddShaderParam(SHADER_PARAM::TEX_0, L"Fire Texture");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_1, L"Paperburn Texture");
 
 	AddRes<CGraphicsShader>(L"ParticleRenderShader", pShader);
 
@@ -1329,6 +1330,12 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->m_bDefault = true;
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"UIFontShader"));
 	AddRes<CMaterial>(L"UIFontMtrl", pMtrl);
+
+	//AttackImpact
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
+	AddRes<CMaterial>(L"AttackImpactMtrl", pMtrl);
 }
 
 

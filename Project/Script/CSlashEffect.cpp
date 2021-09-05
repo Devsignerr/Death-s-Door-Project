@@ -37,6 +37,10 @@ void CSlashEffect::update()
 
 	Ptr<CMaterial> Mtrl = MeshObj->MeshRender()->GetSharedMaterial(0);
 
+	int BurnType = (UINT)BURN_TYPE::SLASH_BURN;
+
+	Mtrl->SetData(SHADER_PARAM::INT_1, &BurnType);
+
 	Vec4 BurnInfo = Vec4(m_vBurnColor, m_fBurnRatio);
 
 	Mtrl->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);

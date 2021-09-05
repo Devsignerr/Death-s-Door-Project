@@ -42,11 +42,16 @@ void CPlayerMagic::OnCollisionEnter(CGameObject* _pOther)
 	if (nullptr == pFireDamagePTC)
 		return;
 
+	while (nullptr != _pOther->GetParent())
+	{
+		_pOther = _pOther->GetParent();
+	}
+
 	((CFireDamageParticle*)pFireDamagePTC->GetScript())->SetTarget(_pOther);
 
 	CCameraScript::SetCameraShake(0.2f, 100.f, 3.f);
 
-	ActivateImpactParticle(Transform()->GetLocalPos(),m_BulletDir, 15 ,9);
+	ActivateImpactParticle(Vec4(0.5f, 0.1f, 0.1f, 0.f),Transform()->GetLocalPos(),m_BulletDir, 15 ,9);
 	
 }
 

@@ -116,11 +116,6 @@ void CBatScript::Attack()
 
 void CBatScript::Death()
 {
-	CAnimator3D* CurAni = Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
-
-	CurAni->Animator3D()->StopAnimation();
-
 	m_PaperBurnTime += fDT;
 
 	vector<CGameObject*> childvec = GetObj()->GetChild();
@@ -128,20 +123,30 @@ void CBatScript::Death()
 	for (int i = 0; i < childvec.size(); ++i)
 	{
 		if (childvec[i]->MeshRender())
-			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+		{
+			Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, m_PaperBurnTime / 2.f);
+			int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
+
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+		}
+
 
 		if (childvec[i]->Collider3D())
 			childvec[i]->Collider3D()->Activate(false);
 	}
 
-	if (1.0f < m_PaperBurnTime)
+	if (3.0f < m_PaperBurnTime)
 	{
-		DeleteObject(GetGameObject());
+		DeleteObject(GetObj());
 	}
 }
 
 void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
@@ -161,12 +166,16 @@ void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
 					for (UINT j = 0; j < Count; ++j)
 					{
-						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetSharedMaterial(j);
 						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
-						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
+						//childvec[i]->MeshRender()->SetMaterial(mtrl, j);
 					}
 				}
 			}
+
+			CAnimator3D* CurAni = Animator3D();
+			CurAni->Animator3D()->StopAnimation();
+			m_bDamaged = false;
 
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
@@ -281,10 +290,14 @@ void CBatScript::CreateCol()
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 
+		//Obj->MeshRender()->Activate(false);
+
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_COL);
 
-		AddChild(GetObj(), Obj);
+		GetObj()->AddChild(Obj);
+
+		Obj->MeshRender()->Activate(false);
 	}
 
 	{
@@ -308,7 +321,9 @@ void CBatScript::CreateCol()
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
 
-		AddChild(GetObj(), Obj);
+		//Obj->MeshRender()->Activate(false);
+
+		GetObj()->AddChild(Obj);
 
 		Obj->MeshRender()->Activate(false);
 		Obj->Collider3D()->Activate(false);

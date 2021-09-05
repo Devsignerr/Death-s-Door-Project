@@ -36,14 +36,26 @@ void CExplosionParticle::update()
 			float MaxLifeTime = pParticle->GetMaxLifeTime();
 
 			//다음번에 만든다면 .. 일정 시간후 해당 값을 초기화 시켜주는 함수를 만들자..
-			int Off = 0;
-			CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &Off);
+			if (m_eType == EXPLOSION_PTC_TYPE::PLAYER_BOMB)
+			{
+				int Off = 0;
+				CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &Off);
+			}
 
 			if (m_fCurTime > MaxLifeTime)
 			{
 				SetActive(false);
 				m_fCurTime = 0.f;
-				CMemoryPoolScript::ReturnObj(GetObj());
+
+				if(m_bMemoryObj)
+					CMemoryPoolScript::ReturnObj(GetObj());
+				else
+				{
+					GetObj()->ParticleSystem()->Activate(false);
+					GetObj()->SetAllColliderActive(false);
+					Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+					GetObj()->ParticleSystem()->Destroy();
+				}
 			}	
 		}
 	}
@@ -66,8 +78,13 @@ void CExplosionParticle::SetActive(bool _b)
 		GetObj()->ParticleSystem()->Reset();
 
 		//다음번에 만든다면 .. 일정 시간후 해당 값을 초기화 시켜주는 함수를 만들자..
-		int On = 1;
-		CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &On);
+		if (m_eType == EXPLOSION_PTC_TYPE::PLAYER_BOMB)
+		{
+			int On = 1;
+			CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &On);
+		}
+
+		CCameraScript::SetCameraShake(0.3f, 100.f, 5.f);
 	}
 
 	m_bActive = _b;

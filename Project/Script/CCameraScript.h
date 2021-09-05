@@ -50,7 +50,7 @@ private:
 
 public:
     virtual void update();
-    virtual void start();
+    virtual void awake();
 public:
     CLONE(CCameraScript);
 public:

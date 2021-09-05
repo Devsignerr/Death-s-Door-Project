@@ -34,6 +34,9 @@ private:
 
 private:
 	void ChangeState(CROW_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);
+	void CreateCrowBullet(Vec3 _Pos, Vec3 _Dir);
+public:
+	void SetbDamaged() { m_bDamaged = false; }
 public:
 	void awake() override;
 	void update() override;

@@ -51,23 +51,9 @@ void CPlayerBomb::update()
 	}
 }
 
-void CPlayerBomb::ActivateExplosionParticle()
-{
-	CGameObject* pExploParticle = CMemoryPoolScript::GetExplosionPTC();
-
-	if (nullptr == pExploParticle)
-		return;
-
-	((CExplosionParticle*)pExploParticle->GetScript())->Reset();
-
-	//폭발 파티클의 소환 위치는 호출당시의 투사체파티클의 위치
-	pExploParticle->Transform()->SetLocalPos(Transform()->GetLocalPos());
-}
 
 void CPlayerBomb::OnCollisionEnter(CGameObject* _pOther)
 {
-	CCameraScript::SetCameraShake(0.3f, 100.f, 5.f);
-
 	m_bDestroyed = true;
 }
 
@@ -86,6 +72,7 @@ CPlayerBomb::CPlayerBomb()
 	m_iScriptType = (int)SCRIPT_TYPE::PLAYERBOMB;
 	m_fLifeTime = 2.f;
 	m_bMemoryObj = false;
+	m_eType = EXPLOSION_PTC_TYPE::PLAYER_BOMB;
 }
 
 CPlayerBomb::~CPlayerBomb()

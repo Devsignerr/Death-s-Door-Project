@@ -3,13 +3,14 @@
 #include "CPlayerScript.h"
 #include "CPlayerChain.h"
 #include "CMemoryPoolScript.h"
+#include "CCameraScript.h"
 
 #include <Engine/CEventMgr.h>
 
 CPlayerHook::CPlayerHook() : 
 	m_vHookDir{},
 	m_fHookSpeed(4000.0f),
-	m_fMaxRange(2000.f),
+	m_fMaxRange(2500.f),
 	m_bArrived(false),
 	m_bFailed(false),
 	m_bHooked(false)
@@ -195,11 +196,15 @@ void CPlayerHook::AdjustChainEmissive()
 void CPlayerHook::CheckArrived()
 {
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
+	Vec3 HookPos = m_vHookedPos;
 
-	float Distance = (PlayerPos - m_vHookedPos).Length();
+	PlayerPos.y = 0.f;
+	HookPos.y = 0.f;
+
+	float Distance = abs(Vec3::Distance(PlayerPos, HookPos));
 
 	//도착지에서 50만큼떨어져있다면 
-	if (Distance < 70.f)
+	if (Distance < 250.f)
 	{
 		m_bArrived = true;
 	}
@@ -208,8 +213,30 @@ void CPlayerHook::CheckArrived()
 
 void CPlayerHook::OnCollisionEnter(CGameObject* _pOther)
 {
-	m_bHooked = true;
-	m_vHookedPos = _pOther->Transform()->GetLocalPos();
+	CCameraScript::SetCameraShake(0.15f, 100.f, 2.f);
+
+	if ((UINT)LAYER_TYPE::WALL_COL == _pOther->GetLayerIndex())
+	{
+		m_bFailed = true;
+	}
+	else
+	{
+		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();
+		Vec3 LocalPos = Transform()->GetLocalPos();
+
+		OtherPos.y = 0.f;
+		LocalPos.y = 0.f;
+
+		float Distance = abs(Vec3::Distance(OtherPos, LocalPos));
+
+		if (Distance < 100.f)
+		{
+			return;
+		}
+
+		m_bHooked = true;
+		m_vHookedPos = _pOther->Transform()->GetWorldPos();
+	}
 }
 
 void CPlayerHook::OnCollision(CGameObject* _pOther)

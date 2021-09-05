@@ -11,7 +11,7 @@
 void CTongueScript::awake()
 {
 	CMonsterScript::awake();
-	CreateCol(L"TongueCol", Vec3(0.0f, 0.0f, 400.0f), Vec3(700.0f, 400.0f, 800.0f), LAYER_TYPE::MONSTER_COL);
+	CreateCol(L"TongueCol", Vec3(0.0f, 0.0f, 400.0f), Vec3(500.0f, 400.0f, 700.0f), LAYER_TYPE::MONSTER_COL);
 	CreateCol(L"TongueAttackCol", Vec3(0.0f, 500.0f, 200.0f), Vec3(600.0f, 400.0f, 400.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
 
 	ChangeState(MONSTERSTATE::IDLE, 0.2f, L"Idle");
@@ -202,11 +202,6 @@ void CTongueScript::SpecialAction()
 	// 가드 회전
 	// 이동
 
-	if (KEY_TAP(KEY_TYPE::SPACE))
-	{
-		ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"GuardBreak");
-	}
-
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
@@ -358,11 +353,6 @@ void CTongueScript::Jump()
 
 void CTongueScript::Death()
 {
-	CAnimator3D* CurAni = Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
-
-	CurAni->Animator3D()->StopAnimation();
-
 	m_PaperBurnTime += fDT;
 
 	vector<CGameObject*> childvec = GetObj()->GetChild();
@@ -370,13 +360,22 @@ void CTongueScript::Death()
 	for (int i = 0; i < childvec.size(); ++i)
 	{
 		if (childvec[i]->MeshRender())
-			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+		{
+			Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, m_PaperBurnTime / 2.f);
+			int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
+
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+		}
+
 
 		if (childvec[i]->Collider3D())
 			childvec[i]->Collider3D()->Activate(false);
 	}
 
-	if (1.0f < m_PaperBurnTime)
+	if (3.0f < m_PaperBurnTime)
 	{
 		DeleteObject(GetGameObject());
 	}
@@ -384,6 +383,8 @@ void CTongueScript::Death()
 
 void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
+
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
@@ -446,12 +447,16 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 						UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
 						for (UINT j = 0; j < Count; ++j)
 						{
-							Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+							Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetSharedMaterial(j);
 							mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
-							childvec[i]->MeshRender()->SetMaterial(mtrl, j);
 						}
 					}
 				}
+
+				CAnimator3D* CurAni = Animator3D();
+				CurAni->Animator3D()->StopAnimation();
+
+				m_bDamaged = false;
 
 				ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 			}
@@ -477,7 +482,11 @@ void CTongueScript::LongDistanceAttack()
 		Obj->AddComponent(new CMeshRender);
 		Obj->AddComponent(new CTongueBullet);
 
-		Obj->Transform()->SetLocalPos(Transform()->GetLocalPos());
+		Vec3 FirePos = Transform()->GetLocalPos();
+
+		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset,1.f);
+
+		Obj->Transform()->SetLocalPos(OffsetPos);
 		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
 
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
@@ -529,6 +538,11 @@ CTongueScript::CTongueScript()
 {
 	m_iScriptType = (int)SCRIPT_TYPE::TONGUESCRIPT;
 	m_MonsterInfo.Hp = 8;
+
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "FrontOffset", &m_fFrontOffset));
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "UpOffset", &m_fUpOffset));
+
+	m_fUpOffset = 350.0f;
 }
 
 CTongueScript::~CTongueScript()

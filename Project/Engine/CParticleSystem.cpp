@@ -34,10 +34,19 @@ CParticleSystem::CParticleSystem()
 	, m_iAccLiveCount(0)
 	, m_iMaxLiveCount(20)
 	, m_bDestroy(false)
+	, m_bPaperburnPTC(false)
 {
 	m_pMesh = CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh");
 	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
 	m_pUpdateShader = (CParticleUpdateShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"ParticleUpdateShader").Get();
+
+
+	Ptr<CTexture> PaperBurnTex = CResMgr::GetInst()->FindRes<CTexture>(L"noise");
+
+	if (nullptr == PaperBurnTex)
+		PaperBurnTex = CResMgr::GetInst()->Load<CTexture>(L"noise", L"texture\\PaperBurn\\noise.png");
+
+	m_pMtrl->SetData(SHADER_PARAM::TEX_1, PaperBurnTex.Get());
 
 	m_pParticleBuffer = new CStructuredBuffer;
 }
@@ -64,6 +73,7 @@ CParticleSystem::CParticleSystem(CParticleSystem& _origin)
 	, m_iAccLiveCount(0)
 	, m_iMaxLiveCount(_origin.m_iMaxLiveCount)
 	, m_bDestroy(false)
+	, m_bPaperburnPTC(_origin.m_bPaperburnPTC)
 {
 	m_pTex = _origin.m_pTex;
 	m_pParticleBuffer = new CStructuredBuffer;
@@ -84,7 +94,7 @@ void CParticleSystem::Activate(bool _b)
 
 void CParticleSystem::LateDestroy()
 {
-	Transform()->SetLocalPos(Vec3(-9999999.f, -9999999.f, -9999999.f));
+	//Transform()->SetLocalPos(Vec3(-9999999.f, -9999999.f, -9999999.f));
 
 	m_iAliveCount = 0;
 	m_fAccTime += fDT;
@@ -135,7 +145,7 @@ void CParticleSystem::finalupdate()
 		if (m_fAccTime >= m_fFrequency)
 		{
 			m_fAccTime = 0.f;
-			m_iAliveCount = 2;
+			m_iAliveCount = 1;
 		}
 
 		else
@@ -150,7 +160,7 @@ void CParticleSystem::finalupdate()
 		if (m_fAccTime >= m_fFrequency && m_iAccLiveCount < m_iMaxLiveCount)
 		{
 			m_fAccTime = 0.f;
-			m_iAliveCount = 2;
+			m_iAliveCount = 1;
 		}
 
 		else
@@ -188,6 +198,7 @@ void CParticleSystem::render()
 	m_pMtrl->SetData(SHADER_PARAM::VEC4_2, &m_vStartColor);
 	m_pMtrl->SetData(SHADER_PARAM::VEC4_3, &m_vEndColor);
 	m_pMtrl->SetData(SHADER_PARAM::TEX_0, m_pTex.Get());
+	m_pMtrl->SetData(SHADER_PARAM::INT_1, &m_bPaperburnPTC);
 
 	// 리소스 바인딩
 	m_pMtrl->UpdateData();

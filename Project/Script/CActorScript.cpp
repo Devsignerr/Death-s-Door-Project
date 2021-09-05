@@ -13,11 +13,116 @@
 #include <Engine/CCollider3D.h>
 
 
+void CActorScript::GetDamage()
+{
+	if (false == m_bDamaged)
+	{
+		int vecOriginalMtrlSize = m_vecOriginMtrl.size();
+
+		const vector<CGameObject*>& ChildVec = GetObj()->GetChild();
+
+		for (int i = 0; i < vecOriginalMtrlSize; ++i)
+		{
+			if (ChildVec[i]->MeshRender())
+			{
+				Ptr<CMaterial> CloneMtrl = ChildVec[i]->MeshRender()->GetCloneMaterial(0);
+				ChildVec[i]->MeshRender()->SetMaterial(CloneMtrl, 0);
+			}
+		}
+	}
+
+	m_bDamaged = true;
+	m_fCurDamageTime = 0.f;
+}
+
+void CActorScript::DamageEffectupdate()
+{
+	if (m_bDamaged)
+	{
+		m_fCurDamageTime += fDT;
+
+		if (m_fCurDamageTime > m_fDamageEffectTime)
+		{
+			m_bDamaged = false;
+
+			int vecOriginalMtrlSize = m_vecOriginMtrl.size();
+
+			const vector<CGameObject*>& ChildVec = GetObj()->GetChild();
+
+			for (int i = 0; i < vecOriginalMtrlSize; ++i)
+			{
+				if (ChildVec[i]->MeshRender())
+				{
+					ChildVec[i]->MeshRender()->SetMaterial(m_vecOriginMtrl[i], 0);
+				}
+			}
+
+			return;
+		}
+
+		//White
+		if (m_fCurDamageTime < 0.2f* m_fDamageEffectTime)
+		{
+			EffectParamSetting(Vec4(100.f, 100.f, 100.f, 1.f), Vec4(10.f, 10.f,10.f, 1.f), m_WhiteTex);
+		}
+		//Red
+		else if (m_fCurDamageTime >= 0.2f* m_fDamageEffectTime && m_fCurDamageTime < 0.4f* m_fDamageEffectTime)
+		{
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+		}
+
+		//Black
+		else if (m_fCurDamageTime >= 0.4f * m_fDamageEffectTime && m_fCurDamageTime < 0.6f * m_fDamageEffectTime)
+		{
+			EffectParamSetting(Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), m_WhiteTex);
+		}
+
+		//Red
+		else if (m_fCurDamageTime >= 0.6f * m_fDamageEffectTime && m_fCurDamageTime < 0.8f * m_fDamageEffectTime)
+		{
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+		}
+
+		//Black
+		else if (m_fCurDamageTime >= 0.8f * m_fDamageEffectTime && m_fCurDamageTime < 1.0f * m_fDamageEffectTime)
+		{
+			EffectParamSetting(Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), m_WhiteTex);
+		}
+	}
+}
+
+void CActorScript::EffectParamSetting(Vec4 Diff, Vec4 Emis, Ptr<CTexture> _Tex)
+{
+	int vecOriginalMtrlSize = m_vecOriginMtrl.size();
+
+	const vector<CGameObject*>& ChildVec = GetObj()->GetChild();
+
+	for (int i = 0; i < vecOriginalMtrlSize; ++i)
+	{
+		if (ChildVec[i]->MeshRender())
+		{
+			//클론된 메테리얼 
+			Ptr<CMaterial> Mtrl = ChildVec[i]->MeshRender()->GetSharedMaterial(0);
+
+			Mtrl->SetDiffuse(Diff);
+			Mtrl->SetEmissive(Emis);
+
+			Mtrl->SetData(SHADER_PARAM::TEX_0, _Tex.Get());
+			Mtrl->SetData(SHADER_PARAM::TEX_3, _Tex.Get());
+		}
+	}
+}
+
+void CActorScript::CreateDeadParticle()
+{
+
+}
+
 void CActorScript::CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos)
 {
 	CGameObject* Obj = new CGameObject;
 
-	Obj->SetName(L"PlayerCol");
+	Obj->SetName(L"Col");
 	Obj->AddComponent(new CTransform);
 	Obj->AddComponent(new CMeshRender);
 	Obj->AddComponent(new CCollider3D);
@@ -420,6 +525,8 @@ bool CActorScript::ResearchNode(Vec3 _MovePos, int _RayDir)
 
 void CActorScript::update()
 {
+	DamageEffectupdate();
+
 	 bool IsGround = GroundCheck();
 
 	 //현재 폴리곤 혹은 인접 폴리곤과의 충돌체크에 실패하면 현재 네비메쉬의 모든 폴리곤에 대해 충돌체크하고 
@@ -451,6 +558,8 @@ void CActorScript::update()
 		 }
 	 }
 
+
+
 }
 
 void CActorScript::awake()
@@ -460,14 +569,43 @@ void CActorScript::awake()
 	if (nullptr == m_PaperBurnTex)
 		m_PaperBurnTex = CResMgr::GetInst()->Load<CTexture>(L"PaperBurnTexture", L"texture\\PaperBurn\\PaperBurnTexture.jpg");
 
+
+
+	m_WhiteTex = CResMgr::GetInst()->FindRes<CTexture>(L"WhiteTex");
+
+	if (nullptr == m_WhiteTex)
+		m_WhiteTex = CResMgr::GetInst()->Load<CTexture>(L"WhiteTex", L"texture\\FBXTexture\\WhiteTex.png");
+
+
+	m_RedTex = CResMgr::GetInst()->FindRes<CTexture>(L"RedTex");
+	
+	if (nullptr == m_RedTex)
+		m_RedTex = CResMgr::GetInst()->Load<CTexture>(L"RedTex", L"texture\\FBXTexture\\RedTex.png");
+
+
+	//int MtrlCount = 0;
+	int ChildCount = 0;
+	
+	const vector<CGameObject*>& ChildVec = GetObj()->GetChild();
+	ChildCount = ChildVec.size();
+	
+	for (int i = 0; i < ChildCount; ++i)
+	{
+		if (ChildVec[i]->MeshRender())
+		{
+			m_vecOriginMtrl.push_back(ChildVec[i]->MeshRender()->GetSharedMaterial(0));
+		}
+	}
 }
 
 void CActorScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	if(_pOther->GetLayerIndex()==(UINT)LAYER_TYPE::PLAYER_ATTACK_COL)
+		GetDamage();
 }
 
 
-void CActorScript::ActivateImpactParticle(Vec3 _Pos ,Vec3 _Dir, int ActivateCount, float SpreadRange)
+void CActorScript::ActivateImpactParticle(Vec4 EmisColor, Vec3 _Pos ,Vec3 _Dir, int ActivateCount, float SpreadRange)
 {
 	for (int i = 0; i < ActivateCount; ++i)
 	{
@@ -477,13 +615,14 @@ void CActorScript::ActivateImpactParticle(Vec3 _Pos ,Vec3 _Dir, int ActivateCoun
 			return;
 
 		Vec3 vUp = Transform()->GetLocalDir(DIR_TYPE::UP);
-		Vec3 vRight = vUp.Cross(_Dir);
-
+		Vec3 vRight = _Dir.Cross(vUp);
+		vRight.Normalize();
 
 		float iRand = CRandomMgrScript::GetRandomintNumber(-SpreadRange, SpreadRange);
 		iRand /= 10.f;
 
 		XMMATRIX matR = XMMatrixRotationAxis(vRight, iRand);
+
 
 		iRand = CRandomMgrScript::GetRandomintNumber(-SpreadRange, SpreadRange);
 		iRand /= 10.f;
@@ -499,22 +638,24 @@ void CActorScript::ActivateImpactParticle(Vec3 _Pos ,Vec3 _Dir, int ActivateCoun
 		((CAttackImpactScript*)pAttackImpact->GetScript())->SetDir(Dir);
 
 
-		iRand = CRandomMgrScript::GetRandomintNumber(50, 200);
+		iRand = CRandomMgrScript::GetRandomintNumber(300, 600);
 
 		((CAttackImpactScript*)pAttackImpact->GetScript())->SetScale(iRand);
 
-		iRand = CRandomMgrScript::GetRandomintNumber(4000, 8000);
+		iRand = CRandomMgrScript::GetRandomintNumber(6000, 10000);
 
 		((CAttackImpactScript*)pAttackImpact->GetScript())->SetSpeed(iRand);
 
-		pAttackImpact->Transform()->SetLocalPos(_Pos);
 
+		pAttackImpact->Transform()->SetLocalPos(_Pos);
 
 		Vec3 Rot = pAttackImpact->Transform()->GetLocalRot();
 		Vec3 vFront = pAttackImpact->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 		Vec3 vCross = Dir.Cross(vFront);
 		Vec3 vUP = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
+		vRight = GetObj()->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 
+		                 
 		float dot = vCross.Dot(vUP);
 		Dir.Normalize();
 
@@ -527,7 +668,23 @@ void CActorScript::ActivateImpactParticle(Vec3 _Pos ,Vec3 _Dir, int ActivateCoun
 		else if (dot < 0.0)
 			Rot.y += RotAngle;
 
+
+		vCross = Dir.Cross(vRight);
+		dot = vCross.Dot(vRight);
+		Dir.Normalize();
+
+	    RotAngle = vRight.Dot(Dir);
+		RotAngle = acos(RotAngle);
+
+		if (dot > 0.0)
+			Rot.x -= RotAngle;
+
+		else if (dot < 0.0)
+			Rot.x += RotAngle;
+
 		pAttackImpact->Transform()->SetLocalRot(Rot);
+
+		pAttackImpact->MeshRender()->GetSharedMaterial(0)->SetEmissive(EmisColor);
 	}
 }
 
@@ -536,12 +693,17 @@ CActorScript::CActorScript()
 	, m_fOffSetPos(10.f)
 	, m_bJump(false)
 	, RayDir(-1)
+	, m_bDamaged(false)
+	, m_fDamageEffectTime(0.4f)
+	, m_fCurDamageTime(0.f)
 {
 
 }
 
 CActorScript::~CActorScript()
 {
+	
+
 }
 
 void CActorScript::SaveToScene(FILE* _pFile)

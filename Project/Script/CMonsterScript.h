@@ -45,12 +45,19 @@ protected:
         DEATH,
         END
     };
+
     MONSTERINFO  m_MonsterInfo;
     MONSTERSTATE m_CurState;
     MONSTERJUMPINFO m_MonsterJumpInfo;
     float m_PaperBurnTime;
 
+ protected:
+    float m_fFrontOffset;
+    float m_fUpOffset;
+    float m_fRightOffset;
 
+public:
+    Vec3 GetOffsetFirePos(Vec3 Pos , float _fFrontOffset , float _fUpOffset , float _fRightOffset);
 
 protected:
     virtual void MeleeAttack() {};

@@ -143,6 +143,7 @@ void InspectorGUI::update()
             }
 
             m_vecScriptGUI[i]->SetTargetObj(m_pTargetObj);
+            m_vecScriptGUI[i]->SetSize(Vec2(0.f, 100.f));
             m_vecScriptGUI[i]->update();
         }
     }
@@ -151,6 +152,7 @@ void InspectorGUI::update()
         for (size_t i = 0; i < m_vecScriptGUI.size(); ++i)
         {
             m_vecScriptGUI[i]->SetTargetObj(nullptr);
+            m_vecScriptGUI[i]->SetSize(Vec2(0.f, 100.f));
             m_vecScriptGUI[i]->update();
         }        
     }

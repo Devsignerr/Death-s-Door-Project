@@ -72,6 +72,8 @@ void CreateTestScene()
 	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"iridecent"))
 		CResMgr::GetInst()->Load<CTexture>(L"iridecent", L"texture\\FBXTexture\\iridecent.png");
 
+	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"plagueKnightTexture"))
+		CResMgr::GetInst()->Load<CTexture>(L"plagueKnightTexture", L"texture\\FBXTexture\\plagueKnightTexture.png");
 	
 	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"T_WaterParticles"))
 		CResMgr::GetInst()->Load<CTexture>(L"T_WaterParticles", L"texture\\FBXTexture\\T_WaterParticles.png");
@@ -230,16 +232,19 @@ void CreateTestScene()
 
 	// playercol - monsterattackcol
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_ATTACK_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::WALL_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::WALL_COL);
 
 	// playerattackcol - monstercol
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MONSTER_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
-	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
 
-	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_HOOK_COL, (UINT)LAYER_TYPE::INDETERMINATE);
-
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_HOOK_COL, (UINT)LAYER_TYPE::INDETERMINATE);
 	pCurScene->awake();
 
 	// Scene Save

@@ -4,10 +4,12 @@
 #include "CPlayerScript.h"
 #include "CBazookaBullet.h"
 #include <Engine/CCollider3D.h>
+#include <Engine/CParticleSystem.h>
 
 void CBazookaScript::awake()
 {
 	CMonsterScript::awake();
+
 	CreateCol(L"BazookaCol", Vec3(0.0f, 0.0f, 300.0f), Vec3(300.0f, 300.0f, 500.0f), LAYER_TYPE::MONSTER_COL);
 	CreateCol(L"BazookaAttackCol", Vec3(0.0f, 350.0f, 200.0f), Vec3(600.0f, 300.0f, 200.0f), LAYER_TYPE::MONSTER_ATTACK_COL);
 
@@ -41,7 +43,6 @@ void CBazookaScript::Idle()
 }
 void CBazookaScript::Chase()
 {
-
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
@@ -160,11 +161,6 @@ void CBazookaScript::Attack()
 
 void CBazookaScript::Death()
 {
-	CAnimator3D* CurAni = Animator3D();
-	UINT iCurClipIdx = CurAni->GetClipIdx();
-
-	CurAni->Animator3D()->StopAnimation();
-
 	m_PaperBurnTime += fDT;
 
 	vector<CGameObject*> childvec = GetObj()->GetChild();
@@ -172,15 +168,24 @@ void CBazookaScript::Death()
 	for (int i = 0; i < childvec.size(); ++i)
 	{
 		if (childvec[i]->MeshRender())
-			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_PaperBurnTime);
+		{
+			Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, m_PaperBurnTime/3.f);
+			int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
+
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+		}
+			
 
 		if (childvec[i]->Collider3D())
 			childvec[i]->Collider3D()->Activate(false);
 	}
 
-	if (1.0f < m_PaperBurnTime)
+	if (5.0f < m_PaperBurnTime)
 	{
-		DeleteObject(GetGameObject());
+		DeleteObject(GetObj());
 	}
 }
 
@@ -190,25 +195,55 @@ void CBazookaScript::MeleeAttack()
 
 void CBazookaScript::LongDistanceAttack()
 {
-	CGameObject* Obj = new CGameObject;
-	Obj->AddComponent(new CTransform);
-	Obj->AddComponent(new CMeshRender);
-	Obj->AddComponent(new CBazookaBullet);
+	CGameObject* Obj = nullptr;
 
-	Obj->Transform()->SetLocalPos(Transform()->GetLocalPos());
-	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
+	Obj=IstanciatePrefab(L"BAZOOKA_BULLET", (UINT)LAYER_TYPE::MONSTER_EFFECT);
 
-	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+	Obj->ParticleSystem()->SetStartScale(Vec3(300.f, 300.f, 300.f));
+	Obj->ParticleSystem()->SetPaperburnPTC(true);
+	Vec3 FirePos = Transform()->GetLocalPos();
+
+	Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset ,m_fRightOffset);
+
+	Obj->Transform()->SetLocalPos(OffsetPos);
+
+
 	CBazookaBullet* Script = (CBazookaBullet*)Obj->GetScript();
+	Script->SetActive(true);
 
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-	CurScene->AddObject(Obj, 9);
+
+	CurScene->AddObject(Obj, LAYER_TYPE::MONSTER_BULLET_COL);
+
+
+
+	CGameObject* Col = new CGameObject;
+	Col->SetName(L"BazookBullet_Col");
+
+	Col->AddComponent(new CTransform);
+	Col->AddComponent(new CMeshRender);
+	Col->AddComponent(new CCollider3D);
+
+	Col->Transform()->SetLocalPos(Vec3(0.f,0.f,0.f));
+	Col->Transform()->SetLocalScale(Vec3(200.f,200.f,200.f));
+
+	Col->Collider3D()->SetParentOffsetPos(Vec3(0.f, 200.f, 0.f));
+
+	Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CurScene->AddObject(Col, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+
+
+	Obj->AddChild(Col);
+
 	Obj->awake();
 }
 
 void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
+
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
@@ -226,20 +261,24 @@ void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 				if (childvec[i]->MeshRender())
 				{
 					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
+
 					for (UINT j = 0; j < Count; ++j)
 					{
-						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
+						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetSharedMaterial(j);
 						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
-						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
 					}
 				}
 			}
 
+			CAnimator3D* CurAni = Animator3D();
+			CurAni->Animator3D()->StopAnimation();
+
+			m_bDamaged = false;
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
-
-
 	}
+
+	
 }
 
 void CBazookaScript::OnCollision(CGameObject* _pOther)
@@ -260,7 +299,15 @@ CBazookaScript::CBazookaScript()
 	, m_AttackRotSpeed(3.4f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::BAZOOKASCRIPT;
-	m_MonsterInfo.Hp = 6;
+	m_MonsterInfo.Hp = 20;
+
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "FrontOffset", &m_fFrontOffset));
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "UpOffset", &m_fUpOffset));
+	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "RightOffset", &m_fRightOffset));
+
+	m_fFrontOffset = 200.f;
+	m_fUpOffset = 250.f;
+	m_fRightOffset = -200.f;
 }
 
 CBazookaScript::~CBazookaScript()

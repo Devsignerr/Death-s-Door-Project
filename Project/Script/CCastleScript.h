@@ -54,6 +54,7 @@ public:
 public:
 	void CheckAttackDirection();
 	void PatternChoice();
+	void SetbDamaged() { m_bDamaged = false; }
 public:
 	void OnCollisionEnter(CGameObject* _pOther) override;
 	void OnCollision(CGameObject* _pOther) override;

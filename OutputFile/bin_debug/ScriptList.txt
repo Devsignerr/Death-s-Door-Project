@@ -1,4 +1,5 @@
 CActorScript
+CAnchor
 CAttackImpactScript
 CBatScript
 CBazookaBullet
@@ -6,15 +7,18 @@ CBazookaScript
 CBossScript
 CCameraScript
 CCastleBullet
+CCastleLaser
 CCastleScript
 CCrowBatBullet
 CCrowBullet
 CCrowEggBullet
 CCrowScript
 CEffectScript
+CElevator
 CEnding
 CExplosionParticle
 CFadeScript
+CFence
 CFireDamageParticle
 CHpBar
 CIronmaceScript
@@ -40,6 +44,7 @@ CSkyBoxScript
 CSlashEffect
 CSpearManScript
 CSpiderScript
+CSpinLaser
 CTestMonsterAttackEffect
 CTestMonsterScript
 CTitle

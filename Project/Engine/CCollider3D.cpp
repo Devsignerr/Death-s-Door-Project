@@ -147,7 +147,9 @@ void CCollider3D::Activate(bool _b)
 {
 	m_bEnable = _b;
 
-	CGameObject* Parent = GetObj()->GetParent();
+	CGameObject* Obj = GetObj();
+
+	CGameObject* Parent = Obj->GetParent();
 
 	if (nullptr != Parent)
 	{
@@ -162,7 +164,7 @@ void CCollider3D::Activate(bool _b)
 		else if (!m_bEnable)
 		{
 			Vec3 LocalPos = Transform()->GetLocalPos();
-			LocalPos.y += 10000.f;
+			LocalPos.y += 100000.f;
 			Transform()->SetLocalPos(LocalPos);
 		}
 	}

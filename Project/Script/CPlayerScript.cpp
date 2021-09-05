@@ -8,9 +8,14 @@
 #include <Engine/CFSM.h>
 #include <Engine/CCollider3D.h>
 #include <Engine/CState.h>
+#include <Engine/CParticleSystem.h>
 
 #include <Script/CCameraScript.h>
 #include <Script/CFadeScript.h>
+#include "CPlayerArrow.h"
+#include "CPlayerBomb.h"
+#include "CPlayerMagic.h"
+#include "CPlayerHook.h"
 
 #pragma region PlayerStateHeader
 #include "TPlayerIdle.h"
@@ -310,13 +315,20 @@ void CPlayerScript::CreateCol()
 		Obj->AddComponent(new CTransform);
 		Obj->AddComponent(new CMeshRender);
 		Obj->AddComponent(new CCollider3D);
+
 		Obj->Transform()->SetLocalPos(Vec3(0.0f, 100.0f, 0.0f));
 		Obj->Transform()->SetLocalScale(Vec3(100.0f, 200.0f, 100.0f));
+
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+		Obj->MeshRender()->Activate(false);
+
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::PLAYER_COL);
-		AddChild(GetObj(), Obj);
+
+		GetObj()->AddChild(Obj);
+
+		Obj->MeshRender()->Activate(false);
 	}
 	{
 		Vec3 Pos = Transform()->GetLocalPos();
@@ -325,17 +337,67 @@ void CPlayerScript::CreateCol()
 		Obj->AddComponent(new CTransform);
 		Obj->AddComponent(new CMeshRender);
 		Obj->AddComponent(new CCollider3D);
+
 		Obj->Transform()->SetLocalPos(Vec3(0.0f, 150.0f, -500.f));
 		Obj->Transform()->SetLocalScale(Vec3(500.0f, 150.0f, 400.0f));
+
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+		Obj->MeshRender()->Activate(false);
+
 		Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 200.0f, -250.f));
+
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
-		AddChild(GetObj(), Obj);
-		//Obj->MeshRender()->Activate(false);
+		GetObj()->AddChild(Obj);
+
+		Obj->MeshRender()->Activate(false);
 		Obj->Collider3D()->Activate(false);
 	}
+}
+
+void CPlayerScript::ClearAllProjectile()
+{
+	if (m_pArrow)
+	{
+		m_pArrow->SetAllMeshrenderActive(false);
+		m_pArrow->SetAllColliderActive(false);
+		m_pArrow->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		((CPlayerArrow*)m_pArrow->GetScript())->SetActive(false);
+		DeleteObject(m_pArrow);
+
+		m_pArrow = nullptr;
+	}
+
+	if (m_pMagic)
+	{
+		m_pMagic->ParticleSystem()->Activate(false);
+		m_pMagic->SetAllColliderActive(false);
+		m_pMagic->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		((CPlayerMagic*)m_pMagic->GetScript())->SetActive(false);
+		m_pMagic->ParticleSystem()->Destroy();
+
+		m_pMagic = nullptr;
+	}
+
+	if (m_pBomb)
+	{
+		m_pBomb->ParticleSystem()->Activate(false);
+		m_pBomb->SetAllColliderActive(false);
+		m_pBomb->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		((CPlayerBomb*)m_pBomb->GetScript())->SetActive(false);
+		m_pBomb->ParticleSystem()->Destroy();
+
+		m_pBomb = nullptr;
+	}
+
+	if (m_pHook)
+	{
+		((CPlayerHook*)m_pHook->GetScript())->Destroy();
+
+		m_pHook = nullptr;
+	}
+
 }
 
 
@@ -354,6 +416,7 @@ Vec3 CPlayerScript::GetMouseClickPos()
 	Vec3 RDirCamera = pCamera->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 	Vec3 FDirCamera = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 	Vec3 BDirCamera = -pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
 	FDirCamera.y = 0.f;
 	BDirCamera.y = 0.f;
 
@@ -368,10 +431,10 @@ Vec3 CPlayerScript::GetMouseClickPos()
 	*/
 
 
-	PlanePoint[0] = { PlayerPos + LDirCamera * 800.f + FDirCamera * 800.f };
-	PlanePoint[1] = { PlayerPos + RDirCamera * 800.f + FDirCamera * 800.f };
-	PlanePoint[2] = { PlayerPos + RDirCamera * 800.f + BDirCamera * 800.f };
-	PlanePoint[3] = { PlayerPos + LDirCamera * 800.f + BDirCamera * 800.f };
+	PlanePoint[0] = { PlayerPos + LDirCamera * 10000.f + FDirCamera * 10000.f };
+	PlanePoint[1] = { PlayerPos + RDirCamera * 10000.f + FDirCamera * 10000.f };
+	PlanePoint[2] = { PlayerPos + RDirCamera * 10000.f + BDirCamera * 10000.f };
+	PlanePoint[3] = { PlayerPos + LDirCamera * 10000.f + BDirCamera * 10000.f };
 
 	Vec3 IntersectPos = {};
 
@@ -432,10 +495,12 @@ void CPlayerScript::RotatetoClick(Vec3 _ClickPos)
 void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
+
 	//if ((int)LAYER_TYPE::ITEM == Obj->GetLayerIndex())
 	//{
 	//	ChangeState(PLAYER_STATE::GET_ITEM, 0.3f, L"GetItem", false);
 	//}
+
 	if ((int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::MONSTER_BULLET_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::BOSS_ATTACK_COL == Obj->GetLayerIndex() ||
@@ -443,6 +508,7 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 	{
 		if (m_eState != PLAYER_STATE::HIT_BACK && m_eState != PLAYER_STATE::HIT_RECOVER)
 		{
+			ClearAllProjectile();
 			ChangeState(PLAYER_STATE::HIT_BACK, 0.3f, L"Hit_Back", false);
 		}
 	}
@@ -452,16 +518,33 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 	{
 		CCameraScript::SetCameraShake(0.2f, 100.f, 3.f);
 
-		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();
+		while (nullptr != _pOther->GetParent())
+		{
+			_pOther = _pOther->GetParent();
+		}
+
+		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();	
 
 		Vec3 vDiff = OtherPos - GetPlayerPos();
 
-		ActivateImpactParticle(OtherPos, vDiff, 15, 9);
+		ActivateImpactParticle(Vec4(0.f,0.f,0.f,0.f),OtherPos, -vDiff, 25, 20);
 	}
+
+	else if ((UINT)LAYER_TYPE::MAP_GIMIC_COL == Obj->GetLayerIndex() || (UINT)LAYER_TYPE::WALL_COL == Obj->GetLayerIndex())
+	{
+		Transform()->SetLocalPos(PlayerPrePos);
+	}
+
 }
 
 void CPlayerScript::OnCollision(CGameObject* _pOther)
 {
+	CGameObject* Obj = _pOther;
+
+	if ((UINT)LAYER_TYPE::MAP_GIMIC_COL == Obj->GetLayerIndex() || (UINT)LAYER_TYPE::WALL_COL == Obj->GetLayerIndex())
+	{
+	Transform()->SetLocalPos(PlayerPrePos);
+	}
 }
 
 void CPlayerScript::OnCollisionExit(CGameObject* _pOther)

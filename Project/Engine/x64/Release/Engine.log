@@ -68,7 +68,9 @@
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -175,7 +177,9 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -283,7 +287,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CopyTexture.fx(59,40
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -392,7 +398,118 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(82,21-37): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
+  }
+  
+  //
+  // 21 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  SamplerState g_sam_2
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(82,21-37): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+      float   fDOFDistance;               // Offset:   32, size:    4
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -498,7 +615,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -604,7 +723,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -713,7 +834,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\HorizontalBlur.fx(49
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -748,6 +871,115 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\HorizontalBlur.fx(49
   };
   RWTexture2D g_DestTex;
   Texture2D g_SrcTex;
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(82,21-37): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+      float   fDOFDistance;               // Offset:   32, size:    4
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
+  }
+  
+  //
+  // 21 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  SamplerState g_sam_2
+  {
+  };
   
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
@@ -823,7 +1055,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\light.fx(173,5-40): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -860,6 +1094,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\light.fx(173,5-40): 
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\particleupdate.fx(134,13-95): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -929,7 +1164,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1038,7 +1275,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\picking.fx(30,9-42):
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1076,8 +1315,8 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\picking.fx(30,9-42):
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\posteffect.fx(39,5-45): warning X3206: implicit truncation of vector type
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\posteffect.fx(63,5-48): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\posteffect.fx(41,5-45): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\posteffect.fx(65,5-48): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -1147,7 +1386,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\posteffect.fx(63,5-4
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1253,7 +1494,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1290,8 +1533,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): 
 FXC : warning X4717: Effects deprecated for D3DCompiler_47
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(170,11-60): warning X3206: implicit truncation of vector type
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(237,5-25): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(176,11-60): warning X3206: implicit truncation of vector type
   
   //
   // FX Version: fx_5_0
@@ -1361,7 +1603,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std2d.fx(237,5-25): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1469,7 +1713,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(82,21-37): 
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1579,7 +1825,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\terrain.fx(160,5-74)
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1683,7 +1931,118 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
+  }
+  
+  //
+  // 21 local object(s)
+  //
+  Texture2D g_tex_0;
+  Texture2D g_tex_1;
+  Texture2D g_tex_2;
+  Texture2D g_tex_3;
+  Texture2D g_tex_4;
+  Texture2D g_tex_5;
+  Texture2D g_tex_6;
+  Texture2D g_tex_7;
+  Texture2DArray g_texarr_0;
+  Texture2DArray g_texarr_1;
+  TextureCube g_texcube_0;
+  TextureCube g_texcube_1;
+  StructuredBuffer g_arrFinalMat;
+  StructuredBuffer g_Light2DInfo;
+  StructuredBuffer g_Light3DInfo;
+  Texture2D g_noise;
+  StructuredBuffer g_Anim2DInfo;
+  Texture2D g_animtex;
+  SamplerState g_sam_0
+  {
+  };
+  SamplerState g_sam_1
+  {
+  };
+  SamplerState g_sam_2
+  {
+  };
+  
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(62,16-61): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.fx(91,16-104): warning X3206: implicit truncation of vector type
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\std3d.fx(82,21-37): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  //
+  // FX Version: fx_5_0
+  //
+  // 3 local buffer(s)
+  //
+  cbuffer TRANSFORM : register(b0)
+  {
+      float4x4 g_matWorld;                // Offset:    0, size:   64
+      float4x4 g_matView;                 // Offset:   64, size:   64
+      float4x4 g_matProj;                 // Offset:  128, size:   64
+      float4x4 g_matWV;                   // Offset:  192, size:   64
+      float4x4 g_matWVP;                  // Offset:  256, size:   64
+      float4x4 g_matWorldInv;             // Offset:  320, size:   64
+      float4x4 g_matViewInv;              // Offset:  384, size:   64
+  }
+  
+  cbuffer MATERIAL_DATA : register(b1)
+  {
+      float4  g_vDiff;                    // Offset:    0, size:   16
+      float4  g_vSpec;                    // Offset:   16, size:   16
+      float4  g_vAmb;                     // Offset:   32, size:   16
+      float4  g_vEmis;                    // Offset:   48, size:   16
+      int     g_int_0;                    // Offset:   64, size:    4
+      int     g_int_1;                    // Offset:   68, size:    4
+      int     g_int_2;                    // Offset:   72, size:    4
+      int     g_int_3;                    // Offset:   76, size:    4
+      float   g_float_0;                  // Offset:   80, size:    4
+      float   g_float_1;                  // Offset:   84, size:    4
+      float   g_float_2;                  // Offset:   88, size:    4
+      float   g_float_3;                  // Offset:   92, size:    4
+      float2  g_vec2_0;                   // Offset:   96, size:    8
+      float2  g_vec2_1;                   // Offset:  104, size:    8
+      float2  g_vec2_2;                   // Offset:  112, size:    8
+      float2  g_vec2_3;                   // Offset:  120, size:    8
+      float4  g_vec4_0;                   // Offset:  128, size:   16
+      float4  g_vec4_1;                   // Offset:  144, size:   16
+      float4  g_vec4_2;                   // Offset:  160, size:   16
+      float4  g_vec4_3;                   // Offset:  176, size:   16
+      float4x4 g_mat_0;                   // Offset:  192, size:   64
+      float4x4 g_mat_1;                   // Offset:  256, size:   64
+      float4x4 g_mat_2;                   // Offset:  320, size:   64
+      float4x4 g_mat_3;                   // Offset:  384, size:   64
+      int     btex_0;                     // Offset:  448, size:    4
+      int     btex_1;                     // Offset:  452, size:    4
+      int     btex_2;                     // Offset:  456, size:    4
+      int     btex_3;                     // Offset:  460, size:    4
+      int     btex_4;                     // Offset:  464, size:    4
+      int     btex_5;                     // Offset:  468, size:    4
+      int     btex_6;                     // Offset:  472, size:    4
+      int     btex_7;                     // Offset:  476, size:    4
+      int     btexarr_0;                  // Offset:  480, size:    4
+      int     btexarr_1;                  // Offset:  484, size:    4
+      int     btexcube_0;                 // Offset:  488, size:    4
+      int     btexcube_1;                 // Offset:  492, size:    4
+      int     iAnim3D;                    // Offset:  496, size:    4
+      int     iBoneCount;                 // Offset:  500, size:    4
+      int2    iMtrlPadding;               // Offset:  504, size:    8
+  }
+  
+  cbuffer GLOBAL_VALUE : register(b2)
+  {
+      float2  g_vResolution;              // Offset:    0, size:    8
+      float2  g_vNoiseResolution;         // Offset:    8, size:    8
+      float   g_DT;                       // Offset:   16, size:    4
+      float   g_AccTime;                  // Offset:   20, size:    4
+      uint    iLight2DCount;              // Offset:   24, size:    4
+      uint    iLight3DCount;              // Offset:   28, size:    4
+      float   fDOFDistance;               // Offset:   32, size:    4
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1787,7 +2146,9 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1893,7 +2254,9 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\VerticalBlur.fx(49,4
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -1999,7 +2362,9 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
       uint    iLight2DCount;              // Offset:   24, size:    4
       uint    iLight3DCount;              // Offset:   28, size:    4
       float   fDOFDistance;               // Offset:   32, size:    4
-      int     Padding[3];                 // Offset:   48, size:   36
+      float3  g_CamWorldPos;              // Offset:   36, size:   12
+      float3  g_vCamUp;                   // Offset:   48, size:   12
+      int     padding;                    // Offset:   64, size:    4
   }
   
   //
@@ -2035,7 +2400,9 @@ FXC : warning X4717: Effects deprecated for D3DCompiler_47
   RWTexture2D WeightTex;
   StructuredBuffer g_PickPos;
   
+  pch.cpp
   CAnimation2D.cpp
+  CAnimation3DShader.cpp
   CAnimator2D.cpp
   CAnimator3D.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2055,8 +2422,13 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26)
   CCollider3D.cpp
   CCollisionMgr.cpp
   CComponent.cpp
+  CComputeShader.cpp
+  CConstBuffer.cpp
+  CCopyBoneMatrixShader.cpp
+  CCopyShaderCS.cpp
   CCore.cpp
   CDevice.cpp
+  CEntity.cpp
   CEventMgr.cpp
   CFBXLoader.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(416,26): warning C4244: '=': 'T'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2139,6 +2511,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CFBXLoader.cpp(129):
   CFSM.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CFrustum.cpp
+  컴파일하고 있습니다...
   CFrustumSphere.cpp
   CGameObject.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2146,15 +2519,19 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(218,
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(230,37): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(242,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CGameObject.cpp(258,35): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CGraphicsShader.cpp
+  CHeightMapShader.cpp
+  CHorizontalBlur.cpp
   CInstancingBuffer.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CInstancingBuffer.cpp(64,37): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  CInterface.cpp
   CKeyMgr.cpp
   CLayer.cpp
   CLight2D.cpp
-  컴파일하고 있습니다...
   CLight3D.cpp
   CLightCamera.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CMRT.cpp
   CMaterial.cpp
   CMesh.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMesh.cpp(372,38): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -2165,6 +2542,10 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26)
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CMeshRender.cpp(263,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   CParticleSystem.cpp
+  CParticleUpdateShader.cpp
+  CPathMgr.cpp
+  컴파일하고 있습니다...
+  CPickingShader.cpp
   CPrefab.cpp
   CRenderMgr.cpp
   CRenderMgr_init.cpp
@@ -2174,11 +2555,14 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(63,112): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(84,32): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CRenderMgr_init.cpp(84,17): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CRes.cpp
   CResMgr.cpp
   CResMgr_init.cpp
   CScene.cpp
   CSceneMgr.cpp
   CScript.cpp
+  CShader.cpp
+  CSingleton.cpp
   CSound.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
@@ -2220,12 +2604,97 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CSound.cpp(95): mess
               _Alloc=std::allocator<char>
           ]
   CState.cpp
+  CStructuredBuffer.cpp
   CTerrain.cpp
   CTerrain_init.cpp
+  CTexture.cpp
   CTimeMgr.cpp
-  컴파일하고 있습니다...
   CTransform.cpp
+  컴파일하고 있습니다...
   CUI.cpp
+  CVerticalBlur.cpp
+  CWeightShader.cpp
+  Ptr.cpp
+  extern.cpp
+  func.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(27): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(27): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<const wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=const wchar_t *
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(34): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\func.cpp(34): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_const_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
   Engine.vcxproj -> C:\Death-s-Door-Project\Death-s-Door-Project\External\Library\Engine\Engine.lib
   .\Project\Engine\CAnimation2D.h
   .\Project\Engine\CAnimation3DShader.h
@@ -2301,9 +2770,11 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CSound.cpp(95): mess
   .\Project\Engine\bonecopy.fx
   .\Project\Engine\CopyTexture.fx
   .\Project\Engine\Fire.fx
+  .\Project\Engine\Font.fx
   .\Project\Engine\func.fx
   .\Project\Engine\heightmap.fx
   .\Project\Engine\HorizontalBlur.fx
+  .\Project\Engine\Hp.fx
   .\Project\Engine\light.fx
   .\Project\Engine\particleupdate.fx
   .\Project\Engine\picking.fx
@@ -2314,7 +2785,8 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Engine\CSound.cpp(95): mess
   .\Project\Engine\struct.fx
   .\Project\Engine\terrain.fx
   .\Project\Engine\tess.fx
+  .\Project\Engine\UI.fx
   .\Project\Engine\value.fx
   .\Project\Engine\VerticalBlur.fx
   .\Project\Engine\weightmap.fx
-  21개 파일이 복사되었습니다.
+  24개 파일이 복사되었습니다.

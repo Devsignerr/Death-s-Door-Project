@@ -19,7 +19,6 @@ void TCastleFly::update()
 	}
 	if (174 == CurAni->GetFrameIdx())
 	{
-
 		m_Script->TransColScale(Vec3(50000.0f, 30000.0f, 50000.0f));
 		m_Script->OnOffAttackCol(false);
 

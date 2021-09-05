@@ -18,6 +18,21 @@ CMonsterScript::~CMonsterScript()
 {
 }
 
+Vec3 CMonsterScript::GetOffsetFirePos(Vec3 _Pos, float _fFrontOffset, float _fUpOffset, float _fRightOffset)
+{	
+	Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 vUp = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+
+	Vec3 Pos = _Pos;
+
+	Pos += vFront * _fFrontOffset;
+	Pos += vUp * _fUpOffset;
+	Pos += vRight * _fRightOffset;
+
+	return Pos;
+}
+
 bool CMonsterScript::RangeSearch(float _Range)
 {
 	Vec3 Pos = CPlayerScript::GetPlayerPos();
@@ -208,19 +223,18 @@ void CMonsterScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAY
 	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 
-	if (_Type == LAYER_TYPE::MONSTER_ATTACK_COL)
-	{
-		Obj->Collider3D()->SetParentOffsetPos(_Pos);
-		//Obj->MeshRender()->Activate(false);
-		Obj->Collider3D()->Activate(false);
-	}
-
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)_Type);
 
-	AddChild(GetObj(), Obj);
+	GetObj()->AddChild(Obj);
 
+	if (_Type == LAYER_TYPE::MONSTER_ATTACK_COL)
+	{
+		Obj->Collider3D()->SetParentOffsetPos(_Pos);
+		Obj->Collider3D()->Activate(false);
+	}
 
+	Obj->MeshRender()->Activate(false);
 }
 
 void CMonsterScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
@@ -261,16 +275,6 @@ void CMonsterScript::update()
 {
 	CActorScript::update();
 }
-
-//void CMonsterScript::OnCollisionEnter(CGameObject* _pOther)
-//{	
-//	CPlayerScript* pScript = dynamic_cast<CPlayerScript*>(_pOther->GetComponent(COMPONENT_TYPE::SCRIPT));
-//	if (nullptr != pScript)
-//	{
-//		DeleteObject(GetObj());
-//	}
-//}
-
 
 void CMonsterScript::SaveToScene(FILE* _pFile)
 {

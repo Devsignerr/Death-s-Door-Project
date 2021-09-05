@@ -10,13 +10,20 @@ private:
 private:
 	bool			m_OnOffCheck;
 	bool			m_MoveCheck;
-	size_t			m_ThisNum;
+	int				m_ThisNum;
 	Vec3			m_UpSwitchPos;
+	Vec3			m_OriginPos;
 	Ptr<CMaterial>	m_pOriginMtrl;
+
+	int				m_Test;
 public:
 	void SetOnOffCheck(bool _OnOffCheck) { m_OnOffCheck = _OnOffCheck; }
 	void SetThisNum(int _Num) { m_ThisNum = _Num; }
 	int	 GetThisNum() { return m_ThisNum; }
+private:
+	void SetMoveCheck(bool _MoveCheck) { m_MoveCheck = _MoveCheck; }
+	void SpinLaserMove();
+	void LastSwitchOnCheck();
 
 private:
 	void ResetSwitch();

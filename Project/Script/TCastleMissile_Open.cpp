@@ -22,19 +22,15 @@ void TCastleMissile_Open::update()
 		m_MissileTime += fDT;
 
 		m_MissileDelay += fDT;
-		if (m_MissileDelay > 0.1f)
+		if (m_MissileDelay > 0.2f)
 		{
 			m_MissileDelay = 0.0f;
 
 			Vec3 Pos = GetObj()->Transform()->GetLocalPos();
-			Pos.x -= 200.0f;
-			Pos.y += 1400.0f;
-			MissileCreate(Pos);
-
-			Vec3 Pos2 = GetObj()->Transform()->GetLocalPos();
-			Pos2.x += 200.0f;
-			Pos2.y += 1400.0f;
-			MissileCreate(Pos2);
+			Vec3 Right = GetObj()->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+			Vec3 Left = -GetObj()->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+			MissileCreate(Pos, Right);
+			MissileCreate(Pos, Left);
 		}
 	}
 
@@ -54,15 +50,19 @@ void TCastleMissile_Open::Exit()
 	m_MissileDelay = 0.0f;
 }
 
-void TCastleMissile_Open::MissileCreate(Vec3 _Pos)
+void TCastleMissile_Open::MissileCreate(Vec3 _Pos, Vec3 _Dir)
 {
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
+	Vec3 Up = -GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 Back = -GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
 	CGameObject* Obj = new CGameObject;
 	Obj->AddComponent(new CTransform);
 	Obj->AddComponent(new CMeshRender);
 	Obj->AddComponent(new CCastleBullet);
+
+	_Pos += (_Dir * 250.0f) + (Up * 1500.0f) + (Back * 200.0f);
 
 	Obj->Transform()->SetLocalPos(_Pos);
 	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));

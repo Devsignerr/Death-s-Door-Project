@@ -59,6 +59,8 @@ void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
         float fKey = _ThreadIdx.x / (float) g_int_0; // 각 스레드가 겹치지 않는 키값을 얻어내기 위해서       
         float3 vRand = float3(Rand(fKey), Rand(fKey * 2.f), Rand(fKey * 3.f)); // 3번의 랜덤을 구함(키값 중복을 피하기 위해서 배수함)
         
+        g_particlebuffer[_ThreadIdx.x].RandValue = vRand.z;
+        
         // vRand 의 각 성분값이 0 ~ 1 이므로, -0.5 ~ 0.5 범위로 확장 후 범위를 곱한다.
         float3 vPositionRange = (vRand - 0.5f) * g_vec4_1.xyz;
               
@@ -113,15 +115,15 @@ void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
     }
     else
     {
-        float slowSpeed = 0.f;
-        
-        if (g_int_2 != 0)
-        {         
-            g_particlebuffer[_ThreadIdx.x].m_fSpeed -= g_DT * g_int_2;
-            if(g_particlebuffer[_ThreadIdx.x].m_fSpeed < 0.f)
-                g_particlebuffer[_ThreadIdx.x].m_fSpeed = 0.f;
-
-        }     
+       // float slowSpeed = 0.f;
+       // 
+       // if (g_int_2 != 0)
+       // {         
+       //     g_particlebuffer[_ThreadIdx.x].m_fSpeed -= g_DT * g_int_2;
+       //     if(g_particlebuffer[_ThreadIdx.x].m_fSpeed < 0.f)
+       //         g_particlebuffer[_ThreadIdx.x].m_fSpeed = 0.f;
+       //
+       // }     
         
        // 파티클 업데이트        
         g_particlebuffer[_ThreadIdx.x].m_fCurTime += g_DT;
@@ -129,6 +131,8 @@ void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
         if (g_particlebuffer[_ThreadIdx.x].m_fCurTime >= g_particlebuffer[_ThreadIdx.x].m_fMaxLife)
         {
             g_particlebuffer[_ThreadIdx.x].iAlive = 0;
+            g_particlebuffer[_ThreadIdx.x].vWorldPos = float4(-99999.f, -99999.f, -99999.f,1.f);
+            g_particlebuffer[_ThreadIdx.x].m_fCurTime = 0.f;
             return;
         }
         

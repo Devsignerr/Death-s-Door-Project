@@ -2,6 +2,8 @@
 #include <Engine/CScript.h>
 
 class CTexture;
+class CMaterial;
+
 class CActorScript : public CScript
 {
 private:
@@ -16,6 +18,24 @@ private:
 	//네비메쉬 체크에 실패했음 
 	bool m_bOutofMesh;
 	bool m_bJump;
+	Vec3 m_vEffectColor;
+
+protected:
+	bool  m_bDamaged;
+	float m_fDamageEffectTime;
+	float m_fCurDamageTime;
+
+protected:
+	vector<Ptr<CMaterial>> m_vecOriginMtrl;
+
+	Ptr<CTexture> m_WhiteTex;
+	Ptr<CTexture> m_RedTex;
+
+public:
+	Vec3 GetEffectColor() { return m_vEffectColor; }
+	void GetDamage();
+	void DamageEffectupdate();
+	void EffectParamSetting(Vec4 Diff,Vec4 Emis ,Ptr<CTexture> _Tex);
 
 protected:
 	float m_fOffSetPos;
@@ -27,6 +47,7 @@ protected:
 	
 
 public:
+	void CreateDeadParticle();
 	void CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos);
 	CGameObject* IstanciatePrefab(wstring _wstr,UINT _LayerIdx);
 	bool GroundCheck();
@@ -37,7 +58,7 @@ public:
 	bool ResearchNode(Vec3 _MovePos, int _RayDir =-1);
 
 public:
-	virtual void ActivateImpactParticle(Vec3 Pos ,Vec3 Dir, int ActivateCount, float SpreadRange);
+	virtual void ActivateImpactParticle(Vec4 EmisColor ,Vec3 Pos ,Vec3 Dir, int ActivateCount, float SpreadRange);
 
 public:
 	virtual void update();

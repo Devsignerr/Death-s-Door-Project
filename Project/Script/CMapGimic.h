@@ -6,11 +6,12 @@ class CMapGimic :public CScript
 public:
     enum class GIMICTYPE
     {
-        GRATING,
+        FENCE,
         SPIN_LASER,
         ANCHOR,
         UPDOWN_SWITCH,
         ELEVATOR,
+        DOOR,
         LEVER,
         END
     };
@@ -20,6 +21,8 @@ protected:
 
 public:
     GIMICTYPE GetGimicType() { return m_GimicType; }
+protected:
+    void CreateCol(Vec3 _Scale, Vec3 _OffsetPos,wstring _Name = L"");
 
 public:
     virtual void awake();

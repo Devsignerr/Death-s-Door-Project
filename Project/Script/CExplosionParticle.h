@@ -5,7 +5,16 @@ class CExplosionParticle:
 	public  CEffectScript 
 {
 private:
-    int   m_iMaxCount;
+    int                m_iMaxCount;
+    EXPLOSION_PTC_TYPE m_eType;
+    bool               m_bMemoryObj;
+
+public:
+    bool  IsMemoryObj() { return m_bMemoryObj; }
+    void SetMemoryObj(bool _b) { m_bMemoryObj = _b; }
+
+    EXPLOSION_PTC_TYPE GetExploPTCType() { return m_eType; }
+    void SetExploPTCType(EXPLOSION_PTC_TYPE _Type) { m_eType = _Type; }
 
 public:
     virtual void awake();

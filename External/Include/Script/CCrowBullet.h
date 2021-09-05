@@ -1,7 +1,7 @@
 #pragma once
 #include "CProjectile.h"
 class CCrowBullet :
-    public CProjectile
+	public CProjectile
 {
 private:
 	Vec3    m_Pos;
@@ -14,6 +14,8 @@ private:
 	float   m_VelocityZ;
 	float   m_MaxHeight;
 	float   m_MaxHeightTime;
+
+	Vec3    m_AwakeMoveDir;
 private:
 	bool AwakeMove();
 
@@ -21,6 +23,8 @@ private:
 	float   m_fTimetoCheckPlayerPos;
 	float	m_fInternalRadianWithPlayer;
 	bool	m_bPlayerMyLeft;
+public:
+	void SetAwakeMoveDir(Vec3 _Dir) { m_AwakeMoveDir = _Dir; }
 private:
 	void GuidedMove();
 

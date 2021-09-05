@@ -2,7 +2,7 @@
 #include <Engine/CState.h>
 
 class TCastleMissile_Open :
-	public CState
+    public CState
 {
 private:
     float m_MissileTime;
@@ -12,7 +12,7 @@ private:
 
     void Enter() override;
     void Exit() override;
-    void MissileCreate(Vec3 _Pos);
+    void MissileCreate(Vec3 _Pos, Vec3 _Dir);
 public:
     TCastleMissile_Open();
     ~TCastleMissile_Open();

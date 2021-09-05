@@ -9,7 +9,6 @@
 
 void TCastleFly_Stay::update()
 {
-
 	//CAnimator3D* CurAni = GetObj()->Animator3D();
 	//UINT iCurClipIdx = CurAni->GetClipIdx();
 

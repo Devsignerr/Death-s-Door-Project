@@ -26,7 +26,7 @@ void TPlayerSlash_Attack_R::update()
 	if (1 == m_ColOnOffCheck)
 	{
 		CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
-		//Obj->MeshRender()->Activate(false);
+		Obj->MeshRender()->Activate(false);
 		Obj->Collider3D()->Activate(false);
 	}
 
@@ -90,7 +90,7 @@ void TPlayerSlash_Attack_R::Enter()
 {
 	m_Script = (CPlayerScript*)GetScript();
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
-	Obj->MeshRender()->Activate(true);
+	//Obj->MeshRender()->Activate(true);
 	Obj->Collider3D()->Activate(true);
 }
 

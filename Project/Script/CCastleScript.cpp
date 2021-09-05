@@ -252,35 +252,15 @@ void CCastleScript::PatternChoice()
 
 void CCastleScript::OnCollisionEnter(CGameObject* _pOther)
 {
+	CActorScript::OnCollisionEnter(_pOther);
 	CGameObject* Obj = _pOther;
-	if ((int)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
+
+	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		--m_Hp;
 
 		if (0 == m_Hp)
-		{
-			vector<CGameObject*> childvec = GetObj()->GetChild();
-
-			for (int i = 0; i < childvec.size(); ++i)
-			{
-				if (childvec[i]->MeshRender())
-				{
-					UINT Count = childvec[i]->MeshRender()->GetMtrlCount();
-					for (UINT j = 0; j < Count; ++j)
-					{
-						Ptr<CMaterial> mtrl = childvec[i]->MeshRender()->GetCloneMaterial(j);
-						mtrl->SetData(SHADER_PARAM::TEX_4, m_PaperBurnTex.Get());
-						childvec[i]->MeshRender()->SetMaterial(mtrl, j);
-					}
-				}
-			}
-
-			if (0 == m_Hp)
-			{
-				m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
-			}
-		}
-
+			m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
 	}
 }
 

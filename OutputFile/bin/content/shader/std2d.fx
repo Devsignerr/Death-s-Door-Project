@@ -167,13 +167,21 @@ void GS_Particle(point VTX_PARTICLE_OUT _in[1], inout TriangleStream<GS_PARTICLE
     // 0 -- 1
     // | \  |
     // 3 -- 2
+   
+    
     float fRatio = (g_particelbuffer[instID].m_fCurTime / g_particelbuffer[instID].m_fMaxLife) ;
+    
+    float randvalue = g_particelbuffer[instID].RandValue;
+    
     float fScale = (g_vec4_1 - g_vec4_0) * fRatio + g_vec4_0;   
+    
+    fRatio += randvalue*10.f;
+    
     
     float4 vSpin = 1.f;
     float4 vSpin2 = 1.f;
     
-    if (g_particelbuffer[instID].iParticleType==0)
+    if (g_particelbuffer[instID].iParticleType == 0 || g_particelbuffer[instID].iParticleType == 1)
     {  
         if (g_particelbuffer[instID].iLeftSpin == 0)
         {
@@ -229,12 +237,31 @@ float4 PS_Particle(GS_PARTICLE_OUT _in) :SV_Target
     uint iInst = (uint) _in.fInstID;
     
     float fRatio = g_particelbuffer[iInst].m_fCurTime / g_particelbuffer[iInst].m_fMaxLife;
+    
     vColor = (g_vec4_3 - g_vec4_2) * fRatio + g_vec4_2;
     vColor2 = g_tex_0.Sample(g_sam_0, _in.vUV);
-    vColor2.xyz *= vColor;
+    vColor2.xyzw *= vColor;
     
+    if(g_int_1)
+    {
+        float2 FullUV = _in.vUV;
+        float test = 0.f;
+        
+        float3 PaperBurn = g_tex_1.Sample(g_sam_1, FullUV).xyz;
+	    
+        //밝을수록 먼저 사라지도록 수정 
+            test = (PaperBurn.x + PaperBurn.y + PaperBurn.z) / 4.f;
+        
+        if (test <= fRatio)
+        {
+            //clip(-1);
+            return float4(0.f, 0.f, 0.f, 0.f);
+        }
+    }
     
+  
     return vColor2;
+    
    
 }
 

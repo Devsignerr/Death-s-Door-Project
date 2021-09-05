@@ -145,6 +145,17 @@ void Particle3DGUI::render()
         GetTargetObj()->ParticleSystem()->Reset();
     }
 
+    ImGui::SameLine();
+
+    static bool paperburn = false;
+
+    if (ImGui::Button("Set paperBurn"))
+    {
+        paperburn = paperburn ? false : true;
+
+        GetTargetObj()->ParticleSystem()->SetPaperburnPTC(paperburn);
+    }
+
     ImGui::NewLine();
 
     ImGui::Text("Set Texture");
@@ -182,8 +193,8 @@ void Particle3DGUI::render()
     ImGui::Text("Frequency   \t");  ImGui::SameLine(); ImGui::DragFloat("##Frequency   ", &Frequency);
     ImGui::Text("AccTime     \t");  ImGui::SameLine(); ImGui::DragFloat("##AccTime     ", &AccTime);
     ImGui::Text("CreateRange \t");  ImGui::SameLine(); ImGui::DragFloat4("##CreateRange ", CreateRange);
-    ImGui::Text("StartColor  \t");  ImGui::SameLine(); ImGui::ColorEdit3("##vAmb", StartColor,misc_flags);
-    ImGui::Text("EndColor    \t");  ImGui::SameLine(); ImGui::ColorEdit3("##vDiff", EndColor, misc_flags);
+    ImGui::Text("StartColor  \t");  ImGui::SameLine(); ImGui::ColorEdit4("##vAmb", StartColor,misc_flags);
+    ImGui::Text("EndColor    \t");  ImGui::SameLine(); ImGui::ColorEdit4("##vDiff", EndColor, misc_flags);
     ImGui::Text("StartScale  \t");  ImGui::SameLine(); ImGui::DragFloat3("##StartScale  ", StartScale);
     ImGui::Text("EndScale    \t");  ImGui::SameLine(); ImGui::DragFloat3("##EndScale    ", EndScale);
 

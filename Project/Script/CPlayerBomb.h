@@ -17,11 +17,6 @@ public:
 	void update() override;
 
 public:
-	void ActivateExplosionParticle() override;
-
-
-
-public:
 	void OnCollisionEnter(CGameObject* _pOther) override;
 	void OnCollision(CGameObject* _pOther) override;
 	void OnCollisionExit(CGameObject* _pOther) override;

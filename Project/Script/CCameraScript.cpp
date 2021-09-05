@@ -80,7 +80,7 @@ void CCameraScript::update()
 }
 
 
-void CCameraScript::start()
+void CCameraScript::awake()
 {
     m_pDirLight = CSceneMgr::GetInst()->GetCurScene()->FindParentObj(L"Directional Light", (UINT)LAYER_TYPE::LIGHT);
 }

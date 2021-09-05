@@ -55,7 +55,7 @@ void CPlayerArrow::OnCollisionEnter(CGameObject* _pOther)
 
 	CCameraScript::SetCameraShake(0.3f, 100.f, 5.f);
 
-	ActivateImpactParticle(Pos, Front, 15, 9);
+	ActivateImpactParticle(Vec4(0.1f, 0.2f, 0.1f, 0.f),Pos, Front, 15, 9);
 }
 
 void CPlayerArrow::OnCollision(CGameObject* _pOther)

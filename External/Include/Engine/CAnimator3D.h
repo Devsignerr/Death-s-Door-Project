@@ -93,6 +93,9 @@ public :
 	void StopAnimation() { m_bStop = m_bStop? false: true; }
 	void ChangeAnimation(int _iNextAnimIdx , float _fLerpTime , bool _Stay=false);
 	void UpdateChangeAnimation();
+
+	bool GetbStop() { return m_bStop; }
+
 private:
 	void check_mesh(Ptr<CMesh> _pMesh);
 

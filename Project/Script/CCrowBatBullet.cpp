@@ -4,8 +4,6 @@
 
 bool CCrowBatBullet::AwakeMove()
 {
-	
-
 	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
 	Vec3 Front = GetObj()->Transform()->GetLocalDir(DIR_TYPE::UP);
 
@@ -51,99 +49,73 @@ bool CCrowBatBullet::GuidedMove()
 	}
 
 
-		//m_ChangeMove = true; // 서클무브로 감 
+	//m_ChangeMove = true; // 서클무브로 감 
 
-		Vec3 PlayerRot = CPlayerScript::GetPlayerRot();
-		//m_LastPlayerpos = PlayerPos;
+	Vec3 PlayerRot = CPlayerScript::GetPlayerRot();
+	//m_LastPlayerpos = PlayerPos;
 
-		//m_fTheta = vUp.Dot(vRelative);
-		//m_fTheta = acos(m_fTheta);
-		//float Dot = PlayerCross.Dot(PlayerUp);
+	//m_fTheta = vUp.Dot(vRelative);
+	//m_fTheta = acos(m_fTheta);
+	//float Dot = PlayerCross.Dot(PlayerUp);
 
-		//내가 플레이어를 바라보는 벡터와 내 front 벡터를 외적 
-		Vec3 vCross = vRelative.Cross(vFront);
+	//내가 플레이어를 바라보는 벡터와 내 front 벡터를 외적 
+	Vec3 vCross = vRelative.Cross(vFront);
 
-		//위 결과에서 나온 벡터와 몬스터의 up벡터(위에서 쓴 front 아님)를 내적했을때 , 
-		// 위 값이 양수면 플레이어는 내 왼쪽 , 음수면 오른쪽에 있는 것 
+	//위 결과에서 나온 벡터와 몬스터의 up벡터(위에서 쓴 front 아님)를 내적했을때 , 
+	// 위 값이 양수면 플레이어는 내 왼쪽 , 음수면 오른쪽에 있는 것 
 
-		//프론트를 얻어왔지만 회전시켜서 세웠으므로 업벡터로 쓰임 
-		float dot = vCross.Dot(vUp);
+	//프론트를 얻어왔지만 회전시켜서 세웠으므로 업벡터로 쓰임 
+	float dot = vCross.Dot(vUp);
 
-		float dist = (-vFront + vRelative).Length();
+	float dist = (-vFront + vRelative).Length();
 
+	//if (dist > 1.9f)
+	//{
+	//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * 0.5f;
+	//}
+
+	vRelative.Normalize();
+
+	float InnerRadian = vRelative.Dot(vFront);
+	InnerRadian = acos(InnerRadian);
+
+
+	if (InnerRadian > m_fLimitTheta * XM_PI / 180.f)
+	{
 		//if (dist > 1.9f)
 		//{
-		//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * 0.5f;
+		//	Rot.y += CTimeMgr::GetInst()->GetfDT() * m_fTheta;
 		//}
 
-		vRelative.Normalize();
-
-		float InnerRadian = vRelative.Dot(vFront);
-		InnerRadian = acos(InnerRadian);
-
-	
-		if (InnerRadian > m_fLimitTheta *XM_PI/180.f)
-		{
-			//if (dist > 1.9f)
-			//{
-			//	Rot.y += CTimeMgr::GetInst()->GetfDT() * m_fTheta;
-			//}
-
-			//플레이어는 내 왼쪽에 있다 
-			if (dot > 0.0) {
-				Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_fTheta;
-			}
-
-			//플레이어는 내 오른쪽에 있다 
-			else if (dot < 0.0)
-			{
-				Rot.y += CTimeMgr::GetInst()->GetfDT() * m_fTheta;
-			}
-		   
-			///플레이어를 똑바로 바라보고 있다 
-			//else if (dot > -20.0 && dot < 20.0 && dist < 1.f)
-			//{
-			//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_fTheta;
-			//}
+		//플레이어는 내 왼쪽에 있다 
+		if (dot > 0.0) {
+			Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_fTheta;
 		}
-		
-		Pos += vFront * fDT * 1000.f;
 
+		//플레이어는 내 오른쪽에 있다 
+		else if (dot < 0.0)
+		{
+			Rot.y += CTimeMgr::GetInst()->GetfDT() * m_fTheta;
+		}
 
-
-		//m_fTimetoCheckPlayerPos += fDT;
-		//
-		//m_fInternalRadianWithPlayer = vFront.Dot(vRelative);
-		//
-		////플레이어는 내 왼쪽에 있다 
-		//if (fDot > 0.0f)
-		//	m_bPlayerMyLeft = true;
-		//
-		////플레이어는 내 오른쪽에 있다 
-		//else if (fDot < 0.0f)
-		//	m_bPlayerMyLeft = false;
-		//
-		//
-		//if (m_bPlayerMyLeft)
-		//	Rot.y += CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
-		//else
-		//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * (1.5f + m_fInternalRadianWithPlayer / 2.0f);
-		//
-		//if (m_fTimetoCheckPlayerPos < 1.0f)
+		///플레이어를 똑바로 바라보고 있다 
+		//else if (dot > -20.0 && dot < 20.0 && dist < 1.f)
 		//{
-		//	Pos.x += fDT * vRelative.x * 800.0f;
-		//	Pos.z += fDT * vRelative.z * 800.0f;
+		//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_fTheta;
 		//}
-		//else
-		//{
-		//	Pos += (vFront / 0.95f) * fDT * 800.f;
-		//}
-		//
+	}
 
-		Transform()->SetLocalPos(Pos);
-		Transform()->SetLocalRot(Rot);
+	Vec3 vDiff = PlayerPos - Pos;
+	vDiff.Normalize();
+	vDiff.x = 0.0f;
+	vDiff.z = 0.0f;
 
-		return true;	
+	Pos += (vFront * fDT * 1000.f) + (vDiff * fDT * 1000.f);
+
+	Transform()->SetLocalPos(Pos);
+	Transform()->SetLocalRot(Rot);
+
+	return true;
 }
 
 bool CCrowBatBullet::CircleMove()
@@ -152,7 +124,7 @@ bool CCrowBatBullet::CircleMove()
 
 	// 중심 점 -> 플레이어의 위치
 	Vec3 PlayerPos = m_LastPlayerpos;
-	
+
 	// 테두리 점 -> 슬라이딩 시작 위치
 	Vec3 SlidingPoint = Vec3(fRadius * cosf(m_fTheta), 0.0f, fRadius * sinf(m_fTheta));
 

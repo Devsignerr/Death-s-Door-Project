@@ -35,6 +35,7 @@ void CEventMgr::update()
 				m_vecDeadObj[i]->DisconnectWithParent();
 			
 			delete m_vecDeadObj[i];
+			m_vecDeadObj[i] = nullptr;
 		}		
 		m_bDeadEventExist = true;
 	}

@@ -4,6 +4,7 @@
 #include "CExplosionParticle.h"
 #include "CFireDamageParticle.h"
 #include "CAttackImpactScript.h"
+#include "CCrowBatBullet.h"
 
 #include <Engine/CSceneMgr.h>
 #include <Engine/CParticleSystem.h>
@@ -13,14 +14,15 @@
 int CMemoryPoolScript::m_iChainCount = 30;
 int CMemoryPoolScript::m_iExplosionPTC =10;
 int CMemoryPoolScript::m_iFireDamagePTC = 10;
-int CMemoryPoolScript::m_iAttackImpact = 60;
+int CMemoryPoolScript::m_iAttackImpact = 100;
+int CMemoryPoolScript::m_iCrowBullet = 30;
 
 
 std::queue<CGameObject*> CMemoryPoolScript::m_queueChain = {};
 std::queue<CGameObject*> CMemoryPoolScript::m_queueExplosionPTC = {};
 std::queue<CGameObject*> CMemoryPoolScript::m_queueFireDamagePTC = {};
 std::queue<CGameObject*> CMemoryPoolScript::m_queueAttackImpact = {};
-
+std::queue<CGameObject*> CMemoryPoolScript::m_queueCrowBullet = {};
 
 CMemoryPoolScript::CMemoryPoolScript()
     :CScript((UINT)SCRIPT_TYPE::MEMORYPOOLSCRIPT)
@@ -34,6 +36,7 @@ CMemoryPoolScript::~CMemoryPoolScript()
 	m_queueExplosionPTC = std::queue<CGameObject*>();
 	m_queueFireDamagePTC = std::queue<CGameObject*>();
 	m_queueAttackImpact = std::queue<CGameObject*>();
+	m_queueCrowBullet = std::queue<CGameObject*>();
 }
 
 
@@ -41,6 +44,12 @@ void CMemoryPoolScript::CreateAttackImpact()
 {
 	if (m_queueAttackImpact.size() >= m_iAttackImpact)
 		return;
+
+	Ptr<CMaterial> mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"AttackImpactMtrl");
+	Ptr<CTexture> Tex = CResMgr::GetInst()->FindRes<CTexture>(L"iridecent");
+
+	mtrl->SetDiffuse(Vec4(10.f, 10.f, 10.f, 10.f));
+	mtrl->SetData(SHADER_PARAM::TEX_3, Tex.Get());
 
 	for (int i = 0; i < m_iAttackImpact; ++i)
 	{
@@ -64,8 +73,10 @@ void CMemoryPoolScript::CreateAttackImpact()
 
 		pGameObject->SetName(PrefabName + PrefabNumber);
 
-		pGameObject->SetAllMeshrenderActive(false);
+		pGameObject->MeshRender()->SetMaterial(mtrl, 0);
 
+		pGameObject->SetAllMeshrenderActive(false);
+		
 		CAttackImpactScript* pScript = (CAttackImpactScript*)pGameObject->GetScript();
 		pScript->SetName(L"CAttackImpactScript");
 		m_queueAttackImpact.push(pGameObject);
@@ -107,6 +118,8 @@ void CMemoryPoolScript::CreateExplosionPTC()
 		pGameObject->ParticleSystem()->SetRepeat(false);
 		pGameObject->ParticleSystem()->Activate(false);
 		CExplosionParticle* pScript = (CExplosionParticle*)pGameObject->GetScript();
+
+		pScript->SetExploPTCType(EXPLOSION_PTC_TYPE::PLAYER_BOMB);
 		pScript->SetName(L"CExplosionParticle");
 		m_queueExplosionPTC.push(pGameObject);
 
@@ -194,6 +207,48 @@ void CMemoryPoolScript::CreateChain()
 	}
 }
 
+void CMemoryPoolScript::CreateCrowBullet()
+{
+	if (m_queueCrowBullet.size() >= m_iCrowBullet)
+		return;
+
+	for (int i = 0; i < m_iCrowBullet; ++i)
+	{
+		wstring PrefabName = L"CrowBullet";
+
+		Ptr<CPrefab> Prefab = CResMgr::GetInst()->FindRes<CPrefab>(PrefabName);
+		if (nullptr == Prefab)
+		{
+			wstring PrefabPath = L"prefab\\" + PrefabName + L".pref";
+			Ptr<CPrefab> Prefab = CResMgr::GetInst()->Load<CPrefab>(PrefabName, PrefabPath);
+		}
+
+		CGameObject* pGameObject = Prefab->Instantiate();
+		pGameObject->awake();
+
+		int PrefabCount = i;
+
+		wchar_t Str[10] = {};
+		_itow_s(PrefabCount, Str, 10);
+		wstring PrefabNumber = wstring(Str);
+
+		pGameObject->SetName(PrefabName + PrefabNumber);
+
+		pGameObject->SetAllMeshrenderActive(false);
+		pGameObject->SetAllColliderActive(false);
+
+		CCrowBatBullet* pScript = (CCrowBatBullet*)pGameObject->GetScript();
+
+		pScript->SetName(L"CCrowBatBullet");
+		m_queueCrowBullet.push(pGameObject);
+
+		pScript->SetActive(false);
+
+		CSceneMgr::GetInst()->GetCurScene()->AddObject(pGameObject, (UINT)LAYER_TYPE::BOSS_EFFECT);
+
+	}
+}
+
 
 CGameObject* CMemoryPoolScript::GetAttackImpact()
 {
@@ -257,6 +312,23 @@ CGameObject* CMemoryPoolScript::GetFireDamagePTC()
 	return nullptr;
 }
 
+CGameObject* CMemoryPoolScript::GetCrowBullet()
+{
+	if (!m_queueCrowBullet.empty())
+	{
+		CGameObject* pObj = m_queueCrowBullet.front();
+		pObj->SetAllMeshrenderActive(true);
+		pObj->SetAllColliderActive(true);
+
+		CCrowBatBullet* pScript = (CCrowBatBullet*)pObj->GetScript();
+		pScript->SetActive(true);
+
+		m_queueCrowBullet.pop();
+		return pObj;
+	}
+	return nullptr;
+}
+
 
 void CMemoryPoolScript::awake()
 {
@@ -264,6 +336,7 @@ void CMemoryPoolScript::awake()
 	CreateExplosionPTC();
 	CreateFireDamagePTC();
 	CreateAttackImpact();
+	//CreateCrowBullet();
 }
 
 void CMemoryPoolScript::update()
@@ -306,6 +379,13 @@ void CMemoryPoolScript::ReturnObj(CGameObject* _Obj)
 		_Obj->Transform()->SetLocalPos(Vec3(-99999.f, -99999.f, -99999.f));
 		((CAttackImpactScript*)_Obj->GetScript())->SetActive(false);
 		m_queueAttackImpact.push(_Obj);
+	}
+
+	else if (ScriptName == L"CCrowBatBullet")
+	{
+		_Obj->Transform()->SetLocalPos(Vec3(-99999.f, -99999.f, -99999.f));
+		((CCrowBatBullet*)_Obj->GetScript())->SetActive(false);
+		m_queueCrowBullet.push(_Obj);
 	}
 }
 

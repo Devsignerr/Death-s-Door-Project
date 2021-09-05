@@ -10,12 +10,12 @@ bool CCrowBullet::AwakeMove()
 	{
 		Vec3 Pos = Transform()->GetLocalPos();
 		Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
-		Vec3 Diff = PlayerPos - Pos;	
+		Vec3 Diff = PlayerPos - Pos;
 		Diff.Normalize();
 
-		float X = -Diff.x * 500.0f * fDT;
+		float X = m_AwakeMoveDir.x * 500.0f * fDT;
 		float Y = m_Pos.y + m_VelocityY * m_Time - 0.5f * m_Gravity * m_Time * m_Time;
-		float Z = -Diff.z * 500.0f * fDT;
+		float Z = m_AwakeMoveDir.z * 500.0f * fDT;
 
 		Pos.x += X;
 		Pos.y = Y;
