@@ -49,13 +49,13 @@ void CPlayerArrow::OnCollisionEnter(CGameObject* _pOther)
 {
 	m_bDestroyed = true;
 
-	Vec3 Pos = Transform()->GetLocalPos();
+	Vec3 Pos = Transform()->GetWorldPos();
 
 	Vec3 Front = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
 	CCameraScript::SetCameraShake(0.3f, 100.f, 5.f);
 
-	ActivateImpactParticle(Vec4(0.1f, 0.2f, 0.1f, 0.f),Pos, Front, 15, 9);
+	ActivateImpactParticle(Vec4(0.4f, 0.1f, 0.1f, 0.f),Pos, Front, 10, 9);
 }
 
 void CPlayerArrow::OnCollision(CGameObject* _pOther)

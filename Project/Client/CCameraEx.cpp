@@ -24,7 +24,7 @@ void CCameraEx::finalupdate()
 
 	if (KEY_TAP(KEY_TYPE::LBTN))
 	{
-		ObjectSelectToRay();
+		//ObjectSelectToRay();
 	}
 }
 

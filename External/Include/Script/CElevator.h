@@ -1,12 +1,18 @@
 #pragma once
 #include "CMapGimic.h"
+
+class CGameObject;
 class CElevator :
 	public CMapGimic
 {
 private:
-	bool	m_IsOn;
-	Vec3	m_DestPos;
-	float	m_Depth;
+	bool			m_IsOn;
+	Vec3			m_DestPos;
+	float			m_Depth;
+	CGameObject* m_Elevator2_Nav;
+	Vec3			m_Elevator2_Nav_OriginPos;
+private:
+	void CreateCol();
 public:
 	void SetOn() { m_IsOn = true; }
 public:

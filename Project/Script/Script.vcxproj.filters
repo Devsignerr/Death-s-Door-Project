@@ -388,6 +388,9 @@
     <ClInclude Include="CCastleLaser.h">
       <Filter>ScriptCode\Actor\Projectile\Castle</Filter>
     </ClInclude>
+    <ClInclude Include="CFogScript.h">
+      <Filter>ScriptCode\System\Fog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -545,6 +548,9 @@
     </Filter>
     <Filter Include="ScriptCode\Map_Gimic\SpinLaser">
       <UniqueIdentifier>{29d3c714-a1bf-497e-9103-fb2b48f27f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\System\Fog">
+      <UniqueIdentifier>{1857a5a9-c658-4fb0-9607-4ee2b19af674}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -931,6 +937,9 @@
     </ClCompile>
     <ClCompile Include="CCastleLaser.cpp">
       <Filter>ScriptCode\Actor\Projectile\Castle</Filter>
+    </ClCompile>
+    <ClCompile Include="CFogScript.cpp">
+      <Filter>ScriptCode\System\Fog</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

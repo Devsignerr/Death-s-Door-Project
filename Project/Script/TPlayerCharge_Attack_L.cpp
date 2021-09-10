@@ -51,6 +51,14 @@ void TPlayerCharge_Attack_L::update()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
+
+		if (nullptr != CPlayerScript::m_pHeavySlashR)
+			CPlayerScript::m_pHeavySlashR->SetAllMeshrenderActive(false);
+
+		if (nullptr != CPlayerScript::m_pHeavySlashL)
+			CPlayerScript::m_pHeavySlashL->SetAllMeshrenderActive(false);
+
+
 		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::IDLE, 0.01f, L"Idle", false);
 	}
 }

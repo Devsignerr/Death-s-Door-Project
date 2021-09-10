@@ -23,7 +23,7 @@ void TCrowSlidingReady::update()
 
 void TCrowSlidingReady::Enter()
 {
-	vector<CGameObject*> Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
+	const vector<CGameObject*>& Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
 
 	if (true == Temp.empty())
 	{

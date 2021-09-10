@@ -34,6 +34,9 @@ public:
 private:
     void CreateChain();
     void ChainMoveEndCheck();
+    bool EmptyChainCheck();
+
+
 private:
     void update() override;
 
@@ -44,4 +47,3 @@ public:
     TCrowSliding();
     ~TCrowSliding();
 };
-

@@ -11,6 +11,8 @@
 #include <Engine/CScene.h>
 #include <Engine/CSceneMgr.h>
 #include <Engine/CLayer.h>
+#include <Engine/CParticleSystem.h>
+#include <Engine/CCollider3D.h>
 
 #pragma region CrowStateHeader
 
@@ -53,24 +55,35 @@ void CCrowScript::ChangeState(CROW_STATE _eState, float _BlendingTime, const wst
 
 void CCrowScript::CreateCrowBullet(Vec3 _Pos, Vec3 _Dir)
 {
-	CGameObject* Obj = new CGameObject;
+	CGameObject* Obj = nullptr;
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 
-	Obj->AddComponent(new CTransform);
-	Obj->AddComponent(new CMeshRender);
-	Obj->AddComponent(new CCrowBullet);
-
+	Obj = IntanciatePrefab(L"CrowHead", (UINT)LAYER_TYPE::BOSS_EFFECT);
 	Obj->Transform()->SetLocalPos(_Pos);
-	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
+	Obj->GetChild()[1]->ParticleSystem()->SetPaperburnPTC(true);
 
-	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::BOSS_EFFECT);
 
 	CCrowBullet* Script = (CCrowBullet*)Obj->GetScript();
 	Script->SetAwakeMoveDir(_Dir);
+	Script->SetActive(true);
 
-	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	CGameObject* Col = new CGameObject;
+	Col->SetName(L"CrowHead_Col");
 
+	Col->AddComponent(new CTransform);
+	Col->AddComponent(new CMeshRender);
+	Col->AddComponent(new CCollider3D);
+
+	Col->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	Col->Transform()->SetLocalScale(Vec3(200.f, 200.f, 600.f));
+
+	Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CurScene->AddObject(Col, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+
+	Obj->AddChild(Col);
 
 	Obj->awake();
 }
@@ -78,7 +91,8 @@ void CCrowScript::CreateCrowBullet(Vec3 _Pos, Vec3 _Dir)
 void CCrowScript::awake()
 {
 	CBossScript::awake();
-	CreateCol(L"CrowBossCol", Vec3(0.0f, 50.0f, 100.0f), Vec3(130.0f, 240.0f, 100.0f), LAYER_TYPE::BOSS_COL);
+
+	CreateCol(L"CrowBossCol", Vec3(0.0f, 50.0f, 50.0f), Vec3(130.0f, 300.0f, 200.0f), LAYER_TYPE::BOSS_COL);
 
 	if (nullptr != m_pFSM)
 		return;
@@ -158,8 +172,10 @@ void CCrowScript::update()
 
 void CCrowScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
 	CGameObject* Obj = _pOther;
+
+	if (m_Hp <= 0)
+		return;
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
@@ -172,6 +188,11 @@ void CCrowScript::OnCollisionEnter(CGameObject* _pOther)
 
 			m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
 		}
+
+		else
+		{
+			CActorScript::OnCollisionEnter(_pOther);
+		}
 	}
 }
 
@@ -180,7 +201,7 @@ void CCrowScript::OnCollision(CGameObject* _pOther)
 	CGameObject* Obj = _pOther;
 	if ((UINT)LAYER_TYPE::INDETERMINATE == Obj->GetLayerIndex())
 	{
-		vector<CGameObject*> Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
+		const vector<CGameObject*>& Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
 
 		CCrowEggBullet* Script = nullptr;
 

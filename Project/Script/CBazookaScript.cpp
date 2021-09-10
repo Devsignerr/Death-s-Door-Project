@@ -163,7 +163,7 @@ void CBazookaScript::Death()
 {
 	m_PaperBurnTime += fDT;
 
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -197,7 +197,7 @@ void CBazookaScript::LongDistanceAttack()
 {
 	CGameObject* Obj = nullptr;
 
-	Obj=IstanciatePrefab(L"BAZOOKA_BULLET", (UINT)LAYER_TYPE::MONSTER_EFFECT);
+	Obj=IntanciatePrefab(L"BAZOOKA_BULLET", (UINT)LAYER_TYPE::MONSTER_EFFECT);
 
 	Obj->ParticleSystem()->SetStartScale(Vec3(300.f, 300.f, 300.f));
 	Obj->ParticleSystem()->SetPaperburnPTC(true);
@@ -242,7 +242,8 @@ void CBazookaScript::LongDistanceAttack()
 
 void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_MonsterInfo.Hp <= 0)
+		return;
 
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
@@ -254,7 +255,7 @@ void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 
 		if (0 == m_MonsterInfo.Hp)
 		{
-			vector<CGameObject*> childvec = GetObj()->GetChild();
+			const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 			for (int i = 0; i < childvec.size(); ++i)
 			{
@@ -276,6 +277,11 @@ void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 			m_bDamaged = false;
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
+		else 
+		{
+			CActorScript::OnCollisionEnter(_pOther);
+		}
+
 	}
 
 	

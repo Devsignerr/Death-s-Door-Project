@@ -90,7 +90,7 @@ void TPlayerRun::update()
 	{
         if (nullptr == CPlayerScript::m_pHorizonSlashL)
         {
-            CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+            CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
             CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
             CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
             CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalPos(Vec3(0.f, 45.f, -170.f));

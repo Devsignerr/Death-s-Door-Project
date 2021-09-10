@@ -61,6 +61,8 @@ void CAttackImpactScript::update()
 
 		m_fMoveSpeed = 0.f;
 		m_fScale = 0.f;
+
+		GetObj()->Transform()->SetLocalScale(Vec3(0.f, 0.f, 0.f));
 		GetObj()->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 		CMemoryPoolScript::ReturnObj(GetObj());
 	}

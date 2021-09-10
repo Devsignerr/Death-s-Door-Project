@@ -59,8 +59,8 @@ void TPlayerRoll::update()
 void TPlayerRoll::Enter()
 {
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerCol",(UINT)LAYER_TYPE::PLAYER_COL);
-	Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 0.0f, 0.5f));
-	Obj->MeshRender()->Activate(false);
+	//Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 0.0f, 0.5f));
+	//Obj->MeshRender()->Activate(false);
 	Obj->Collider3D()->Activate(false);
 }
 

@@ -311,5 +311,39 @@ float4 Fade_In_Out(float4 _Color, uint _Idx, float _Time)
     return _Color * fRatio;
 }
 
+float calcFogHeightUniform(float3 objectPosition, float3 cameraPosition, float fogDensity, float fogEndHeight)
+{
+    float3 camToObj = cameraPosition - objectPosition;
+    float t;
+    if (objectPosition.y < fogEndHeight)
+    {
+        if (cameraPosition.y > fogEndHeight)
+        {
+            t = (fogEndHeight - objectPosition.y) / camToObj.y;
+        }
+        else
+        {
+            t = 1.0;
+        }
+    }
+    else
+    {
+        if (cameraPosition.y < fogEndHeight)
+        {
+            t = (cameraPosition.y - fogEndHeight) / camToObj.y;
+        }
+        else
+        {
+            t = 0.0;
+        }
+    }
+
+    
+    float distance = length(camToObj) * t;
+    //float fog = exp(-distance * fogDensity);
+    float fog = pow(-distance * fogDensity, 4);
+    return fog;
+}
+
 
 #endif

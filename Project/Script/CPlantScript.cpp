@@ -5,6 +5,7 @@
 
 #include <Engine/CCollider3D.h>
 #include <Engine/CLayer.h>
+#include <Engine/CLight3D.h>
 
 void CPlantScript::awake()
 {
@@ -71,7 +72,7 @@ void CPlantScript::Attack()
 void CPlantScript::Death()
 {
 	CAnimator3D* CurAni = Animator3D();
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	if (190 <= CurAni->GetFrameIdx())
 	{
@@ -116,30 +117,41 @@ void CPlantScript::LongDistanceAttack()
 		m_BulletLimit = true;
 		Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 		Vec3 Pos = Transform()->GetLocalPos();
-
 		Vec3 Dir = -Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
-		CGameObject* Obj = new CGameObject;
-		Obj->AddComponent(new CTransform);
-		Obj->AddComponent(new CMeshRender);
-		Obj->AddComponent(new CCollider3D);
-		Obj->AddComponent(new CPlantBullet);
+		CGameObject* Obj = nullptr;
+
+		Obj = IntanciatePrefab(L"PLANT_BULLET", (UINT)LAYER_TYPE::MONSTER_EFFECT);
 
 		Vec3 FirePos = Transform()->GetLocalPos();
-
-		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset,1.f);
-
+		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset,m_fRightOffset);
 		Obj->Transform()->SetLocalPos(OffsetPos);
-		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
 
-		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 		CPlantBullet* Script = (CPlantBullet*)Obj->GetScript();
-		Script->awake();
+
+		Script->SetActive(true);
 		Script->SetBulletDir(Dir);
 
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_EFFECT);
+
+		CGameObject* Child = new CGameObject;
+
+		Child->AddComponent(new CTransform);
+		Child->AddComponent(new CMeshRender);
+		Child->AddComponent(new CCollider3D);
+
+		Child->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		Child->Transform()->SetLocalScale(Vec3(150.f, 150.f, 150.f));
+
+		Child->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Child->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+		CurScene->AddObject(Child, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+
+		Obj->AddChild(Child);
+
+		Obj->awake();
 	}
 }
 
@@ -174,7 +186,8 @@ void CPlantScript::CreateCol()
 
 void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_MonsterInfo.Hp <= 0)
+		return;
 
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
@@ -185,7 +198,7 @@ void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 
 		if (0 == m_MonsterInfo.Hp)
 		{
-			vector<CGameObject*> childvec = GetObj()->GetChild();
+			const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 			for (int i = 0; i < childvec.size(); ++i)
 			{
@@ -205,7 +218,10 @@ void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
-
+		else
+		{
+			CActorScript::OnCollisionEnter(_pOther);
+		}
 
 	}
 }
@@ -226,13 +242,14 @@ CPlantScript::CPlantScript()
 	, m_AttackRange(1500.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::PLANTSCRIPT;
-	m_MonsterInfo.Hp = 3;
+	m_MonsterInfo.Hp = 16;
 
 	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "FrontOffset", &m_fFrontOffset));
 	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "UpOffset", &m_fUpOffset));
 
 	m_fFrontOffset = 360.0f;
 	m_fUpOffset = -600.0f;
+	m_fRightOffset = 0.f;
 }
 
 CPlantScript::~CPlantScript()

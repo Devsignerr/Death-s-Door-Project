@@ -119,6 +119,8 @@ void MenuGUI::render()
 
                     CScene* pScene = new CScene;
 
+                    CResMgr::GetInst()->GetNavMeshVec().clear();
+
                     CSaveLoadMgr::LoadScene(pScene, FileName);
 
                     CSceneMgr::GetInst()->ChangeScene(pScene);
@@ -232,6 +234,8 @@ void MenuGUI::render()
                     }
                     else 
                     {
+                        pObj->Transform()->SetLocalScale(Vec3(20.f, 20.f, 20.f));
+                        pObj->Transform()->SetLocalRot(Vec3(-90.f * XM_PI / 180.f, 180.f * XM_PI / 180.f, 0.f));
                         //씬에 존재하는 모든 네비메쉬 벡터
                         vector<CGameObject*>& pVecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
 

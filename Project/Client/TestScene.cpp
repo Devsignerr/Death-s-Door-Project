@@ -243,8 +243,12 @@ void CreateTestScene()
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MONSTER_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
 
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_HOOK_COL, (UINT)LAYER_TYPE::INDETERMINATE);
+
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
 	pCurScene->awake();
 
 	// Scene Save

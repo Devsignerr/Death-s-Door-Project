@@ -15,6 +15,9 @@ public:
 
 	CLONE(CTongueBullet);
 
+
+	void OnCollisionEnter(CGameObject* _pOther) override;
+
 public:
 	CTongueBullet();
 	~CTongueBullet();

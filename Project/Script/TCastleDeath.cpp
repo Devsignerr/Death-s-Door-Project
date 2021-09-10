@@ -9,7 +9,7 @@
 void TCastleDeath::update()
 {
 	CAnimator3D* CurAni = GetObj()->Animator3D();
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	if (75 == CurAni->GetFrameIdx())
 	{
@@ -59,7 +59,7 @@ void TCastleDeath::update()
 
 			if (3.0f < m_PaperBurnTime)
 			{
-				DeleteObject(GetObj());
+				CScript::DeleteObject(GetObj());
 			}
 		}
 

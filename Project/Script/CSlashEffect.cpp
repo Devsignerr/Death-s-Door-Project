@@ -20,10 +20,19 @@ void CSlashEffect::SetActive(bool _b)
 {
 	m_bActive = _b;
 
-	if(true==_b)
+	if (true == _b)
+	{
+		GetObj()->GetChild()[0]->MeshRender()->Activate(true);
+		GetObj()->GetChild()[0]->SetDynamicShadow(false);
 		m_fBurnRatio = 0.f;
-	else if (false==_b)
-		m_fBurnRatio = 10.f;
+	}
+		
+	else if (false == _b)
+	{
+		m_fBurnRatio = 0.f;
+		GetObj()->GetChild()[0]->SetDynamicShadow(false);
+		GetObj()->GetChild()[0]->MeshRender()->Activate(false);
+	}
 }
 
 void CSlashEffect::update()
@@ -33,6 +42,7 @@ void CSlashEffect::update()
 
 	m_fBurnRatio += fDT*3.f;
 
+	GetObj()->GetChild()[0]->SetDynamicShadow(false);
 	CGameObject* MeshObj = GetObj()->GetChild()[0];
 
 	Ptr<CMaterial> Mtrl = MeshObj->MeshRender()->GetSharedMaterial(0);

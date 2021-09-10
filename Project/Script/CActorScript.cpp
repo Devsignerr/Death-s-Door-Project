@@ -23,10 +23,16 @@ void CActorScript::GetDamage()
 
 		for (int i = 0; i < vecOriginalMtrlSize; ++i)
 		{
-			if (ChildVec[i]->MeshRender())
+			if (ChildVec[i]->MeshRender() && nullptr == ChildVec[i]->Collider3D())
 			{
-				Ptr<CMaterial> CloneMtrl = ChildVec[i]->MeshRender()->GetCloneMaterial(0);
-				ChildVec[i]->MeshRender()->SetMaterial(CloneMtrl, 0);
+				int Count = ChildVec[i]->MeshRender()->GetMtrlCount();
+
+				for (UINT j = 0; j < Count; ++j)
+				{
+					Ptr<CMaterial> CloneMtrl = ChildVec[i]->MeshRender()->GetCloneMaterial(j);
+					ChildVec[i]->MeshRender()->SetMaterial(CloneMtrl, j);
+				}
+
 			}
 		}
 	}
@@ -49,9 +55,10 @@ void CActorScript::DamageEffectupdate()
 
 			const vector<CGameObject*>& ChildVec = GetObj()->GetChild();
 
+
 			for (int i = 0; i < vecOriginalMtrlSize; ++i)
 			{
-				if (ChildVec[i]->MeshRender())
+				if (ChildVec[i]->MeshRender() && nullptr == ChildVec[i]->Collider3D())
 				{
 					ChildVec[i]->MeshRender()->SetMaterial(m_vecOriginMtrl[i], 0);
 				}
@@ -61,18 +68,18 @@ void CActorScript::DamageEffectupdate()
 		}
 
 		//White
-		if (m_fCurDamageTime < 0.2f* m_fDamageEffectTime)
+		if (m_fCurDamageTime < 0.1f * m_fDamageEffectTime)
 		{
-			EffectParamSetting(Vec4(100.f, 100.f, 100.f, 1.f), Vec4(10.f, 10.f,10.f, 1.f), m_WhiteTex);
+			EffectParamSetting(Vec4(100.f, 100.f, 100.f, 1.f), Vec4(10.f, 10.f, 10.f, 1.f), m_WhiteTex);
 		}
 		//Red
-		else if (m_fCurDamageTime >= 0.2f* m_fDamageEffectTime && m_fCurDamageTime < 0.4f* m_fDamageEffectTime)
+		else if (m_fCurDamageTime >= 0.1f * m_fDamageEffectTime && m_fCurDamageTime < 0.3f * m_fDamageEffectTime)
 		{
-			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.1f, 0.f, 0.f, 1.f), m_RedTex);
 		}
 
 		//Black
-		else if (m_fCurDamageTime >= 0.4f * m_fDamageEffectTime && m_fCurDamageTime < 0.6f * m_fDamageEffectTime)
+		else if (m_fCurDamageTime >= 0.3f * m_fDamageEffectTime && m_fCurDamageTime < 0.6f * m_fDamageEffectTime)
 		{
 			EffectParamSetting(Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), m_WhiteTex);
 		}
@@ -80,7 +87,7 @@ void CActorScript::DamageEffectupdate()
 		//Red
 		else if (m_fCurDamageTime >= 0.6f * m_fDamageEffectTime && m_fCurDamageTime < 0.8f * m_fDamageEffectTime)
 		{
-			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.01f, 0.005f, 0.005f, 1.f), m_RedTex);
+			EffectParamSetting(Vec4(10.f, 1.f, 1.f, 1.f), Vec4(0.1f, 0.f, 0.f, 1.f), m_RedTex);
 		}
 
 		//Black
@@ -91,6 +98,7 @@ void CActorScript::DamageEffectupdate()
 	}
 }
 
+
 void CActorScript::EffectParamSetting(Vec4 Diff, Vec4 Emis, Ptr<CTexture> _Tex)
 {
 	int vecOriginalMtrlSize = m_vecOriginMtrl.size();
@@ -99,10 +107,16 @@ void CActorScript::EffectParamSetting(Vec4 Diff, Vec4 Emis, Ptr<CTexture> _Tex)
 
 	for (int i = 0; i < vecOriginalMtrlSize; ++i)
 	{
-		if (ChildVec[i]->MeshRender())
+		if (ChildVec[i]->MeshRender() && nullptr == ChildVec[i]->Collider3D())
 		{
 			//클론된 메테리얼 
 			Ptr<CMaterial> Mtrl = ChildVec[i]->MeshRender()->GetSharedMaterial(0);
+
+			if (Mtrl->GetKey() != L"CM")
+			{
+				Mtrl = ChildVec[i]->MeshRender()->GetCloneMaterial(0);
+			}
+
 
 			Mtrl->SetDiffuse(Diff);
 			Mtrl->SetEmissive(Emis);
@@ -140,7 +154,7 @@ void CActorScript::CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos)
 
 }
 
-CGameObject* CActorScript::IstanciatePrefab(wstring _wstr, UINT _LayerIdx)
+CGameObject* CActorScript::IntanciatePrefab(wstring _wstr, UINT _LayerIdx)
 {
 	Ptr<CPrefab> Prefab = CResMgr::GetInst()->FindRes<CPrefab>(_wstr);
 	if (nullptr == Prefab)
@@ -198,8 +212,11 @@ bool CActorScript::GroundCheck()
 	//리소스 매니저에게서 현재 맵에 존재하는 모든 네비메쉬 벡터를 얻어온다 
 	const vector<CGameObject*>& VecNavMesh = CResMgr::GetInst()->GetNavMeshVec();
 	
-	if (VecNavMesh.size() == 0)
+	if (VecNavMesh.size() == 0 || VecNavMesh.size() >= m_iCurNavMeshIdx)
+	{
+		m_iCurNavMeshIdx = 0;
 		return false;
+	}
 
 	//이전 프레임에 내가 위치했던 메쉬의 인덱스로 탐색할것이다. 
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
@@ -578,22 +595,31 @@ void CActorScript::awake()
 
 
 	m_RedTex = CResMgr::GetInst()->FindRes<CTexture>(L"RedTex");
-	
+
 	if (nullptr == m_RedTex)
 		m_RedTex = CResMgr::GetInst()->Load<CTexture>(L"RedTex", L"texture\\FBXTexture\\RedTex.png");
 
 
+	if (m_vecOriginMtrl.size() != 0)
+		return;
+
 	//int MtrlCount = 0;
 	int ChildCount = 0;
-	
+
 	const vector<CGameObject*>& ChildVec = GetObj()->GetChild();
 	ChildCount = ChildVec.size();
-	
+
 	for (int i = 0; i < ChildCount; ++i)
 	{
-		if (ChildVec[i]->MeshRender())
+		if (ChildVec[i]->MeshRender() && nullptr == ChildVec[i]->Collider3D())
 		{
-			m_vecOriginMtrl.push_back(ChildVec[i]->MeshRender()->GetSharedMaterial(0));
+			int Count = ChildVec[i]->MeshRender()->GetMtrlCount();
+
+			for (UINT j = 0; j < Count; ++j)
+			{
+				m_vecOriginMtrl.push_back(ChildVec[i]->MeshRender()->GetSharedMaterial(j));
+			}
+
 		}
 	}
 }
@@ -605,7 +631,7 @@ void CActorScript::OnCollisionEnter(CGameObject* _pOther)
 }
 
 
-void CActorScript::ActivateImpactParticle(Vec4 EmisColor, Vec3 _Pos ,Vec3 _Dir, int ActivateCount, float SpreadRange)
+void CActorScript::ActivateImpactParticle(Vec4 EmisColor, Vec3 _Pos ,Vec3 _Dir, int ActivateCount, float SpreadRange, Vec2 Scale, Vec2 Speed)
 {
 	for (int i = 0; i < ActivateCount; ++i)
 	{
@@ -621,11 +647,19 @@ void CActorScript::ActivateImpactParticle(Vec4 EmisColor, Vec3 _Pos ,Vec3 _Dir, 
 		float iRand = CRandomMgrScript::GetRandomintNumber(-SpreadRange, SpreadRange);
 		iRand /= 10.f;
 
+		if (vRight.Length() == 0.f)
+			continue;
+
 		XMMATRIX matR = XMMatrixRotationAxis(vRight, iRand);
 
 
 		iRand = CRandomMgrScript::GetRandomintNumber(-SpreadRange, SpreadRange);
 		iRand /= 10.f;
+
+
+		if (vUp.Length() == 0.f)
+			continue;
+
 
 		XMMATRIX matU = XMMatrixRotationAxis(vUp, iRand);
 
@@ -638,11 +672,11 @@ void CActorScript::ActivateImpactParticle(Vec4 EmisColor, Vec3 _Pos ,Vec3 _Dir, 
 		((CAttackImpactScript*)pAttackImpact->GetScript())->SetDir(Dir);
 
 
-		iRand = CRandomMgrScript::GetRandomintNumber(300, 600);
+		iRand = CRandomMgrScript::GetRandomintNumber(Scale.x, Scale.y);
 
 		((CAttackImpactScript*)pAttackImpact->GetScript())->SetScale(iRand);
 
-		iRand = CRandomMgrScript::GetRandomintNumber(6000, 10000);
+		iRand = CRandomMgrScript::GetRandomintNumber(Speed.x, Speed.y);
 
 		((CAttackImpactScript*)pAttackImpact->GetScript())->SetSpeed(iRand);
 

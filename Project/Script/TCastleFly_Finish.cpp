@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TCastleFly_Finish.h"
 #include "CCastleScript.h"
+#include "CCameraScript.h"
 
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
@@ -18,6 +19,8 @@ void TCastleFly_Finish::update()
 		m_Script->OnOffAttackCol(true);
 		m_Script->TransColPos(Vec3(0.0f, -10000.0f, 0.0f));
 		m_Script->TransColScale(Vec3(160000.0f, 20000.0f, 160000.0f));
+
+		CCameraScript::SetCameraShake(0.2f, 100.f, 10.f);
 
 	}
 	if (437 == CurAni->GetFrameIdx())

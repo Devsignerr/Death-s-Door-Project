@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "CTongueBullet.h"
 #include "CPlayerScript.h"
+#include "CCameraScript.h"
+
+#include <Engine/CParticleSystem.h>
 
 void CTongueBullet::update()
 {
@@ -45,7 +48,13 @@ void CTongueBullet::update()
 	}
 	else
 	{
+		Vec3 vDiff = PlayerPos - Pos;
+		vDiff.Normalize();
+		vDiff.x = 0.0f;
+		vDiff.z = 0.0f;
+
 		Pos += (vFront / 0.95f) * fDT * 1000.f;
+		Pos += vDiff * fDT * 1000.f;
 	}
 
 
@@ -54,9 +63,25 @@ void CTongueBullet::update()
 
 }
 
+void CTongueBullet::OnCollisionEnter(CGameObject* _pOther)
+{
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL || _pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL)
+	{
+		CCameraScript::SetCameraShake(0.2f, 100.f, 4.f);
+
+		ActivateExplosionParticle();
+
+		GetObj()->SetAllColliderActive(false);
+		SetActive(false);
+		m_bDestroyed = false;
+		GetObj()->ParticleSystem()->Destroy();
+	}
+}
+
 CTongueBullet::CTongueBullet()
 {
 	m_iScriptType = (int)SCRIPT_TYPE::TONGUEBULLET;
+	m_eType = EXPLOSION_PTC_TYPE::TONGUE_EXPLO_PTC;
 }
 
 CTongueBullet::~CTongueBullet()

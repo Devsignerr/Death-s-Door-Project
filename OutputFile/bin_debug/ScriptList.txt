@@ -20,6 +20,7 @@ CExplosionParticle
 CFadeScript
 CFence
 CFireDamageParticle
+CFogScript
 CHpBar
 CIronmaceScript
 CMapChange

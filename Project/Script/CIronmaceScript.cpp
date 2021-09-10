@@ -113,7 +113,9 @@ void CIronmaceScript::update()
 
 void CIronmaceScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_Hp <= 0)
+		return;
+
 	CGameObject* Obj = _pOther;
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
@@ -123,6 +125,11 @@ void CIronmaceScript::OnCollisionEnter(CGameObject* _pOther)
 		if (0 == m_Hp)
 		{
 			m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
+		}
+
+		else
+		{
+			CActorScript::OnCollisionEnter(_pOther);
 		}
 	}
 }

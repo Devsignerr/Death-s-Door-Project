@@ -58,6 +58,8 @@ void TCastleFly_Stay::update()
 			GetFSM()->ChangeState(L"Fly_Finish", 0.1f, L"Fly_Finish", false);
 		}
 	}
+
+	((CCastleScript*)GetScript())->ActivateFlyCloud();
 }
 
 void TCastleFly_Stay::Enter()

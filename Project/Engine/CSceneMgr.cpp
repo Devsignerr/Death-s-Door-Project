@@ -41,7 +41,6 @@ CGameObject* CSceneMgr::FindObjectByName(const wstring& _strName)
 
 void CSceneMgr::ChangeScene(CScene* _pNextScene)
 {
-	CResMgr::GetInst()->GetNavMeshVec().clear();
 
 	tEvent evn = {};
 	evn.eEvent = EVENT_TYPE::SCENE_CHANGE;

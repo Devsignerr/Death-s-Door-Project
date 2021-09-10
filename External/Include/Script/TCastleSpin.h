@@ -7,6 +7,7 @@ class TCastleSpin :
 {
 private:
     CCastleScript* m_Script;
+    bool           m_bImpacted;
 private:
     void update() override;
 

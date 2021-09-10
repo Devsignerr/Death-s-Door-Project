@@ -23,6 +23,7 @@
 #include "CFadeScript.h"
 #include "CFence.h"
 #include "CFireDamageParticle.h"
+#include "CFogScript.h"
 #include "CHpBar.h"
 #include "CIronmaceScript.h"
 #include "CMapChange.h"
@@ -80,6 +81,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CFadeScript");
 	_vec.push_back(L"CFence");
 	_vec.push_back(L"CFireDamageParticle");
+	_vec.push_back(L"CFogScript");
 	_vec.push_back(L"CHpBar");
 	_vec.push_back(L"CIronmaceScript");
 	_vec.push_back(L"CMapChange");
@@ -160,6 +162,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CFence;
 	if (L"CFireDamageParticle" == _strScriptName)
 		return new CFireDamageParticle;
+	if (L"CFogScript" == _strScriptName)
+		return new CFogScript;
 	if (L"CHpBar" == _strScriptName)
 		return new CHpBar;
 	if (L"CIronmaceScript" == _strScriptName)
@@ -296,6 +300,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::FIREDAMAGEPARTICLE:
 		return new CFireDamageParticle;
+		break;
+	case (UINT)SCRIPT_TYPE::FOGSCRIPT:
+		return new CFogScript;
 		break;
 	case (UINT)SCRIPT_TYPE::HPBAR:
 		return new CHpBar;
@@ -487,6 +494,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::FIREDAMAGEPARTICLE:
 		return L"CFireDamageParticle";
+		break;
+
+	case SCRIPT_TYPE::FOGSCRIPT:
+		return L"CFogScript";
 		break;
 
 	case SCRIPT_TYPE::HPBAR:

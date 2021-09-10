@@ -355,7 +355,7 @@ void CTongueScript::Death()
 {
 	m_PaperBurnTime += fDT;
 
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -383,7 +383,8 @@ void CTongueScript::Death()
 
 void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_MonsterInfo.Hp <= 0)
+		return;
 
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
@@ -438,7 +439,7 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 
 			if (0 == m_MonsterInfo.Hp)
 			{
-				vector<CGameObject*> childvec = GetObj()->GetChild();
+				const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 				for (int i = 0; i < childvec.size(); ++i)
 				{
@@ -460,6 +461,11 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 
 				ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 			}
+
+			else
+			{
+				CActorScript::OnCollisionEnter(_pOther);
+			}
 		}
 	}
 }
@@ -477,24 +483,44 @@ void CTongueScript::LongDistanceAttack()
 	if (m_BulletLimit == false)
 	{
 		m_BulletLimit = true;
-		CGameObject* Obj = new CGameObject;
-		Obj->AddComponent(new CTransform);
-		Obj->AddComponent(new CMeshRender);
-		Obj->AddComponent(new CTongueBullet);
+
+		CGameObject* Obj = nullptr;
+
+		Obj = IntanciatePrefab(L"TONGUE_BULLET", (UINT)LAYER_TYPE::MONSTER_EFFECT);
 
 		Vec3 FirePos = Transform()->GetLocalPos();
 
-		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset,1.f);
+		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset, m_fRightOffset);
 
 		Obj->Transform()->SetLocalPos(OffsetPos);
-		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
 
-		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 		CTongueBullet* Script = (CTongueBullet*)Obj->GetScript();
+		Script->SetActive(true);
 
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-		CurScene->AddObject(Obj, 9);
+		CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+
+
+
+		CGameObject* Col = new CGameObject;
+		Col->SetName(L"TongueBullet_Col");
+
+		Col->AddComponent(new CTransform);
+		Col->AddComponent(new CMeshRender);
+		Col->AddComponent(new CCollider3D);
+
+		Col->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		Col->Transform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+
+		Col->Collider3D()->SetParentOffsetPos(Vec3(0.f, 200.f, 0.f));
+
+		Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+		CurScene->AddObject(Col, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+
+		Obj->AddChild(Col);
+
 		Obj->awake();
 	}
 }
@@ -543,6 +569,9 @@ CTongueScript::CTongueScript()
 	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "UpOffset", &m_fUpOffset));
 
 	m_fUpOffset = 350.0f;
+	m_fFrontOffset = 0.f;
+	m_fRightOffset = 0.f;
+
 }
 
 CTongueScript::~CTongueScript()

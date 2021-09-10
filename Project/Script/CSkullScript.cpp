@@ -3,6 +3,7 @@
 #include "CPlayerScript.h"
 #include "CSkullBullet.h"
 
+#include <Engine/CParticleSystem.h>
 #include <Engine/CCollider3D.h>
 
 
@@ -34,7 +35,8 @@ void CSkullScript::update()
 
 void CSkullScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_MonsterInfo.Hp <= 0)
+		return;
 
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
@@ -45,7 +47,7 @@ void CSkullScript::OnCollisionEnter(CGameObject* _pOther)
 
 		if (0 == m_MonsterInfo.Hp)
 		{
-			vector<CGameObject*> childvec = GetObj()->GetChild();
+			const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 			for (int i = 0; i < childvec.size(); ++i)
 			{
@@ -65,7 +67,10 @@ void CSkullScript::OnCollisionEnter(CGameObject* _pOther)
 			m_bDamaged = false;
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
-
+		else
+		{
+			CActorScript::OnCollisionEnter(_pOther);
+		}
 
 	}
 
@@ -84,26 +89,45 @@ void CSkullScript::LongDistanceAttack()
 	if (m_BulletLimit == false)
 	{
 		m_BulletLimit = true;
-		CGameObject* Obj = new CGameObject;
-		Obj->AddComponent(new CTransform);
-		Obj->AddComponent(new CMeshRender);
-		Obj->AddComponent(new CSkullBullet);
+		CGameObject* Obj = nullptr;
+
+		Obj = IntanciatePrefab(L"SKULL_BULLET", (UINT)LAYER_TYPE::MONSTER_EFFECT);
+
+		Obj->ParticleSystem()->SetStartScale(Vec3(300.f, 300.f, 300.f));
+		Obj->ParticleSystem()->SetPaperburnPTC(true);
 
 		Vec3 FirePos = Transform()->GetLocalPos();
-
-		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset,1.f);
-		Vec3 Right = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		OffsetPos += Right * 150.0f;
+		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset, m_fRightOffset);
 
 		Obj->Transform()->SetLocalPos(OffsetPos);
-		Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
-
-		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+;
 		CSkullBullet* Script = (CSkullBullet*)Obj->GetScript();
+		Script->SetActive(true);
 
 		CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-		CurScene->AddObject(Obj, 9);
+		CurScene->AddObject(Obj, LAYER_TYPE::MONSTER_EFFECT);
+
+
+
+		CGameObject* Col = new CGameObject;
+		Col->SetName(L"SkullBullet_Col");
+
+		Col->AddComponent(new CTransform);
+		Col->AddComponent(new CMeshRender);
+		Col->AddComponent(new CCollider3D);
+
+		Col->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		Col->Transform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+
+		Col->Collider3D()->SetParentOffsetPos(Vec3(0.f, 200.f, 0.f));
+
+		Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+		CurScene->AddObject(Col, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+
+		Obj->AddChild(Col);
+
 		Obj->awake();
 	}
 }
@@ -260,7 +284,7 @@ void CSkullScript::Death()
 {
 	m_PaperBurnTime += fDT;
 
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -291,7 +315,7 @@ CSkullScript::CSkullScript()
 	, m_ChaseSpeed(450.0f)
 	, m_MeleeAttackRange(800.0f)
 	, m_MeleeAttack2Range(1000.0f)
-	, m_LongDistanceAttackRange(1800.0f)
+	, m_LongDistanceAttackRange(1400.0f)
 	, m_AttackMoveSpeed(900.0f)
 	, m_RotSpeed(5.0f)
 {
@@ -300,6 +324,8 @@ CSkullScript::CSkullScript()
 	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "FrontOffset", &m_fFrontOffset));
 	AddDesc(tDataDesc(SCRIPT_DATA_TYPE::FLOAT, "UpOffset", &m_fUpOffset));
 	m_fUpOffset = 200.0f;
+	m_fFrontOffset = 0.f;
+	m_fRightOffset = 150.f;
 }
 
 CSkullScript::~CSkullScript()

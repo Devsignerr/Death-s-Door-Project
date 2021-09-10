@@ -10,6 +10,8 @@
 
 #include "CPlayerScript.h"
 #include "CRandomMgrScript.h"
+#include "CCameraScript.h"
+#include "CExplosionParticle.h"
 
 #pragma region CastleStateHeader
 #include "TCastleCutScene.h"
@@ -30,6 +32,91 @@
 #include "TCastleDeath.h"
 #pragma endregion
 
+
+void CCastleScript::ActivateImpact()
+{
+	m_fImpactPTCTime+= fDT;
+
+	Vec3 ColPos = Vec3(0.f, 0.f, 0.f);
+	Vec3 ColScale = Vec3(0.f, 0.f, 0.f);
+
+	if (m_fImpactPTCTime > 0.05f)
+	{
+		m_fImpactPTCTime = 0.f;
+
+		const vector<CGameObject*>& childvec = GetObj()->GetChild();
+
+		for (int i = 0; i < childvec.size(); ++i)
+		{
+			if (childvec[i]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_ATTACK_COL)
+			{
+				ColPos = childvec[i]->Transform()->GetWorldPos();
+				ColScale = childvec[i]->Transform()->GetWorldScale();
+				break;
+			}
+		}
+		ColPos.y -= ColScale.y / 2.f ;
+
+		Vec3 ImpactPos = ColPos;
+
+		ActivateImpactParticle(Vec4(0.1f, 0.1f, 0.1f, 1.f), ImpactPos, Vec3(0.5f, 0.5f, 0.5f), 3, 34,Vec2(200.f,200.f),Vec2(3000.f,3000.f));
+
+		CCameraScript::SetCameraShake(0.1f, 100.f, 8.f);
+	}
+}
+
+void CCastleScript::ActivateFlyCloud()
+{
+	m_fFlyCloudTime += fDT;
+
+	if (m_fFlyCloudTime > 0.8f)
+	{
+		m_fFlyCloudTime = 0.f;
+
+		CGameObject* pFlyCloud = nullptr;
+
+		pFlyCloud = IntanciatePrefab(L"CastleCloud", (UINT)LAYER_TYPE::BOSS_EFFECT);
+		((CExplosionParticle*)pFlyCloud->GetScript())->SetExploPTCType(EXPLOSION_PTC_TYPE::BAZOOKA_EXPLO_PTC);
+		((CExplosionParticle*)pFlyCloud->GetScript())->SetMemoryObj(false);
+		((CExplosionParticle*)pFlyCloud->GetScript())->SetActive(true);
+
+		pFlyCloud->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
+	}
+}
+
+void CCastleScript::ActivateAttackCloud()
+{
+	CGameObject* pFlyCloud = nullptr;
+
+	pFlyCloud = IntanciatePrefab(L"CastleAttackCloud", (UINT)LAYER_TYPE::BOSS_EFFECT);
+
+	((CExplosionParticle*)pFlyCloud->GetScript())->SetExploPTCType(EXPLOSION_PTC_TYPE::BAZOOKA_EXPLO_PTC);
+	((CExplosionParticle*)pFlyCloud->GetScript())->SetMemoryObj(false);
+	((CExplosionParticle*)pFlyCloud->GetScript())->SetActive(true);
+
+	Vec3 ColPos = Vec3(0.f, 0.f, 0.f);
+	Vec3 ColScale = Vec3(0.f, 0.f, 0.f);
+
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_ATTACK_COL)
+		{
+			childvec[i]->Transform()->finalupdate();
+
+			ColPos = childvec[i]->Transform()->GetWorldPos();
+			ColScale = childvec[i]->Transform()->GetWorldScale();
+
+			break;
+		}
+	}
+	ColPos.y -= ColScale.y / 2.f;
+
+	Vec3 ImpactPos = ColPos;
+
+	pFlyCloud->Transform()->SetLocalPos(ImpactPos);
+}
 
 void CCastleScript::ChangeState(CASTLE_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay)
 {
@@ -52,17 +139,17 @@ void CCastleScript::CreateLaserPoint()
 {
 	CGameObject* Obj = new CGameObject;
 	Obj->SetName(L"LaserPoint");
-
+	
 	Obj->AddComponent(new CTransform);
 	Obj->AddComponent(new CMeshRender);
 	Obj->AddComponent(new CCollider3D);
-
+	
 	Obj->Transform()->SetLocalPos(Vec3(3560.0f, -4073.0f, 1113.0f));
 	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
-
+	
 	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-
+	
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::INDETERMINATE);
 }
@@ -71,6 +158,7 @@ void CCastleScript::awake()
 {
 	CBossScript::awake();
 	CreateLaserPoint();
+
 	CreateCol(L"CastleCol", Vec3(0.0f, -50000.0f, 0.0f), Vec3(140000.0f, 100000.0f, 40000.0f), LAYER_TYPE::BOSS_COL);
 	CreateCol(L"CastleAttackCol", Vec3(60000.0f, -10000.0f, 25000.0f), Vec3(50000.0f, 30000.0f, 50000.0f), LAYER_TYPE::BOSS_ATTACK_COL);
 
@@ -244,7 +332,7 @@ void CCastleScript::PatternChoice()
 	{
 		m_pFSM->ChangeState(L"Fly_Start", 0.1f, L"Fly_Start", false);
 	}
-	else if (1 == Pattern)
+	else if (0 < Pattern)
 	{
 		m_pFSM->ChangeState(L"Fly", 0.1f, L"Fly", false);
 	}
@@ -252,7 +340,9 @@ void CCastleScript::PatternChoice()
 
 void CCastleScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_Hp <= 0)
+		return;
+
 	CGameObject* Obj = _pOther;
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
@@ -260,7 +350,15 @@ void CCastleScript::OnCollisionEnter(CGameObject* _pOther)
 		--m_Hp;
 
 		if (0 == m_Hp)
+		{
 			m_pFSM->ChangeState(L"Death", 0.04f, L"Death", true);
+		}
+
+		else
+		{
+			CActorScript::OnCollisionEnter(_pOther);
+		}
+
 	}
 }
 

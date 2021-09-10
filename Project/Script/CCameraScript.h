@@ -12,9 +12,10 @@ class CCameraScript :
 {
 private:
     static bool  m_IsCameraShake;
-    static float m_ShakeSpeed;
-    static float m_ShakeTime;
-    static float m_ShakePower;
+
+    static float       m_ShakeSpeed;   
+    static float       m_ShakePower;
+    static float       m_ShakeTime;
 
     float m_fSmoothStep; //선형보간 비율 
     Vec3  m_vCameraOffset; //플레이어에게서 카메라가 얼만큼 떨어져있는지 
@@ -25,7 +26,7 @@ public:
 
 public:
     bool IsScaleTrans() { return m_IsOrthoScaleTrans; }
-
+    void LookAtPlayer();
 public:
 
     void CutSceneCamera();

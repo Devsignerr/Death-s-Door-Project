@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CCastleBullet.h"
 
+#include <Engine/CParticleSystem.h>
+
 void CCastleBullet::awake()
 {
 	m_Pos = Transform()->GetLocalPos();
@@ -33,6 +35,9 @@ void CCastleBullet::start()
 
 void CCastleBullet::update()
 {
+	if (false == m_bActive)
+		return;
+
 	m_Time += fDT;
 
 	if (m_Time <= m_DestAttachTime)
@@ -47,6 +52,16 @@ void CCastleBullet::update()
 		Pos.z = Z;
 
 		Transform()->SetLocalPos(Pos);
+	}
+	else 
+	{
+		ActivateExplosionParticle();
+
+		GetObj()->SetAllColliderActive(false);
+		SetActive(false);
+		m_bDestroyed = false;
+
+		GetObj()->ParticleSystem()->Destroy();
 	}
 }
 
@@ -74,6 +89,7 @@ CCastleBullet::CCastleBullet()
 	, m_TargetPos{}
 {
 	m_iScriptType = (int)SCRIPT_TYPE::CASTLEBULLET;
+	m_eType = EXPLOSION_PTC_TYPE::CASTLE_EXPLO_PTC;
 }
 
 CCastleBullet::~CCastleBullet()

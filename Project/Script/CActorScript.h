@@ -49,7 +49,7 @@ protected:
 public:
 	void CreateDeadParticle();
 	void CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos);
-	CGameObject* IstanciatePrefab(wstring _wstr,UINT _LayerIdx);
+	CGameObject* IntanciatePrefab(wstring _wstr,UINT _LayerIdx);
 	bool GroundCheck();
 	bool ResearchNode();
 
@@ -58,7 +58,7 @@ public:
 	bool ResearchNode(Vec3 _MovePos, int _RayDir =-1);
 
 public:
-	virtual void ActivateImpactParticle(Vec4 EmisColor ,Vec3 Pos ,Vec3 Dir, int ActivateCount, float SpreadRange);
+	virtual void ActivateImpactParticle(Vec4 EmisColor, Vec3 Pos, Vec3 Dir, int ActivateCount, float SpreadRange, Vec2 Scale = Vec2(300, 600), Vec2 Speed = Vec2(6000, 10000));
 
 public:
 	virtual void update();

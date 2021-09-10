@@ -7,6 +7,7 @@
 #include "CCrowBatBullet.h"
 
 #include <Engine/CSceneMgr.h>
+#include <Engine/CCollider3D.h>
 #include <Engine/CParticleSystem.h>
 #include <Engine/CScene.h>
 
@@ -15,7 +16,7 @@ int CMemoryPoolScript::m_iChainCount = 30;
 int CMemoryPoolScript::m_iExplosionPTC =10;
 int CMemoryPoolScript::m_iFireDamagePTC = 10;
 int CMemoryPoolScript::m_iAttackImpact = 100;
-int CMemoryPoolScript::m_iCrowBullet = 30;
+int CMemoryPoolScript::m_iCrowBullet = 50;
 
 
 std::queue<CGameObject*> CMemoryPoolScript::m_queueChain = {};
@@ -224,7 +225,6 @@ void CMemoryPoolScript::CreateCrowBullet()
 		}
 
 		CGameObject* pGameObject = Prefab->Instantiate();
-		pGameObject->awake();
 
 		int PrefabCount = i;
 
@@ -234,9 +234,6 @@ void CMemoryPoolScript::CreateCrowBullet()
 
 		pGameObject->SetName(PrefabName + PrefabNumber);
 
-		pGameObject->SetAllMeshrenderActive(false);
-		pGameObject->SetAllColliderActive(false);
-
 		CCrowBatBullet* pScript = (CCrowBatBullet*)pGameObject->GetScript();
 
 		pScript->SetName(L"CCrowBatBullet");
@@ -245,6 +242,31 @@ void CMemoryPoolScript::CreateCrowBullet()
 		pScript->SetActive(false);
 
 		CSceneMgr::GetInst()->GetCurScene()->AddObject(pGameObject, (UINT)LAYER_TYPE::BOSS_EFFECT);
+
+
+		CGameObject* Col = new CGameObject;
+		Col->SetName(L"CrowBatBullet_Col");
+
+		Col->AddComponent(new CTransform);
+		Col->AddComponent(new CMeshRender);
+		Col->AddComponent(new CCollider3D);
+
+		Col->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		Col->Transform()->SetLocalScale(Vec3(80.f, 80.f, 200.f));
+
+		Col->Collider3D()->SetParentOffsetPos(Vec3(0.f, 0.f, 100.f));
+
+		Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+		Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+		CSceneMgr::GetInst()->GetCurScene()->AddObject(Col, (UINT)LAYER_TYPE::CROWBULLET_COL);	
+
+		pGameObject->AddChild(Col);
+
+		pGameObject->awake();
+
+		pGameObject->SetAllMeshrenderActive(false);
+		pGameObject->SetAllColliderActive(false);
 
 	}
 }
@@ -317,6 +339,7 @@ CGameObject* CMemoryPoolScript::GetCrowBullet()
 	if (!m_queueCrowBullet.empty())
 	{
 		CGameObject* pObj = m_queueCrowBullet.front();
+
 		pObj->SetAllMeshrenderActive(true);
 		pObj->SetAllColliderActive(true);
 
@@ -324,6 +347,7 @@ CGameObject* CMemoryPoolScript::GetCrowBullet()
 		pScript->SetActive(true);
 
 		m_queueCrowBullet.pop();
+
 		return pObj;
 	}
 	return nullptr;
@@ -336,7 +360,7 @@ void CMemoryPoolScript::awake()
 	CreateExplosionPTC();
 	CreateFireDamagePTC();
 	CreateAttackImpact();
-	//CreateCrowBullet();
+	CreateCrowBullet();
 }
 
 void CMemoryPoolScript::update()
@@ -384,6 +408,8 @@ void CMemoryPoolScript::ReturnObj(CGameObject* _Obj)
 	else if (ScriptName == L"CCrowBatBullet")
 	{
 		_Obj->Transform()->SetLocalPos(Vec3(-99999.f, -99999.f, -99999.f));
+		_Obj->SetAllMeshrenderActive(false);
+		_Obj->SetAllColliderActive(false);
 		((CCrowBatBullet*)_Obj->GetScript())->SetActive(false);
 		m_queueCrowBullet.push(_Obj);
 	}

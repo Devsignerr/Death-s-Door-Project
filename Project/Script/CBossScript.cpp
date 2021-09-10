@@ -61,13 +61,14 @@ bool CBossScript::RotateSysTem(float _RotSpeed)
 
 void CBossScript::OnOffAttackCol(bool _OnOff, LAYER_TYPE _Type)
 {
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
 		if (childvec[i]->GetLayerIndex() == (UINT)_Type)
 		{
 			childvec[i]->MeshRender()->Activate(_OnOff);
+			//childvec[i]->MeshRender()->Activate(false);
 			childvec[i]->Collider3D()->Activate(_OnOff);
 			break;
 		}
@@ -102,14 +103,11 @@ void CBossScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_
 	CurScene->AddObject(Obj, (UINT)_Type);
 
 	GetObj()->AddChild(Obj);
-
-	Obj->MeshRender()->Activate(false);
-
 }
 
 void CBossScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
 {
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -123,7 +121,7 @@ void CBossScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
 
 void CBossScript::TransColScale(Vec3 _Scale, LAYER_TYPE _Type)
 {
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{

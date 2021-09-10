@@ -31,6 +31,7 @@ void TCastleLaser_Finish::Enter()
 
 void TCastleLaser_Finish::Exit()
 {
+	
 }
 
 TCastleLaser_Finish::TCastleLaser_Finish()

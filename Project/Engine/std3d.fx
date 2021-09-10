@@ -326,6 +326,23 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
             output.pDOFDepthTex.r = Diff;
         }      
     }
+    
+    if (g_int_2 == 1)
+    {
+        float4 vWorldPos = mul(float4(_in.vViewPos, 1.f), g_matViewInv);
+        
+        if (vWorldPos.y < g_float_2)
+        {
+            float Diff = (g_float_2 - vWorldPos.y) / g_float_3;
+            
+            float4 black = float4(0.f, 0.f, 0.f, 1.f);
+            
+            vObjectColor = lerp(vObjectColor, black, Diff);
+            
+            output.vDiff = vObjectColor;
+        }
+    }
+
 
  
     output.vDiff.x = output.vDiff.x * g_vDiff.x;

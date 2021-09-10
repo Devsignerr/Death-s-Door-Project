@@ -37,6 +37,18 @@ void CPlayerMagic::update()
 
 void CPlayerMagic::OnCollisionEnter(CGameObject* _pOther)
 {
+	CCameraScript::SetCameraShake(0.2f, 100.f, 3.f);
+
+	Vec3 Pos = Transform()->GetWorldPos();
+
+	ActivateImpactParticle(Vec4(0.5f, 0.1f, 0.1f, 0.f), Pos ,m_BulletDir, 10 ,9);
+
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_BULLET_COL ||
+		_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_BULLET_COL)
+	{
+		return;
+	}
+
 	CGameObject* pFireDamagePTC = CMemoryPoolScript::GetFireDamagePTC();
 
 	if (nullptr == pFireDamagePTC)
@@ -48,10 +60,6 @@ void CPlayerMagic::OnCollisionEnter(CGameObject* _pOther)
 	}
 
 	((CFireDamageParticle*)pFireDamagePTC->GetScript())->SetTarget(_pOther);
-
-	CCameraScript::SetCameraShake(0.2f, 100.f, 3.f);
-
-	ActivateImpactParticle(Vec4(0.5f, 0.1f, 0.1f, 0.f),Transform()->GetLocalPos(),m_BulletDir, 15 ,9);
 	
 }
 

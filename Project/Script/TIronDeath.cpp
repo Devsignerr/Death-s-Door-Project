@@ -12,11 +12,10 @@
 void TIronDeath::update()
 {
 	CAnimator3D* CurAni = GetObj()->Animator3D();
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	if (380 == CurAni->GetFrameIdx())
 	{
-
 		for (int i = 0; i < childvec.size(); ++i)
 		{
 			if (childvec[i]->MeshRender())
@@ -59,7 +58,7 @@ void TIronDeath::update()
 
 		if (3.0f < m_PaperBurnTime)
 		{
-			DeleteObject(GetObj());
+			CScript::DeleteObject(GetObj());
 		}
 	}
 

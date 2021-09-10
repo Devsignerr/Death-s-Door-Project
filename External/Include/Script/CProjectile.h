@@ -22,6 +22,7 @@ public:
 	virtual void ReturnToMemoryPool();
 
 	virtual void SetActive(bool _b) { m_bActive = _b; }
+	bool IsActive() { return m_bActive; }
 
 public:
 	virtual void update() override;

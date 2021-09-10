@@ -189,6 +189,8 @@ CMaterial* CMaterial::Clone()
 	// ResMgr 에 복사된 Material 을 등록
 	CResMgr::GetInst()->AddCloneRes<CMaterial>(pCloneMtrl);
 
+	pCloneMtrl->SetKey(L"CM");
+
 	return pCloneMtrl;
 }
 

@@ -248,6 +248,7 @@ Ptr<CMaterial> CMeshRender::GetCloneMaterial(UINT _iIdx)
 {
 	m_vecMtrl[_iIdx] = m_vecMtrl[_iIdx]->Clone();
 
+
 	return m_vecMtrl[_iIdx];
 }
 

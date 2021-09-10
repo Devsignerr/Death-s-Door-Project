@@ -33,7 +33,7 @@ void TPlayerCharge_R::update()
 		{
 			if (nullptr == CPlayerScript::m_pHeavySlashL)
 			{
-				CPlayerScript::m_pHeavySlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_HEAVY_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pHeavySlashL = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"SLASH_HEAVY_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 				CPlayerScript::m_pHeavySlashL->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 				CPlayerScript::m_pHeavySlashL->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 				CPlayerScript::m_pHeavySlashL->Transform()->SetLocalPos(Vec3(-30.f, 50.f, -250.f));

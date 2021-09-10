@@ -25,7 +25,17 @@ RWStructuredBuffer<tParticleShared> g_shared : register(u1);
 void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
 {
     if (g_int_0 <= _ThreadIdx.x)
+    {
+        g_particlebuffer[_ThreadIdx.x].m_fCurTime = 0.f;
+        g_particlebuffer[_ThreadIdx.x].m_fMaxLife = 0.f;
+        g_particlebuffer[_ThreadIdx.x].iParticleType = 0.f;
+        g_particlebuffer[_ThreadIdx.x].iLeftSpin = 0.f;
+        g_particlebuffer[_ThreadIdx.x].m_fSpeed = 0.f;
+        g_particlebuffer[_ThreadIdx.x].vWorldPos = float3(-9999999.f, -9999999.f, -9999999.f);
+        g_particlebuffer[_ThreadIdx.x].vWorldDir = float3(0.f, 0.f, 0.f);
+        g_particlebuffer[_ThreadIdx.x].iAlive = 0;
         return;
+    }
     
     // particle update
     if (0 == g_particlebuffer[_ThreadIdx.x].iAlive)
@@ -52,7 +62,16 @@ void CS_ParticleUpdate(int3 _ThreadIdx : SV_DispatchThreadID)
         }    
         
         if (0 == g_particlebuffer[_ThreadIdx.x].iAlive)
-            return;        
+        {
+            g_particlebuffer[_ThreadIdx.x].m_fCurTime = 0.f;
+            g_particlebuffer[_ThreadIdx.x].m_fMaxLife = 0.f;
+            g_particlebuffer[_ThreadIdx.x].iParticleType = 0.f;
+            g_particlebuffer[_ThreadIdx.x].iLeftSpin = 0.f;
+            g_particlebuffer[_ThreadIdx.x].m_fSpeed = 0.f;
+            g_particlebuffer[_ThreadIdx.x].vWorldPos = float3(-9999999.f, -9999999.f, -9999999.f);
+            return;
+        }
+            
         
         
         // 활성화 된 파티클을 랜덤한 좌표, 방향으로 초기화한다.

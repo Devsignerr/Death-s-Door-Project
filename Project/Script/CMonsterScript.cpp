@@ -193,7 +193,7 @@ void CMonsterScript::MonsterJumpSystem()
 
 void CMonsterScript::OnOffAttackCol(bool _OnOff, LAYER_TYPE _Type)
 {
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -239,7 +239,7 @@ void CMonsterScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAY
 
 void CMonsterScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
 {
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -253,7 +253,7 @@ void CMonsterScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)
 
 void CMonsterScript::TransColScale(Vec3 _Scale, LAYER_TYPE _Type)
 {
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{

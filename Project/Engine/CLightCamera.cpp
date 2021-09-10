@@ -10,6 +10,7 @@
 #include "CGameObject.h"
 #include "CTransform.h"
 #include "CMeshRender.h"
+#include "CFrustumSphere.h"
 
 #include "CResMgr.h"
 #include "CInstancingBuffer.h"
@@ -47,18 +48,26 @@ void CLightCamera::SortShadowObject()
 
 			for (size_t j = 0; j < vecObj.size(); ++j)
 			{
-				//if (vecObj[j]->ParticleSystem())
-				//{
-				//	m_vecParticle.push_back(vecObj[i]);
-				//	continue;
-				//}
-
 				if (!vecObj[j]->IsDynamicShdow() ||
 					nullptr == vecObj[j]->MeshRender() ||
 					nullptr == vecObj[j]->MeshRender()->GetMesh())
 					continue;
 
-				// 절두체 테스트(미구현)
+				// 절두체 테스트(구현)
+				if (vecObj[j]->GetParent())
+				{
+					if (vecObj[j]->GetParent()->FrustumSphere() && vecObj[j]->GetParent()->IsFrustum())
+					{
+						Vec3 vWorldPos = vecObj[j]->Transform()->GetWorldPos();
+						Vec3 vOffSetPos = vecObj[j]->GetParent()->FrustumSphere()->GetOffSetPos();
+						float Radius = vecObj[j]->GetParent()->FrustumSphere()->GetRadius();
+
+						if (!m_frustum.CheckFrustumSphere(vWorldPos, vOffSetPos, Radius))
+						{
+							continue;
+						}
+					}
+				}
 
 				// 메테리얼 개수만큼 반복
 				UINT iMtrlCount = vecObj[j]->MeshRender()->GetMtrlCount();
@@ -66,7 +75,7 @@ void CLightCamera::SortShadowObject()
 				{
 					// Material 을 참조하고 있지 않거나, Material 에 아직 Shader 를 연결하지 않은 상태라면 Continue
 					Ptr<CMaterial> pMtrl = vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl);
-					if (nullptr == pMtrl || pMtrl->GetShader() == nullptr)
+					if (nullptr == pMtrl || pMtrl->GetShader() == nullptr || false == vecObj[j]->MeshRender()->IsEnable()|| vecObj[j]->Collider3D())
 						continue;
 
 					uInstID uID = {};

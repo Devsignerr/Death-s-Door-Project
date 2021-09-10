@@ -11,11 +11,10 @@
 void TCrowDeath::update()
 {
 	CAnimator3D* CurAni = GetObj()->Animator3D();
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	if (540 == CurAni->GetFrameIdx())
 	{
-
 		for (int i = 0; i < childvec.size(); ++i)
 		{
 			if (childvec[i]->MeshRender())
@@ -54,7 +53,7 @@ void TCrowDeath::update()
 
 	if (3.0f < m_PaperBurnTime)
 	{
-		DeleteObject(GetObj());
+		CScript::DeleteObject(GetObj());
 	}
 }
 
@@ -69,7 +68,7 @@ void TCrowDeath::Enter()
 	if (nullptr == m_PaperBurnTex)
 		m_PaperBurnTex = CResMgr::GetInst()->FindRes<CTexture>(L"PaperBurnTexture");
 
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 	for (int i = 0; i < childvec.size(); ++i)
 	{
 		if (childvec[i]->Collider3D())

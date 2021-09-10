@@ -18,7 +18,7 @@ CCameraScript::CCameraScript()
     , m_pDirLight(nullptr)
     , m_eMode(CAMERA_MODE::FREE)
     , m_fSmoothStep(1.5f)
-    , m_vCameraOffset(Vec3(6000.f,6000.f,6000.f))
+    , m_vCameraOffset(Vec3(3397.f,4882.f,-3135.f))
     , m_vCameraRot(Vec3(0.f, 0.f, 0.f))
 {
 }
@@ -71,7 +71,6 @@ void CCameraScript::update()
     else if (m_eMode == CAMERA_MODE::FOLLOW)
         CameraFollowMove();
 
-
     if (true == m_IsCameraShake)
         CameraShake();
 
@@ -83,6 +82,12 @@ void CCameraScript::update()
 void CCameraScript::awake()
 {
     m_pDirLight = CSceneMgr::GetInst()->GetCurScene()->FindParentObj(L"Directional Light", (UINT)LAYER_TYPE::LIGHT);
+
+    Vec3 Pos = CPlayerScript::GetPlayer()->Transform()->GetLocalPos();
+    Transform()->SetLocalPos(Pos+m_vCameraOffset);
+    Transform()->finalupdate();
+
+    LookAtPlayer();
 }
 
 
@@ -98,13 +103,12 @@ void CCameraScript::CameraShake()
     }
     else
     {
-        Vec3 CameraPos = Transform()->GetWorldPos();
-
+        Vec3 CameraPos = Transform()->GetLocalPos();
         AccTime += fDT * m_ShakeSpeed;
         Vec3 ShakeCameraPos = Vec3{ cos(AccTime) * m_ShakePower, cos(AccTime) * m_ShakePower,cos(AccTime) * m_ShakePower };
 
         CameraPos = DirectX::XMVectorAdd(CameraPos, ShakeCameraPos);
-        DirectX::XMMatrixLookToLH(CameraPos, Transform()->GetWorldDir(DIR_TYPE::FRONT), Transform()->GetWorldDir(DIR_TYPE::UP));
+        // DirectX::XMMatrixLookToLH(CameraPos, Transform()->GetWorldDir(DIR_TYPE::FRONT), Transform()->GetWorldDir(DIR_TYPE::UP));
 
         Transform()->SetLocalPos(CameraPos);
     }
@@ -203,8 +207,100 @@ void CCameraScript::CameraFollowMove()
     Transform()->SetLocalPos(SmoothPos);
 
     MakeLightFollow(PlayerMovePos);
+
+    if (KEY_HOLD(KEY_TYPE::RBTN))
+    {
+        if (PROJ_TYPE::ORTHOGRAPHIC == Camera()->GetProjType())
+        {
+            Vec3 PlayerFront = CPlayerScript::GetPlayerFront();
+            Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
+            PlayerPos += PlayerFront * 300.0f;
+
+            Vec3 CameraPos = Transform()->GetLocalPos();
+
+            Vec3 Temp = PlayerFront * fDT * 1000.0f;
+            CameraPos += Temp;
+            Transform()->SetLocalPos(CameraPos);
+        }
+
+    }
 }
 
+
+void CCameraScript::LookAtPlayer()
+{
+    Vec3 CameraRot = Transform()->GetLocalRot();
+    Vec3 CameraPos = Transform()->GetLocalPos(); 
+
+    Vec3 PlayerPos = CPlayerScript::GetPlayer()->Transform()->GetLocalPos();
+
+    Vec3 vCameraFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+    Vec3 vCameraUP =Transform()->GetLocalDir(DIR_TYPE::UP);
+    Vec3 vCameraRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+
+    Vec3 relativePos = PlayerPos - CameraPos;
+
+    relativePos.y = 0.f;
+    relativePos.Normalize();
+
+    vCameraFront.y = 0.f;
+    vCameraFront.Normalize();
+
+    Vec3 vCross = relativePos.Cross(vCameraFront);
+
+    float dot = vCross.Dot(vCameraUP);
+
+    float RotAngle = relativePos.Dot(vCameraFront);
+
+    if (RotAngle > 1.f)
+        RotAngle = 1.f;
+    else if (RotAngle < 0.f)
+        RotAngle = 0.f;
+
+    RotAngle = acosf(RotAngle);
+
+    //플레이어는 내 왼쪽에 있다 
+    if (dot > 0.0)
+        CameraRot.y -= RotAngle;
+
+    //플레이어는 내 오른쪽에 있다 
+    else if (dot < 0.0)
+        CameraRot.y += RotAngle;
+
+
+
+    relativePos = PlayerPos - CameraPos;
+    vCameraFront =Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
+    relativePos.x = 0.f;
+    relativePos.Normalize();
+
+    vCameraFront.x = 0.f;
+    vCameraFront.Normalize();
+
+    vCross = relativePos.Cross(vCameraFront);
+
+    dot = vCross.Dot(vCameraRight);
+
+    RotAngle = relativePos.Dot(vCameraFront);
+
+    if (RotAngle > 1.f)
+        RotAngle = 1.f;
+    else if (RotAngle < 0.f)
+        RotAngle = 0.f;
+
+    RotAngle = acos(RotAngle);
+
+    //플레이어는 내 왼쪽에 있다 
+    if (dot >= 0.0)
+        CameraRot.x -= RotAngle;
+
+    //플레이어는 내 오른쪽에 있다 
+    else if (dot < 0.0)
+        CameraRot.x += RotAngle;
+
+    Transform()->SetLocalRot(CameraRot);
+}
 
 void CCameraScript::CutSceneCamera()
 {

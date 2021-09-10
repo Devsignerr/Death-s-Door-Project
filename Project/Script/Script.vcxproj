@@ -277,6 +277,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CFadeScript.h" />
     <ClInclude Include="CFence.h" />
     <ClInclude Include="CFireDamageParticle.h" />
+    <ClInclude Include="CFogScript.h" />
     <ClInclude Include="CHpBar.h" />
     <ClInclude Include="CIronmaceScript.h" />
     <ClInclude Include="CMapChange.h" />
@@ -408,6 +409,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CFadeScript.cpp" />
     <ClCompile Include="CFence.cpp" />
     <ClCompile Include="CFireDamageParticle.cpp" />
+    <ClCompile Include="CFogScript.cpp" />
     <ClCompile Include="CHpBar.cpp" />
     <ClCompile Include="CIronmaceScript.cpp" />
     <ClCompile Include="CMapChange.cpp" />

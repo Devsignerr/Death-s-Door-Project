@@ -36,7 +36,7 @@ void CTransform::finalupdate()
 	m_matLocalRot *= XMMatrixRotationY(m_vLocalRot.y);
 	m_matLocalRot *= XMMatrixRotationZ(m_vLocalRot.z);
 
-	m_matWorld = m_matLocalScale * m_matLocalRot * matTranslation;
+	m_matWorld = m_matLocalScale * m_matLocalRot *  matTranslation;
 
 	// Local 방향 구하기
 	static Vec3 vArr[3] = { Vec3(1.f, 0.f, 0.f), Vec3(0.f, 1.f, 0.f), Vec3(0.f, 0.f, 1.f) };
@@ -59,6 +59,7 @@ void CTransform::finalupdate()
 	}	
 
 	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
+	//m_matTemp = XMMatrixIdentity();
 }
 
 void CTransform::UpdateData()

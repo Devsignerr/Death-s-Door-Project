@@ -147,7 +147,7 @@ void CUpDownSwitch::ResetSwitch()
 		m_UpDownSwitchObj[i]->Transform()->SetLocalPos(m_OriginPos);
 		m_UpDownSwitchObj[i]->GetChild()[0]->MeshRender()->SetMaterial(m_pOriginMtrl, 0);
 
-		vector<CGameObject*> childvec = GetObj()->GetChild();
+		const vector<CGameObject*>& childvec = GetObj()->GetChild();
 		int Size = childvec.size();
 
 		for (int j = 0; j < Size; ++j)
@@ -172,7 +172,7 @@ void CUpDownSwitch::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
-		vector<CGameObject*> childvec = GetObj()->GetChild();
+		const vector<CGameObject*>& childvec = GetObj()->GetChild();
 		int Size = childvec.size();
 
 		for (int i = 0; i < Size; ++i)

@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "CPlantBullet.h"
+#include "CCameraScript.h"
+
 #include <Engine/CLight3D.h>
 #include <Engine/CParticleSystem.h>
 
@@ -18,33 +20,30 @@ void CPlantBullet::update()
 
 void CPlantBullet::awake()
 {
-	CGameObject* Child = new CGameObject;
+	
+}
 
-	Child->AddComponent(new CTransform);
-	Child->AddComponent(new CLight3D);
-	Child->Light3D()->SetLightType(LIGHT_TYPE::POINT);
-	Child->Light3D()->SetRange(200.f);
-	Child->Light3D()->SetAmbPow(Vec3(1.f, 0.f, 0.f));
+void CPlantBullet::OnCollisionEnter(CGameObject* _pOther)
+{
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL)
+	{
+		CCameraScript::SetCameraShake(0.2f, 100.f, 4.f);
 
-	Child->AddComponent(new CParticleSystem);
+		ActivateExplosionParticle();
 
-	Ptr<CTexture> ParticleTex = CResMgr::GetInst()->FindRes<CTexture>(L"fireparticle");
-	if (nullptr == ParticleTex)
-		ParticleTex = CResMgr::GetInst()->Load<CTexture>(L"fireparticle", L"texture\\FBXTexture\\fireparticle.png");
-
-	Child->ParticleSystem()->SetTexture(ParticleTex);
-	Child->ParticleSystem()->awake();
-	Child->ParticleSystem()->SetStartScale(Vec3(200.f, 200.f, 200.f));
-	CSceneMgr::GetInst()->GetCurScene()->AddObject(Child, 0);
-
-
-	GetObj()->AddChild(Child);
+		GetObj()->SetAllColliderActive(false);
+		SetActive(false);
+		m_bDestroyed = false;
+		GetObj()->ParticleSystem()->Destroy();
+	}
 }
 
 CPlantBullet::CPlantBullet()
 	: m_BulletDir{}
+
 {
 	m_iScriptType = (int)SCRIPT_TYPE::PLANTBULLET;
+	m_eType = EXPLOSION_PTC_TYPE::SKULL_EXPLO_PTC;
 }
 
 CPlantBullet::~CPlantBullet()

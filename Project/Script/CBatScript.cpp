@@ -118,7 +118,7 @@ void CBatScript::Death()
 {
 	m_PaperBurnTime += fDT;
 
-	vector<CGameObject*> childvec = GetObj()->GetChild();
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 	for (int i = 0; i < childvec.size(); ++i)
 	{
@@ -146,7 +146,9 @@ void CBatScript::Death()
 
 void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 {
-	CActorScript::OnCollisionEnter(_pOther);
+	if (m_MonsterInfo.Hp <= 0)
+		return;
+
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
@@ -157,7 +159,7 @@ void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 
 		if (0 == m_MonsterInfo.Hp)
 		{
-			vector<CGameObject*> childvec = GetObj()->GetChild();
+			const vector<CGameObject*>& childvec = GetObj()->GetChild();
 
 			for (int i = 0; i < childvec.size(); ++i)
 			{
@@ -179,8 +181,11 @@ void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
+		else {
+			CActorScript::OnCollisionEnter(_pOther);
+		}
 
-
+		
 	}
 }
 

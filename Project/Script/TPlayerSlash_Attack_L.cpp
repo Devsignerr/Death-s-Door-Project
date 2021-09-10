@@ -65,7 +65,7 @@ void TPlayerSlash_Attack_L::update()
 		{
 			if (nullptr == CPlayerScript::m_pHorizonSlashR)
 			{
-				CPlayerScript::m_pHorizonSlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_R", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pHorizonSlashR = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"SLASH_R", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalRot(Vec3(0.f, XM_PI, 0.f));
 				CPlayerScript::m_pHorizonSlashR->Transform()->SetLocalPos(Vec3(0.f, 30.f, -170.f));
@@ -84,6 +84,12 @@ void TPlayerSlash_Attack_L::update()
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
+		if(nullptr!=CPlayerScript::m_pHorizonSlashR)
+			CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
+
+		if (nullptr != CPlayerScript::m_pHorizonSlashL)
+			CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(false);
+
 		GetFSM()->ChangeState(L"Idle", 0.01f, L"Idle", false);
 	}
 

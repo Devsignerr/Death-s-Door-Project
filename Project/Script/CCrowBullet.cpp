@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "CCrowBullet.h"
 #include "CPlayerScript.h"
+#include "CCameraScript.h"
+
+#include <Engine/CParticleSystem.h>
 
 bool CCrowBullet::AwakeMove()
 {
@@ -33,8 +36,8 @@ bool CCrowBullet::AwakeMove()
 
 void CCrowBullet::GuidedMove()
 {
-	Vec3 vUp = Transform()->GetLocalDir(DIR_TYPE::UP);
-	Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vUp = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::UP);
 
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 Pos = Transform()->GetLocalPos();
@@ -119,6 +122,25 @@ void CCrowBullet::update()
 		GuidedMove();
 }
 
+void CCrowBullet::OnCollisionEnter(CGameObject* _pOther)
+{
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL)
+	{
+		CCameraScript::SetCameraShake(0.1f, 100.f, 3.f);
+
+		Vec3 Pos = Transform()->GetLocalPos();
+		Vec3 DiffPos = Pos - CPlayerScript::GetPlayerPos();
+
+		ActivateImpactParticle(Vec4(0.f, 0.f, 0.f, 0.f), Pos, DiffPos, 5, 34, Vec2(300, 300), Vec2(4000, 8000));
+
+		GetObj()->GetChild()[1]->ParticleSystem()->Activate(false);
+		GetObj()->SetAllColliderActive(false);
+		Transform()->SetLocalPos(Vec3(-9999.f, -9999.f, -9999.f));
+		SetActive(false);
+		GetObj()->GetChild()[1]->ParticleSystem()->Destroy();
+	}
+}
+
 void CCrowBullet::SaveToScene(FILE* _pFile)
 {
 	CProjectile::SaveToScene(_pFile);
@@ -144,6 +166,8 @@ CCrowBullet::CCrowBullet()
 	, m_fInternalRadianWithPlayer(0.0f)
 	, m_bPlayerMyLeft(false)
 {
+	m_bMemoryObj = false;
+	m_fLifeTime = 100.f;
 	m_iScriptType = (int)SCRIPT_TYPE::CROWBULLET;
 }
 

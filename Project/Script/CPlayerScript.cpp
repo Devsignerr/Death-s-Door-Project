@@ -16,6 +16,7 @@
 #include "CPlayerBomb.h"
 #include "CPlayerMagic.h"
 #include "CPlayerHook.h"
+#include "CSlashEffect.h"
 
 #pragma region PlayerStateHeader
 #include "TPlayerIdle.h"
@@ -222,6 +223,8 @@ void CPlayerScript::awake()
 	m_Weapon = vecChild[1];
 	m_pBow = vecChild[2];
 	m_pBow->MeshRender()->Activate(false);
+
+
 }
 
 void CPlayerScript::start()
@@ -364,6 +367,12 @@ void CPlayerScript::ClearAllProjectile()
 		m_pArrow->SetAllColliderActive(false);
 		m_pArrow->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		((CPlayerArrow*)m_pArrow->GetScript())->SetActive(false);
+
+		if (nullptr != m_pArrow->GetParent())
+			m_pArrow->DisconnectWithParent();
+
+		m_pArrow->RegisterAsParentObj();
+
 		DeleteObject(m_pArrow);
 
 		m_pArrow = nullptr;
@@ -375,7 +384,14 @@ void CPlayerScript::ClearAllProjectile()
 		m_pMagic->SetAllColliderActive(false);
 		m_pMagic->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		((CPlayerMagic*)m_pMagic->GetScript())->SetActive(false);
+
+		if(nullptr!=m_pMagic->GetParent())
+			m_pMagic->DisconnectWithParent();
+
+		m_pMagic->RegisterAsParentObj();
+
 		m_pMagic->ParticleSystem()->Destroy();
+		
 
 		m_pMagic = nullptr;
 	}
@@ -386,6 +402,12 @@ void CPlayerScript::ClearAllProjectile()
 		m_pBomb->SetAllColliderActive(false);
 		m_pBomb->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		((CPlayerBomb*)m_pBomb->GetScript())->SetActive(false);
+
+		if (nullptr != m_pBomb->GetParent())
+			m_pBomb->DisconnectWithParent();
+
+		m_pBomb->RegisterAsParentObj();
+
 		m_pBomb->ParticleSystem()->Destroy();
 
 		m_pBomb = nullptr;
@@ -393,10 +415,42 @@ void CPlayerScript::ClearAllProjectile()
 
 	if (m_pHook)
 	{
+		if (nullptr != m_pHook->GetParent())
+			m_pHook->DisconnectWithParent();
+
+		m_pHook->RegisterAsParentObj();
+
 		((CPlayerHook*)m_pHook->GetScript())->Destroy();
 
 		m_pHook = nullptr;
 	}
+
+	if (nullptr != m_pHeavySlashR)
+	{
+		((CSlashEffect*)CPlayerScript::m_pHeavySlashR->GetScript())->SetActive(false);
+		m_pHeavySlashR->SetAllMeshrenderActive(false);
+	}
+
+	if (nullptr != m_pHeavySlashL)
+	{
+		((CSlashEffect*)CPlayerScript::m_pHeavySlashL->GetScript())->SetActive(false);
+		m_pHeavySlashL->SetAllMeshrenderActive(false);
+	}
+
+	if (nullptr != m_pHorizonSlashR)
+	{
+		((CSlashEffect*)CPlayerScript::m_pHorizonSlashR->GetScript())->SetActive(false);
+		m_pHorizonSlashR->SetAllMeshrenderActive(false);
+	}
+
+	if (nullptr != m_pHorizonSlashL)
+	{
+		((CSlashEffect*)CPlayerScript::m_pHorizonSlashL->GetScript())->SetActive(false);
+		m_pHorizonSlashL->SetAllMeshrenderActive(false);
+	}
+	
+
+
 
 }
 
@@ -543,7 +597,7 @@ void CPlayerScript::OnCollision(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::MAP_GIMIC_COL == Obj->GetLayerIndex() || (UINT)LAYER_TYPE::WALL_COL == Obj->GetLayerIndex())
 	{
-	Transform()->SetLocalPos(PlayerPrePos);
+		Transform()->SetLocalPos(PlayerPrePos);
 	}
 }
 

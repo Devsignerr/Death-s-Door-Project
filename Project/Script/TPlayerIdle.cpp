@@ -37,7 +37,7 @@ void TPlayerIdle::update()
 	{
 		if (nullptr == CPlayerScript::m_pHorizonSlashL)
 		{
-			CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+			CPlayerScript::m_pHorizonSlashL = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"SLASH_L", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 			CPlayerScript::m_pHorizonSlashL->Transform()->SetLocalPos(Vec3(0.f, 45.f, -170.f));
@@ -83,7 +83,7 @@ void TPlayerIdle::update()
 
 			if (nullptr == CPlayerScript::m_pArrow)
 			{
-				CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerArrow", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pArrow = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"PlayerArrow", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 			}
 			
 			CPlayerScript::m_pArrow->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
@@ -100,7 +100,7 @@ void TPlayerIdle::update()
 
 			if (nullptr == CPlayerScript::m_pMagic)
 			{
-				CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerFire", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pMagic = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"PlayerFire", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 			}
 			 CPlayerScript::m_pMagic->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			 CPlayerScript::m_pMagic->Transform()->SetLocalPos(Vec3(-60.f, 80.f, 40.f));
@@ -116,7 +116,7 @@ void TPlayerIdle::update()
 
 			if (nullptr == CPlayerScript::m_pBomb)
 			{
-				CPlayerScript::m_pBomb = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerBomb", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pBomb = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"PlayerBomb", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 			}
 			CPlayerScript::m_pBomb->Transform()->SetLocalPos(Vec3(0.f, 170.f, -100.f));
 			CPlayerScript::m_pBomb->ParticleSystem()->Activate(true);
@@ -130,7 +130,7 @@ void TPlayerIdle::update()
 
 			if (nullptr == CPlayerScript::m_pHook)
 			{
-				CPlayerScript::m_pHook = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"PlayerHook", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pHook = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"PlayerHook", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 			}
 			CPlayerScript::m_pHook->Transform()->SetLocalPos(Vec3(0.f, 150.f, -40.f));
 
@@ -147,6 +147,7 @@ void TPlayerIdle::update()
 	Vec3 Pos = GetObj()->Transform()->GetLocalPos();
 	Vec3 vPlayerPos = GetObj()->Transform()->GetLocalPos();
 	Vec3 vMovePos = {  };
+
 	vMovePos += CPlayerScript::GetOtherPower();
 	bool IsGround = ((CPlayerScript*)GetScript())->GroundCheck(vPlayerPos + vMovePos);
 	if (!IsGround)

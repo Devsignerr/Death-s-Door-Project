@@ -272,23 +272,39 @@ PS_PARTICLE_OUT PS_Deffered_Particle(GS_PARTICLE_OUT _in)
 
     
     float4 vColor = (float4) 0.f;
+    float4 vColor2 = (float4) 0.f;
     
     uint iInst = (uint) _in.fInstID;
     
     float fRatio = g_particelbuffer[iInst].m_fCurTime / g_particelbuffer[iInst].m_fMaxLife;
     vColor = (g_vec4_3 - g_vec4_2) * fRatio + g_vec4_2;
         
-    vColor= g_tex_0.Sample(g_sam_0, _in.vUV) * vColor;
+    vColor2 = g_tex_0.Sample(g_sam_0, _in.vUV);
     
-    if (vColor.a > 0.1f)
-    {
-        output.vDiff = vColor;
-        output.vDiffLight.x = vColor.x * g_vEmis.x;
-        output.vDiffLight.x = vColor.y * g_vEmis.y;
-        output.vDiffLight.x = vColor.z * g_vEmis.z;
-    }
-    else
+    if(vColor2.a==0.f)
         clip(-1);
+    
+    output.vDiff = vColor2 * vColor * g_vEmis;
+    output.vDiffLight.x = (vColor2 * vColor).x;
+    output.vDiffLight.y = (vColor2 * vColor).y;
+    output.vDiffLight.z = (vColor2 * vColor).z;
+    
+    
+    if (g_int_1)
+    {
+        float2 FullUV = _in.vUV;
+        float test = 0.f;
+        
+        float3 PaperBurn = g_tex_1.Sample(g_sam_1, FullUV).xyz;
+	    
+        //밝을수록 먼저 사라지도록 수정 
+        test = (PaperBurn.x + PaperBurn.y + PaperBurn.z) / 4.f;
+        
+        if (test <= fRatio)
+        {
+            clip(-1);
+        }
+    }
     
     return output;
     

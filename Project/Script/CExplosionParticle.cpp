@@ -53,7 +53,7 @@ void CExplosionParticle::update()
 				{
 					GetObj()->ParticleSystem()->Activate(false);
 					GetObj()->SetAllColliderActive(false);
-					Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+					Transform()->SetLocalPos(Vec3(-99999.f, -99999.f, -99999.f));
 					GetObj()->ParticleSystem()->Destroy();
 				}
 			}	
@@ -82,9 +82,7 @@ void CExplosionParticle::SetActive(bool _b)
 		{
 			int On = 1;
 			CResMgr::GetInst()->FindRes<CMaterial>(L"PostEffectMtrl")->SetData(SHADER_PARAM::INT_1, &On);
-		}
-
-		CCameraScript::SetCameraShake(0.3f, 100.f, 5.f);
+		}	
 	}
 
 	m_bActive = _b;

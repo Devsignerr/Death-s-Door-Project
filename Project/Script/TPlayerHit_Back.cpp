@@ -18,6 +18,7 @@ void TPlayerHit_Back::update()
 
 void TPlayerHit_Back::Enter()
 {
+	
 }
 
 void TPlayerHit_Back::Exit()

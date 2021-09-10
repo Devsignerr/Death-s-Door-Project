@@ -3,6 +3,8 @@
 
 #include "CPlayerScript.h"
 
+#include <Engine/CParticleSystem.h>
+
 void CSkullBullet::awake()
 {
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
@@ -36,6 +38,9 @@ void CSkullBullet::start()
 
 void CSkullBullet::update()
 {
+	if (false == m_bActive)
+		return;
+
 	m_Time += fDT;
 
 	if (m_Time <= m_DestAttachTime)
@@ -50,6 +55,16 @@ void CSkullBullet::update()
 		Pos.z = Z;
 
 		Transform()->SetLocalPos(Pos);
+	}
+	//목표했던 위치로 옴
+	else
+	{
+		ActivateExplosionParticle();
+
+		GetObj()->SetAllColliderActive(false);
+		SetActive(false);
+		m_bDestroyed = false;
+		GetObj()->ParticleSystem()->Destroy();
 	}
 }
 
@@ -66,6 +81,7 @@ CSkullBullet::CSkullBullet()
 	, m_MaxHeight(500.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::SKULLBULLET;
+	m_eType = EXPLOSION_PTC_TYPE::SKULL_EXPLO_PTC;
 }
 
 CSkullBullet::~CSkullBullet()

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TCastleFly.h"
 #include "CCastleScript.h"
+#include "CCameraScript.h"
+#include "CExplosionParticle.h"
 
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
@@ -16,6 +18,7 @@ void TCastleFly::update()
 		m_Script->TransColPos(Vec3(0.0f, -10000.0f, 0.0f));
 		m_Script->TransColScale(Vec3(160000.0f, 20000.0f, 160000.0f));
 
+		CCameraScript::SetCameraShake(0.2f, 100.f, 10.f);
 	}
 	if (174 == CurAni->GetFrameIdx())
 	{
@@ -35,6 +38,8 @@ void TCastleFly::update()
 	{
 		GetFSM()->ChangeState(L"Missile_Open", 0.1f, L"Missile_Open", true);
 	}
+	
+	((CCastleScript*)GetScript())->ActivateFlyCloud();
 }
 
 void TCastleFly::Enter()
@@ -42,10 +47,12 @@ void TCastleFly::Enter()
 	if (nullptr == m_Script)
 		m_Script = (CCastleScript*)GetScript();
 	m_Script->OnOffAttackCol(false, LAYER_TYPE::BOSS_COL);
+	m_Script->SetFlyCloudTime(0.8f);
 }
 
 void TCastleFly::Exit()
 {
+	
 }
 
 TCastleFly::TCastleFly()

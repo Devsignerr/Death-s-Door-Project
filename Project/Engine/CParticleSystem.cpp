@@ -100,9 +100,18 @@ void CParticleSystem::LateDestroy()
 	m_fAccTime += fDT;
 
 	if (m_fAccTime > m_fMaxLifeTime)
-	{
-		if(false==GetObj()->IsDead())
-			CScript::DeleteObject(GetObj());
+	{			
+		CGameObject* Parent = GetObj();
+
+		while (nullptr!=Parent->GetParent())
+		{
+			Parent = Parent->GetParent();
+		}
+
+		if (false == Parent->IsDead())
+		{
+			CScript::DeleteObject(Parent);		
+		}		
 	}
 
 	m_pUpdateShader->SetSlow(m_iSlow);
@@ -136,6 +145,12 @@ void CParticleSystem::finalupdate()
 
 	if (!m_bEnable)
 		return;
+
+	if(m_ePOV== SHADER_POV::PARTICLE)
+		m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl");
+
+	else if (m_ePOV == SHADER_POV::DEFERRED_PARTICLE)
+		m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DefferedParticleRenderMtrl");
 
 	m_fAccTime += fDT;
 
@@ -245,7 +260,6 @@ void CParticleSystem::SaveToScene(FILE* _pFile)
 	fwrite(&m_bRepeat, sizeof(bool), 1, _pFile);
 	fwrite(&m_iSlow, sizeof(int), 1, _pFile);
 	fwrite(&m_iMaxLiveCount, sizeof(int), 1, _pFile);
-
 
 	SaveResRefInfo<CTexture>(m_pTex, _pFile);
 }

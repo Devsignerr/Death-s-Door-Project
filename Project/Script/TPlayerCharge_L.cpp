@@ -32,7 +32,7 @@ void TPlayerCharge_L::update()
 		{
 			if (nullptr == CPlayerScript::m_pHeavySlashR)
 			{
-				CPlayerScript::m_pHeavySlashR = ((CPlayerScript*)GetScript())->IstanciatePrefab(L"SLASH_HEAVY_R", (UINT)LAYER_TYPE::PLAYER_EFFECT);
+				CPlayerScript::m_pHeavySlashR = ((CPlayerScript*)GetScript())->IntanciatePrefab(L"SLASH_HEAVY_R", (UINT)LAYER_TYPE::PLAYER_EFFECT);
 				CPlayerScript::m_pHeavySlashR->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 				CPlayerScript::m_pHeavySlashR->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 				CPlayerScript::m_pHeavySlashR->Transform()->SetLocalPos(Vec3(30.f, 50.f, -250.f));
@@ -48,11 +48,6 @@ void TPlayerCharge_L::update()
 				((CSlashEffect*)CPlayerScript::m_pHeavySlashL->GetScript())->SetActive(false);
 			}
 				
-
-			
-			
-
-
 
 			((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_CHARGE_ATTACK_R, 0.03f, L"Charge_Attack_R", false);
 		}

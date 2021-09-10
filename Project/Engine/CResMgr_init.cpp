@@ -893,6 +893,18 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"FireShader", pShader);
 
+	// =================
+	// Fire Shader2
+	// =================
+	pShader = new CGraphicsShader(SHADER_POV::DEFERRED);
+	pShader->CreateVertexShader(L"Shader\\Fire.fx", "VS_Fire");
+	pShader->CreatePixelShader(L"Shader\\Fire.fx", "PS_Fire2");
+
+	pShader->AddShaderParam(SHADER_PARAM::TEX_0, L"Noise Tex");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_1, L"Gradient Tex");
+
+	AddRes(L"FireShader2", pShader);
+
 	// ==============
 	// SkyBox Shader
 	// ==============
@@ -1037,7 +1049,11 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateGeometryShader(L"shader\\std2d.fx", "GS_Particle");
 	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_Deffered_Particle");
 	pShader->SetBlendType(BLEND_TYPE::ONE_ONE);
+	pShader->SetDSType(DS_TYPE::LESS_NO_WRITE);
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	pShader->AddShaderParam(SHADER_PARAM::TEX_0, L"Fire Texture");
+	pShader->AddShaderParam(SHADER_PARAM::TEX_1, L"Paperburn Texture");
 
 	AddRes<CGraphicsShader>(L"DefferedParticleRenderShader", pShader);
 
@@ -1086,6 +1102,46 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreatePixelShader(L"Shader\\shadowmap.fx", "PS_ShadowMap");
 
 	AddRes(L"ShadowMapShader", pShader);
+
+
+	// ==============
+	// Hp Shader
+	// ==============
+	pShader = new CGraphicsShader(SHADER_POV::FORWARD);
+	pShader->CreateVertexShader(L"shader\\Hp.fx", "VS_Hp");
+	pShader->CreatePixelShader(L"shader\\Hp.fx", "PS_Hp");
+	AddRes<CGraphicsShader>(L"HpShader", pShader);
+
+	// ==============
+	// UI Shader	
+	// ==============
+	pShader = new CGraphicsShader(SHADER_POV::FORWARD);
+	pShader->CreateVertexShader(L"shader\\UI.fx", "VS_UI");
+	pShader->CreatePixelShader(L"shader\\UI.fx", "PS_UI");
+
+	AddRes<CGraphicsShader>(L"UIShader", pShader);
+
+	// ==============
+	// Font Shader	
+	// ==============
+	pShader = new CGraphicsShader(SHADER_POV::FORWARD);
+	pShader->CreateVertexShader(L"shader\\Font.fx", "VS_Font");
+	pShader->CreatePixelShader(L"shader\\Font.fx", "PS_Font");
+	pShader->SetBlendType(BLEND_TYPE::ALPHA_ONE);
+
+
+	AddRes<CGraphicsShader>(L"UIFontShader", pShader);
+
+	// ==============
+	// Fog Shader	
+	// ==============
+	//pShader = new CGraphicsShader(SHADER_POV::FORWARD);
+	//pShader->CreateVertexShader(L"shader\\fog.fx", "VS_Fog");
+	//pShader->CreatePixelShader(L"shader\\fog.fx", "PS_Fog");
+	//pShader->SetBlendType(BLEND_TYPE::ALPHA_ONE);
+	//
+	//
+	//AddRes<CGraphicsShader>(L"FogShader", pShader);
 }
 
 #include "CCopyShaderCS.h"
@@ -1283,6 +1339,46 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"FireShader"));
 	AddRes<CMaterial>(L"FireMtrl", pMtrl);
 
+
+	Ptr<CTexture> WaterPTC = nullptr;
+	Ptr<CTexture> GreyScale = nullptr;
+
+	WaterPTC = CResMgr::GetInst()->FindRes<CTexture>(L"PaperBurnTexture");
+
+	if (nullptr == WaterPTC)
+		WaterPTC =CResMgr::GetInst()->Load<CTexture>(L"PaperBurnTexture", L"texture\\PaperBurn\\PaperBurnTexture.jpg");
+
+
+	GreyScale = CResMgr::GetInst()->FindRes<CTexture>(L"GrayScale2");
+
+	if (nullptr == GreyScale)
+		GreyScale = CResMgr::GetInst()->Load<CTexture>(L"GrayScale2", L"texture\\PaperBurn\\GrayScale2.png");
+
+
+	pMtrl->SetData(SHADER_PARAM::TEX_0, WaterPTC.Get());
+	pMtrl->SetData(SHADER_PARAM::TEX_1, GreyScale.Get());
+
+	pMtrl->SetMaterialCoefficient(Vec4(0.1, 0.7, 0.7, 1), Vec4(0.1, 0.75, 0.75, 1), Vec4(0.1, 0.8, 0.8, 1), Vec4(0.1, 0.8, 0.8, 1));
+
+	
+
+	WaterPTC = CResMgr::GetInst()->FindRes<CTexture>(L"castleInteriorFence_Gate01");
+
+	if (nullptr == WaterPTC)
+		WaterPTC = CResMgr::GetInst()->Load<CTexture>(L"castleInteriorFence_Gate01", L"texture\\FBXTexture\\castleInteriorFence_Gate01.png");
+
+	//FireMtrl
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"FireShader2"));
+	AddRes<CMaterial>(L"FireMtrl2", pMtrl);
+
+	pMtrl->SetData(SHADER_PARAM::TEX_0, WaterPTC.Get());
+	pMtrl->SetData(SHADER_PARAM::TEX_1, GreyScale.Get());
+
+	pMtrl->SetMaterialCoefficient(Vec4(0.1, 0.78, 0.78, 1), Vec4(0.1, 0.79, 0.79, 1), Vec4(0.1, 0.85, 0.85, 1), Vec4(0.1, 0.8, 0.8, 1));
+
+
 	//UIArrow	
 	pMtrl = new CMaterial;
 	pMtrl->m_bDefault = true;
@@ -1336,6 +1432,19 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->m_bDefault = true;
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
 	AddRes<CMaterial>(L"AttackImpactMtrl", pMtrl);
+
+	//LaserMtrl
+	pMtrl = new CMaterial;
+	pMtrl->m_bDefault = true;
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
+	AddRes<CMaterial>(L"LaserMtrl", pMtrl);
+
+	//Fog
+	//pMtrl = new CMaterial;
+	//pMtrl->m_bDefault = true;
+	//pMtrl->SetShader(FindRes<CGraphicsShader>(L"FogShader"));
+	//AddRes<CMaterial>(L"FogMtrl", pMtrl);
+
 }
 
 

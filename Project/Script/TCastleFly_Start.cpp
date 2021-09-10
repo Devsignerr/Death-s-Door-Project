@@ -11,7 +11,6 @@
 
 void TCastleFly_Start::update()
 {
-
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
@@ -19,6 +18,9 @@ void TCastleFly_Start::update()
 	{
 		GetFSM()->ChangeState(L"Fly_Stay", 0.1f, L"Fly_Stay", false);
 	}
+
+	((CCastleScript*)GetScript())->ActivateFlyCloud();
+
 }
 
 
@@ -29,7 +31,7 @@ void TCastleFly_Start::Enter()
 		m_Script = (CCastleScript*)GetScript();
 	}
 	m_Script->OnOffAttackCol(false, LAYER_TYPE::BOSS_COL);
-
+	m_Script->SetFlyCloudTime(0.8f);
 }
 
 void TCastleFly_Start::Exit()

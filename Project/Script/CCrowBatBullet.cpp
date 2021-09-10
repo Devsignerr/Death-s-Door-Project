@@ -49,14 +49,7 @@ bool CCrowBatBullet::GuidedMove()
 	}
 
 
-	//m_ChangeMove = true; // 서클무브로 감 
-
 	Vec3 PlayerRot = CPlayerScript::GetPlayerRot();
-	//m_LastPlayerpos = PlayerPos;
-
-	//m_fTheta = vUp.Dot(vRelative);
-	//m_fTheta = acos(m_fTheta);
-	//float Dot = PlayerCross.Dot(PlayerUp);
 
 	//내가 플레이어를 바라보는 벡터와 내 front 벡터를 외적 
 	Vec3 vCross = vRelative.Cross(vFront);
@@ -65,14 +58,10 @@ bool CCrowBatBullet::GuidedMove()
 	// 위 값이 양수면 플레이어는 내 왼쪽 , 음수면 오른쪽에 있는 것 
 
 	//프론트를 얻어왔지만 회전시켜서 세웠으므로 업벡터로 쓰임 
+
 	float dot = vCross.Dot(vUp);
 
 	float dist = (-vFront + vRelative).Length();
-
-	//if (dist > 1.9f)
-	//{
-	//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * 0.5f;
-	//}
 
 	vRelative.Normalize();
 
@@ -82,12 +71,6 @@ bool CCrowBatBullet::GuidedMove()
 
 	if (InnerRadian > m_fLimitTheta * XM_PI / 180.f)
 	{
-		//if (dist > 1.9f)
-		//{
-		//	Rot.y += CTimeMgr::GetInst()->GetfDT() * m_fTheta;
-		//}
-
-		//플레이어는 내 왼쪽에 있다 
 		if (dot > 0.0) {
 			Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_fTheta;
 		}
@@ -97,12 +80,6 @@ bool CCrowBatBullet::GuidedMove()
 		{
 			Rot.y += CTimeMgr::GetInst()->GetfDT() * m_fTheta;
 		}
-
-		///플레이어를 똑바로 바라보고 있다 
-		//else if (dot > -20.0 && dot < 20.0 && dist < 1.f)
-		//{
-		//	Rot.y -= CTimeMgr::GetInst()->GetfDT() * m_fTheta;
-		//}
 	}
 
 	Vec3 vDiff = PlayerPos - Pos;
@@ -163,6 +140,18 @@ void CCrowBatBullet::update()
 
 }
 
+void CCrowBatBullet::OnCollisionEnter(CGameObject* _pOther)
+{
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL)
+	{
+		Vec3 Pos = Transform()->GetLocalPos();
+		Vec3 DiffPos = Pos-CPlayerScript::GetPlayerPos();
+
+		ActivateImpactParticle(Vec4(0.f, 0.f, 0.f, 0.f), Pos, DiffPos, 2, 34,Vec2(300,300),Vec2(4000,8000));
+		ReturnToMemoryPool();
+	}
+}
+
 void CCrowBatBullet::SaveToScene(FILE* _pFile)
 {
 	CProjectile::SaveToScene(_pFile);
@@ -182,6 +171,8 @@ CCrowBatBullet::CCrowBatBullet()
 	, m_fTheta(0.0f)
 	, m_LastPlayerpos{}
 {
+	m_bMemoryObj = true;
+	m_fLifeTime = 100.f;
 	m_iScriptType = (int)SCRIPT_TYPE::CROWBATBULLET;
 }
 

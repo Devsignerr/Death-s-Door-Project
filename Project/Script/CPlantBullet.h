@@ -11,6 +11,10 @@ public:
 	void update() override;
 	void awake() override;
 
+public:
+	void OnCollisionEnter(CGameObject* _pOther) override;
+	void OnCollision(CGameObject* _pOther) override {}
+	void OnCollisionExit(CGameObject* _pOther) override {}
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);

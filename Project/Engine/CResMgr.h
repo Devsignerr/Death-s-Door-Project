@@ -17,6 +17,7 @@ class CResMgr
 	: public CSingleton<CResMgr>
 {
 	SINGLE(CResMgr);
+
 private:
 	map<wstring, CRes*>		m_mapRes[(UINT)RES_TYPE::END];
 	vector<CRes*>			m_vecCloneRes[(UINT)RES_TYPE::END];
@@ -137,6 +138,16 @@ inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T> _pRes)
 	// 이미 동일한 키로 리소스가 등록되어있는경우 assert
 	//assert( nullptr == FindRes<T>(_strKey));
 
+	//동일한 키로 등록되어있는 경우 갱신해주기 
+	//if (nullptr != FindRes<T>(_strKey))
+	//{
+	//	//이전에 등록된 리소스 삭제 
+	//	Ptr<T> Ptr = FindRes<T>(_strKey).Get();
+	//	delete Ptr.Get();
+	//	m_mapRes[(UINT)type].erase(_strKey);
+	//}
+
+	//새롭게 등록 
 	_pRes->SetKey(_strKey);
 	m_mapRes[(UINT)type].insert(make_pair(_strKey, _pRes.Get()));
 	m_bEvent = true;

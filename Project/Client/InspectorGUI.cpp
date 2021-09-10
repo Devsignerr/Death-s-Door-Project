@@ -234,6 +234,8 @@ void InspectorGUI::render()
                 wstring ComponentName = m_arrComGUI[i]->GetName();
                 string strName = GetString(ComponentName);
 
+                //ImGui::SetNextTreeNodeOpen(true);
+
                 if (ImGui::CollapsingHeader(strName.c_str()))
                 {
                     m_arrComGUI[i]->render();
@@ -263,36 +265,32 @@ void InspectorGUI::render()
 
         if (ImGui::Button("make Prefab"))
         {
-           // Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(m_pTargetObj->GetName());
-           //
-           // if (nullptr == pPrefab)
-           // {
-                Ptr<CPrefab> pPrefab = nullptr;
+            Ptr<CPrefab> pPrefab = nullptr;
 
-                int Layer = m_pTargetObj->GetLayerIndex();         
+            int Layer = m_pTargetObj->GetLayerIndex();         
 
-                CGameObject* ProtoObject = m_pTargetObj->Clone();
-                ProtoObject->SetName(m_pTargetObj->GetName());
+            CGameObject* ProtoObject = m_pTargetObj->Clone();
+            ProtoObject->SetName(m_pTargetObj->GetName());
 
-                UINT ChildCount = m_pTargetObj->GetChild().size();
+            UINT ChildCount = m_pTargetObj->GetChild().size();
 
-                for (UINT i = 0; i < ChildCount; ++i)
-                {
-                    wstring ChildName = m_pTargetObj->GetChild()[i]->GetName();
-                    UINT ChildLayer = m_pTargetObj->GetChild()[i]->GetLayerIndex();
+            for (UINT i = 0; i < ChildCount; ++i)
+            {
+                wstring ChildName = m_pTargetObj->GetChild()[i]->GetName();
+                UINT ChildLayer = m_pTargetObj->GetChild()[i]->GetLayerIndex();
 
-                    ProtoObject->GetChild()[i]->SetName(ChildName);
-                    ProtoObject->GetChild()[i]->SetLayerIndex(ChildLayer);
-                }
+                ProtoObject->GetChild()[i]->SetName(ChildName);
+                ProtoObject->GetChild()[i]->SetLayerIndex(ChildLayer);
+            }
 
-                ProtoObject->SetLayerIndex(Layer);
+            ProtoObject->SetLayerIndex(Layer);
 
-                pPrefab = new CPrefab(ProtoObject);
-                wstring Name = m_pTargetObj->GetName();
-                Name = L"prefab\\" + Name + L".pref";
-                pPrefab->Save(Name);
-                CResMgr::GetInst()->AddRes<CPrefab>(m_pTargetObj->GetName(), pPrefab);
-            //}
+            pPrefab = new CPrefab(ProtoObject);
+            wstring Name = m_pTargetObj->GetName();
+            Name = L"prefab\\" + Name + L".pref";
+            pPrefab->Save(Name);
+            CResMgr::GetInst()->AddRes<CPrefab>(m_pTargetObj->GetName(), pPrefab);
+            
         }
 
         int LayerIdx = m_pTargetObj->GetLayerIndex();

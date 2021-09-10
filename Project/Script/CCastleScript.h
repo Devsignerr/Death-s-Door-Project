@@ -39,11 +39,23 @@ private:
 	};
 
 private:
-	CFSM* m_pFSM;
+	CFSM*						m_pFSM;
 	CASTLE_STATE				m_eState;
 	map<CASTLE_STATE, wstring>	m_mapState;
 	int							m_Hp;
+	//CGameObject*				m_pAttackCollider;
+	float					    m_fImpactPTCTime;
+	float						m_fFlyCloudTime; //부양 시 생성되는 구름 파티클 생성 주기 
 
+public:
+	void SetFlyCloudTime(float _Time) { m_fFlyCloudTime = _Time; }
+
+public:
+	float GetImpactPTCTime() { return m_fImpactPTCTime; }
+	void  SetImpactPTCTime(float _Time) { m_fImpactPTCTime = _Time; }
+	void  ActivateImpact();
+	void  ActivateFlyCloud();
+	void  ActivateAttackCloud();
 private:
 	void ChangeState(CASTLE_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);
 	void CreateLaserPoint();
