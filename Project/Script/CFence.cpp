@@ -12,6 +12,7 @@ void CFence::awake()
 	Vec3 Down = -Transform()->GetLocalDir(DIR_TYPE::UP);
 	m_DestPos = Transform()->GetLocalPos() + Down * 700.0f;
 	CreateWallCol();
+	m_PrevOpenCheck = m_IsOpen;
 }
 
 void CFence::update()
@@ -21,12 +22,18 @@ void CFence::update()
 		Vec3 Pos = Transform()->GetLocalPos();
 		Vec3 FenceWallPos = m_FenceWall->Transform()->GetLocalPos();
 
+		if (!m_PrevOpenCheck)
+		{
+			Play_Sound(L"VaultDoor");
+			m_PrevOpenCheck = true;
+		}
+
 		if (m_DestPos.y < Pos.y)
 		{
-			Pos.y -= fDT * 200.0f;
+			Pos.y -= fDT * 150.0f;
 			Transform()->SetLocalPos(Pos);
 
-			FenceWallPos.y -= fDT * 200.0f;
+			FenceWallPos.y -= fDT * 150.0f;
 			m_FenceWall->Transform()->SetLocalPos(FenceWallPos);
 		}
 		else
@@ -35,10 +42,10 @@ void CFence::update()
 		}
 	}
 
-	//if (KEY_TAP(KEY_TYPE::SPACE))
-	//{
-	//	m_IsOpen = true;
-	//}
+	if (KEY_TAP(KEY_TYPE::SPACE))
+	{
+		m_IsOpen = true;
+	}
 }
 
 void CFence::CreateWallCol()
@@ -125,6 +132,7 @@ void CFence::LoadFromScene(FILE* _pFile)
 
 CFence::CFence()
 	: m_FenceWall(nullptr)
+	, m_PrevOpenCheck(false)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::FENCE;
 	m_GimicType = GIMICTYPE::FENCE;

@@ -16,6 +16,7 @@
 #include "CCrowBullet.h"
 #include "CCrowEggBullet.h"
 #include "CCrowScript.h"
+#include "CDoorScript.h"
 #include "CEffectScript.h"
 #include "CElevator.h"
 #include "CEnding.h"
@@ -74,6 +75,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCrowBullet");
 	_vec.push_back(L"CCrowEggBullet");
 	_vec.push_back(L"CCrowScript");
+	_vec.push_back(L"CDoorScript");
 	_vec.push_back(L"CEffectScript");
 	_vec.push_back(L"CElevator");
 	_vec.push_back(L"CEnding");
@@ -148,6 +150,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCrowEggBullet;
 	if (L"CCrowScript" == _strScriptName)
 		return new CCrowScript;
+	if (L"CDoorScript" == _strScriptName)
+		return new CDoorScript;
 	if (L"CEffectScript" == _strScriptName)
 		return new CEffectScript;
 	if (L"CElevator" == _strScriptName)
@@ -279,6 +283,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::CROWSCRIPT:
 		return new CCrowScript;
+		break;
+	case (UINT)SCRIPT_TYPE::DOORSCRIPT:
+		return new CDoorScript;
 		break;
 	case (UINT)SCRIPT_TYPE::EFFECTSCRIPT:
 		return new CEffectScript;
@@ -466,6 +473,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::CROWSCRIPT:
 		return L"CCrowScript";
+		break;
+
+	case SCRIPT_TYPE::DOORSCRIPT:
+		return L"CDoorScript";
 		break;
 
 	case SCRIPT_TYPE::EFFECTSCRIPT:

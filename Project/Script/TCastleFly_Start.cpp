@@ -32,6 +32,8 @@ void TCastleFly_Start::Enter()
 	}
 	m_Script->OnOffAttackCol(false, LAYER_TYPE::BOSS_COL);
 	m_Script->SetFlyCloudTime(0.8f);
+
+	((CCastleScript*)GetScript())->PlaySound(L"RedeemerTakeOff", true, 1.0f);
 }
 
 void TCastleFly_Start::Exit()

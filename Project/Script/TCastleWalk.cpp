@@ -37,6 +37,102 @@ void TCastleWalk::update()
 		m_Script->CheckAttackDirection();
 	}
 
+    m_fSoundTimer += fDT;
+
+    if (1.f < m_fSoundTimer)
+    {
+        m_fSoundTimer = 0.0f;
+
+        Ptr<CSound> Sound = nullptr;
+
+        if (m_iRunSoundChange == 1)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep1");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep1", L"sound\\Allsound\\RedeemerStep1.ogg");
+
+        }
+
+        else if (m_iRunSoundChange == 2)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep2");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep2", L"sound\\Allsound\\RedeemerStep2.ogg");
+
+        }
+
+        else if (m_iRunSoundChange == 3)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep3");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep3", L"sound\\Allsound\\RedeemerStep3.ogg");
+
+        }
+
+        else if (m_iRunSoundChange == 4)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep4");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep4", L"sound\\Allsound\\RedeemerStep4.ogg");
+        }
+
+
+        Sound->Stop();
+
+        if (m_iRunSoundChange == 1)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep1");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep1", L"sound\\Allsound\\RedeemerStep1.ogg");
+
+            m_iRunSoundChange = 2;
+        }
+
+        else if (m_iRunSoundChange == 2)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep2");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep2", L"sound\\Allsound\\RedeemerStep2.ogg");
+
+            m_iRunSoundChange = 3;
+        }
+
+        else if (m_iRunSoundChange == 3)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep3");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep3", L"sound\\Allsound\\RedeemerStep3.ogg");
+
+            m_iRunSoundChange = 4;
+        }
+
+        else if (m_iRunSoundChange == 4)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerStep4");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerStep4", L"sound\\Allsound\\RedeemerStep4.ogg");
+            m_iRunSoundChange = 1;
+        }
+
+
+        Sound->Play(1, false, 0.3f);
+    }
+
+
+
+
+
+
+
+
 }
 
 void TCastleWalk::Enter()
@@ -46,10 +142,12 @@ void TCastleWalk::Enter()
 
 void TCastleWalk::Exit()
 {
+    m_iRunSoundChange = 1;
 }
 
 TCastleWalk::TCastleWalk()
 	: m_Script(nullptr)
+    , m_iRunSoundChange(1)
 {
 }
 

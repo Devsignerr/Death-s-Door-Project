@@ -34,6 +34,18 @@ void CBatScript::Idle()
 	// 플레이어가 범위 안에 들어올때까지 빙빙 돈다
 	// 범위 안에들어오면 인식했다는 모션 있다
 
+	Ptr<CSound> Sound = Play_Sound(L"BatFlap3");
+
+	m_SoundTimer += fDT;
+
+	if (0.7f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound->Stop();
+	}
+
+	
+
 	Vec3 vBatRot = Transform()->GetLocalRot();
 	Vec3 Pos = Transform()->GetLocalPos();
 	Vec3 vMovePos = {};
@@ -52,6 +64,7 @@ void CBatScript::Idle()
 
 	if (RangeSearch(m_AttackRange))
 	{
+		Play_Sound(L"BatEngage2", 1, true);
 		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"Recognize");
 	}
 }
@@ -59,22 +72,35 @@ void CBatScript::Idle()
 
 void CBatScript::Chase()
 {
+
+	Ptr<CSound> Sound = Play_Sound(L"BatFlap2");
+
+	m_SoundTimer += fDT;
+
+	if (0.7f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound->Stop();
+	}
+	
 	CalChaseMove();
 
 	if (RangeSearch(m_AttackRange))
 	{
+		Play_Sound(L"BatAttack3", 1, true);
 		ChangeState(MONSTERSTATE::ATTACK, 0.05f, L"Attack");
 	}
 }
 
 void CBatScript::ReadyAction()
 {
+
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
-
+		Play_Sound(L"BatAttack3", 1, true);
 		ChangeState(MONSTERSTATE::ATTACK, 0.1f, L"Attack");
 	}
 }
@@ -99,6 +125,7 @@ void CBatScript::Attack()
 
 	if (85 == CurAni->GetFrameIdx())
 	{
+		PlaySound(L"BatAttack3", 1, true);
 		OnOffAttackCol(true);
 	}
 
@@ -179,6 +206,7 @@ void CBatScript::OnCollisionEnter(CGameObject* _pOther)
 			CurAni->Animator3D()->StopAnimation();
 			m_bDamaged = false;
 
+			Play_Sound(L"BatDeath4", 1, true);
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else {

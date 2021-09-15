@@ -9,13 +9,19 @@ void TIronChopAttack::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
-	m_Script->OnOffAttackCol(true);
+	if (631 == CurAni->GetFrameIdx())
+	{
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam3", true, 0.5f);
+		m_Script->OnOffAttackCol(true);
+	}
+
+	if (640 == CurAni->GetFrameIdx())
+		m_Script->OnOffAttackCol(false);
+
 	
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		GetFSM()->ChangeState(L"ChopAttackCombo", 0.1f, L"ChopAttackCombo", false);
-
-		//GetFSM()->ChangeState(L"ChopAttackEnd", 0.05f, L"ChopAttackEnd", false);
 	}
 }
 

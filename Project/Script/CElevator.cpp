@@ -17,20 +17,20 @@ void CElevator::awake()
 		++a;
 		CreateCol();
 		vector<CGameObject*>& Temp = CResMgr::GetInst()->GetNavMeshVec();
-
-		//for (int i = 0; i < Temp.size(); ++i)
-		//{
-		//	if (Temp[i]->GetName() == L"Room_ElevatorRoom2_Nav Child0")
-		//	{
-		//		m_Elevator2_Nav = Temp[i];
-		//		break;
-		//	}
-		//}
-
-		m_Elevator2_Nav = GetObj()->GetChild()[0];
-
+	
+		for (int i = 0; i < Temp.size(); ++i)
+		{
+			if (Temp[i]->GetName() == L"Room_ElevatorRoom2_Nav Child0")
+			{
+				m_Elevator2_Nav = Temp[i];
+				break;
+			}
+		}
+	
+		//	m_Elevator2_Nav = GetObj()->GetChild()[0];
+	
 		m_Elevator2_Nav_OriginPos = m_Elevator2_Nav->Transform()->GetLocalPos();
-
+	
 		Vec3 Pos = m_Elevator2_Nav_OriginPos;
 		Pos.y += 100000.0f;
 		m_Elevator2_Nav->Transform()->SetLocalPos(Pos);

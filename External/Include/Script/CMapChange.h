@@ -6,6 +6,7 @@ class CMapChange : public CScript
 {
 private:
     static vector<CGameObject*> FindCollNum;
+public:
     static bool IsMapChange;
 private:
     int m_ThisCollNum;
@@ -13,6 +14,7 @@ private:
     bool m_MapChangeCheck;
 public:
     int GetThisColNum() { return m_ThisCollNum; }
+
 public:
     virtual void awake();
     virtual void update();

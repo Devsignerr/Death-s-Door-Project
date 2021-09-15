@@ -16,7 +16,7 @@ float CCameraScript::m_ShakeTime = 0.0f;
 CCameraScript::CCameraScript()
     : CScript((UINT)SCRIPT_TYPE::CAMERASCRIPT)
     , m_pDirLight(nullptr)
-    , m_eMode(CAMERA_MODE::FREE)
+    , m_eMode(CAMERA_MODE::FOLLOW)
     , m_fSmoothStep(1.5f)
     , m_vCameraOffset(Vec3(3397.f,4882.f,-3135.f))
     , m_vCameraRot(Vec3(0.f, 0.f, 0.f))
@@ -300,6 +300,11 @@ void CCameraScript::LookAtPlayer()
         CameraRot.x += RotAngle;
 
     Transform()->SetLocalRot(CameraRot);
+}
+
+void CCameraScript::LookAtPlayer(Vec3 _PlayerPos)
+{
+    Transform()->SetLocalPos(_PlayerPos+m_vCameraOffset);
 }
 
 void CCameraScript::CutSceneCamera()

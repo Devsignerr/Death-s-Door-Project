@@ -497,7 +497,7 @@ void MenuGUI::render()
             if (ImGui::BeginMenu("Map Change Collider Create"))
             {
                 static int ColliderCount = 0;
-                static int LayerIdx = 8;
+                static int LayerIdx = (UINT)LAYER_TYPE::SCENE_CHANGE_COL;
 
                 //ImGui::Text("Setting Layer \t");
                 //ImGui::SameLine(200);
@@ -537,8 +537,6 @@ void MenuGUI::render()
 
                         CEventMgr::GetInst()->AddEvent(even);
                     }
-
-                    CCollisionMgr::GetInst()->CollisionCheck(8, 10);
                 }
                 ImGui::EndMenu();
             }

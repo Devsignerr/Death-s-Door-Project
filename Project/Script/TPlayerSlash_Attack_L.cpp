@@ -100,6 +100,7 @@ void TPlayerSlash_Attack_L::Enter()
 	++m_LimitAttackCount;
 	m_Script = (CPlayerScript*)GetScript();
 
+	GetScript()->Play_Sound(L"GreatSwordFinalSwing", 1, true, 0.2f);
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
 	//Obj->MeshRender()->Activate(true);
 	Obj->Collider3D()->Activate(true);

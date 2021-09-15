@@ -391,6 +391,12 @@
     <ClInclude Include="CFogScript.h">
       <Filter>ScriptCode\System\Fog</Filter>
     </ClInclude>
+    <ClInclude Include="CDoorScript.h">
+      <Filter>ScriptCode\Map_Gimic\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="TIronIdle.h">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -551,6 +557,9 @@
     </Filter>
     <Filter Include="ScriptCode\System\Fog">
       <UniqueIdentifier>{1857a5a9-c658-4fb0-9607-4ee2b19af674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\Door">
+      <UniqueIdentifier>{66aff110-9f68-49e5-ae4d-43f5ecb6c531}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -940,6 +949,12 @@
     </ClCompile>
     <ClCompile Include="CFogScript.cpp">
       <Filter>ScriptCode\System\Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="CDoorScript.cpp">
+      <Filter>ScriptCode\Map_Gimic\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="TIronIdle.cpp">
+      <Filter>ScriptCode\FSM\Boss\Iron</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -35,6 +35,7 @@ void CSpearManScript::Idle()
 {
 	if (RangeSearch(1500.0f))
 	{
+		
 		ChangeState(MONSTERSTATE::CHASE, 0.2f, L"Chase");
 	}
 }
@@ -45,6 +46,20 @@ void CSpearManScript::Move()
 
 void CSpearManScript::Chase()
 {
+	
+
+	Ptr<CSound> Sound1 = Play_Sound(L"ChunkyDodgerThud1");
+	Ptr<CSound> Sound2 = Play_Sound(L"ChunkyDodgerBell1",1,false, 0.05f);
+
+	m_SoundTimer += fDT;
+
+	if (0.9f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound1->Stop();
+		Sound2->Stop();
+	}
+
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
@@ -95,6 +110,10 @@ void CSpearManScript::ReadyAction()
 	{
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
+			Play_Sound(L"ChunkyDodgerFirstAttackEnhance3", 1, true);
+			Play_Sound(L"ChunkyDodgerAttackSwing2",1,true);
+			Play_Sound(L"ChunkyDodgerBell5", 1, true);
+			
 			ChangeState(MONSTERSTATE::ATTACK, 0.1f, L"LeftCut");
 		}
 	}
@@ -102,6 +121,9 @@ void CSpearManScript::ReadyAction()
 	{
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
+			Play_Sound(L"ChunkyDodgerSecondAttackEnhance3", 1, true);
+			Play_Sound(L"ChunkyDodgerAttackSwing4", 1, true);
+			Play_Sound(L"ChunkyDodgerBell4", 1, true);
 			ChangeState(MONSTERSTATE::ATTACK, 0.1f, L"RightCut");
 		}
 	}
@@ -197,6 +219,8 @@ void CSpearManScript::Attack()
 		{
 			if (RangeSearch(m_EvasionRange))
 			{
+				Play_Sound(L"ChunkyDodgerBell3", 1, true);
+				Play_Sound(L"ChunkyDodgerJumpWoosh2", 1, true);
 				ChangeState(MONSTERSTATE::JUMP, 0.1f, L"Evasion");
 			}
 			else
@@ -260,9 +284,15 @@ void CSpearManScript::Jump()
 
 		// È¸Àü
 
+		if (145 == CurAni->GetFrameIdx())
+		{
+			PlaySound(L"ChunkyDodgerLand6", true);
+		}
+
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
 			m_IsEvasion = true;
+		
 			ChangeState(MONSTERSTATE::CHASE, 0.2f, L"Chase");
 		}
 	}
@@ -308,6 +338,7 @@ void CSpearManScript::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
+		Play_Sound(L"ChunkyDodgerTakeDamage2", 1, true);
 		--m_MonsterInfo.Hp;
 
 		if (0 == m_MonsterInfo.Hp)
@@ -330,6 +361,7 @@ void CSpearManScript::OnCollisionEnter(CGameObject* _pOther)
 			CurAni->Animator3D()->StopAnimation();
 
 			m_bDamaged = false;
+			Play_Sound(L"ChunkyDodgerDeath3",1,true);
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else

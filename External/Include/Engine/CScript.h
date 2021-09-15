@@ -9,6 +9,8 @@
 #include "CMeshRender.h"
 
 #include "CPrefab.h"
+#include "CSound.h"
+#include "Ptr.h"
 
 
 
@@ -29,9 +31,11 @@ class CScript :
     public CComponent
 {
 protected:
-    int                 m_iScriptType;
-    vector<tDataDesc>   m_vecDesc;
-   
+    int                  m_iScriptType;
+    vector<tDataDesc>    m_vecDesc;
+    //map<wstring, float>  m_mapSound;
+
+
 public:
     static void Instantiate(Ptr<CPrefab> _pPrefab, Vec3 _vWorldPos, int _iLayerIdx = 0);
     static void DeleteObject(CGameObject* _pTarget);
@@ -39,6 +43,7 @@ public:
     static void DisconnenctWithParent(CGameObject* _pTarget);
 
 public:
+    virtual void update();
     virtual void finalupdate() final {}
     virtual CScript* Clone() = 0;
 
@@ -55,6 +60,9 @@ public:
 
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile) {};
+
+    Ptr<CSound> Play_Sound(wstring _wstr,int _iRoopCount=1, bool _bOverlap = false, float _Volume = 0.5f);
+
 
 public:
     CScript(int _iScriptType);

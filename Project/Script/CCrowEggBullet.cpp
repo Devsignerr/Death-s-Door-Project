@@ -9,21 +9,42 @@
 
 void CCrowEggBullet::Create()
 {
-	CGameObject* Obj = new CGameObject;
+	CGameObject* Obj = nullptr;
+	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 
-	Obj->AddComponent(new CTransform);
-	Obj->AddComponent(new CMeshRender);
-	Obj->AddComponent(new CCollider3D);
+	Obj=IntanciatePrefab(L"CrowChain", (UINT)LAYER_TYPE::BOSS_EFFECT);
+	
+	CGameObject* Col = new CGameObject;
+	Col->SetName(L"BazookBullet_Col");
+
+	Col->AddComponent(new CTransform);
+	Col->AddComponent(new CMeshRender);
+	Col->AddComponent(new CCollider3D);
+
+	Col->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	Col->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+
+	Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CurScene->AddObject(Col, (UINT)LAYER_TYPE::INDETERMINATE);
 
 	Obj->Transform()->SetLocalPos(m_StartPos);
-	Obj->Transform()->SetLocalScale(Vec3(500.0f, 500.0f, 500.0f));
-	Obj->Transform()->SetLocalRot(m_CrowBossRot);
+	//Obj->Transform()->SetLocalScale(Vec3(500.0f, 500.0f, 500.0f));
 
-	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+	m_CrowBossRot.x += XM_PI / 2.f;
+	Vec3 Rot = m_CrowBossRot;
+	Rot.y += XM_PI / 2.f;
 
-	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::INDETERMINATE);
+	Obj->Transform()->SetLocalRot(Rot);
+
+	//Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	//Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	
+	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::BOSS_EFFECT);
+
+	Obj->AddChild(Col);
 
 	AddSlidingLine(Obj);
 }
@@ -41,7 +62,7 @@ void CCrowEggBullet::Move()
 	for (; Iter != m_SlidingLine.end(); ++Iter)
 	{
 		list<SLIDINGINFO>::iterator NextIter = Iter;
-		float Scale = (*Iter).Obj->Transform()->GetLocalScale().y / 2.0f;
+		float Scale = (*Iter).Obj->GetChild()[0]->Transform()->GetWorldScale().y/4.f;
 
 		if ((*Iter).MovementValue >= Scale)
 		{
@@ -55,7 +76,7 @@ void CCrowEggBullet::Move()
 		if (true == (*Iter).MoveCheck)
 		{
 			Vec3 Pos = (*Iter).Obj->Transform()->GetLocalPos();
-			float MovementValue = fDT * 10000.0f;
+			float MovementValue = 40.f;
 			Pos += m_Dir * MovementValue;
 			(*Iter).MovementValue += MovementValue;
 
@@ -120,7 +141,7 @@ void CCrowEggBullet::FindToDeadCheck(CGameObject* _Obj)
 		list<SLIDINGINFO>::iterator Iter = m_SlidingLine.begin();
 		for (; Iter != m_SlidingLine.end(); ++Iter)
 		{
-			if ((*Iter).Obj == _Obj)
+			if ((*Iter).Obj == _Obj->GetParent())
 			{
 				(*Iter).DeadCheck = true;
 				break;

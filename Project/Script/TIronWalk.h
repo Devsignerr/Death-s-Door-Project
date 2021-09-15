@@ -7,6 +7,8 @@ class TIronWalk :
 {
 private:
 	CIronmaceScript* m_Script;
+	bool			 m_bWalkSoundChange;
+	float		     m_fSoundTimer;
 private:
 	void update() override;
 private:

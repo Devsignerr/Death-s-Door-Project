@@ -22,17 +22,6 @@ void CSceneChange::update()
 			CSceneMgr::GetInst()->SceneChange(m_NextSceneName.c_str());
 		}
 	}
-
-	//if (true == m_fadeCheck)
-	//{
-	//	testtime += fDT;
-	//}
-	//
-	//if (3.0f < testtime)
-	//{
-	//	m_fadeCheck = false;
-	//
-	//}
 }
 
 CSceneChange::CSceneChange()
@@ -50,7 +39,7 @@ void CSceneChange::OnCollisionEnter(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
 
-	if (10 == Obj->GetLayerIndex())
+	if ((UINT)LAYER_TYPE::PLAYER_COL == Obj->GetLayerIndex())
 	{
 		CFadeScript::Fade_Out();
 		m_fadeCheck = true;

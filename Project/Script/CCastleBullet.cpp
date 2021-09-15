@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CCastleBullet.h"
+#include "CRandomMgrScript.h"
 
 #include <Engine/CParticleSystem.h>
 
@@ -55,6 +56,11 @@ void CCastleBullet::update()
 	}
 	else 
 	{
+		int i = CRandomMgrScript::GetRandomintNumber(0,1);
+
+		if(i==0)
+			Play_Sound(L"RedeemerMissileExplosion2", 1, true, 0.5f);
+
 		ActivateExplosionParticle();
 
 		GetObj()->SetAllColliderActive(false);

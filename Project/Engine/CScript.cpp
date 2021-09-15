@@ -5,7 +5,9 @@
 #include "CScene.h"
 
 #include "CEventMgr.h"
+#include "CResMgr.h"
 #include <Script/CScriptMgr.h>
+
 
 CScript::CScript(int _iScriptType)
 	: m_iScriptType(_iScriptType)
@@ -77,6 +79,13 @@ void CScript::DisconnenctWithParent(CGameObject* _pTarget)
 	CEventMgr::GetInst()->AddEvent(even);
 }
 
+void CScript::update()
+{
+
+
+
+}
+
 void CScript::SaveToScene(FILE* _pFile)
 {
 	CComponent::SaveToScene(_pFile);
@@ -84,5 +93,23 @@ void CScript::SaveToScene(FILE* _pFile)
 	wstring ScriptName = CScriptMgr::GetScriptName(this);
 	SaveWString(ScriptName, _pFile);
 	//fwrite(&m_iScriptType, sizeof(UINT), 1, _pFile);
+}
+
+Ptr<CSound> CScript::Play_Sound(wstring _wstr, int _iRoopCount, bool _bOverlap, float _Volume)
+{
+	Ptr<CSound> sound = nullptr;
+
+	sound = CResMgr::GetInst()->FindRes<CSound>(_wstr);
+
+	if (nullptr == sound)
+	{
+		sound = CResMgr::GetInst()->Load<CSound>(_wstr, L"sound\\Allsound\\" + _wstr + L".ogg");
+	}
+
+	assert(sound.Get());
+
+	sound->Play(_iRoopCount, _bOverlap, _Volume);
+
+	return sound;
 }
 

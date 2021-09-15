@@ -17,6 +17,7 @@ void TCastleSpin::update()
 
 	if (284 == CurAni->GetFrameIdx())
 	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerSlam1", false, 0.5f);
 		m_Script->OnOffAttackCol(true);
 
 		if (!m_bImpacted)
@@ -30,6 +31,7 @@ void TCastleSpin::update()
 
 	if (284 < CurAni->GetFrameIdx() && CurAni->GetFrameIdx() < 320)
 	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerDrill", false, 0.3f);
 		((CCastleScript*)GetScript())->ActivateImpact();
 	}
 

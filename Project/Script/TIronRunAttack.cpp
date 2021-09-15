@@ -13,7 +13,11 @@ void TIronRunAttack::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (329 == CurAni->GetFrameIdx())
+	{
 		m_Script->OnOffAttackCol(true);
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam1",true,0.5f);
+	}
+		
 	if (331 == CurAni->GetFrameIdx())
 		m_Script->OnOffAttackCol(false);
 
@@ -34,6 +38,53 @@ void TIronRunAttack::update()
 		if (true == IsGround)
 			m_Script->Transform()->SetLocalPos(Pos + vMovePos);
 
+
+		m_fSoundTimer += fDT;
+
+		if (0.4f < m_fSoundTimer)
+		{
+			m_fSoundTimer = 0.0f;
+
+			Ptr<CSound> Sound = nullptr;
+
+			if (m_bWalkSoundChange)
+			{
+				Sound = CResMgr::GetInst()->FindRes<CSound>(L"KnightStep1");
+
+				if (Sound == nullptr)
+					Sound = CResMgr::GetInst()->Load<CSound>(L"KnightStep1", L"sound\\Allsound\\KnightStep1.ogg");
+			}
+			else
+			{
+				Sound = CResMgr::GetInst()->FindRes<CSound>(L"KnightStep4");
+
+				if (Sound == nullptr)
+					Sound = CResMgr::GetInst()->Load<CSound>(L"KnightStep4", L"sound\\Allsound\\KnightStep4.ogg");
+			}
+
+			Sound->Stop();
+
+			m_bWalkSoundChange = m_bWalkSoundChange ? false : true;
+
+
+			if (m_bWalkSoundChange)
+			{
+				Sound = CResMgr::GetInst()->FindRes<CSound>(L"KnightStep1");
+
+				if (Sound == nullptr)
+					Sound = CResMgr::GetInst()->Load<CSound>(L"KnightStep1", L"sound\\Allsound\\KnightStep1.ogg");
+			}
+			else
+			{
+				Sound = CResMgr::GetInst()->FindRes<CSound>(L"KnightStep4");
+
+				if (Sound == nullptr)
+					Sound = CResMgr::GetInst()->Load<CSound>(L"KnightStep4", L"sound\\Allsound\\KnightStep4.ogg");
+			}
+
+			Sound->Play(1, false, 0.8f);
+		}
+
 	}
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
@@ -46,10 +97,13 @@ void TIronRunAttack::Enter()
 {
 	if (nullptr == m_Script)
 		m_Script = (CIronmaceScript*)GetScript();
+
+	m_fSoundTimer = 0.39f;
 }
 
 void TIronRunAttack::Exit()
 {
+	m_fSoundTimer = 0.f;
 }
 
 TIronRunAttack::TIronRunAttack()

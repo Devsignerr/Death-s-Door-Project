@@ -4,17 +4,7 @@
 class CMapGimic :public CScript
 {
 public:
-    enum class GIMICTYPE
-    {
-        FENCE,
-        SPIN_LASER,
-        ANCHOR,
-        UPDOWN_SWITCH,
-        ELEVATOR,
-        DOOR,
-        LEVER,
-        END
-    };
+  
 
 protected:
     GIMICTYPE m_GimicType;

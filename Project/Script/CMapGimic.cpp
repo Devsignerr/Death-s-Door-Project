@@ -23,7 +23,7 @@ void CMapGimic::CreateCol(Vec3 _Scale, Vec3 _OffsetPos, wstring _Name)
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
 
-	AddChild(GetObj(), Obj);
+	GetObj()->AddChild(Obj);
 }
 
 void CMapGimic::awake()

@@ -14,7 +14,7 @@ void CSpinLaser::awake()
 	LaserCreate();
 	SetCollideRectInfo();
 	CreateRectToCollide();
-
+	m_PreStopCheck = m_StopCheck;
 }
 
 void CSpinLaser::update()
@@ -22,6 +22,23 @@ void CSpinLaser::update()
 
 	if (false == m_StopCheck)
 	{
+		if (false == m_PreStopCheck)
+		{
+			Play_Sound(L"LaserFire1");
+			m_PreStopCheck = true;
+		}
+
+
+		Ptr<CSound> Sound = Play_Sound(L"LaserBurst2");
+
+		m_SoundTimer += fDT;
+
+		if (0.5f < m_SoundTimer)
+		{
+			m_SoundTimer = 0.0f;
+			Sound->Stop();
+		}
+
 		Vec3 Rot = Transform()->GetLocalRot();
 		Rot.y -= fDT / 3.0f;
 
@@ -33,6 +50,7 @@ void CSpinLaser::update()
 	}
 	else
 	{
+		m_PreStopCheck = false;
 		m_StopTime += fDT;
 
 		if (m_StopTime < 2.0f)
@@ -50,11 +68,13 @@ void CSpinLaser::update()
 		m_LaserCol[1]->Transform()->SetLocalScale(Vec3(0.0f, 0.0f, 0.0f));
 	}
 
-	if (KEY_TAP(KEY_TYPE::KEY_E))
+	/*if (KEY_TAP(KEY_TYPE::KEY_E))
 	{
+		Play_Sound(L"LaserBurstY", 1, true, 0.3f);
 		m_StopCheck = true;
 		m_PrevStopState = true;
-	}
+	}*/
+
 }
 
 
@@ -249,7 +269,7 @@ void CSpinLaser::SetCollideRectInfo()
 	m_CollideRectInfo.push(Temp);
 
 
-	Temp.Pos = Vec3(SpinLaserPos.x - 3127.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 655.0f);
+	Temp.Pos = Vec3(SpinLaserPos.x - 3127.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1155.0f);
 	Temp.Scale = Vec3(2550.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, -(XM_PI / 2.0f), 0.0f);
 	m_CollideRectInfo.push(Temp);
@@ -367,6 +387,7 @@ void CSpinLaser::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_COL == Obj->GetLayerIndex())
 	{
+		Play_Sound(L"LaserBurstY", 1, true, 0.3f);
 		m_StopCheck = true;
 		m_PrevStopState = true;
 
@@ -393,6 +414,8 @@ void CSpinLaser::LoadFromScene(FILE* _pFile)
 
 CSpinLaser::CSpinLaser()
 	: m_StopTime(0.0f)
+	, m_PreStopCheck(false)
+	, m_SoundTimer(0.0f)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::SPINLASER;
 	m_GimicType = GIMICTYPE::SPIN_LASER;

@@ -175,6 +175,7 @@ void CCamera::SortObject()
 							continue;
 						}
 					}
+
 				}
 
 				UINT iMtrlCount = 0;

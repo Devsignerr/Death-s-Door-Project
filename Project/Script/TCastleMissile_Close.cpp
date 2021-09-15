@@ -27,6 +27,8 @@ void TCastleMissile_Close::update()
 void TCastleMissile_Close::Enter()
 {
 	m_Script = (CCastleScript*)GetScript();
+
+	((CCastleScript*)GetScript())->PlaySound(L"RedeemerRevertPose", true, 0.2f);
 }
 
 void TCastleMissile_Close::Exit()

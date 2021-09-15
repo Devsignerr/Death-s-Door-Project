@@ -46,6 +46,15 @@ void CNailScript::Idle()
 
 void CNailScript::Chase()
 {
+	Ptr<CSound> Sound = Play_Sound(L"GruntStep", 1, false, 0.2f);
+
+	m_SoundTimer += fDT;
+
+	if (0.35f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound->Stop();
+	}
 
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
@@ -68,6 +77,7 @@ void CNailScript::Chase()
 	if (RangeSearch(m_NailAttackRange))
 	{
 		m_fTheta = XM_PI / 2.0f;
+		Play_Sound(L"Grunt_DashAttackVoice2", 1, true);
 		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"NailAttackReady");
 	}
 	else if (false == RangeSearch(m_NailAttackRange) && true == RangeSearch(m_JumpAttackRange))
@@ -104,7 +114,7 @@ void CNailScript::ReadyAction()
 		&& CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"JumpAttackReady")
 	{
 		ResetBackStepInfo();
-
+		Play_Sound(L"Grunt_JumpAttack2", 1, true);
 		ChangeState(MONSTERSTATE::ATTACK, 0.02f, L"JumpAttack");
 	}
 
@@ -127,6 +137,7 @@ void CNailScript::Attack()
 
 	if (279 == CurAni->GetFrameIdx())
 	{
+		PlaySound(L"GruntMeleeAttack3",true);
 		OnOffAttackCol(true);
 	}
 
@@ -136,17 +147,17 @@ void CNailScript::Attack()
 
 	}
 
+	if (545 == CurAni->GetFrameIdx())
+	{
+		OnOffAttackCol(false, LAYER_TYPE::MONSTER_COL);
+	}
 
 	if (558 == CurAni->GetFrameIdx())
 	{
 		OnOffAttackCol(true);
+		PlaySound(L"MeleeBodyFall4", true);
 		TransColPos(Vec3(0.0f, 0.0f, 50.0f));
 		TransColScale(Vec3(350.0f, 350.0f, 100.0f));
-	}
-
-	if (545 == CurAni->GetFrameIdx())
-	{
-		OnOffAttackCol(false, LAYER_TYPE::MONSTER_COL);
 	}
 
 	if (562 == CurAni->GetFrameIdx())
@@ -194,10 +205,12 @@ void CNailScript::Attack()
 		if (RangeSearch(m_BackStepRange))
 		{
 			SetbJump(true);
+			Play_Sound(L"Grunt_Backstep4", 1, true);
 			ChangeState(MONSTERSTATE::JUMP, 0.02f, L"BackStep");
 		}
 		else if (false == RangeSearch(m_BackStepRange) && true == RangeSearch(m_NailAttackRange))
 		{
+			Play_Sound(L"Grunt_DashAttackVoice2", 1, true);
 			ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"NailAttackReady");
 		}
 		else if (false == RangeSearch(m_NailAttackRange) && true == RangeSearch(m_JumpAttackRange))
@@ -211,7 +224,7 @@ void CNailScript::Attack()
 			ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"JumpAttackReady");
 		}
 	}
-	else 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true
+	else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true
 		&& CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"JumpAttack")
 	{
 
@@ -219,10 +232,12 @@ void CNailScript::Attack()
 		if (RangeSearch(m_BackStepRange))
 		{
 			SetbJump(true);
+			Play_Sound(L"Grunt_Backstep4", 1, true);
 			ChangeState(MONSTERSTATE::JUMP, 0.005f, L"BackStep");
 		}
 		else if (false == RangeSearch(m_BackStepRange) && true == RangeSearch(m_NailAttackRange))
 		{
+			Play_Sound(L"Grunt_DashAttackVoice2", 1, true);
 			ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"NailAttackReady");
 		}
 		else if (false == RangeSearch(m_NailAttackRange) && true == RangeSearch(m_JumpAttackRange))
@@ -254,6 +269,7 @@ void CNailScript::Jump()
 		if (RangeSearch(m_NailAttackRange))
 		{
 			ResetBackStepInfo();
+			Play_Sound(L"Grunt_DashAttackVoice2", 1, true);
 			ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"NailAttackReady");
 		}
 		else if (false == RangeSearch(m_NailAttackRange) && true == RangeSearch(m_JumpAttackRange))
@@ -322,6 +338,7 @@ void CNailScript::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
+		Play_Sound(L"GruntTakeDamage", 1, true);
 		--m_MonsterInfo.Hp;
 
 		if (0 == m_MonsterInfo.Hp)
@@ -342,7 +359,7 @@ void CNailScript::OnCollisionEnter(CGameObject* _pOther)
 			}
 
 			m_bDamaged = false;
-
+			Play_Sound(L"GruntDeath1", 1, true);
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else

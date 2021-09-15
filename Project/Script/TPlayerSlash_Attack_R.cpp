@@ -94,6 +94,7 @@ void TPlayerSlash_Attack_R::update()
 
 void TPlayerSlash_Attack_R::Enter()
 {
+	GetScript()->Play_Sound(L"GreatSwordFinalSwing", 1, true, 0.2f);
 	m_Script = (CPlayerScript*)GetScript();
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
 	//Obj->MeshRender()->Activate(true);

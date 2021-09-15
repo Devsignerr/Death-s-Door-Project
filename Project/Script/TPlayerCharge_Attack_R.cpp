@@ -71,8 +71,10 @@ void TPlayerCharge_Attack_R::Enter()
 	m_IsChargeAttack = true;
 
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
-	Obj->MeshRender()->Activate(true);
+	//Obj->MeshRender()->Activate(true);
 	Obj->Collider3D()->Activate(true);
+
+	GetScript()->Play_Sound(L"GreatSwordHeavySwing1", 1, true, 0.3f);
 }
 
 void TPlayerCharge_Attack_R::Exit()

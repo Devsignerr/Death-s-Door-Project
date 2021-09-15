@@ -148,6 +148,7 @@ PS_OUT PS_PointLight(VS_DIR_OUT _in)
         //output.vDiffuse = float4(0.f, 0.f, 1.f, 1.f);        
         clip(-1);
     }       
+   
     
     //output.vDiffuse = float4(0.f, 1.f, 0.f, 1.f);
     

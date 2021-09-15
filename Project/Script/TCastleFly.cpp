@@ -19,6 +19,8 @@ void TCastleFly::update()
 		m_Script->TransColScale(Vec3(160000.0f, 20000.0f, 160000.0f));
 
 		CCameraScript::SetCameraShake(0.2f, 100.f, 10.f);
+
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerLand", true, 0.6f);
 	}
 	if (174 == CurAni->GetFrameIdx())
 	{
@@ -48,6 +50,8 @@ void TCastleFly::Enter()
 		m_Script = (CCastleScript*)GetScript();
 	m_Script->OnOffAttackCol(false, LAYER_TYPE::BOSS_COL);
 	m_Script->SetFlyCloudTime(0.8f);
+
+	((CCastleScript*)GetScript())->PlaySound(L"RedeemerTakeOff", true, 1.0f);	
 }
 
 void TCastleFly::Exit()

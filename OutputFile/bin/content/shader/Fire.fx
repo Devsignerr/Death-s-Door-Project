@@ -137,7 +137,6 @@ PS_OUT PS_Fire2(VTX_OUT _in)
         }
     }
     
-
   
     return output;
 }

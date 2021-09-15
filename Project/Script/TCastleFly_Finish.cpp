@@ -22,7 +22,9 @@ void TCastleFly_Finish::update()
 
 		CCameraScript::SetCameraShake(0.2f, 100.f, 10.f);
 
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerLand", true, 0.6f);
 	}
+
 	if (437 == CurAni->GetFrameIdx())
 	{
 		m_Script->TransColScale(Vec3(50000.0f, 30000.0f, 50000.0f));

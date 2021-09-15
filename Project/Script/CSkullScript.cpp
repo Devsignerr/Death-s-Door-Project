@@ -65,6 +65,7 @@ void CSkullScript::OnCollisionEnter(CGameObject* _pOther)
 			CurAni->Animator3D()->StopAnimation();
 
 			m_bDamaged = false;
+			Play_Sound(L"BruteDeath4");
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else
@@ -88,6 +89,8 @@ void CSkullScript::LongDistanceAttack()
 {
 	if (m_BulletLimit == false)
 	{
+		Play_Sound(L"Brute_ThrowLayer3", 1, true);
+
 		m_BulletLimit = true;
 		CGameObject* Obj = nullptr;
 
@@ -100,7 +103,7 @@ void CSkullScript::LongDistanceAttack()
 		Vec3 OffsetPos = GetOffsetFirePos(FirePos, m_fFrontOffset, m_fUpOffset, m_fRightOffset);
 
 		Obj->Transform()->SetLocalPos(OffsetPos);
-;
+
 		CSkullBullet* Script = (CSkullBullet*)Obj->GetScript();
 		Script->SetActive(true);
 
@@ -149,6 +152,17 @@ void CSkullScript::Chase()
 	// 초기 상태
 	// 플레이어가 공격 범위내에 들어온경우
 
+	Ptr<CSound> Sound =  Play_Sound(L"BruteStep3", 1, false, 0.2f);
+
+	m_SoundTimer += fDT;
+
+	if (0.75f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound->Stop();
+	}
+
+
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
@@ -171,6 +185,8 @@ void CSkullScript::Chase()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 	if (RangeSearch(m_MeleeAttackRange))
 	{
+		Play_Sound(L"BrutePrepAttackVoice2",1,true);
+		Play_Sound(L"BrutePrepAttack2", 1, true);
 		ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 	}
 
@@ -178,6 +194,7 @@ void CSkullScript::Chase()
 	{
 		if (false == RangeSearch(m_LongDistanceAttackRange))
 		{
+			
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 		}
 	}
@@ -187,12 +204,20 @@ void CSkullScript::Attack()
 {
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
-	if (260 == CurAni->GetFrameIdx() || 310 < CurAni->GetFrameIdx())
+
+	if (260 == CurAni->GetFrameIdx() )
 	{
+		PlaySound(L"BruteSwing1",true,0.5f);
 		OnOffAttackCol(true);
 	}
 
-	if (270 == CurAni->GetFrameIdx() || 320 < CurAni->GetFrameIdx())
+	else if (317 == CurAni->GetFrameIdx())
+	{
+		PlaySound(L"BruteSlam3", true, 0.5f);
+		OnOffAttackCol(true);
+	}
+
+	if (270 == CurAni->GetFrameIdx() || 317 < CurAni->GetFrameIdx())
 	{
 		OnOffAttackCol(false);
 	}
@@ -235,10 +260,14 @@ void CSkullScript::Attack()
 		{
 			if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee" && RangeSearch(m_MeleeAttack2Range))
 			{
+				Play_Sound(L"BrutePrepSlamVoice2", 1, true);
+				Play_Sound(L"BrutePrepAttack2", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee2");
 			}
 			else if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"Melee2" && RangeSearch(m_MeleeAttackRange))
 			{
+				Play_Sound(L"BrutePrepAttackVoice2", 1, true);
+				Play_Sound(L"BrutePrepAttack2", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 			}
 			else if (false == RangeSearch(m_MeleeAttackRange) && RangeSearch(m_LongDistanceAttackRange))
@@ -248,6 +277,7 @@ void CSkullScript::Attack()
 			}
 			else
 			{
+				
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 			}
 
@@ -260,15 +290,17 @@ void CSkullScript::Attack()
 
 		if (378 == CurAni->GetFrameIdx())
 		{
+		
 			LongDistanceAttack();
 		}
-
 
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
 			m_BulletLimit = false;
 			if (RangeSearch(m_MeleeAttackRange))
 			{
+				Play_Sound(L"BrutePrepAttackVoice2", 1, true);
+				Play_Sound(L"BrutePrepAttack2", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 			}
 			else

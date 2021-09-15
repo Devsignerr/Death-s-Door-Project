@@ -16,8 +16,12 @@ void TCastleLeftBack_HalfSpin::update()
 	if (520 == CurAni->GetFrameIdx())
 	{
 		m_Script->OnOffAttackCol(true);
+
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerSlam2", true, 0.3f);	
+
 		//m_Script->TransColPos(Vec3(60000.0f, -10000.0f, -25000.0f));
 	
+
 		if (!m_bImpacted)
 		{
 			CCameraScript::SetCameraShake(0.1f, 100.f, 6.f);
@@ -31,6 +35,12 @@ void TCastleLeftBack_HalfSpin::update()
 	{
 		((CCastleScript*)GetScript())->ActivateImpact();
 	}
+
+	if (528 == CurAni->GetFrameIdx())
+	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerKill_Detach1", false, 0.3f);
+	}
+	
 
 	if (534 == CurAni->GetFrameIdx())
 	{
@@ -47,6 +57,7 @@ void TCastleLeftBack_HalfSpin::update()
 			RotValue += fDT * (XM_PI + 1.0f);
 		}
 
+		((CCastleScript*)GetScript())->PlaySound(L"Redeemer180Scrape1", false, 0.3f);
 	}
 
 	//m_Script->RotateSysTem(0.5f);

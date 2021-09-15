@@ -1,5 +1,6 @@
 #pragma once
 #include "CBossScript.h"
+#include <queue>
 
 class CFSM;
 class CCrowScript : public CBossScript
@@ -31,6 +32,18 @@ private:
 	CROW_STATE					m_eState;
 	map<CROW_STATE, wstring>	m_mapState;
 	int							m_Hp;
+
+	std::queue<CGameObject*>	m_queueChain;
+	int							m_iChainCount;
+	CGameObject*			    m_pChainCreater;
+
+public:
+	CGameObject* GetChainCreater() { return m_pChainCreater; }
+	void SetChainCreater(CGameObject* _Obj) {m_pChainCreater = _Obj;}
+public:
+	void CreateChains();
+	CGameObject* GetChain();
+	void ReturnChain(CGameObject* _Obj);
 
 private:
 	void ChangeState(CROW_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);

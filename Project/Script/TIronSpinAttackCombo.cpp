@@ -37,7 +37,11 @@ void TIronSpinAttackCombo::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (690 == CurAni->GetFrameIdx())
+	{
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam1", true, 0.5f);
 		m_Script->OnOffAttackCol(true);
+	}
+		
 	if (692 == CurAni->GetFrameIdx())
 		m_Script->OnOffAttackCol(false);
 
@@ -75,6 +79,7 @@ void TIronSpinAttackCombo::Enter()
 
 void TIronSpinAttackCombo::Exit()
 {
+	((CIronmaceScript*)GetScript())->PlaySound(L"Revert3", true, 0.5f);
 }
 
 TIronSpinAttackCombo::TIronSpinAttackCombo()

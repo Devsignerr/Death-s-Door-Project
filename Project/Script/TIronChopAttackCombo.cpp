@@ -39,7 +39,11 @@ void TIronChopAttackCombo::update()
 	CIronmaceScript* Script = (CIronmaceScript*)GetScript();
 
 	if (661 == CurAni->GetFrameIdx())
+	{
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam2", true, 0.5f);
 		m_Script->OnOffAttackCol(true);
+	}
+		
 	if (663 == CurAni->GetFrameIdx())
 		m_Script->OnOffAttackCol(false);
 

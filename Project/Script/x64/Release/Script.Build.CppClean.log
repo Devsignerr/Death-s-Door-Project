@@ -21,7 +21,6 @@ c:\death-s-door-project\death-s-door-project\project\script\x64\release\cbatscri
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cattackimpactscript.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\canchor.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cactorscript.obj
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\cscenechange.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\crandommgrscript.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cprojectile.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cplayerscript.obj
@@ -39,9 +38,9 @@ c:\death-s-door-project\death-s-door-project\project\script\x64\release\cmapgimi
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cmapchange.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cironmacescript.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\chpbar.obj
+c:\death-s-door-project\death-s-door-project\project\script\x64\release\cfogscript.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cfiredamageparticle.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cfence.obj
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlefly_start.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlefly_finish.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlefly.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastledeath.obj
@@ -61,7 +60,7 @@ c:\death-s-door-project\death-s-door-project\project\script\x64\release\cskyboxs
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cskullscript.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cskullbullet.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\cscriptmgr.obj
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowrun.obj
+c:\death-s-door-project\death-s-door-project\project\script\x64\release\cscenechange.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowrightspin.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowleftspin.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowjump.obj
@@ -81,7 +80,7 @@ c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlel
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlelaser_ready.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlelaser_finish.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlefly_stay.obj
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\tironspinattackcombo.obj
+c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcastlefly_start.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tironspinattack.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tironrunattack.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tironjumpready.obj
@@ -101,7 +100,7 @@ c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowspi
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowslidingrot.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowslidingready.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowsliding.obj
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerladder_top.obj
+c:\death-s-door-project\death-s-door-project\project\script\x64\release\tcrowrun.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerladder_down.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayeridle.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerhookfly.obj
@@ -121,17 +120,14 @@ c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerb
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerbomb.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerarrow.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tironwalk.obj
+c:\death-s-door-project\death-s-door-project\project\script\x64\release\tironspinattackcombo.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerslash_attack_r.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerslash_attack_l.obj
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerrun.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerrollslash.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerroll.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayermagic.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerladder_up.obj
-c:\death-s-door-project\death-s-door-project\external\library\script\script.lib
+c:\death-s-door-project\death-s-door-project\project\script\x64\release\tplayerladder_top.obj
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\script.tlog\cl.command.1.tlog
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\script.tlog\cl.read.1.tlog
 c:\death-s-door-project\death-s-door-project\project\script\x64\release\script.tlog\cl.write.1.tlog
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\script.tlog\lib-link.read.1.tlog
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\script.tlog\lib-link.write.1.tlog
-c:\death-s-door-project\death-s-door-project\project\script\x64\release\script.tlog\lib.command.1.tlog

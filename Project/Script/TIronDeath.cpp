@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "TIronDeath.h"
 #include "CIronmaceScript.h"
+#include "CDoorScript.h"
 
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CLayer.h>
 
 #include <Engine/CAnimator3D.h>
 #include <Engine/CTimeMgr.h>
@@ -56,8 +60,23 @@ void TIronDeath::update()
 				childvec[i]->Collider3D()->Activate(false);
 		}
 
-		if (3.0f < m_PaperBurnTime)
+		if (2.0f < m_PaperBurnTime)
 		{
+			vector<CGameObject*>& Temp = (vector<CGameObject*>&)CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::MAP_GIMIC)->GetObjects();
+
+			vector<CGameObject*>::iterator iter = Temp.begin();
+
+			for (; iter != Temp.end(); ++iter)
+			{
+				if ((*iter)->GetScript())
+				{
+					if (((CMapGimic*)(*iter)->GetScript())->GetGimicType() == GIMICTYPE::DOOR)
+					{
+						((CDoorScript*)(*iter)->GetScript())->Spawn();
+					}
+				}
+			}
+
 			CScript::DeleteObject(GetObj());
 		}
 	}
@@ -74,10 +93,16 @@ void TIronDeath::Enter()
 
 	if (nullptr == m_PaperBurnTex)
 		m_PaperBurnTex = CResMgr::GetInst()->FindRes<CTexture>(L"PaperBurnTexture");
+
+	((CIronmaceScript*)GetScript())->PlaySound(L"KnightDeath", true, 0.5f);
+
+
+
 }
 
 void TIronDeath::Exit()
 {
+	
 }
 
 TIronDeath::TIronDeath()

@@ -270,6 +270,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CCrowBullet.h" />
     <ClInclude Include="CCrowEggBullet.h" />
     <ClInclude Include="CCrowScript.h" />
+    <ClInclude Include="CDoorScript.h" />
     <ClInclude Include="CEffectScript.h" />
     <ClInclude Include="CElevator.h" />
     <ClInclude Include="CEnding.h" />
@@ -351,6 +352,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="TIronChopAttackEnd.h" />
     <ClInclude Include="TIronCutScene.h" />
     <ClInclude Include="TIronDeath.h" />
+    <ClInclude Include="TIronIdle.h" />
     <ClInclude Include="TIronJumpAttack.h" />
     <ClInclude Include="TIronJumpAttack2.h" />
     <ClInclude Include="TIronJumpFinish.h" />
@@ -402,6 +404,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CCrowBullet.cpp" />
     <ClCompile Include="CCrowEggBullet.cpp" />
     <ClCompile Include="CCrowScript.cpp" />
+    <ClCompile Include="CDoorScript.cpp" />
     <ClCompile Include="CEffectScript.cpp" />
     <ClCompile Include="CElevator.cpp" />
     <ClCompile Include="CEnding.cpp" />
@@ -489,6 +492,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="TIronChopAttackEnd.cpp" />
     <ClCompile Include="TIronCutScene.cpp" />
     <ClCompile Include="TIronDeath.cpp" />
+    <ClCompile Include="TIronIdle.cpp" />
     <ClCompile Include="TIronJumpAttack.cpp" />
     <ClCompile Include="TIronJumpAttack2.cpp" />
     <ClCompile Include="TIronJumpFinish.cpp" />

@@ -120,18 +120,18 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\Animator3DGUI.cpp(32
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\Animator3DGUI.cpp(450,63): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\Animator3DGUI.cpp(865,67): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   BtnGUI.cpp
-  CameraGUI.cpp
   CCameraEx.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\CCameraEx.cpp(37,65): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   CGameObjectEx.cpp
   CGridScript.cpp
   CImGUIMgr.cpp
-  Collider2DGUI.cpp
-  Collider3DGUI.cpp
-  ComponentGUI.cpp
   CSaveLoadMgr.cpp
   CToolCamScript.cpp
   CToolObjMgr.cpp
+  CameraGUI.cpp
+  Collider2DGUI.cpp
+  Collider3DGUI.cpp
+  ComponentGUI.cpp
   DataGUI.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\DataGUI.cpp(148,27): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -175,6 +175,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\DataGUI.cpp(121): me
           ]
   DebugGUI.cpp
   FrustumGUI.cpp
+  GUI.cpp
   HierachyGUI.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
@@ -217,12 +218,13 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\HierachyGUI.cpp(60):
           ]
   ImGuizmo.cpp
   InspectorGUI.cpp
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\InspectorGUI.cpp(257,41): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\InspectorGUI.cpp(275,66): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Light3DGUI.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\InspectorGUI.cpp(261,41): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\InspectorGUI.cpp(275,62): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
   컴파일하고 있습니다...
+  Light3DGUI.cpp
   ListGUI.cpp
+  MRTGUI.cpp
   MaterialGUI.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'const wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
@@ -267,7 +269,7 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\MaterialGUI.cpp(89):
 C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\MenuGUI.cpp(64,55): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\MenuGUI.cpp(102,46): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\MenuGUI.cpp(286,49): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\MenuGUI.cpp(290,49): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   MeshRenderGUI.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
@@ -347,29 +349,27 @@ C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\MeshRenderGUI.cpp(73
               _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-  MRTGUI.cpp
   Particle3DGUI.cpp
   PrefabGUI.cpp
 C:\Death-s-Door-Project\Death-s-Door-Project\Project\Client\PrefabGUI.cpp(46,51): warning C4267: '초기화 중': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   ResGUI.cpp
   ResInfoGUI.cpp
   ScriptGUI.cpp
+  TestScene.cpp
+C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   TransformGUI.cpp
-  GUI.cpp
+  TreeCtrl.cpp
+  UIGUI.cpp
   imgui.cpp
   imgui_demo.cpp
   imgui_draw.cpp
   imgui_impl_dx11.cpp
   imgui_impl_win32.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
   imgui_tables.cpp
   imgui_widgets.cpp
   main.cpp
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  TestScene.cpp
-C:\Death-s-Door-Project\Death-s-Door-Project\External\Include\Engine\CAnimator3D.h(56,26): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  TreeCtrl.cpp
-  UIGUI.cpp
   코드를 생성하고 있습니다...
   LINK : C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\Client.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
 DirectXTex_debug.lib(BC.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(BC.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
@@ -378,7 +378,7 @@ DirectXTex_debug.lib(BC6HBC7.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'Di
 DirectXTex_debug.lib(DirectXTexCompress.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(DirectXTexCompress.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 DirectXTex_debug.lib(DirectXTexConvert.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(DirectXTexConvert.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 DirectXTex_debug.lib(DirectXTexD3D11.obj) : warning LNK4099: '' PDB를 'DirectXTex_debug.lib(DirectXTexD3D11.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-DirectXTex_debug.lib(DirectXTexDDS.obj) : warning LNK4099: '' PDB를 'DirectXTex_debug.lib(DirectXTexDDS.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex_debug.lib(DirectXTexDDS.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(DirectXTexDDS.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 DirectXTex_debug.lib(DirectXTexImage.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(DirectXTexImage.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 DirectXTex_debug.lib(DirectXTexMipMaps.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(DirectXTexMipMaps.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
 DirectXTex_debug.lib(DirectXTexTGA.obj) : warning LNK4099: 'DirectXTex.pdb' PDB를 'DirectXTex_debug.lib(DirectXTexTGA.obj)' 또는 'C:\Death-s-Door-Project\Death-s-Door-Project\OutputFile\bin_debug\DirectXTex.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.

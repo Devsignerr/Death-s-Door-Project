@@ -13,6 +13,7 @@ CCrowBatBullet
 CCrowBullet
 CCrowEggBullet
 CCrowScript
+CDoorScript
 CEffectScript
 CElevator
 CEnding

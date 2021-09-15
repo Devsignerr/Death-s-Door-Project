@@ -27,6 +27,8 @@ void TPlayerBomb::update()
 
 	if (KEY_NONE(KEY_TYPE::RBTN))
 	{
+		GetScript()->Play_Sound(L"BombFire1", 1, true, 0.2f);
+
 		GetFSM()->ChangeState(L"Bomb_Finish", 0.03f, L"Bomb_Finish", false);
 	}
 }
@@ -36,6 +38,9 @@ void TPlayerBomb::Enter()
 	m_Script = (CPlayerScript*)GetScript();
 	
 	CPlayerScript::m_Weapon->MeshRender()->Activate(false);
+
+	GetScript()->Play_Sound(L"BombCharge", 1, true, 0.2f);
+
 }
 
 void TPlayerBomb::Exit()

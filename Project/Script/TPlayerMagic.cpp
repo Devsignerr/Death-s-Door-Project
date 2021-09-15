@@ -26,6 +26,8 @@ void TPlayerMagic::Attack()
 		CPlayerScript::m_pMagic = nullptr;
 
 		m_BulletLimit = true;
+
+		GetScript()->Play_Sound(L"FireBallFire1", 1, true, 0.2f);
 	}
 }
 
@@ -60,6 +62,8 @@ void TPlayerMagic::Enter()
 	m_Script = (CPlayerScript*)GetScript();
 
 	CPlayerScript::m_Weapon->MeshRender()->Activate(false);
+
+	GetScript()->Play_Sound(L"FireBallCharge1", 1, true, 0.2f);
 }
 
 void TPlayerMagic::Exit()

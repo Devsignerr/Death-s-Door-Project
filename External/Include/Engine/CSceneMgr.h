@@ -11,7 +11,6 @@ class CSceneMgr
 	SINGLE(CSceneMgr);
 private:
 	CScene* m_pCurScene;
-
 public:
 	void init();
 	void progress();

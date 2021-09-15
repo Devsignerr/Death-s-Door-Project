@@ -390,9 +390,9 @@ void CPlayerScript::ClearAllProjectile()
 
 		m_pMagic->RegisterAsParentObj();
 
-		m_pMagic->ParticleSystem()->Destroy();
-		
 
+		m_pMagic->ParticleSystem()->Destroy();
+	
 		m_pMagic = nullptr;
 	}
 
@@ -449,7 +449,11 @@ void CPlayerScript::ClearAllProjectile()
 		m_pHorizonSlashL->SetAllMeshrenderActive(false);
 	}
 	
-
+	if (nullptr != m_pRollSlash)
+	{
+		((CSlashEffect*)CPlayerScript::m_pRollSlash->GetScript())->SetActive(false);
+		m_pRollSlash->SetAllMeshrenderActive(false);
+	}
 
 
 }
@@ -550,11 +554,6 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
 
-	//if ((int)LAYER_TYPE::ITEM == Obj->GetLayerIndex())
-	//{
-	//	ChangeState(PLAYER_STATE::GET_ITEM, 0.3f, L"GetItem", false);
-	//}
-
 	if ((int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::MONSTER_BULLET_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::BOSS_ATTACK_COL == Obj->GetLayerIndex() ||
@@ -568,7 +567,7 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 	}
 
 
-	if ((int)LAYER_TYPE::MONSTER_COL == Obj->GetLayerIndex())
+	if ((int)LAYER_TYPE::MONSTER_COL == Obj->GetLayerIndex() || (int)LAYER_TYPE::BOSS_COL == Obj->GetLayerIndex())
 	{
 		CCameraScript::SetCameraShake(0.2f, 100.f, 3.f);
 
@@ -582,6 +581,8 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 		Vec3 vDiff = OtherPos - GetPlayerPos();
 
 		ActivateImpactParticle(Vec4(0.f,0.f,0.f,0.f),OtherPos, -vDiff, 25, 20);
+
+		Play_Sound(L"EnemyHit1", 1, true, 0.5f);		
 	}
 
 	else if ((UINT)LAYER_TYPE::MAP_GIMIC_COL == Obj->GetLayerIndex() || (UINT)LAYER_TYPE::WALL_COL == Obj->GetLayerIndex())

@@ -16,6 +16,8 @@ void TCastleLaser_Ready::CreateLaser()
 {
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 
+
+
 	if (nullptr == m_Laser)
 	{
 		m_Laser = new CGameObject;
@@ -94,12 +96,20 @@ void TCastleLaser_Ready::update()
 		if (false == ((CCastleLaser*)m_Laser->GetScript())->IsActive())
 		{
 			((CCastleLaser*)m_Laser->GetScript())->SetActive(true);
+			((CCastleScript*)GetScript())->PlaySound(L"RedeemerLaserCharge", true, 1.0f);
 			m_Laser->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		}
 			
 		// 레이저 조준
 		if (m_LaserAimTime > 0.5f)
 		{
+			Ptr<CSound> Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerLaserLong");
+
+			if (Sound == nullptr)
+				Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerLaserLong", L"sound\\Allsound\\RedeemerLaserLong.ogg");
+
+			Sound->Play(0, false, 0.3f);
+
 			m_LaserPoint->ParticleSystem()->SetMaxCount(100);
 
 			Vec3 OriginRot = m_LaserOrigin->Transform()->GetLocalRot();
@@ -243,6 +253,9 @@ void TCastleLaser_Ready::Enter()
 	Vec3 RedeemRot = GetObj()->Transform()->GetLocalRot();
 
 	//m_LaserOrigin->Transform()->SetLocalRot()
+
+	((CCastleScript*)GetScript())->PlaySound(L"RedeemerIntroPose", true, 0.4f);
+	
 }
 
 void TCastleLaser_Ready::Exit()
@@ -254,6 +267,15 @@ void TCastleLaser_Ready::Exit()
 	m_LaserPoint->ParticleSystem()->SetMaxCount(0);
 
 	((CCastleLaser*)m_Laser->GetScript())->SetActive(false);
+
+	Ptr<CSound> Sound = CResMgr::GetInst()->FindRes<CSound>(L"RedeemerLaserLong");
+
+	if (Sound == nullptr)
+		Sound = CResMgr::GetInst()->Load<CSound>(L"RedeemerLaserLong", L"sound\\Allsound\\RedeemerLaserLong.ogg");
+
+	Sound->Stop();
+
+	((CCastleScript*)GetScript())->PlaySound(L"RedeemerRevertPose", true, 0.3f);
 }
 
 TCastleLaser_Ready::TCastleLaser_Ready()

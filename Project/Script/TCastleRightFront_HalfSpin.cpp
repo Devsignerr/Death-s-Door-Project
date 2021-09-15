@@ -18,6 +18,7 @@ void TCastleRightFront_HalfSpin::update()
 
 	if (605 == CurAni->GetFrameIdx())
 	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerSlam1", true, 0.3f);
 		m_Script->OnOffAttackCol(true);
 		//m_Script->TransColPos(Vec3(-60000.0f, -10000.0f, 25000.0f));
 
@@ -36,6 +37,11 @@ void TCastleRightFront_HalfSpin::update()
 
 	}
 
+	if (611 == CurAni->GetFrameIdx())
+	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerKill_Detach4", false, 0.3f);
+	}
+
 	if (619 == CurAni->GetFrameIdx())
 	{
 		m_Script->OnOffAttackCol(false);
@@ -49,6 +55,8 @@ void TCastleRightFront_HalfSpin::update()
 			Rot.y -= fDT * (XM_PI + 1.0f);
 			RotValue += fDT * (XM_PI + 1.0f);
 		}
+
+		((CCastleScript*)GetScript())->PlaySound(L"Redeemer180Scrape4", false, 0.3f);
 
 	}
 

@@ -27,6 +27,7 @@ public:
 public:
     bool IsScaleTrans() { return m_IsOrthoScaleTrans; }
     void LookAtPlayer();
+    void LookAtPlayer(Vec3 _PlayerPos);
 public:
 
     void CutSceneCamera();

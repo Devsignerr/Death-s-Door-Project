@@ -58,6 +58,7 @@ void TPlayerCharge_R::update()
 
 void TPlayerCharge_R::Enter()
 {
+	GetScript()->Play_Sound(L"SwordCharge", 1, true, 0.1f);
 }
 
 void TPlayerCharge_R::Exit()

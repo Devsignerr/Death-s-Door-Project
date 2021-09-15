@@ -37,6 +37,8 @@ void CSpiderScript::Idle()
 {
 	if (RangeSearch(1000.0f))
 	{
+		Play_Sound(L"LurkerDodge1", 1, true);
+		Play_Sound(L"LurkerDogeWoosh5", 1, true);
 		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"ReadyAction");
 	}
 }
@@ -48,6 +50,17 @@ void CSpiderScript::Move()
 	// 플레이거가 가까이 있는 경우 게걸음
 	// 플레이어가 특정 범위 안에 있는경우 공격
 	// 아마 벽에 일정시간 부딛히는 경우 점프하는것 같다	
+
+
+	Ptr<CSound> Sound = Play_Sound(L"LurkerStep2",1,false,0.1f);
+
+	m_SoundTimer += fDT;
+
+	if (0.35f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound->Stop();
+	}
 
 	MonsterRotateSystem(m_RotSpeed);
 
@@ -133,6 +146,7 @@ void CSpiderScript::Move()
 			if (RangeSearch(300.0f))
 			{
 				SetMonsterJumpInfo(0.6f, 1000.0f);
+				Play_Sound(L"LurkerDodgeWoosh1", 1, true);
 				ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep");
 			}
 		}
@@ -163,6 +177,7 @@ void CSpiderScript::Move()
 				m_MoveCount = 0;
 				m_fTheta = -XM_PI / 2.f;
 				m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
+				Play_Sound(L"LurkerPrepAttack1", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 			}
 		}
@@ -187,6 +202,11 @@ void CSpiderScript::ReadyAction()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (189 == CurAni->GetFrameIdx())
+	{
+		PlaySound(L"LurkerLand4", true);
+	}
+
 	// 애니메이션 끝나면 
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
@@ -195,6 +215,7 @@ void CSpiderScript::ReadyAction()
 		if (RangeSearch(m_BackStepRange))
 		{
 			SetMonsterJumpInfo(0.6f, 1000.0f);
+			Play_Sound(L"LurkerDodgeWoosh1", 1, true);
 			ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep");
 		}
 		else if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
@@ -203,6 +224,7 @@ void CSpiderScript::ReadyAction()
 			{
 				m_fTheta = -XM_PI / 2.f;
 				m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
+				Play_Sound(L"LurkerPrepAttack1", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 				Focus = false;
 			}
@@ -247,6 +269,7 @@ void CSpiderScript::Attack()
 
 	if (158 == CurAni->GetFrameIdx())
 	{
+		PlaySound(L"LurkerAttack1", true);
 		OnOffAttackCol(true);
 	}
 
@@ -284,6 +307,11 @@ void CSpiderScript::Jump()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (208 == CurAni->GetFrameIdx())
+	{
+		PlaySound(L"LurkerLand2", true);
+	}
+
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		if (false == RangeSearch(m_BackStepRange) && RangeSearch(m_FrontMoveRange))
@@ -298,6 +326,7 @@ void CSpiderScript::Jump()
 			{
 				m_fTheta = -XM_PI / 2.f;
 				m_AttackDir = Transform()->GetLocalDir(DIR_TYPE::UP);
+				Play_Sound(L"LurkerPrepAttack1",1,true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 			}
 		}
@@ -361,6 +390,7 @@ void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
+		Play_Sound(L"LurkerTakeDamage1", 1, true);
 		--m_MonsterInfo.Hp;
 
 		if (0 == m_MonsterInfo.Hp)
@@ -382,6 +412,7 @@ void CSpiderScript::OnCollisionEnter(CGameObject* _pOther)
 
 			m_bDamaged = false;
 
+			Play_Sound(L"LurkerDeath1", 1, true);
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else

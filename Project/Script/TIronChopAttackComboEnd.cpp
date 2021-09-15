@@ -11,7 +11,11 @@ void TIronChopAttackComboEnd::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (603 == CurAni->GetFrameIdx())
+	{
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam4", true, 0.5f);
 		m_Script->OnOffAttackCol(true);
+	}
+	
 	if (605 == CurAni->GetFrameIdx())
 		m_Script->OnOffAttackCol(false);
 
@@ -33,6 +37,8 @@ void TIronChopAttackComboEnd::Enter()
 {
 	if (nullptr == m_Script)
 		m_Script = (CIronmaceScript*)GetScript();
+
+	((CIronmaceScript*)GetScript())->PlaySound(L"Revert3", true, 0.5f);
 }
 
 void TIronChopAttackComboEnd::Exit()

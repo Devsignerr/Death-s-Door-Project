@@ -57,7 +57,7 @@ void TCastleDeath::update()
 					childvec[i]->Collider3D()->Activate(false);
 			}
 
-			if (3.0f < m_PaperBurnTime)
+			if (2.0f < m_PaperBurnTime)
 			{
 				CScript::DeleteObject(GetObj());
 			}
@@ -76,6 +76,8 @@ void TCastleDeath::Enter()
 
 	if (nullptr == m_PaperBurnTex)
 		m_PaperBurnTex = CResMgr::GetInst()->FindRes<CTexture>(L"PaperBurnTexture");
+
+	((CCastleScript*)GetScript())->PlaySound(L"KnightDeath", true, 0.5f);
 }
 
 void TCastleDeath::Exit()

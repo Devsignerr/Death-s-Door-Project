@@ -11,7 +11,11 @@ void TIronJumpAttack2::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (631 == CurAni->GetFrameIdx())
+	{
 		m_Script->OnOffAttackCol(true);
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam1", true, 0.5f);
+	}
+		
 	if (633 == CurAni->GetFrameIdx())
 		m_Script->OnOffAttackCol(false);
 
@@ -32,6 +36,7 @@ void TIronJumpAttack2::Enter()
 
 void TIronJumpAttack2::Exit()
 {
+	((CIronmaceScript*)GetScript())->PlaySound(L"Revert3", true, 0.5f);
 }
 
 TIronJumpAttack2::TIronJumpAttack2()

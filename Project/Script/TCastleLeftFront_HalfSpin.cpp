@@ -18,6 +18,8 @@ void TCastleLeftFront_HalfSpin::update()
 
 	if (670 == CurAni->GetFrameIdx())
 	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerSlam1", true, 0.3f);
+
 		m_Script->OnOffAttackCol(true);
 
 		if (!m_bImpacted)
@@ -32,6 +34,11 @@ void TCastleLeftFront_HalfSpin::update()
 	if (670 < CurAni->GetFrameIdx() && CurAni->GetFrameIdx() < 684)
 	{
 		((CCastleScript*)GetScript())->ActivateImpact();
+	}
+
+	if (677 == CurAni->GetFrameIdx())
+	{
+		((CCastleScript*)GetScript())->PlaySound(L"RedeemerKill_Detach2", false, 0.3f);
 	}
 
 
@@ -49,6 +56,7 @@ void TCastleLeftFront_HalfSpin::update()
 			RotValue += fDT * (XM_PI + 1.0f);
 		}
 
+		((CCastleScript*)GetScript())->PlaySound(L"Redeemer180Scrape2", false, 0.3f);
 	}
 
 	//m_Script->RotateSysTem(0.5f);

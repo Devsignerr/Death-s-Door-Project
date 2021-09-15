@@ -44,6 +44,7 @@ void CPlantScript::Idle()
 
 		if (RangeSearch(m_AttackRange))
 		{
+			Play_Sound(L"FirePlantCharge2",1,true);
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Attack");
 		}
 
@@ -58,6 +59,7 @@ void CPlantScript::Attack()
 
 	if (89 == CurAni->GetFrameIdx())
 	{
+		PlaySound(L"FirePlantFire1", 1, true);
 		LongDistanceAttack();
 	}
 
@@ -194,6 +196,8 @@ void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
+		Play_Sound(L"FirePlantDamageNew1",1,true);
+
 		--m_MonsterInfo.Hp;
 
 		if (0 == m_MonsterInfo.Hp)
@@ -215,7 +219,7 @@ void CPlantScript::OnCollisionEnter(CGameObject* _pOther)
 
 
 			m_bDamaged = false;
-
+			Play_Sound(L"FirePlantDeath3", 1, true);
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else

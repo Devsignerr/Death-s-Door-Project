@@ -30,6 +30,7 @@
 #include <Script\CSkyBoxScript.h>
 #include <Script/CCameraScript.h>
 #include <Script/CMemoryPoolScript.h>
+#include <Script/CFadeScript.h>
 
 #include<Engine/CLayer.h>
 
@@ -38,11 +39,51 @@ void CreateTestScene()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
-	// Scene Load
-	//CSaveLoadMgr::LoadScene(pCurScene, L"scene\\TestScene.scene");
-	//return;
+	//Scene Load
+	//CSaveLoadMgr::LoadScene(pCurScene, L"scene\\test1234.scene");
+
 
 	CGameObject* pObj = nullptr;
+	// =================
+	// UI Camera Object
+	// ==================
+	//pObj = new CGameObject;
+	//pObj->SetName(L"UI Camera Object");
+	//pObj->AddComponent(new CTransform);
+	//pObj->AddComponent(new CCamera);
+	//
+	//pObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	//pObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	//pObj->Camera()->SetCameraType(CAMERA_TYPE::UI_CAM);
+	//pObj->Camera()->SetFar(1000.f);
+	//CRenderMgr::GetInst()->RegisterUICamera(pObj->Camera());
+	//
+	////playercol - monsterattackcol
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_ATTACK_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::WALL_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::WALL_COL);
+	//
+	//// playerattackcol - monstercol
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MONSTER_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::SCENE_CHANGE_COL);
+	//
+	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
+	//
+	//
+	//pCurScene->awake();
+	//pCurScene->SetState(SCENE_STATE::PLAY);
+	//return;
+
+	//CGameObject* pObj = nullptr;
 
 	// Texture ·Îµù 
 	Ptr<CTexture> pSkyBoxTex = CResMgr::GetInst()->Load<CTexture>(L"SkyBox_01", L"texture\\skybox\\Sky02.jpg");
@@ -135,6 +176,7 @@ void CreateTestScene()
 	
 	pPostEffect->AddComponent(new CTransform);
 	pPostEffect->AddComponent(new CMeshRender);
+	pPostEffect->AddComponent(new CFadeScript);
 	
 	pPostEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 100.f));
 	pPostEffect->Transform()->SetLocalScale(Vec3(5500.f, 3300.f, 1.f));
@@ -246,7 +288,7 @@ void CreateTestScene()
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
-
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::SCENE_CHANGE_COL);
 
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
 	pCurScene->awake();

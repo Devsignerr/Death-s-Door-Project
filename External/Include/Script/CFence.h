@@ -17,6 +17,7 @@ private:
 private:
 	Vec3			m_DestPos;
 	CGameObject* m_FenceWall;
+	bool			m_PrevOpenCheck;
 private:
 	void CreateWallCol();
 

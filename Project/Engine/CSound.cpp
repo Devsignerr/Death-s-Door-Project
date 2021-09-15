@@ -2,6 +2,7 @@
 #include "CSound.h"
 
 #include "CResMgr.h"
+#include "CTimeMgr.h"
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype
 	, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbacktype
@@ -39,13 +40,13 @@ CSound::~CSound()
 	}
 }
 
-void CSound::Play(int _iRoopCount, bool _bOverlap)
+void CSound::Play(int _iRoopCount, bool _bOverlap, float _Volume)
 {
 	if (_iRoopCount <= -1)
 	{
 		assert(nullptr);
 	}
-		
+
 	// 재생되고 있는 채널이 있는데, 중복재생을 허용하지 않았다 -> 재생 안함
 	if (!_bOverlap && !m_listChannel.empty())
 	{
@@ -57,6 +58,7 @@ void CSound::Play(int _iRoopCount, bool _bOverlap)
 	FMOD::Channel* pChannel = nullptr;
 	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
 
+	pChannel->setVolume(_Volume);
 	pChannel->setCallback(CHANNEL_CALLBACK);
 	pChannel->setUserData(this);
 
@@ -73,7 +75,7 @@ void CSound::Stop()
 	while (!m_listChannel.empty())
 	{
 		iter = m_listChannel.begin();
-		(*iter)->stop();		
+		(*iter)->stop();
 	}
 }
 

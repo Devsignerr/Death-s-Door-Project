@@ -26,7 +26,8 @@ private:
 	vector<CGameObject*>		m_AllRect;
 	std::queue<COLLIDERECTINFO> m_CollideRectInfo;
 	float						m_StopTime;
-
+	bool						m_PreStopCheck;
+	float						m_SoundTimer;
 private:
 	void LaserCreate();
 	void CalLaserLength(bool _bRight, float _Dist, CGameObject* _Laser, CGameObject* _LaserCol);

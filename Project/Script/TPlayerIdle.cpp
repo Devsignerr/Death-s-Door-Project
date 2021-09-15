@@ -56,6 +56,7 @@ void TPlayerIdle::update()
 
 		Vec3 Pos = m_Script->GetMouseClickPos();
 		m_Script->RotatetoClick(Pos);
+		
 		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::SLASH_ATTACK_L, 0.1f, L"Slash_L", false);
 	}
 
@@ -91,7 +92,9 @@ void TPlayerIdle::update()
 			CPlayerScript::m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 150.f, -10.f));
 			CPlayerScript::m_pArrow->SetAllMeshrenderActive(true);
 			CPlayerScript::m_pArrow->SetAllColliderActive(true);
+
 			GetObj()->AddChild(CPlayerScript::m_pArrow);
+
 			
 			break;
 		case PLAYER_PROJECTILE_TYPE::MAGIC:
@@ -107,7 +110,9 @@ void TPlayerIdle::update()
 			 CPlayerScript::m_pMagic->ParticleSystem()->Activate(true);
 			 CPlayerScript::m_pMagic->SetAllColliderActive(true);
 
-			GetObj()->AddChild(CPlayerScript::m_pMagic);
+
+			GetObj()->AddChild(CPlayerScript::m_pMagic);	
+
 		}
 		
 			break;
@@ -122,7 +127,9 @@ void TPlayerIdle::update()
 			CPlayerScript::m_pBomb->ParticleSystem()->Activate(true);
 			CPlayerScript::m_pBomb->SetAllColliderActive(true);
 
+
 			GetObj()->AddChild(CPlayerScript::m_pBomb);
+
 
 			break;
 		case PLAYER_PROJECTILE_TYPE::HOOK:
@@ -134,7 +141,10 @@ void TPlayerIdle::update()
 			}
 			CPlayerScript::m_pHook->Transform()->SetLocalPos(Vec3(0.f, 150.f, -40.f));
 
+
 			GetObj()->AddChild(CPlayerScript::m_pHook);
+
+		
 
 			break;
 		default:

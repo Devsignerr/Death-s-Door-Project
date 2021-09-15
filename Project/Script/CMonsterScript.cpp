@@ -10,12 +10,26 @@ CMonsterScript::CMonsterScript()
 	: m_CurState(MONSTERSTATE::IDLE)
 	, m_MonsterJumpInfo{}
 	, m_PaperBurnTime(0.0f)
+	, m_SoundTimer(0.0f)
+	, m_SoundCheck(false)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::MONSTERSCRIPT;
 }
 
 CMonsterScript::~CMonsterScript()
 {
+}
+
+void CMonsterScript::PlaySound(wstring _wstr, bool _bOverlap, float _Volume)
+{
+	if (false == m_SoundCheck)
+	{
+		m_SoundCheck = true;
+		m_iPrevSoundFrame = Animator3D()->GetFrameIdx();
+		
+		Play_Sound(_wstr, 1, _bOverlap, _Volume);
+
+	}
 }
 
 Vec3 CMonsterScript::GetOffsetFirePos(Vec3 _Pos, float _fFrontOffset, float _fUpOffset, float _fRightOffset)
@@ -273,6 +287,15 @@ void CMonsterScript::awake()
 
 void CMonsterScript::update()
 {
+	if (m_SoundCheck == true)
+	{
+		int FrameIdx = Animator3D()->GetFrameIdx();
+		if (FrameIdx != m_iPrevSoundFrame)
+		{
+			m_SoundCheck = false;
+		}
+	}
+
 	CActorScript::update();
 }
 

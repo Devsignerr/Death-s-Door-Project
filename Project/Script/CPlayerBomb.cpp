@@ -54,6 +54,7 @@ void CPlayerBomb::update()
 
 void CPlayerBomb::OnCollisionEnter(CGameObject* _pOther)
 {
+	Play_Sound(L"BombFullyCharged", 1, true, 0.5f);
 	m_bDestroyed = true;
 }
 

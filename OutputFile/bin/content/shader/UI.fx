@@ -1,6 +1,9 @@
 #ifndef _UI
 #define _UI
 
+#define FADETYPE     g_int_0
+#define FADETIME      g_float_0
+
 #include "value.fx"
 #include "std3d.fx"
 
@@ -30,8 +33,10 @@ float4 PS_UI(VTX_OUT _in) : SV_Target
         
         if (vObjectColor.a == 0.0f)
             clip(-1);
-
     }
+    
+  
+    vObjectColor = Fade_In_Out(vObjectColor, g_int_0, g_float_0);
     
     return vObjectColor;
 }

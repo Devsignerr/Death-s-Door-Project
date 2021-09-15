@@ -11,7 +11,11 @@ void TIronSpinAttack::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (528 == CurAni->GetFrameIdx())
+	{
+		((CIronmaceScript*)GetScript())->PlaySound(L"KnightSlam4", true, 0.5f);
 		m_Script->OnOffAttackCol(true);
+	}
+		
 	if (530 == CurAni->GetFrameIdx())
 		m_Script->OnOffAttackCol(false);
 
@@ -29,6 +33,9 @@ void TIronSpinAttack::Enter()
 {
 	if (nullptr == m_Script)
 		m_Script = (CIronmaceScript*)GetScript();
+
+	((CIronmaceScript*)GetScript())->PlaySound(L"KnightPrep180Slam1", true, 0.5f);
+	
 }
 
 void TIronSpinAttack::Exit()

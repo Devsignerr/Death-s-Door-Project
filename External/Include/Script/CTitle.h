@@ -7,10 +7,13 @@ class CTitle :
 {
 private:
     CGameObject* m_TitleFont;
-    Vec3            m_FontPos;
-    Vec3            m_FontHalfScale;
-    Vec3            m_FontMinRange;
-    Vec3            m_FontMaxRange;
+    CGameObject* m_Title;
+
+   bool          m_Fade;
+   int           m_FadeType;
+   float         m_Time;
+
+   
 public:
     virtual void awake();
     virtual void update();

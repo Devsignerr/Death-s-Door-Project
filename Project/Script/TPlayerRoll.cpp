@@ -58,16 +58,18 @@ void TPlayerRoll::update()
 
 void TPlayerRoll::Enter()
 {
+	GetScript()->Play_Sound(L"NewRoll1", 1, true, 0.3f);
+
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerCol",(UINT)LAYER_TYPE::PLAYER_COL);
 	//Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 0.0f, 0.5f));
-	//Obj->MeshRender()->Activate(false);
+	Obj->MeshRender()->Activate(false);
 	Obj->Collider3D()->Activate(false);
 }
 
 void TPlayerRoll::Exit()
 {
 	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerCol", (UINT)LAYER_TYPE::PLAYER_COL);
-	Obj->MeshRender()->Activate(true);
+	//Obj->MeshRender()->Activate(true);
 	Obj->Collider3D()->Activate(true);
 	m_IsRollSlash = false;
 }

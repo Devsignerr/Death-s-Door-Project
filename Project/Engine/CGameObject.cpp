@@ -259,7 +259,7 @@ void CGameObject::SetAllMeshrenderActive(bool _b)
 
 	for (UINT i = 0; i < ChildCount; ++i)
 	{
-		if (vecChild[i]->MeshRender())
+		if (vecChild[i]->MeshRender()&& nullptr==vecChild[i]->Collider3D())
 			vecChild[i]->MeshRender()->Activate(_b);
 	}
 

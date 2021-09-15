@@ -43,6 +43,20 @@ void CBazookaScript::Idle()
 }
 void CBazookaScript::Chase()
 {
+	Ptr<CSound> Sound1 = Play_Sound(L"PlagueBoyStepVoiceA1");
+	Ptr<CSound> Sound2 = Play_Sound(L"PlagueBoyStep4");
+
+	m_SoundTimer += fDT;
+
+	if (0.75f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound1->Stop();	
+		Sound2->Stop();
+	}
+
+
+
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vDiff = vPlayerPos - vPos;
@@ -79,6 +93,12 @@ void CBazookaScript::ReadyAction()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
+	if (76 == CurAni->GetFrameIdx())
+	{
+		PlaySound(L"PlagueBoyCharge1",1, true);
+	}
+
+
 	if (false == Focus && CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 		ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"Aim", true);
@@ -88,6 +108,7 @@ void CBazookaScript::ReadyAction()
 
 	if (RangeSearch(m_MeleeAttackRange))
 	{
+		Play_Sound(L"PlagueBoyChargeSlam3", 1, true);
 		ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 		MeleeAttack();
 	}
@@ -100,6 +121,7 @@ void CBazookaScript::ReadyAction()
 
 		if (true == RangeSearch(m_LongDistanceAttackRange))
 		{
+			Play_Sound(L"PlagueBoyFire1", 1, true);
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 			LongDistanceAttack();
 		}
@@ -140,15 +162,18 @@ void CBazookaScript::Attack()
 		}
 	}
 
+
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 	{
 
 		if (RangeSearch(m_MeleeAttackRange))
 		{
+			Play_Sound(L"PlagueBoyChargeSlam3", 1, true);
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 		}
 		else if (RangeSearch(m_LongDistanceAttackRange) && false == RangeSearch(m_MeleeAttackRange))
 		{
+			
 			ChangeState(MONSTERSTATE::READY_ACTION, 0.2f, L"Aim");
 		}
 		else if (false == RangeSearch(m_LongDistanceAttackRange))
@@ -251,6 +276,7 @@ void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
+		Play_Sound(L"BruteTakeDamage3", 1, true);
 		--m_MonsterInfo.Hp;
 
 		if (0 == m_MonsterInfo.Hp)
@@ -275,6 +301,7 @@ void CBazookaScript::OnCollisionEnter(CGameObject* _pOther)
 			CurAni->Animator3D()->StopAnimation();
 
 			m_bDamaged = false;
+			Play_Sound(L"PlagueBoyDeath", 1, true);
 			ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 		}
 		else 

@@ -107,7 +107,8 @@ void CEventMgr::ExcuteEvent(const tEvent& _event)
 
 		delete ((CScene*)_event.lParam);
 		CSceneMgr::GetInst()->m_pCurScene = (CScene*)_event.wParam;
-
+		//CSceneMgr::GetInst()->m_pCurScene->awake();
+		//CSceneMgr::GetInst()->m_pCurScene->SetState(SCENE_STATE::PLAY);
 		break;
 
 	case EVENT_TYPE::END:

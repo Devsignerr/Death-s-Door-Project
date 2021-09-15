@@ -59,6 +59,9 @@ void CPlayerMagic::OnCollisionEnter(CGameObject* _pOther)
 		_pOther = _pOther->GetParent();
 	}
 
+	
+	Play_Sound(L"FireballHit1", 1, true, 0.2f);
+
 	((CFireDamageParticle*)pFireDamagePTC->GetScript())->SetTarget(_pOther);
 	
 }

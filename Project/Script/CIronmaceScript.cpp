@@ -5,6 +5,7 @@
 #include <Engine/CState.h>
 
 #include "CPlayerScript.h"
+#include "CDoorScript.h"
 
 #pragma region IRonStateHeader
 
@@ -22,6 +23,7 @@
 #include "TIronSpinAttack.h"
 #include "TIronSpinAttackCombo.h"
 #include "TIronWalk.h"
+#include "TIronIdle.h"
 
 #pragma endregion
 
@@ -46,6 +48,8 @@ void CIronmaceScript::ChangeState(IRONMACE_STATE _eState, float _BlendingTime, c
 
 void CIronmaceScript::awake()
 {
+	CDoorScript::m_bIronDead = false;
+
 	CBossScript::awake();
 	CreateCol(L"IronMaceCol", Vec3(0.0f, 0.0f, 600.0f), Vec3(600.0f, 500.0f, 1200.0f), LAYER_TYPE::BOSS_COL);
 	CreateCol(L"IronMaceAttackCol", Vec3(-100.0f, 800.0f, 150.0f), Vec3(500.0f, 1100.0f, 300.0f), LAYER_TYPE::BOSS_ATTACK_COL);
@@ -100,15 +104,17 @@ void CIronmaceScript::awake()
 	m_pFSM->AddState(L"Death", DeathState);
 	m_mapState.insert(make_pair(IRONMACE_STATE::DEATH, L"Death"));
 
-	ChangeState(IRONMACE_STATE::CUTSCENE, 0.04f, L"CutScene");
+	TIronIdle* IdleState = new TIronIdle;
+	m_pFSM->AddState(L"Idle", IdleState);
+	m_mapState.insert(make_pair(IRONMACE_STATE::IDLE, L"Idle"));
+
+	ChangeState(IRONMACE_STATE::IDLE, 0.04f, L"Idle");
 }
 
 void CIronmaceScript::update()
 {
 	CBossScript::update();
 	m_pFSM->update();
-
-
 }
 
 void CIronmaceScript::OnCollisionEnter(CGameObject* _pOther)

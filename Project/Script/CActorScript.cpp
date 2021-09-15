@@ -150,6 +150,8 @@ void CActorScript::CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos)
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, _LayerIdx);
 
+	Obj->MeshRender()->Activate(false);
+
 	AddChild(GetObj(), Obj);
 
 }

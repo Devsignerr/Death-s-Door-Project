@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 
 #define SINGLE(Type) private:\
 Type();\
@@ -44,31 +45,35 @@ friend class CSingleton;
 			          m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_COL|| \
 			          m_iLayerIndex == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL|| \
 			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_EFFECT|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_COL|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_BULLET_COL|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_COL|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_ATTACK_COL|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_BULLET_COL|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_EFFECT|| \
-			          m_iLayerIndex == (UINT)LAYER_TYPE::INDETERMINATE
-
+					  m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::MONSTER_BULLET_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_ATTACK_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_BULLET_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::BOSS_EFFECT || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::INDETERMINATE || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::WALL_COL || \
+					  m_iLayerIndex == (UINT)LAYER_TYPE::CROWBULLET_COL
 
 #define DONTSAVEGOBJ m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MAP_GIMIC_COL|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::UI|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_EFFECT|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_HOOK_COL|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_EFFECT|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_COL|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL|| \
-					 m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_BULLET_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::UI|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_EFFECT|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_HOOK_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_EFFECT|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_ATTACK_COL|| \
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::MONSTER_BULLET_COL|| \
 				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_COL|| \
 				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_ATTACK_COL|| \
 				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_BULLET_COL|| \
 				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::BOSS_EFFECT|| \
-				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::INDETERMINATE
+				     m_vecChild[k]->GetLayerIndex() == (UINT)LAYER_TYPE::INDETERMINATE || \
+					 m_vecChild[k]->GetLayerIndex() ==(UINT)LAYER_TYPE::WALL_COL || \
+					 m_vecChild[k]->GetLayerIndex() ==(UINT)LAYER_TYPE::CROWBULLET_COL
+						
 
 
 #include "SimpleMath.h"
@@ -396,3 +401,17 @@ enum class EXPLOSION_PTC_TYPE
 	SKULL_EXPLO_PTC,
 	TONGUE_EXPLO_PTC,
 }; 
+
+enum class GIMICTYPE
+{
+	FENCE,
+	SPIN_LASER,
+	ANCHOR,
+	UPDOWN_SWITCH,
+	ELEVATOR,
+	DOOR,
+	LEVER,
+	END
+};
+
+

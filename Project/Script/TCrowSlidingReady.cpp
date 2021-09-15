@@ -16,7 +16,7 @@ void TCrowSlidingReady::update()
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
 	if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
-	{	
+	{
 		GetFSM()->ChangeState(L"Sliding", 0.03f, L"Sliding", false);
 	}
 }

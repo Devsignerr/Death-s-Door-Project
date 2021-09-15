@@ -64,6 +64,7 @@ void TIronChopAttackEnd::Enter()
 
 void TIronChopAttackEnd::Exit()
 {
+	((CIronmaceScript*)GetScript())->PlaySound(L"Revert2", true, 0.5f);
 	m_SpinAttackCheck = false;
 }
 

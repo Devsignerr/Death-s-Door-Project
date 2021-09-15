@@ -21,11 +21,10 @@ public:
 private:
 	FMOD::Sound*			m_pSound;
 	list<FMOD::Channel*>	m_listChannel;
-
-
+	float					m_fPrevTime;
 public:
 	// 0 (무한반복) 
-	void Play(int _iRoopCount, bool _bOverlap = false);
+	void Play(int _iRoopCount, bool _bOverlap = false, float _Volume = 0.5f);
 	void Stop();
 
 private:

@@ -55,6 +55,11 @@ protected:
     float m_fFrontOffset;
     float m_fUpOffset;
     float m_fRightOffset;
+    float m_SoundTimer;
+    bool  m_SoundCheck;
+    int   m_iPrevSoundFrame;
+public:
+    void PlaySound(wstring _wstr, bool _bOverlap = false, float _Volume = 0.5f);
 
 public:
     Vec3 GetOffsetFirePos(Vec3 Pos , float _fFrontOffset , float _fUpOffset , float _fRightOffset);

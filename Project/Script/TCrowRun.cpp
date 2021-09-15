@@ -9,6 +9,7 @@
 
 #define CROWRIGHT 1
 #define CROWLEFT 2
+
 bool TCrowRun::CheckBehind()
 {
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();

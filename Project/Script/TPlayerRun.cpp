@@ -3,6 +3,8 @@
 
 #include "CPlayerScript.h"
 #include "CSlashEffect.h"
+#include "CRandomMgrScript.h"
+
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
@@ -105,13 +107,12 @@ void TPlayerRun::update()
             ((CSlashEffect*)CPlayerScript::m_pHorizonSlashR->GetScript())->SetActive(false);
             CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
         }
-
-
 		GetFSM()->ChangeState(L"Slash_L", 0.1f, L"Slash_L", false);
 	}
 
 	if (KEY_TAP(KEY_TYPE::SPACE))
 	{
+       
 		GetFSM()->ChangeState(L"Roll", 0.03f, L"Roll", false);
 	}
 
@@ -150,6 +151,96 @@ void TPlayerRun::update()
          GetObj()->Transform()->SetLocalPos(vPlayerPos+ vMovePos);
 
     GetObj()->Transform()->SetLocalRot(vPlayerRot);
+   
+
+    m_SoundTimer += fDT;
+
+    if (0.4f < m_SoundTimer)
+    {
+        m_SoundTimer = 0.0f;
+
+        Ptr<CSound> Sound = nullptr;
+
+        if (m_iRunSoundChange == 1)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep1");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep1", L"sound\\Allsound\\MeleeStep1.ogg");
+
+        }
+
+        else if (m_iRunSoundChange == 2)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep2");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep2", L"sound\\Allsound\\MeleeStep2.ogg");
+
+        }
+
+        else if (m_iRunSoundChange == 4)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep4");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep4", L"sound\\Allsound\\MeleeStep4.ogg");
+
+        }
+
+        else if (m_iRunSoundChange == 6)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep6");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep6", L"sound\\Allsound\\MeleeStep6.ogg");
+        }
+
+
+        Sound->Stop();
+
+        if (m_iRunSoundChange == 1)
+        {
+            Sound =CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep1");
+
+            if(Sound==nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep1", L"sound\\Allsound\\MeleeStep1.ogg");
+
+            m_iRunSoundChange = 2;
+        }
+
+        else if (m_iRunSoundChange == 2)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep2");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep2", L"sound\\Allsound\\MeleeStep2.ogg");
+
+            m_iRunSoundChange = 4;
+        }
+
+        else if (m_iRunSoundChange == 4)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep4");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep4", L"sound\\Allsound\\MeleeStep4.ogg");
+
+            m_iRunSoundChange = 6;
+        }
+
+        else if (m_iRunSoundChange == 6)
+        {
+            Sound = CResMgr::GetInst()->FindRes<CSound>(L"MeleeStep6");
+
+            if (Sound == nullptr)
+                Sound = CResMgr::GetInst()->Load<CSound>(L"MeleeStep6", L"sound\\Allsound\\MeleeStep6.ogg");
+            m_iRunSoundChange = 1;
+        }
+
+
+        Sound->Play(1,false,0.02f);
+    }
 }
 
 void TPlayerRun::Enter()
@@ -160,7 +251,8 @@ void TPlayerRun::Exit()
 {
 }
 
-TPlayerRun::TPlayerRun()
+TPlayerRun::TPlayerRun():
+    m_iRunSoundChange(1)
 {
 }
 

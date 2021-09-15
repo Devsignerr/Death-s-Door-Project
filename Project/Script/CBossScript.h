@@ -3,6 +3,10 @@
 
 class CBossScript : public CActorScript
 {
+private:
+	bool  m_SoundCheck;
+	int   m_iPrevSoundFrame;
+
 public:
 	virtual bool RangeSearch(float _Range);
 	virtual bool RotateSysTem(float _RotSpeed);
@@ -12,6 +16,10 @@ public:
 	virtual void CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_TYPE _Type);
 	virtual void TransColPos(Vec3 _Pos, LAYER_TYPE _Type = LAYER_TYPE::BOSS_ATTACK_COL);
 	virtual void TransColScale(Vec3 _Scale, LAYER_TYPE _Type = LAYER_TYPE::BOSS_ATTACK_COL);
+
+
+public:
+	void PlaySound(wstring _wstr, bool _bOverlap = false, float _Volume = 0.5f);
 
 public:
 	virtual void awake();

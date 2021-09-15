@@ -36,6 +36,70 @@
 #pragma endregion
 
 
+void CCrowScript::CreateChains()
+{
+	if (m_queueChain.size() >= m_iChainCount)
+		return;
+
+	for (int i = 0; i < m_iChainCount; ++i)
+	{
+		wstring PrefabName = L"CrowChain";
+
+		Ptr<CPrefab> Prefab = CResMgr::GetInst()->FindRes<CPrefab>(PrefabName);
+
+		if (nullptr == Prefab)
+		{
+			wstring PrefabPath = L"prefab\\" + PrefabName + L".pref";
+			Ptr<CPrefab> Prefab = CResMgr::GetInst()->Load<CPrefab>(PrefabName, PrefabPath);
+		}
+
+		CGameObject* pGameObject = Prefab->Instantiate();
+		pGameObject->awake();
+
+		int PrefabCount = i;
+
+		wchar_t Str[10] = {};
+		_itow_s(PrefabCount, Str, 10);
+		wstring PrefabNumber = wstring(Str);
+
+		pGameObject->SetName(PrefabName + PrefabNumber);
+
+		pGameObject->SetAllMeshrenderActive(false);
+		pGameObject->SetAllColliderActive(false);
+
+		m_queueChain.push(pGameObject);
+
+		CSceneMgr::GetInst()->GetCurScene()->AddObject(pGameObject, (UINT)LAYER_TYPE::BOSS_EFFECT);
+
+	}
+}
+
+CGameObject* CCrowScript::GetChain()
+{
+	if (!m_queueChain.empty())
+	{
+		CGameObject* pObj = m_queueChain.front();
+
+		pObj->SetAllMeshrenderActive(true);
+		pObj->SetAllColliderActive(true);
+
+		m_queueChain.pop();
+
+		return pObj;
+	}
+	return nullptr;
+}
+
+
+void CCrowScript::ReturnChain(CGameObject* _Obj)
+{
+	_Obj->SetAllMeshrenderActive(false);
+	_Obj->SetAllColliderActive(false);
+
+	m_queueChain.push(_Obj);
+}
+
+
 void CCrowScript::ChangeState(CROW_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay)
 {
 	m_eState = _eState;
@@ -91,6 +155,8 @@ void CCrowScript::CreateCrowBullet(Vec3 _Pos, Vec3 _Dir)
 void CCrowScript::awake()
 {
 	CBossScript::awake();
+
+	//CreateChains();
 
 	CreateCol(L"CrowBossCol", Vec3(0.0f, 50.0f, 50.0f), Vec3(130.0f, 300.0f, 200.0f), LAYER_TYPE::BOSS_COL);
 
@@ -160,14 +226,13 @@ void CCrowScript::awake()
 	m_pFSM->AddState(L"BatBullet", BatBullet);
 	m_mapState.insert(make_pair(CROW_STATE::BATBULLET, L"BatBullet"));
 
-	ChangeState(CROW_STATE::CUTSCENE, 0.04f, L"CutScene");
+	ChangeState(CROW_STATE::IDLE, 0.04f, L"Idle");
 }
 
 void CCrowScript::update()
 {
 	CBossScript::update();
 	m_pFSM->update();
-
 }
 
 void CCrowScript::OnCollisionEnter(CGameObject* _pOther)
@@ -199,6 +264,7 @@ void CCrowScript::OnCollisionEnter(CGameObject* _pOther)
 void CCrowScript::OnCollision(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
+
 	if ((UINT)LAYER_TYPE::INDETERMINATE == Obj->GetLayerIndex())
 	{
 		const vector<CGameObject*>& Temp = CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::INDETERMINATE)->GetObjects();
@@ -238,6 +304,7 @@ CCrowScript::CCrowScript()
 	: m_pFSM(nullptr)
 	, m_eState(CROW_STATE::END)
 	, m_Hp(15)
+	//, m_iChainCount(50)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::CROWSCRIPT;
 }

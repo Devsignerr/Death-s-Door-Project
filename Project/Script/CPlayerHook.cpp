@@ -104,6 +104,9 @@ void CPlayerHook::SpawnChain()
 		if (nullptr == Chain)
 			return;
 
+		if(m_vecChain.size()%3==0)
+			Play_Sound(L"HookShotBeginReturn1", 1, true, 0.2f);
+
 		m_vecChain.push_back(Chain);
 
 
@@ -154,6 +157,9 @@ void CPlayerHook::returnChainToMemoryPool()
 			pObj->RegisterAsParentObj();
 
 			m_vecChain.pop_back();
+
+			if (m_vecChain.size() % 3 == 0)
+				Play_Sound(L"HookShotBeginReturn1", 1, true, 0.2f);
 		}
 	}
 }
@@ -236,6 +242,8 @@ void CPlayerHook::OnCollisionEnter(CGameObject* _pOther)
 
 		m_bHooked = true;
 		m_vHookedPos = _pOther->Transform()->GetWorldPos();
+
+		Play_Sound(L"HookShotGrab1", 1, false, 0.2f);
 	}
 }
 

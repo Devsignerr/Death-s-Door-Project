@@ -1,10 +1,23 @@
 #include "pch.h"
 #include "CBossScript.h"
 #include "CPlayerScript.h"
+
+#include <Engine/CAnimator3D.h>
 #include <Engine/CCollider3D.h>
 #include <Engine/CSceneMgr.h>
 #include <Engine/CScene.h>
 
+
+void CBossScript::PlaySound(wstring _wstr, bool _bOverlap, float _Volume)
+{
+	if (false == m_SoundCheck)
+	{
+		m_SoundCheck = true;
+		m_iPrevSoundFrame = Animator3D()->GetFrameIdx();
+
+		Play_Sound(_wstr, 1, _bOverlap, _Volume);
+	}
+}
 
 bool CBossScript::RangeSearch(float _Range)
 {
@@ -144,6 +157,15 @@ void CBossScript::start()
 
 void CBossScript::update()
 {
+	if (m_SoundCheck == true)
+	{
+		int FrameIdx = Animator3D()->GetFrameIdx();
+		if (FrameIdx != m_iPrevSoundFrame)
+		{
+			m_SoundCheck = false;
+		}
+	}
+
 	CActorScript::update();
 }
 

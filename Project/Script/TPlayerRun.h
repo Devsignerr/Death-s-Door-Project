@@ -4,6 +4,9 @@ class TPlayerRun :
 	public CState
 {
 private:
+    float m_SoundTimer;
+    int   m_iRunSoundChange;
+private:
     void update() override;
 
     void Enter() override;

@@ -25,8 +25,10 @@ void TPlayerHook::Fly()
 		CPlayerScript::m_pHook->DisconnectWithParent();
 		CPlayerScript::m_pHook->RegisterAsParentObj();
 
-
 		m_BulletLimit = true;
+
+		GetScript()->Play_Sound(L"HookShotFire1", 1, true, 0.2f);
+	
 	}
 }
 
@@ -68,6 +70,9 @@ void TPlayerHook::Enter()
 {
 	m_Script = (CPlayerScript*)GetScript();
 	CPlayerScript::m_Weapon->MeshRender()->Activate(false);
+
+	GetScript()->Play_Sound(L"HookShotCharge1", 1, true, 0.2f);
+
 }
 
 void TPlayerHook::Exit()

@@ -20,7 +20,7 @@ private:
 public:
 	double GetDT() { return m_dDeltaTime; }
 	float GetfDT() { return (float)m_dDeltaTime; }
-
+	float GetAccTime() { return (float)m_dAccTime; }
 public:
 	void init();
 	void update();

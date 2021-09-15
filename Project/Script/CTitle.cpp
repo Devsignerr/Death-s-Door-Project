@@ -20,25 +20,26 @@ void CTitle::awake()
 
 		Ptr<CMaterial> Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"UITitleMtrl");
 		{
-			CGameObject* Obj = new CGameObject;
+			m_Title = new CGameObject;
 
-			Obj->AddComponent(new CTransform);
-			Obj->AddComponent(new CMeshRender);
+			m_Title->AddComponent(new CTransform);
+			m_Title->AddComponent(new CMeshRender);
+			m_Title->AddComponent(new CUI);
+			m_Title->SetName(L"TitleScene");
 
-
-			Obj->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 2.f));
-			Obj->Transform()->SetLocalScale(Vec3(1600.f, 900.f, 1.f));
+			m_Title->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 2.f));
+			m_Title->Transform()->SetLocalScale(Vec3(1600.f * 3.2f, 900.f * 3.2f, 1.f));
 			//Obj->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, XM_PI / 4.0f));
 
-			Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-			Obj->MeshRender()->SetMaterial(Mtrl, 0);
+			m_Title->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+			m_Title->MeshRender()->SetMaterial(Mtrl, 0);
 
-			Obj->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_0, UITex.Get());
+			m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_0, UITex.Get());
 
 			CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
-			CurScene->AddObject(Obj, (UINT)LAYER_TYPE::UI);
+			CurScene->AddObject(m_Title, (UINT)LAYER_TYPE::UI);
 
-			AddChild(GetObj(), Obj);
+			AddChild(GetObj(), m_Title);
 		}
 
 		{
@@ -57,11 +58,12 @@ void CTitle::awake()
 
 			m_TitleFont->AddComponent(new CTransform);
 			m_TitleFont->AddComponent(new CMeshRender);
+			m_TitleFont->AddComponent(new CUI);
 
 			m_TitleFont->SetName(L"TitleFont");
 
-			m_TitleFont->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.f));
-			m_TitleFont->Transform()->SetLocalScale(Vec3(182.f, 181.f, 1.f));
+			m_TitleFont->Transform()->SetLocalPos(Vec3(0.0f, -700.0f, 0.f));
+			m_TitleFont->Transform()->SetLocalScale(Vec3(300.f * 3.2f, 130.f * 3.2f, 1.f));
 			//Obj->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, XM_PI / 4.0f));
 
 			m_TitleFont->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -76,31 +78,26 @@ void CTitle::awake()
 		}
 	}
 
-	m_FontPos = m_TitleFont->Transform()->GetLocalPos();
-	m_FontHalfScale = m_TitleFont->Transform()->GetLocalScale() / 2.0f;
-
-	m_FontMinRange = m_FontPos - m_FontHalfScale;
-	m_FontMaxRange = m_FontPos + m_FontHalfScale;
-
-	CFadeScript::SetFadeTime(XM_PI / 8.0f);
-	CFadeScript::Fade_In();
+	//CFadeScript::SetFadeTime(XM_PI / 8.0f);
+	//CFadeScript::Fade_In();
 }
 
 void CTitle::update()
 {
-	Vec2 MousePos = CKeyMgr::GetInst()->GetMousePos();
-	MousePos.x -= (float)CDevice::GetInst()->GetBufferResolution().x;
-	MousePos.y -= (float)CDevice::GetInst()->GetBufferResolution().y;
 
-	if (m_FontMinRange.x <= MousePos.x && m_FontMinRange.y <= MousePos.y &&
-		m_FontMaxRange.x >= MousePos.x && m_FontMaxRange.y >= MousePos.y)
+
+	Vec2 MousePos = CKeyMgr::GetInst()->GetMousePos();
+
+	if (666.0f <= MousePos.x && 622.0f <= MousePos.y &&
+		925.0f >= MousePos.x && 708.0f >= MousePos.y)
 	{
 		Ptr<CTexture> GameStart_L = CResMgr::GetInst()->FindRes<CTexture>(L"GameStart_L");
 		m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_0, GameStart_L.Get());
 
 		if (KEY_TAP(KEY_TYPE::LBTN))
 		{
-			CFadeScript::Fade_Out();
+			m_FadeType = 0;
+			m_Time = 0.f;
 		}
 	}
 	else
@@ -109,12 +106,58 @@ void CTitle::update()
 		m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_0, GameStart_S.Get());
 	}
 
+	m_Time += fDT * 1.0f;
 
+	if (m_Time > XM_PI / 2.f)
+	{
+		m_Time = XM_PI / 2.f;
+
+		if (0 == m_FadeType)
+		{
+			CSceneMgr::GetInst()->SceneChange(L"Puzzlet");
+		}
+	}
+		
+
+	if (m_Time > 0.f)
+	{
+		if (0 == m_FadeType)
+		{
+			m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_FadeType);
+			m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_Time);
+
+			m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_FadeType);
+			m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_Time);
+		}
+		else
+		{
+			m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_FadeType);
+			m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_Time);
+
+			m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_FadeType);
+			m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &m_Time);
+
+		}
+	}
+	else 
+	{
+		float Time = 0.f;
+
+		m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_FadeType);
+		m_Title->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Time);
+
+		m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_0, &m_FadeType);
+		m_TitleFont->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Time);
+	}
 }
 
 CTitle::CTitle()
 	: CScript((UINT)SCRIPT_TYPE::TITLE)
 	, m_TitleFont(nullptr)
+	, m_Title(nullptr)
+	, m_Fade(true)
+	, m_FadeType(1)
+	, m_Time(-6.0f)
 {
 
 }

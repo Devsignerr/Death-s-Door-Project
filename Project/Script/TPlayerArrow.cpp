@@ -32,6 +32,8 @@ void TPlayerArrow::Attack()
 		CPlayerScript::m_pArrow = nullptr;
 		
 		m_BulletLimit = true;
+
+		GetScript()->Play_Sound(L"ArrowFire1", 1, true, 0.2f);
 	}
 }
 
@@ -61,6 +63,8 @@ void TPlayerArrow::Enter()
 
 	//활
 	CPlayerScript::m_pBow->MeshRender()->Activate(true);
+
+	GetScript()->Play_Sound(L"ArrowCharge3", 1, true, 0.1f);
 }
 
 void TPlayerArrow::Exit()

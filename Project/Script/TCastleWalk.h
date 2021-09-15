@@ -7,6 +7,9 @@ class TCastleWalk :
 {
 private:
     CCastleScript* m_Script;
+    int			 m_iRunSoundChange;
+    float		 m_fSoundTimer;
+
 private:
     void update() override;
 

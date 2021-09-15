@@ -61,6 +61,7 @@ void CBazookaBullet::update()
 	//목표했던 위치로 옴
 	else
 	{
+		Play_Sound(L"PlagueBoyExplosion1",1,true);
 		ActivateExplosionParticle();
 
 		GetObj()->SetAllColliderActive(false);

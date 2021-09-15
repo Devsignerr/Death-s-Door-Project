@@ -31,7 +31,7 @@ private:
 	IRONMACE_STATE					m_eState;
 	map<IRONMACE_STATE, wstring>	m_mapState;
 	int								m_Hp;
-
+	
 private:
 	void ChangeState(IRONMACE_STATE _eState, float _BlendingTime, const wstring& _AniName, bool _Stay = false);
 public:

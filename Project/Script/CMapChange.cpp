@@ -1,10 +1,17 @@
 #include "pch.h"
 #include "CMapChange.h"
 #include "CPlayerScript.h"
+#include "CCameraScript.h"
 #include "CFadeScript.h"
+#include "CDoorScript.h"
+
+#include <Engine/CLayer.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
 
 vector<CGameObject*> CMapChange::FindCollNum = {};
 bool CMapChange::IsMapChange = false;
+
 
 void CMapChange::awake()
 {
@@ -28,11 +35,12 @@ void CMapChange::awake()
 
 void CMapChange::update()
 {
-
 	if (true == m_MapChangeCheck)
 	{
 		if (true == CFadeScript::GetIsFadeInOut())
 		{
+			IsMapChange = true;
+
 			vector<CGameObject*>::iterator Iter = FindCollNum.begin();
 
 			for (; Iter != FindCollNum.end(); ++Iter)
@@ -42,12 +50,42 @@ void CMapChange::update()
 				if (ChangeCol->GetThisColNum() == m_ChangeCollNum)
 				{
 					Vec3 Pos = (*Iter)->Transform()->GetLocalPos();
-					Vec3 FrontDir = CPlayerScript::GetPlayerFront();;
+					Vec3 FrontDir = CPlayerScript::GetPlayerFront();
 
 					Pos += FrontDir * 300.0f;
 
-					CPlayerScript::GetPlayer()->Transform()->SetLocalPos(Pos);
-					m_MapChangeCheck = false;
+					CGameObject* camera = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"Camera Object", (UINT)LAYER_TYPE::CAMERA);
+
+					((CCameraScript*)camera->GetScript())->LookAtPlayer(Pos);
+										
+					CPlayerScript::GetPlayer()->Transform()->SetLocalPos(Pos);	
+
+					if (CDoorScript::m_bActive == true)
+					{
+						CPlayerScript* Player = CPlayerScript::GetPlayer();
+
+						Player->GetObj()->GetChild()[0]->MeshRender()->Activate(true);
+						Player->GetObj()->GetChild()[1]->MeshRender()->Activate(true);
+
+						m_MapChangeCheck = false;
+						IsMapChange = false;
+
+						vector<CGameObject*>& Temp =(vector<CGameObject*>&)CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::MAP_GIMIC)->GetObjects();
+
+						vector<CGameObject*>::iterator iter = Temp.begin();
+
+						for (; iter != Temp.end(); ++iter)
+						{
+							if ((*iter)->GetScript())
+							{
+								if (((CMapGimic*)(*iter)->GetScript())->GetGimicType() == GIMICTYPE::DOOR)
+								{
+									((CDoorScript*)(*iter)->GetScript())->Disappear();
+								}
+							}
+						}
+					}
+
 					break;
 				}
 			}
@@ -65,18 +103,38 @@ CMapChange::CMapChange()
 
 CMapChange::~CMapChange()
 {
+	FindCollNum.clear();
 }
 
 void CMapChange::OnCollisionEnter(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
 
-	if (10 == Obj->GetLayerIndex())
+	if ((UINT)LAYER_TYPE::PLAYER_COL== Obj->GetLayerIndex())
 	{
 		CFadeScript::Fade_Out();
 		m_MapChangeCheck = true;
-
 	}
+
+	CPlayerScript* Player =CPlayerScript::GetPlayer();
+	Player->GetObj()->SetAllMeshrenderActive(false);
+
+
+	vector<CGameObject*>& Temp = (vector<CGameObject*>&)CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::MAP_GIMIC)->GetObjects();
+
+	vector<CGameObject*>::iterator iter = Temp.begin();
+
+	for (; iter != Temp.end(); ++iter)
+	{
+		if ((*iter)->GetScript())
+		{
+			if (((CMapGimic*)(*iter)->GetScript())->GetGimicType() == GIMICTYPE::DOOR)
+			{
+				((CDoorScript*)(*iter)->GetScript())->Spawn();
+			}
+		}
+	}
+
 }
 
 void CMapChange::OnCollision(CGameObject* _pOther)
@@ -86,11 +144,11 @@ void CMapChange::OnCollision(CGameObject* _pOther)
 void CMapChange::OnCollisionExit(CGameObject* _pOther)
 {
 	CGameObject* Obj = _pOther;
-
-	if (10 == Obj->GetLayerIndex())
+	
+	if ((UINT)LAYER_TYPE::PLAYER_COL == Obj->GetLayerIndex())
 	{
 		CFadeScript::Fade_In();
-		m_MapChangeCheck = false;
+		//m_MapChangeCheck = false;
 	}
 }
 

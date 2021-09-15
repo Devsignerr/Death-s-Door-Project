@@ -35,6 +35,8 @@
 
 void CCastleScript::ActivateImpact()
 {
+
+
 	m_fImpactPTCTime+= fDT;
 
 	Vec3 ColPos = Vec3(0.f, 0.f, 0.f);

@@ -52,6 +52,16 @@ void CTongueScript::Idle()
 
 void CTongueScript::Move()
 {
+	Ptr<CSound> Sound = Play_Sound(L"GrimaceStep2", 1, false, 0.2f);
+	
+	m_SoundTimer += fDT;
+
+	if (0.75f < m_SoundTimer)
+	{
+		m_SoundTimer = 0.0f;
+		Sound->Stop();
+	}
+
 	// 바로 플레이어 앞까지 간후 방어태세
 	Vec3 vPlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 vPos = Transform()->GetLocalPos();
@@ -73,7 +83,7 @@ void CTongueScript::Move()
 
 	if (RangeSearch(m_GuardRange))
 	{
-
+		Play_Sound(L"GrimaceShieldPrep", 1, true);
 		ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.2f, L"Guard");
 
 		//ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"SpinDown");
@@ -85,8 +95,14 @@ void CTongueScript::Attack()
 	CAnimator3D* CurAni = Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
-	if (1011 == CurAni->GetFrameIdx() || 166 == CurAni->GetFrameIdx())
+	if (166 == CurAni->GetFrameIdx())
 	{
+		PlaySound(L"GrimaceTwirlSlam", true);
+		OnOffAttackCol(true);
+	}
+	if (1011 == CurAni->GetFrameIdx())
+	{
+		PlaySound(L"GrimaceBite", true);
 		OnOffAttackCol(true);
 	}
 
@@ -108,6 +124,7 @@ void CTongueScript::Attack()
 		MonsterRotateSystem(3.0f);
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
+			Play_Sound(L"GrimaceVoice", 1, true);
 			ChangeState(MONSTERSTATE::FINISH_ACTION, 0.2f, L"SpinUp");
 		}
 	}
@@ -124,6 +141,7 @@ void CTongueScript::Attack()
 		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).bFinish == true)
 		{
 			m_BulletLimit = false;
+			Play_Sound(L"GrimacePrepBullet", 1, true);
 			ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"Melee");
 
 		}
@@ -152,10 +170,13 @@ void CTongueScript::Attack()
 
 			if (0 == Pattern)
 			{
+				Play_Sound(L"GrimacePrepBackStep",1,true);
+				Play_Sound(L"GrimaceBackstep", 1, true);
 				ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep2");
 			}
 			else if (1 == Pattern)
 			{
+				Play_Sound(L"GrimaceBeginTwirl", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"SpinDown");
 			}
 			else if (2 == Pattern)
@@ -180,10 +201,13 @@ void CTongueScript::FinishAction()
 		{
 			if (RangeSearch(m_BackStepRange))
 			{
+				Play_Sound(L"GrimacePrepBackStep", 1, true);
+				Play_Sound(L"GrimaceBackstep", 1, true);
 				ChangeState(MONSTERSTATE::JUMP, 0.2f, L"BackStep2");
 			}
 			else if (false == RangeSearch(m_BackStepRange) && true == RangeSearch(m_ChaseRange))
 			{
+				Play_Sound(L"GrimacePrepBullet", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 			}
 			else if (false == RangeSearch(m_ChaseRange))
@@ -207,6 +231,7 @@ void CTongueScript::SpecialAction()
 
 	if (534 == CurAni->GetFrameIdx())
 	{
+		PlaySound(L"GrimaceShieldSlam", true);
 		m_ShieldPoint = 3;
 		TransColPos(Vec3(0.0f, 300.0f, 200.0f), LAYER_TYPE::MONSTER_COL);
 		TransColScale(Vec3(600.0f, 200.0f, 400.0f), LAYER_TYPE::MONSTER_COL);
@@ -304,6 +329,7 @@ void CTongueScript::SpecialAction()
 		{
 			if (RangeSearch(m_SpinDownRange))
 			{
+				Play_Sound(L"GrimaceBeginTwirl", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"SpinDown");
 			}
 			else
@@ -345,6 +371,7 @@ void CTongueScript::Jump()
 			}
 			else if (1 == Pattern)
 			{
+				Play_Sound(L"GrimacePrepBullet", 1, true);
 				ChangeState(MONSTERSTATE::ATTACK, 0.2f, L"LongDistance");
 			}
 		}
@@ -389,29 +416,6 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 	// 플레이어의 공격을 받은경우
 	CGameObject* Obj = _pOther;
 
-	if (11 == Obj->GetLayerIndex())
-	{
-		CAnimator3D* CurAni = Animator3D();
-		UINT iCurClipIdx = CurAni->GetClipIdx();
-
-		if (CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"GuardStay" ||
-			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"LeftSpin" ||
-			CurAni->GetMTAnimClip()->at(iCurClipIdx).strAnimName == L"RightSpin")
-		{
-			--m_ShieldPoint;
-
-			if (0 == m_ShieldPoint)
-			{
-				m_ShieldPoint = 3;
-				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.05f, L"GuardBreak");
-			}
-		}
-		else
-		{
-			--m_MonsterInfo.Hp;
-		}
-	}
-
 	if ((UINT)LAYER_TYPE::PLAYER_ATTACK_COL == Obj->GetLayerIndex())
 	{
 		CAnimator3D* CurAni = Animator3D();
@@ -424,18 +428,23 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 		{
 			--m_ShieldPoint;
 
+			Play_Sound(L"GrimaceShieldDamage", 1, true);
+			
 			if (0 == m_ShieldPoint)
 			{
 				m_ShieldPoint = 3;
 
 				TransColPos(Vec3(0.0f, 0.0f, 400.0f), LAYER_TYPE::MONSTER_COL);
 				TransColScale(Vec3(700.0f, 400.0f, 800.0f), LAYER_TYPE::MONSTER_COL);
+				Play_Sound(L"GrimaceShieldBreak", 1, true);
 				ChangeState(MONSTERSTATE::SPECIAL_ACTION, 0.05f, L"GuardBreak");
 			}
 		}
 		else
 		{
 			--m_MonsterInfo.Hp;
+			Play_Sound(L"GrimaceVoice", 1, true);
+			Play_Sound(L"GrimaceDamage", 1, true);
 
 			if (0 == m_MonsterInfo.Hp)
 			{
@@ -458,7 +467,7 @@ void CTongueScript::OnCollisionEnter(CGameObject* _pOther)
 				CurAni->Animator3D()->StopAnimation();
 
 				m_bDamaged = false;
-
+				Play_Sound(L"GrimaceBreak2", 1, true);
 				ChangeState(MONSTERSTATE::DEATH, 0.03f, L"Death", true);
 			}
 
@@ -482,6 +491,7 @@ void CTongueScript::LongDistanceAttack()
 {
 	if (m_BulletLimit == false)
 	{
+		Play_Sound(L"GrimaceBullet", 1, true);
 		m_BulletLimit = true;
 
 		CGameObject* Obj = nullptr;

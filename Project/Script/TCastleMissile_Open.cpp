@@ -23,7 +23,7 @@ void TCastleMissile_Open::update()
 		m_MissileTime += fDT;
 
 		m_MissileDelay += fDT;
-		if (m_MissileDelay > 0.1f)
+		if (m_MissileDelay > 0.15f)
 		{
 			m_MissileDelay = 0.0f;
 
@@ -32,6 +32,8 @@ void TCastleMissile_Open::update()
 			Vec3 Left = -GetObj()->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 			MissileCreate(Pos, Right);
 			MissileCreate(Pos, Left);
+
+			((CCastleScript*)GetScript())->Play_Sound(L"RedeemerMissileFire1",1, true, 0.5f);			
 		}
 	}
 
@@ -43,6 +45,7 @@ void TCastleMissile_Open::update()
 
 void TCastleMissile_Open::Enter()
 {
+	((CCastleScript*)GetScript())->PlaySound(L"RedeemerOpenMissiles", true, 0.3f);
 }
 
 void TCastleMissile_Open::Exit()
