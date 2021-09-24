@@ -88,9 +88,12 @@ void MeshRenderGUI::render()
 	{
 		if (i < iMtrlCount)
 		{
-			wstrName = pMeshRender->GetSharedMaterial(i)->GetKey();
-			vecMtrl[i] = string(wstrName.begin(), wstrName.end());
-			strMtrl[i] = vecMtrl[i].c_str(); 
+			if (nullptr != pMeshRender->GetSharedMaterial(i))
+			{
+				wstrName = pMeshRender->GetSharedMaterial(i)->GetKey();
+				vecMtrl[i] = string(wstrName.begin(), wstrName.end());
+				strMtrl[i] = vecMtrl[i].c_str();
+			}
 		}
 		else
 		{
@@ -102,6 +105,12 @@ void MeshRenderGUI::render()
 	ImGui::Text("Material");
 	ImGui::SameLine();
 	ImGui::PushItemWidth(200);
+
+	if (nullptr == pMeshRender->GetSharedMaterial(0))
+	{
+		strMtrl[0] = "Empty";
+	}
+
 	ImGui::Combo("##MtrlName", &item_current, strMtrl, ARRAYSIZE(strMtrl));
 	ImGui::SameLine();
 

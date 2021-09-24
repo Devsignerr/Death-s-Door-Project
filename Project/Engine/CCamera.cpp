@@ -137,6 +137,36 @@ void CCamera::SortObject()
 
 				}
 
+				// 절두체 테스트(구현)
+				if (vecObj[j]->GetParent())
+				{
+					if (vecObj[j]->GetParent()->FrustumSphere() && vecObj[j]->GetParent()->IsFrustum())
+					{
+						Vec3 vWorldPos = vecObj[j]->Transform()->GetWorldPos();
+						Vec3 vOffSetPos = vecObj[j]->GetParent()->FrustumSphere()->GetOffSetPos();
+						float Radius = vecObj[j]->GetParent()->FrustumSphere()->GetRadius();
+
+						if (!m_frustum.CheckFrustumSphere(vWorldPos, vOffSetPos, Radius))
+						{
+							continue;
+						}
+					}
+				}
+				else
+				{
+					if (vecObj[j]->FrustumSphere() && vecObj[j]->IsFrustum())
+					{
+						Vec3 vWorldPos = vecObj[j]->Transform()->GetLocalPos();
+						Vec3 vOffSetPos = vecObj[j]->FrustumSphere()->GetOffSetPos();
+						float Radius = vecObj[j]->FrustumSphere()->GetRadius();
+
+						if (!m_frustum.CheckFrustumSphere(vWorldPos, vOffSetPos, Radius))
+						{
+							continue;
+						}
+					}
+				}
+
 				if (vecObj[j]->ParticleSystem()&& vecObj[j]->ParticleSystem()->IsEnable())
 				{
 					if (vecObj[j]->ParticleSystem()->GetMaterial()->GetShader()->GetPOV() == SHADER_POV::PARTICLE)
@@ -161,22 +191,7 @@ void CCamera::SortObject()
 				}
 
 
-				// 절두체 테스트(구현)
-				if (vecObj[j]->GetParent())
-				{
-					if (vecObj[j]->GetParent()->FrustumSphere()&& vecObj[j]->GetParent()->IsFrustum())
-					{
-						Vec3 vWorldPos = vecObj[j]->Transform()->GetWorldPos();
-						Vec3 vOffSetPos = vecObj[j]->GetParent()->FrustumSphere()->GetOffSetPos();
-						float Radius = vecObj[j]->GetParent()->FrustumSphere()->GetRadius();
-
-						if (!m_frustum.CheckFrustumSphere(vWorldPos,vOffSetPos, Radius))
-						{
-							continue;
-						}
-					}
-
-				}
+				
 
 				UINT iMtrlCount = 0;
 

@@ -32,7 +32,6 @@ void CActorScript::GetDamage()
 					Ptr<CMaterial> CloneMtrl = ChildVec[i]->MeshRender()->GetCloneMaterial(j);
 					ChildVec[i]->MeshRender()->SetMaterial(CloneMtrl, j);
 				}
-
 			}
 		}
 	}
@@ -125,6 +124,12 @@ void CActorScript::EffectParamSetting(Vec4 Diff, Vec4 Emis, Ptr<CTexture> _Tex)
 			Mtrl->SetData(SHADER_PARAM::TEX_3, _Tex.Get());
 		}
 	}
+}
+
+void CActorScript::ResetNavMeshInfo()
+{
+	m_iCurNavMeshIdx = 0;
+	m_iCurNavNodeIdx = 0;
 }
 
 void CActorScript::CreateDeadParticle()
@@ -220,6 +225,11 @@ bool CActorScript::GroundCheck()
 		return false;
 	}
 
+	if (m_iCurNavMeshIdx > VecNavMesh.size())
+	{
+		m_iCurNavMeshIdx = 0;
+	}
+
 	//이전 프레임에 내가 위치했던 메쉬의 인덱스로 탐색할것이다. 
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
 
@@ -250,6 +260,11 @@ bool CActorScript::GroundCheck()
 	//충돌에 실패했다면 인접 노드들을 대상으로 다시 한번 충돌체크를 진행한다 . 
 	else 
 	{
+		if (m_iCurNavNodeIdx > vecNavMesh.size())
+		{
+			m_iCurNavNodeIdx = 0;
+		}
+
 		vector<int> NearNodeVec = vecNavMesh[m_iCurNavNodeIdx].VecNearNodeIdx;
 		UINT NearNodeCnt = NearNodeVec.size();
 
@@ -299,6 +314,11 @@ bool CActorScript::ResearchNode()
 
 	if (VecNavMesh.size() == 0)
 		return false;
+
+	if (m_iCurNavMeshIdx > VecNavMesh.size())
+	{
+		m_iCurNavMeshIdx = 0;
+	}
 
 	//일단 내가 위치했던 네비메쉬인덱스로 접근해 검사를 진행해본다 .
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
@@ -391,6 +411,11 @@ bool CActorScript::GroundCheck(Vec3 _MovePos, int _RayDir)
 	if (VecNavMesh.size() == 0)
 		return false;
 
+	if (m_iCurNavMeshIdx > VecNavMesh.size())
+	{
+		m_iCurNavMeshIdx = 0;
+	}
+
 	//이전 프레임에 내가 위치했던 메쉬의 인덱스로 탐색할것이다. 
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
 
@@ -404,6 +429,9 @@ bool CActorScript::GroundCheck(Vec3 _MovePos, int _RayDir)
 	DirectX::XMVECTOR MapPoint1 = {};
 	DirectX::XMVECTOR MapPoint2 = {};
 	DirectX::XMVECTOR MapPoint3 = {};
+
+	if (m_iCurNavNodeIdx > vecNavMesh.size())
+		m_iCurNavNodeIdx = 0;
 
 	//이전 프레임에 위치했던 폴리곤 위에서 충돌검사를 먼저 1번 진행한다 
 	MapPoint1 = DirectX::XMVector3TransformCoord(vecNavMesh[m_iCurNavNodeIdx].VertexPosition[0], MapMat);
@@ -421,6 +449,11 @@ bool CActorScript::GroundCheck(Vec3 _MovePos, int _RayDir)
 	//충돌에 실패했다면 인접 노드들을 대상으로 다시 한번 충돌체크를 진행한다 . 
 	else
 	{
+		if (m_iCurNavNodeIdx > vecNavMesh.size())
+		{
+			m_iCurNavNodeIdx = 0;
+		}
+
 		vector<int> NearNodeVec = vecNavMesh[m_iCurNavNodeIdx].VecNearNodeIdx;
 		UINT NearNodeCnt = NearNodeVec.size();
 
@@ -470,6 +503,11 @@ bool CActorScript::ResearchNode(Vec3 _MovePos, int _RayDir)
 
 	if (VecNavMesh.size() == 0)
 		return false;
+
+	if (m_iCurNavMeshIdx > VecNavMesh.size())
+	{
+		m_iCurNavMeshIdx = 0;
+	}
 
 	//일단 내가 위치했던 네비메쉬인덱스로 접근해 검사를 진행해본다 .
 	CGameObject* pNavMesh = VecNavMesh[m_iCurNavMeshIdx];
@@ -577,8 +615,6 @@ void CActorScript::update()
 		 }
 	 }
 
-
-
 }
 
 void CActorScript::awake()
@@ -621,9 +657,11 @@ void CActorScript::awake()
 			{
 				m_vecOriginMtrl.push_back(ChildVec[i]->MeshRender()->GetSharedMaterial(j));
 			}
-
 		}
 	}
+
+	m_iCurNavMeshIdx = 0;
+	m_iCurNavNodeIdx = 0;
 }
 
 void CActorScript::OnCollisionEnter(CGameObject* _pOther)
@@ -732,6 +770,8 @@ CActorScript::CActorScript()
 	, m_bDamaged(false)
 	, m_fDamageEffectTime(0.4f)
 	, m_fCurDamageTime(0.f)
+	, m_iCurNavMeshIdx(0)
+	, m_iCurNavNodeIdx(0)
 {
 
 }

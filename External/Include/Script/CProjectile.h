@@ -25,6 +25,7 @@ public:
 	bool IsActive() { return m_bActive; }
 
 public:
+	virtual void awake() override;
 	virtual void update() override;
 
 	CLONE(CProjectile);

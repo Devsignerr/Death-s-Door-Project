@@ -1,9 +1,14 @@
 #include "pch.h"
 #include "TIronCutScene.h"
 #include "CIronmaceScript.h"
+#include "CCameraScript.h"
 
 #include <Engine/CAnimator3D.h>
+#include <Engine/CCollider3D.h>
 #include <Engine/CFSM.h>
+#include  <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CLayer.h>
 
 void TIronCutScene::update()
 {
@@ -34,10 +39,26 @@ void TIronCutScene::update()
 
 void TIronCutScene::Enter()
 {
+	vector<CGameObject*>& Temp = (vector<CGameObject*>&)CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::SCENE_CHANGE_COL)->GetObjects();
+
+	vector<CGameObject*>::iterator iter = Temp.begin();
+
+	for (; iter != Temp.end(); ++iter)
+	{
+		if (nullptr!=(*iter)->Collider3D())
+		{
+			Vec3 LocalPos = ((*iter)->Transform())->GetLocalPos();
+			LocalPos.y += 10000.f;
+			((*iter)->Transform())->SetLocalPos(LocalPos);
+		}
+	}
 }
 
 void TIronCutScene::Exit()
 {
+	CGameObject* Camera = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"Camera Object", (UINT)LAYER_TYPE::CAMERA);
+	CCameraScript* CameraScript = (CCameraScript*)Camera->GetScript();
+	CameraScript->ResetOriginCamera();
 }
 
 TIronCutScene::TIronCutScene()

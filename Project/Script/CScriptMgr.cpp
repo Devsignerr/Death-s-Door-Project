@@ -25,8 +25,10 @@
 #include "CFence.h"
 #include "CFireDamageParticle.h"
 #include "CFogScript.h"
+#include "CGateScript.h"
 #include "CHpBar.h"
 #include "CIronmaceScript.h"
+#include "CLeverScript.h"
 #include "CMapChange.h"
 #include "CMapGimic.h"
 #include "CMemoryPoolScript.h"
@@ -84,8 +86,10 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CFence");
 	_vec.push_back(L"CFireDamageParticle");
 	_vec.push_back(L"CFogScript");
+	_vec.push_back(L"CGateScript");
 	_vec.push_back(L"CHpBar");
 	_vec.push_back(L"CIronmaceScript");
+	_vec.push_back(L"CLeverScript");
 	_vec.push_back(L"CMapChange");
 	_vec.push_back(L"CMapGimic");
 	_vec.push_back(L"CMemoryPoolScript");
@@ -168,10 +172,14 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CFireDamageParticle;
 	if (L"CFogScript" == _strScriptName)
 		return new CFogScript;
+	if (L"CGateScript" == _strScriptName)
+		return new CGateScript;
 	if (L"CHpBar" == _strScriptName)
 		return new CHpBar;
 	if (L"CIronmaceScript" == _strScriptName)
 		return new CIronmaceScript;
+	if (L"CLeverScript" == _strScriptName)
+		return new CLeverScript;
 	if (L"CMapChange" == _strScriptName)
 		return new CMapChange;
 	if (L"CMapGimic" == _strScriptName)
@@ -311,11 +319,17 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::FOGSCRIPT:
 		return new CFogScript;
 		break;
+	case (UINT)SCRIPT_TYPE::GATESCRIPT:
+		return new CGateScript;
+		break;
 	case (UINT)SCRIPT_TYPE::HPBAR:
 		return new CHpBar;
 		break;
 	case (UINT)SCRIPT_TYPE::IRONMACESCRIPT:
 		return new CIronmaceScript;
+		break;
+	case (UINT)SCRIPT_TYPE::LEVERSCRIPT:
+		return new CLeverScript;
 		break;
 	case (UINT)SCRIPT_TYPE::MAPCHANGE:
 		return new CMapChange;
@@ -511,12 +525,20 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CFogScript";
 		break;
 
+	case SCRIPT_TYPE::GATESCRIPT:
+		return L"CGateScript";
+		break;
+
 	case SCRIPT_TYPE::HPBAR:
 		return L"CHpBar";
 		break;
 
 	case SCRIPT_TYPE::IRONMACESCRIPT:
 		return L"CIronmaceScript";
+		break;
+
+	case SCRIPT_TYPE::LEVERSCRIPT:
+		return L"CLeverScript";
 		break;
 
 	case SCRIPT_TYPE::MAPCHANGE:

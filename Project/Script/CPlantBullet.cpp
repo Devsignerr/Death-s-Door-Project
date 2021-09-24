@@ -20,7 +20,7 @@ void CPlantBullet::update()
 
 void CPlantBullet::awake()
 {
-	
+	CProjectile::awake();
 }
 
 void CPlantBullet::OnCollisionEnter(CGameObject* _pOther)

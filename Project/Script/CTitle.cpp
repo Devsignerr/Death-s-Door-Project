@@ -114,7 +114,13 @@ void CTitle::update()
 
 		if (0 == m_FadeType)
 		{
-			CSceneMgr::GetInst()->SceneChange(L"Puzzlet");
+			CSceneMgr::GetInst()->SceneChange(L"Stage_Rock");
+
+			CGameObject* pPostEffect = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PostEffect Object", (UINT)LAYER_TYPE::POSTEFFECT);
+
+			CFadeScript* script = (CFadeScript*)pPostEffect->GetScript();
+
+			script->SetFadeTime(0.2f);
 		}
 	}
 		

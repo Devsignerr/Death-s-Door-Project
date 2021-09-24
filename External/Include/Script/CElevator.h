@@ -1,16 +1,20 @@
 #pragma once
 #include "CMapGimic.h"
 
+class CSound;
 class CGameObject;
 class CElevator :
 	public CMapGimic
 {
 private:
-	bool			m_IsOn;
-	Vec3			m_DestPos;
-	float			m_Depth;
+	bool         m_IsOn;
+	Vec3         m_DestPos;
+	float         m_Depth;
 	CGameObject* m_Elevator2_Nav;
-	Vec3			m_Elevator2_Nav_OriginPos;
+	Vec3         m_Elevator2_Nav_OriginPos;
+	float			m_SoundTimer;
+	Ptr<CSound>     m_ChainSound;
+
 private:
 	void CreateCol();
 public:
@@ -34,4 +38,3 @@ public:
 public:
 	CLONE(CElevator);
 };
-

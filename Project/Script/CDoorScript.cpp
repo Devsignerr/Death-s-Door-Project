@@ -3,6 +3,9 @@
 #include "CMapChange.h"
 #include "CSceneChange.h"
 #include "CFadeScript.h"
+#include <Engine/CCollider3D.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
 
 bool CDoorScript::m_bIronDead = false;
 bool CDoorScript::m_bCrowDead = false;
@@ -33,10 +36,40 @@ void CDoorScript::Disappear()
 	m_eState = DOOR_STATE::DISAPPEARING;
 }
 
+void CDoorScript::CreateCol(wstring _wstr)
+{
+	CGameObject* Col = new CGameObject;
+	Col->SetName(_wstr);
+
+	Col->AddComponent(new CTransform);
+	Col->AddComponent(new CMeshRender);
+	Col->AddComponent(new CCollider3D);
+	Col->AddComponent(new CSceneChange);
+
+	Col->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	Col->Transform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+
+	Col->Collider3D()->SetParentOffsetPos(Vec3(0.f, 0.f, 100.f));
+
+	Col->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+
+	CSceneMgr::GetInst()->GetCurScene()->AddObject(Col, (UINT)LAYER_TYPE::CROWBULLET_COL);
+
+	Col->awake();
+
+	Col->SetDynamicShadow(false);
+	Col->SetFrustumCheck(false);
+	Col->MeshRender()->Activate(false);
+
+	GetObj()->AddChild(Col);
+}
+
 
 void CDoorScript::awake()
 {
 	m_eState = DOOR_STATE::STAY_DEACTIVE;
+	GetObj()->SetDynamicShadow(false);
 }
 
 void CDoorScript::update()

@@ -77,6 +77,8 @@ void CMemoryPoolScript::CreateAttackImpact()
 		pGameObject->MeshRender()->SetMaterial(mtrl, 0);
 
 		pGameObject->SetAllMeshrenderActive(false);
+		pGameObject->SetDynamicShadow(false);
+		pGameObject->SetFrustumCheck(false);
 		
 		CAttackImpactScript* pScript = (CAttackImpactScript*)pGameObject->GetScript();
 		pScript->SetName(L"CAttackImpactScript");
@@ -118,6 +120,10 @@ void CMemoryPoolScript::CreateExplosionPTC()
 
 		pGameObject->ParticleSystem()->SetRepeat(false);
 		pGameObject->ParticleSystem()->Activate(false);
+
+		pGameObject->SetDynamicShadow(false);
+		pGameObject->SetFrustumCheck(false);
+
 		CExplosionParticle* pScript = (CExplosionParticle*)pGameObject->GetScript();
 
 		pScript->SetExploPTCType(EXPLOSION_PTC_TYPE::PLAYER_BOMB);
@@ -158,6 +164,9 @@ void CMemoryPoolScript::CreateFireDamagePTC()
 
 		pGameObject->SetName(PrefabName + PrefabNumber);
 		pGameObject->ParticleSystem()->Activate(false);
+
+		pGameObject->SetDynamicShadow(false);
+		pGameObject->SetFrustumCheck(false);
 
 		CFireDamageParticle* pScript = (CFireDamageParticle*)pGameObject->GetScript();
 		pScript->SetName(L"CFireDamageParticleScript");
@@ -202,6 +211,9 @@ void CMemoryPoolScript::CreateChain()
 		
 		pScript->SetActive(false);
 		pGameObject->SetAllMeshrenderActive(false);
+		pGameObject->SetDynamicShadow(false);
+		pGameObject->SetFrustumCheck(false);
+
 		
 		CSceneMgr::GetInst()->GetCurScene()->AddObject(pGameObject, (UINT)LAYER_TYPE::PLAYER_EFFECT);
 
@@ -234,6 +246,10 @@ void CMemoryPoolScript::CreateCrowBullet()
 
 		pGameObject->SetName(PrefabName + PrefabNumber);
 
+		pGameObject->SetDynamicShadow(false);
+		pGameObject->SetFrustumCheck(false);
+
+
 		CCrowBatBullet* pScript = (CCrowBatBullet*)pGameObject->GetScript();
 
 		pScript->SetName(L"CCrowBatBullet");
@@ -260,6 +276,10 @@ void CMemoryPoolScript::CreateCrowBullet()
 		Col->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 
 		CSceneMgr::GetInst()->GetCurScene()->AddObject(Col, (UINT)LAYER_TYPE::CROWBULLET_COL);	
+
+		Col->SetDynamicShadow(false);
+		Col->SetFrustumCheck(false);
+
 
 		pGameObject->AddChild(Col);
 
@@ -343,8 +363,20 @@ CGameObject* CMemoryPoolScript::GetCrowBullet()
 		pObj->SetAllMeshrenderActive(true);
 		pObj->SetAllColliderActive(true);
 
+		pObj->SetDynamicShadow(true);
+
 		CCrowBatBullet* pScript = (CCrowBatBullet*)pObj->GetScript();
 		pScript->SetActive(true);
+
+		const vector<CGameObject*>& vecChild = pObj->GetChild();
+
+		UINT ChildCount = vecChild.size();
+
+		for (UINT i = 0; i < ChildCount; ++i)
+		{
+			if (vecChild[i]->MeshRender() && vecChild[i]->Collider3D())
+				vecChild[i]->MeshRender()->Activate(false);
+		}
 
 		m_queueCrowBullet.pop();
 
@@ -411,6 +443,8 @@ void CMemoryPoolScript::ReturnObj(CGameObject* _Obj)
 		_Obj->SetAllMeshrenderActive(false);
 		_Obj->SetAllColliderActive(false);
 		((CCrowBatBullet*)_Obj->GetScript())->SetActive(false);
+		_Obj->SetDynamicShadow(false);
+
 		m_queueCrowBullet.push(_Obj);
 	}
 }

@@ -275,6 +275,8 @@ void TCastleLaser_Ready::Exit()
 
 	Sound->Stop();
 
+	CPlayerScript::SetOtherPower(Vec3(0.0f, 0.0f, 0.0f));
+
 	((CCastleScript*)GetScript())->PlaySound(L"RedeemerRevertPose", true, 0.3f);
 }
 

@@ -17,6 +17,8 @@ CExplosionParticle::~CExplosionParticle()
 
 void CExplosionParticle::awake()
 {
+	GetObj()->SetAlldynamicShadow(false);
+
 	m_iMaxCount = GetObj()->ParticleSystem()->GetMaxCount();
 	GetObj()->ParticleSystem()->SetRepeat(false);
 }

@@ -25,6 +25,7 @@ private:
 public:
 	// 0 (무한반복) 
 	void Play(int _iRoopCount, bool _bOverlap = false, float _Volume = 0.5f);
+	void PlayRegionLoop(int _iRoopCount, unsigned int StartPoint, bool _bOverlap = false, float _Volume = 0.5f);
 	void Stop();
 
 private:

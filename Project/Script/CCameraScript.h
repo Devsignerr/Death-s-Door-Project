@@ -29,8 +29,7 @@ public:
     void LookAtPlayer();
     void LookAtPlayer(Vec3 _PlayerPos);
 public:
-
-    void CutSceneCamera();
+    void CutSceneCamera(Vec3 _Pos, Vec3 _Rot);
     void ResetOriginCamera();
     void EndingSCeneCamera();
     void OrthoScaleSmoothTrans(Vec2 _Scale, float _SmoothSpeed);

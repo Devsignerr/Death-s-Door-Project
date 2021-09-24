@@ -47,6 +47,7 @@ protected:
 	
 
 public:
+	void ResetNavMeshInfo();
 	void CreateDeadParticle();
 	void CreateCollider(UINT _LayerIdx, Vec3 _Scale, Vec3 OffsetPos);
 	CGameObject* IntanciatePrefab(wstring _wstr,UINT _LayerIdx);

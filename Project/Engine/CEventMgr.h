@@ -6,32 +6,30 @@ using std::priority_queue;
 
 enum class EVENT_TYPE
 {
-	CREATE_OBJECT,
-	DELETE_OBJECT,
-	
-	ADD_CHILD,
-	DISCONNECT_PARENT,
+    SCENE_CHANGE,
+    CREATE_OBJECT,
+    DELETE_OBJECT,
 
-	SCENE_CHANGE,
-
-	END,
+    ADD_CHILD,
+    DISCONNECT_PARENT,
+    END,
 };
 
 struct tEvent
 {
-	EVENT_TYPE	eEvent;
-	DWORD_PTR	wParam;
-	DWORD_PTR	lParam;
+    EVENT_TYPE   eEvent;
+    DWORD_PTR   wParam;
+    DWORD_PTR   lParam;
 };
 
 
 class Compare
 {
 public:
-	bool operator() (const tEvent& _left, const tEvent& _right)
-	{
-		return (UINT)_left.eEvent > (UINT)_right.eEvent;
-	}
+    bool operator() (const tEvent& _left, const tEvent& _right)
+    {
+        return (UINT)_left.eEvent > (UINT)_right.eEvent;
+    }
 };
 
 
@@ -42,18 +40,18 @@ class CEventMgr :
 {
     SINGLE(CEventMgr);
 private:
-	priority_queue<tEvent, vector<tEvent>, Compare>	m_event;
-	vector<CGameObject*>							m_vecDeadObj;
+    priority_queue<tEvent, vector<tEvent>, Compare>   m_event;
+    //std::queue<tEvent>                        m_event;
+    vector<CGameObject*>                     m_vecDeadObj;
 
-	bool											m_bEvent; // HierachyGUI 가 알림받을 용도
-	bool											m_bDeadEventExist;
+    bool                                 m_bEvent; // HierachyGUI 가 알림받을 용도
+    bool                                 m_bDeadEventExist;
 public:
-	void update();
-	void AddEvent(const tEvent& _event) { m_event.push(_event); }
+    void update();
+    void AddEvent(const tEvent& _event) { m_event.push(_event); }
 
-	bool HasEvnOcrd() { return m_bEvent; }
+    bool HasEvnOcrd() { return m_bEvent; }
 
 private:
-	void ExcuteEvent(const tEvent& _event);
+    void ExcuteEvent(const tEvent& _event);
 };
-

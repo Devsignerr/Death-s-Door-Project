@@ -8,6 +8,8 @@
 
 void CBazookaBullet::awake()
 {
+	CProjectile::awake();
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = Transform()->GetLocalPos();
 

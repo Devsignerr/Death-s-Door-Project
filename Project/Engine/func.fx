@@ -290,19 +290,18 @@ float4 decode(float _value)
     return float4(r, g, b, a);
 }
 
-
 float4 Fade_In_Out(float4 _Color, uint _Idx, float _Time)
 {
     // 1 원본 0 검정
     static float fRatio = 1.0f;
 
-	// 페이드 아웃
+   // 페이드 아웃
 
     if (0 == _Idx)
     {
         fRatio -= sin(_Time);
     }
-	// 페이드 인
+   // 페이드 인
     else if (1 == _Idx)
     {
         fRatio -= cos(_Time);

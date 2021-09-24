@@ -17,7 +17,7 @@ private:
 
 public:
     virtual void update();
-
+    virtual void awake();
 
 public:   
     virtual void SetActive(bool _b);

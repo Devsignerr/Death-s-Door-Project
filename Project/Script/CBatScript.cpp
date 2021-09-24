@@ -167,7 +167,10 @@ void CBatScript::Death()
 
 	if (3.0f < m_PaperBurnTime)
 	{
-		DeleteObject(GetObj());
+		if (!GetObj()->IsDead())
+		{
+			CScript::DeleteObject(GetObj());
+		}
 	}
 }
 

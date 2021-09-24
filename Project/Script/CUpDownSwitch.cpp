@@ -14,9 +14,9 @@ vector<CGameObject*> CUpDownSwitch::m_UpDownSwitchObj = {};
 
 void CUpDownSwitch::awake()
 {
-	if (0 == m_Test)
+	//if (0 == m_Test)
 	{
-		m_Test = 1;
+		//m_Test = 1;
 		CMapGimic::awake();
 
 		m_UpDownSwitchObj.push_back(GetGameObject());
@@ -36,7 +36,7 @@ void CUpDownSwitch::awake()
 	}
 
 	m_OriginPos = Transform()->GetLocalPos();
-	Vec3 Up = Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 Up = Vec3(0.f, 1.f, 0.f);
 	m_UpSwitchPos = m_OriginPos + Up * 200.0f;
 
 
@@ -60,11 +60,22 @@ void CUpDownSwitch::update()
 
 		if (m_UpSwitchPos.y > Pos.y)
 		{
+			Ptr<CSound> Sound = Play_Sound(L"SmallDoorOpen", 1, false, 0.2f);
+
+			m_SoundTimer += fDT;
+
+			if (0.8f < m_SoundTimer)
+			{
+				m_SoundTimer = 0.0f;
+				Sound->Stop();
+			}
+
 			Pos.y += fDT * 30.0f;
 			Transform()->SetLocalPos(Pos);
 		}
 		else
 		{
+			Ptr<CSound> Sound = Play_Sound(L"DoorButton", 1, false, 0.3f);
 			m_MoveCheck = true;
 			Ptr<CMaterial> Mtrl = GetObj()->GetChild()[0]->MeshRender()->GetCloneMaterial(0);
 			Mtrl->SetEmissive(Vec4(0.1f, 0.8f, 0.8f, 0.5f));
@@ -72,7 +83,7 @@ void CUpDownSwitch::update()
 	}
 	else if (false == m_OnOffCheck && true == m_MoveCheck)
 	{
-		GetObj()->GetChild()[0]->MeshRender()->SetMaterial(m_pOriginMtrl,0);
+		GetObj()->GetChild()[0]->MeshRender()->SetMaterial(m_pOriginMtrl, 0);
 		LastSwitchOnCheck();
 	}
 
@@ -222,7 +233,7 @@ CUpDownSwitch::CUpDownSwitch()
 	: m_OnOffCheck(false)
 	, m_ThisNum(-1)
 	, m_MoveCheck(false)
-	, m_Test(0)
+	//, m_Test(0)
 {
 	m_iScriptType = (int)SCRIPT_TYPE::UPDOWNSWITCH;
 	m_GimicType = GIMICTYPE::UPDOWN_SWITCH;
@@ -230,6 +241,6 @@ CUpDownSwitch::CUpDownSwitch()
 
 CUpDownSwitch::~CUpDownSwitch()
 {
-	m_Test = 0;
+	//m_Test = 0;
 	m_UpDownSwitchObj.clear();
 }

@@ -49,10 +49,16 @@ CFogScript::~CFogScript()
 void CFogScript::SaveToScene(FILE* _pFile)
 {
 	CScript::SaveToScene(_pFile);
+
+	fwrite(&m_fBlendingRatio, sizeof(float), 1, _pFile);
+	fwrite(&m_fMaxHeight, sizeof(float), 1, _pFile);
 }
 
 void CFogScript::LoadFromScene(FILE* _pFile)
 {
 	CScript::LoadFromScene(_pFile);
+
+	fread(&m_fBlendingRatio, sizeof(float), 1, _pFile);
+	fread(&m_fMaxHeight, sizeof(float), 1, _pFile);
 }
 

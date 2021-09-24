@@ -77,7 +77,11 @@ void TIronDeath::update()
 				}
 			}
 
-			CScript::DeleteObject(GetObj());
+			if (!m_bDead)
+			{
+				CScript::DeleteObject(GetObj());
+				m_bDead = true;
+			}			
 		}
 	}
 
@@ -96,8 +100,19 @@ void TIronDeath::Enter()
 
 	((CIronmaceScript*)GetScript())->PlaySound(L"KnightDeath", true, 0.5f);
 
+	vector<CGameObject*>& Temp = (vector<CGameObject*>&)CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::SCENE_CHANGE_COL)->GetObjects();
 
+	vector<CGameObject*>::iterator iter = Temp.begin();
 
+	for (; iter != Temp.end(); ++iter)
+	{
+		if (nullptr != (*iter)->Collider3D())
+		{
+			Vec3 LocalPos = ((*iter)->Transform())->GetLocalPos();
+			LocalPos.y -= 10000.f;
+			((*iter)->Transform())->SetLocalPos(LocalPos);
+		}
+	}
 }
 
 void TIronDeath::Exit()

@@ -22,7 +22,7 @@ void CToolCamScript::update()
 	float fSpeed = m_fSpeed;
 
 	if (KEY_HOLD(KEY_TYPE::LSHIFT))
-		fSpeed *= 5.f;
+		fSpeed *= 50.f;
 
 	if (KEY_HOLD(KEY_TYPE::NUM_1))
 	{

@@ -316,6 +316,8 @@ PS_OUT PS_Std3D_Deferred(VTX_OUT _in)
         float fDepth = vProj.z / vProj.w; // w 로 나눠서 실제 투영좌표 z 값을 구한다.(올바르게 비교하기 위해서)
         
         
+        //이부분을 플레이어의 위치에서 물체의 위치까지로 변경할수 있을까
+        //수정사항 
         
         float Distance = (float) fDOFDistance;
         

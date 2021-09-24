@@ -10,6 +10,8 @@ private:
 	float m_MeleeAttack2Range;
 	float m_LongDistanceAttackRange;
 	float m_RotSpeed;
+	bool  m_MeleeAttackCheck;
+	float m_MeleeAttackDelay;
 public:
 	void awake() override;
 	void update() override;
@@ -28,7 +30,7 @@ private:
 	void Death() override;
 
 private:
-	bool	m_BulletLimit;
+	bool   m_BulletLimit;
 public:
 	CLONE(CSkullScript);
 
@@ -40,4 +42,3 @@ public:
 	~CSkullScript();
 
 };
-

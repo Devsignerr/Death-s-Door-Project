@@ -56,6 +56,11 @@ void CSlashEffect::update()
 	Mtrl->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
 }
 
+void CSlashEffect::awake()
+{
+	GetObj()->SetAlldynamicShadow(false);
+}
+
 
 void CSlashEffect::SaveToScene(FILE* _pFile)
 {

@@ -4,8 +4,7 @@
 class CMapGimic :public CScript
 {
 public:
-  
-
+ 
 protected:
     GIMICTYPE m_GimicType;
 

@@ -21,7 +21,7 @@ CCastleLaser::~CCastleLaser()
 
 void CCastleLaser::awake()
 {
-	
+	CProjectile::awake();
 }
 
 void CCastleLaser::update()

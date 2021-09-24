@@ -45,6 +45,9 @@
 #include "TPlayerLadder_Down.h"
 #include "TPlayerLadder_Top.h"
 #include "TPlayerLadder_Up.h"
+
+#include "CHpBar.h"
+
 #pragma endregion
 
 CPlayerScript* CPlayerScript::Player = {};
@@ -217,14 +220,16 @@ void CPlayerScript::awake()
 	
 	ChangeState(PLAYER_STATE::IDLE, 0.04f, L"Idle",false);
 
-
 	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
 	//Ȱ
 	m_Weapon = vecChild[1];
 	m_pBow = vecChild[2];
 	m_pBow->MeshRender()->Activate(false);
 
+	PlayerPos= Transform()->GetLocalPos();
+	PlayerPrePos = Transform()->GetLocalPos();
 
+	ResetNavMeshInfo();
 }
 
 void CPlayerScript::start()
@@ -267,11 +272,6 @@ void CPlayerScript::update()
 	}
 	
 	m_pFSM->update();
-	
-	if (KEY_TAP(KEY_TYPE::KEY_E))
-	{		
-		ChangeState(PLAYER_STATE::HIT_BACK, 0.03f, L"Hit_Back", false);
-	}
 
 	PlayerMovePos = PlayerPos - PlayerPrePos;
 }
@@ -346,7 +346,6 @@ void CPlayerScript::CreateCol()
 
 		Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 		Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-		Obj->MeshRender()->Activate(false);
 
 		Obj->Collider3D()->SetParentOffsetPos(Vec3(0.0f, 200.0f, -250.f));
 
@@ -369,9 +368,11 @@ void CPlayerScript::ClearAllProjectile()
 		((CPlayerArrow*)m_pArrow->GetScript())->SetActive(false);
 
 		if (nullptr != m_pArrow->GetParent())
+		{
 			m_pArrow->DisconnectWithParent();
-
-		m_pArrow->RegisterAsParentObj();
+			m_pArrow->RegisterAsParentObj();
+		}
+			
 
 		DeleteObject(m_pArrow);
 
@@ -385,11 +386,12 @@ void CPlayerScript::ClearAllProjectile()
 		m_pMagic->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		((CPlayerMagic*)m_pMagic->GetScript())->SetActive(false);
 
-		if(nullptr!=m_pMagic->GetParent())
+		if (nullptr != m_pMagic->GetParent())
+		{
 			m_pMagic->DisconnectWithParent();
-
-		m_pMagic->RegisterAsParentObj();
-
+			m_pMagic->RegisterAsParentObj();
+		}
+			
 
 		m_pMagic->ParticleSystem()->Destroy();
 	
@@ -404,9 +406,10 @@ void CPlayerScript::ClearAllProjectile()
 		((CPlayerBomb*)m_pBomb->GetScript())->SetActive(false);
 
 		if (nullptr != m_pBomb->GetParent())
+		{
 			m_pBomb->DisconnectWithParent();
-
-		m_pBomb->RegisterAsParentObj();
+			m_pBomb->RegisterAsParentObj();
+		}	
 
 		m_pBomb->ParticleSystem()->Destroy();
 
@@ -416,9 +419,10 @@ void CPlayerScript::ClearAllProjectile()
 	if (m_pHook)
 	{
 		if (nullptr != m_pHook->GetParent())
+		{
 			m_pHook->DisconnectWithParent();
-
-		m_pHook->RegisterAsParentObj();
+			m_pHook->RegisterAsParentObj();
+		}		
 
 		((CPlayerHook*)m_pHook->GetScript())->Destroy();
 
@@ -557,11 +561,12 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 	if ((int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::MONSTER_BULLET_COL == Obj->GetLayerIndex() ||
 		(int)LAYER_TYPE::BOSS_ATTACK_COL == Obj->GetLayerIndex() ||
-		(int)LAYER_TYPE::MONSTER_ATTACK_COL == Obj->GetLayerIndex())
+		(int)LAYER_TYPE::BOSS_BULLET_COL == Obj->GetLayerIndex())
 	{
-		if (m_eState != PLAYER_STATE::HIT_BACK && m_eState != PLAYER_STATE::HIT_RECOVER)
+		if (m_eState != PLAYER_STATE::HIT_BACK && m_eState != PLAYER_STATE::HIT_RECOVER && m_eState != PLAYER_STATE::ROLL)
 		{
 			ClearAllProjectile();
+			CHpBar::m_HitCheck = true;
 			ChangeState(PLAYER_STATE::HIT_BACK, 0.3f, L"Hit_Back", false);
 		}
 	}
@@ -576,13 +581,13 @@ void CPlayerScript::OnCollisionEnter(CGameObject* _pOther)
 			_pOther = _pOther->GetParent();
 		}
 
-		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();	
+		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();
 
 		Vec3 vDiff = OtherPos - GetPlayerPos();
 
-		ActivateImpactParticle(Vec4(0.f,0.f,0.f,0.f),OtherPos, -vDiff, 25, 20);
+		ActivateImpactParticle(Vec4(0.f, 0.f, 0.f, 0.f), OtherPos, -vDiff, 25, 20);
 
-		Play_Sound(L"EnemyHit1", 1, true, 0.5f);		
+		Play_Sound(L"EnemyHit1", 1, true, 0.5f);
 	}
 
 	else if ((UINT)LAYER_TYPE::MAP_GIMIC_COL == Obj->GetLayerIndex() || (UINT)LAYER_TYPE::WALL_COL == Obj->GetLayerIndex())

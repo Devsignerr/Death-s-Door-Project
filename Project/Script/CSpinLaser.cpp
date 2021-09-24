@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CSpinLaser.h"
+#include "CPlayerScript.h"
 
 #include <Engine/CCollider3D.h>
 #include <Engine/CScene.h>
@@ -29,8 +30,7 @@ void CSpinLaser::update()
 		}
 
 
-		Ptr<CSound> Sound = Play_Sound(L"LaserBurst2");
-
+		Ptr<CSound> Sound = Play_RegionLoopSound(L"LaserBurst2", 10000);
 		m_SoundTimer += fDT;
 
 		if (0.5f < m_SoundTimer)
@@ -98,7 +98,18 @@ void CSpinLaser::LaserCreate()
 			m_Laser[i]->Transform()->SetLocalScale(Vec3(1.0f, 40.0f, 40.0f));
 
 			m_Laser[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Low_SphereMesh"));
-			m_Laser[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+			m_Laser[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LaserMtrl"), 0);
+
+			Ptr<CTexture> WhiteTex = CResMgr::GetInst()->FindRes<CTexture>(L"WhiteTex");
+
+			if (nullptr == WhiteTex)
+				WhiteTex = CResMgr::GetInst()->Load<CTexture>(L"WhiteTex", L"texture\\FBXTexture\\WhiteTex.png");
+
+			m_Laser[i]-> MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_0, WhiteTex.Get());
+			m_Laser[i]-> MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::TEX_3, WhiteTex.Get());
+
+			m_Laser[i]-> MeshRender()->GetSharedMaterial(0)->SetDiffuse(Vec4(1, 1, 1, 1));
+			m_Laser[i]-> MeshRender()->GetSharedMaterial(0)->SetEmissive(Vec4(0.4, 0.1, 0.1, 1));
 
 			CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 			CurScene->AddObject(m_Laser[i], (UINT)LAYER_TYPE::MAP_GIMIC);
@@ -128,6 +139,7 @@ void CSpinLaser::LaserCreate()
 
 			m_LaserCol[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 			m_LaserCol[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+			m_LaserCol[i]->MeshRender()->Activate(false);
 
 			CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 			CurScene->AddObject(m_LaserCol[i], (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
@@ -153,6 +165,9 @@ void CSpinLaser::CalLaserLength(bool _bRight, float _Dist, CGameObject* _Laser, 
 		LayDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 	else
 		LayDir = -Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+
+	if (LayDir.Length() == 0.f)
+		return;
 
 	Vec3 Point1 = {};
 	Vec3 Point2 = {};
@@ -192,13 +207,29 @@ void CSpinLaser::CalLaserLength(bool _bRight, float _Dist, CGameObject* _Laser, 
 		_Laser->Transform()->SetLocalPos(Pos);
 		_LaserCol->Transform()->SetLocalPos(Pos);
 
-		Vec3 Scale = _Laser->Transform()->GetLocalScale();
+
+
+
+		Vec3 Scale = Vec3(1.f, 40.f, 40.f);
+
+		m_fCurtime += fDT;
+
+		float Ratio = (cos(m_fCurtime * 100.f) + 1.f) / 6.f;
 
 		Scale.x = _Dist / 2.f;
+		Scale.z *= Ratio;
+		Scale.y *= Ratio;
 
 		_Laser->Transform()->SetLocalScale(Scale);
 
+
+
+		Scale = _Laser->Transform()->GetLocalScale();
+
 		Scale.x = _Dist;
+		Scale.y = Scale.y / 2.f;
+		Scale.z = Scale.z / 2.f;
+
 		_LaserCol->Transform()->SetLocalScale(Scale);
 	}
 
@@ -231,6 +262,7 @@ void CSpinLaser::CreateRectToCollide()
 			pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 
 			pObj->MeshRender()->Activate(false);
+
 			CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 			CurScene->AddObject(pObj, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
 
@@ -274,75 +306,76 @@ void CSpinLaser::SetCollideRectInfo()
 	Temp.Rot = Vec3(0.0f, -(XM_PI / 2.0f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
-	Temp.Pos = Vec3(SpinLaserPos.x - 1944.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1213);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	// 5
+	Temp.Pos = Vec3(SpinLaserPos.x - 1906.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1123.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(XM_PI, -(XM_PI / 3.6f), XM_PI);
 	m_CollideRectInfo.push(Temp);
 
-	Temp.Pos = Vec3(SpinLaserPos.x - 1183.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1986.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Pos = Vec3(SpinLaserPos.x - 1189.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1928.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(XM_PI, -(XM_PI / 6.0f), XM_PI);
 	m_CollideRectInfo.push(Temp);
 
-	Temp.Pos = Vec3(SpinLaserPos.x - 1939.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1168.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Pos = Vec3(SpinLaserPos.x - 1890.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1104.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(XM_PI, -(XM_PI / 1.5f), XM_PI);
 	m_CollideRectInfo.push(Temp);
 
-	Temp.Pos = Vec3(SpinLaserPos.x - 1202.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1932.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Pos = Vec3(SpinLaserPos.x - 1216.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1872.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(XM_PI, -(XM_PI / 1.39f), XM_PI);
 	m_CollideRectInfo.push(Temp);
 
 
 	Temp.Pos = Vec3(SpinLaserPos.x + 1155.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1888.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, (XM_PI / 4.5f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x + 1954.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1118.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, (XM_PI / 4.5f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x + 1849.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1189.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, (XM_PI / 1.39f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x + 1177.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 2023.0f);
-	Temp.Scale = Vec3(94.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(350.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, (XM_PI / 1.29f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 
 	Temp.Pos = Vec3(SpinLaserPos.x - 9.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 769.0f);
-	Temp.Scale = Vec3(166.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(250.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, 0.0f, 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x - 9.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 821.0f);
-	Temp.Scale = Vec3(166.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(250.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, XM_PI, 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x - 1153.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1139.0f);
-	Temp.Scale = Vec3(166.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(250.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, -(XM_PI / 1.29f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
-	Temp.Pos = Vec3(SpinLaserPos.x - 1117.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1099.0f);
-	Temp.Scale = Vec3(166.0f, 546.0f, 1.0f);
+	Temp.Pos = Vec3(SpinLaserPos.x - 1107.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1123.0f);
+	Temp.Scale = Vec3(250.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, -(XM_PI / 3.6f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x + 1126.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z + 1115.0f);
-	Temp.Scale = Vec3(166.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(250.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, (XM_PI / 3.6f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 
 	Temp.Pos = Vec3(SpinLaserPos.x + 1118.0f, SpinLaserPos.y + 233.0f, SpinLaserPos.z - 1157.0f);
-	Temp.Scale = Vec3(166.0f, 546.0f, 1.0f);
+	Temp.Scale = Vec3(250.0f, 546.0f, 1.0f);
 	Temp.Rot = Vec3(0.0f, (XM_PI / 1.29f), 0.0f);
 	m_CollideRectInfo.push(Temp);
 }
@@ -387,10 +420,13 @@ void CSpinLaser::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_COL == Obj->GetLayerIndex())
 	{
-		Play_Sound(L"LaserBurstY", 1, true, 0.3f);
-		m_StopCheck = true;
-		m_PrevStopState = true;
-
+		
+		if (CPlayerScript::GetPlayer()->GetState() != PLAYER_STATE::ROLL)
+		{
+			Play_Sound(L"LaserBurstY", 1, true, 0.3f);
+			m_StopCheck = true;
+			m_PrevStopState = true;
+		}
 	}
 }
 

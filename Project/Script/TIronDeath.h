@@ -11,6 +11,7 @@ private:
     CIronmaceScript* m_Script;
     Ptr<CTexture>    m_RedTex;
     Ptr<CTexture>    m_PaperBurnTex;
+    bool             m_bDead;
 private:
     void update() override;
 

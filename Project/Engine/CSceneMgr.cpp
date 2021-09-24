@@ -84,5 +84,4 @@ void CSceneMgr::SceneChange(const wstring& _SceneName)
 	evn.wParam = (DWORD_PTR)pScene;
 
 	CEventMgr::GetInst()->AddEvent(evn);
-
 }

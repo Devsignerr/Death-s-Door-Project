@@ -9,6 +9,7 @@
 #include "CCamera.h"
 #include "CLight3D.h"
 #include "CTransform.h"
+#include "CFrustumSphere.h"
 
 #include "CScene.h"
 #include "CSceneMgr.h"
@@ -175,9 +176,24 @@ void CRenderMgr::render_play()
 		g_transform.matViewInv = GetCurCam()->GetViewInvMat();
 		g_transform.matProj = GetCurCam()->GetProjMat();
 
-		for (size_t i = 0; i < m_vecLight3D.size(); ++i)
+		for (size_t j = 0; j < m_vecLight3D.size(); ++j)
 		{
-			m_vecLight3D[i]->render();
+			if (LIGHT_TYPE::POINT == m_vecLight3D[j]->GetInfo().eType)
+			{
+				if (m_vecLight3D[j]->GetObj()->FrustumSphere() && m_vecLight3D[j]->GetObj()->IsFrustum())
+				{
+					Vec3 vWorldPos = m_vecLight3D[j]->GetObj()->Transform()->GetLocalPos();
+					Vec3 vOffSetPos = m_vecLight3D[j]->GetObj()->FrustumSphere()->GetOffSetPos();
+					float Radius = m_vecLight3D[j]->GetObj()->FrustumSphere()->GetRadius();
+					
+					if (!m_vecCam[i]->GetFrustum().CheckFrustumSphere(vWorldPos, vOffSetPos, Radius))
+					{
+						continue;
+					}
+				}
+			}
+
+			m_vecLight3D[j]->render();
 		}
 
 		// 물체 색상, Lights Merge
@@ -245,6 +261,21 @@ void CRenderMgr::render_tool()
 
 	for (size_t i = 0; i < m_vecLight3D.size(); ++i)
 	{
+		if (LIGHT_TYPE::POINT == m_vecLight3D[i]->GetInfo().eType)
+		{
+			if (m_vecLight3D[i]->GetObj()->FrustumSphere() && m_vecLight3D[i]->GetObj()->IsFrustum())
+			{
+				Vec3 vWorldPos = m_vecLight3D[i]->GetObj()->Transform()->GetLocalPos();
+				Vec3 vOffSetPos = m_vecLight3D[i]->GetObj()->FrustumSphere()->GetOffSetPos();
+				float Radius = m_vecLight3D[i]->GetObj()->FrustumSphere()->GetRadius();
+
+				if (!m_pToolCam->GetFrustum().CheckFrustumSphere(vWorldPos, vOffSetPos, Radius))
+				{
+					continue;
+				}
+			}
+		}
+
 		m_vecLight3D[i]->render();
 	}
 

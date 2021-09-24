@@ -60,6 +60,11 @@ void TCrowRun::update()
 		Pos.z += CTimeMgr::GetInst()->GetfDT() * Front.z * 700.0f * 3.0f;
 
 		GetObj()->Transform()->SetLocalPos(Pos);
+		m_Script->OnOffAttackCol(true);
+	}
+	else
+	{
+		m_Script->OnOffAttackCol(false);
 	}
 
 	if (304 <= CurAni->GetFrameIdx() && 308 >= CurAni->GetFrameIdx() ||
@@ -92,6 +97,7 @@ void TCrowRun::Enter()
 void TCrowRun::Exit()
 {
 	m_DirCheck = 0;
+	m_Script->OnOffAttackCol(false);
 }
 
 TCrowRun::TCrowRun()

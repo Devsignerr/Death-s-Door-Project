@@ -30,6 +30,7 @@
 #include "TCastleSpin.h"
 #include "TCastleWalk.h"
 #include "TCastleDeath.h"
+#include "TCastleCutSceneWalk.h"
 #pragma endregion
 
 
@@ -37,7 +38,7 @@ void CCastleScript::ActivateImpact()
 {
 
 
-	m_fImpactPTCTime+= fDT;
+	m_fImpactPTCTime += fDT;
 
 	Vec3 ColPos = Vec3(0.f, 0.f, 0.f);
 	Vec3 ColScale = Vec3(0.f, 0.f, 0.f);
@@ -57,11 +58,11 @@ void CCastleScript::ActivateImpact()
 				break;
 			}
 		}
-		ColPos.y -= ColScale.y / 2.f ;
+		ColPos.y -= ColScale.y / 2.f;
 
 		Vec3 ImpactPos = ColPos;
 
-		ActivateImpactParticle(Vec4(0.1f, 0.1f, 0.1f, 1.f), ImpactPos, Vec3(0.5f, 0.5f, 0.5f), 3, 34,Vec2(200.f,200.f),Vec2(3000.f,3000.f));
+		ActivateImpactParticle(Vec4(0.1f, 0.1f, 0.1f, 1.f), ImpactPos, Vec3(0.5f, 0.5f, 0.5f), 3, 34, Vec2(200.f, 200.f), Vec2(3000.f, 3000.f));
 
 		CCameraScript::SetCameraShake(0.1f, 100.f, 8.f);
 	}
@@ -141,19 +142,22 @@ void CCastleScript::CreateLaserPoint()
 {
 	CGameObject* Obj = new CGameObject;
 	Obj->SetName(L"LaserPoint");
-	
+
 	Obj->AddComponent(new CTransform);
 	Obj->AddComponent(new CMeshRender);
 	Obj->AddComponent(new CCollider3D);
-	
-	Obj->Transform()->SetLocalPos(Vec3(3560.0f, -4073.0f, 1113.0f));
+
+	Obj->Transform()->SetLocalPos(Vec3(57210.266f, 8689.829f, 3980.703f));
 	Obj->Transform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
-	
+
 	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-	
+
+
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::INDETERMINATE);
+
+	Obj->MeshRender()->Activate(false);
 }
 
 void CCastleScript::awake()
@@ -171,8 +175,8 @@ void CCastleScript::awake()
 	m_pFSM->SetObject(GetObj());
 
 	TCastleCutScene* CutSceneState = new TCastleCutScene;						//여기에서 스테이트 생성 , FSM에 추가시킴 
-	m_pFSM->AddState(L"CutScene", CutSceneState);								// FSM에 상태를 추가한다 
-	m_mapState.insert(make_pair(CASTLE_STATE::CUTSCENE, L"CutScene"));			//내 상태와 , 상태이름을 맵으로 저장한다 
+	m_pFSM->AddState(L"CutScene2", CutSceneState);								// FSM에 상태를 추가한다 
+	m_mapState.insert(make_pair(CASTLE_STATE::CUTSCENE, L"CutScene2"));			//내 상태와 , 상태이름을 맵으로 저장한다 
 
 	TCastleFly* FlyState = new TCastleFly;
 	m_pFSM->AddState(L"Fly", FlyState);
@@ -234,8 +238,11 @@ void CCastleScript::awake()
 	m_pFSM->AddState(L"Death", DeathState);
 	m_mapState.insert(make_pair(CASTLE_STATE::DEATH, L"Death"));
 
+	TCastleCutSceneWalk* CutSceneWalkState = new TCastleCutSceneWalk;
+	m_pFSM->AddState(L"CutSceneWalk", CutSceneWalkState);
+	m_mapState.insert(make_pair(CASTLE_STATE::CUTSCENEWALK, L"CutSceneWalk"));
 
-	m_pFSM->ChangeState(L"CutScene", 0.04f, L"CutScene", false);
+	m_pFSM->ChangeState(L"CutSceneWalk", 0.04f, L"CutSceneWalk", false);
 }
 
 void CCastleScript::update()

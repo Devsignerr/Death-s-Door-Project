@@ -6,6 +6,8 @@
 
 void CCastleBullet::awake()
 {
+	CProjectile::awake();
+
 	m_Pos = Transform()->GetLocalPos();
 
 	// 최고점 도달 시간 // 0.9 ~ 1.5

@@ -14,8 +14,8 @@ private:
 	Vec3			m_UpSwitchPos;
 	Vec3			m_OriginPos;
 	Ptr<CMaterial>	m_pOriginMtrl;
+	float			m_SoundTimer;
 
-	int				m_Test;
 public:
 	void SetOnOffCheck(bool _OnOffCheck) { m_OnOffCheck = _OnOffCheck; }
 	void SetThisNum(int _Num) { m_ThisNum = _Num; }

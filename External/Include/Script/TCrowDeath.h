@@ -11,8 +11,10 @@ private:
     CCrowScript* m_Script;
     Ptr<CTexture>   m_RedTex;
     Ptr<CTexture>   m_PaperBurnTex;
+    bool            m_bDead;
 private:
     void update() override;
+    void CreateDoor();
 
     void Enter() override;
     void Exit() override;

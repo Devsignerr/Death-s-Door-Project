@@ -59,7 +59,10 @@ void TCastleDeath::update()
 
 			if (2.0f < m_PaperBurnTime)
 			{
-				CScript::DeleteObject(GetObj());
+				if (!GetObj()->IsDead())
+				{
+					CScript::DeleteObject(GetObj());
+				}
 			}
 		}
 

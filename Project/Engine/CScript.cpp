@@ -113,3 +113,22 @@ Ptr<CSound> CScript::Play_Sound(wstring _wstr, int _iRoopCount, bool _bOverlap, 
 	return sound;
 }
 
+
+Ptr<CSound> CScript::Play_RegionLoopSound(wstring _wstr, unsigned int StartPoint, int _iRoopCount, bool _bOverlap, float _Volume)
+{
+	Ptr<CSound> sound = nullptr;
+
+	sound = CResMgr::GetInst()->FindRes<CSound>(_wstr);
+
+	if (nullptr == sound)
+	{
+		sound = CResMgr::GetInst()->Load<CSound>(_wstr, L"sound\\Allsound\\" + _wstr + L".ogg");
+	}
+
+	assert(sound.Get());
+
+	sound->PlayRegionLoop(_iRoopCount, StartPoint, _bOverlap, _Volume);
+
+	return sound;
+}
+

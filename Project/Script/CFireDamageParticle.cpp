@@ -17,7 +17,7 @@ CFireDamageParticle::~CFireDamageParticle()
 
 void CFireDamageParticle::awake()
 {
-
+	GetObj()->SetAlldynamicShadow(false);
 }
 
 void CFireDamageParticle::update()

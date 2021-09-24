@@ -42,6 +42,7 @@ void CPlayerArrow::update()
 
 void CPlayerArrow::awake()
 {
+	CProjectile::awake();
 	CreateCollider((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, Vec3(80.f, 80.f, 80.f), Vec3(0.f, 0.f, -50.f));
 }
 

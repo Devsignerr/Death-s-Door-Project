@@ -97,6 +97,11 @@ void CProjectile::ReturnToMemoryPool()
 	CMemoryPoolScript::ReturnObj(GetObj());
 }
 
+void CProjectile::awake()
+{
+	GetObj()->SetAlldynamicShadow(false);
+}
+
 void CProjectile::update()
 {
 	if (m_bActive)

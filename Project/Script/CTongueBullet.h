@@ -8,7 +8,7 @@ private:
 	bool	m_bPlayerMyLeft;
 public:
 	void update() override;
-
+	void awake() override;
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);

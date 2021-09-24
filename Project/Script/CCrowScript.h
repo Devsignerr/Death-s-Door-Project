@@ -37,6 +37,13 @@ private:
 	int							m_iChainCount;
 	CGameObject*			    m_pChainCreater;
 
+private:
+	static bool               CrowDeathCheck;
+
+public:
+	static void SetCrowDeath() { CrowDeathCheck = true; }
+	static bool GetCrowDeath() { return CrowDeathCheck; }
+
 public:
 	CGameObject* GetChainCreater() { return m_pChainCreater; }
 	void SetChainCreater(CGameObject* _Obj) {m_pChainCreater = _Obj;}

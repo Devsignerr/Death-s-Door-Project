@@ -3,10 +3,11 @@
 
 #include "CGameObject.h"
 #include "CLayer.h"
+#include "CPathMgr.h"
 
 CScene::CScene()
 	: m_arrLayer{}
-	, m_eState(SCENE_STATE::STOP)
+	, m_eState(SCENE_STATE::PLAY)
 {
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
@@ -21,10 +22,27 @@ CScene::~CScene()
 
 void CScene::awake()
 {
+	wstring strFilePath = CPathMgr::GetResPath();
+	strFilePath += L"scene\\temp.scene";
+
+	FILE* pFile = nullptr;
+	HRESULT hr = _wfopen_s(&pFile, strFilePath.c_str(), L"wb");
+
+	if (nullptr == pFile)
+	{
+		MessageBox(nullptr, L"Scene Save Failed", L"Error", MB_OK);
+		return;
+	}
+
+	SaveToScene(pFile);
+
+	fclose(pFile);
+
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
 		m_arrLayer[i]->awake();
 	}
+
 }
 
 void CScene::start()

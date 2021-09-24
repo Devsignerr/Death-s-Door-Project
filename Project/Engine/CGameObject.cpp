@@ -24,7 +24,7 @@ CGameObject::CGameObject()
 	, m_iLayerIdx(-1)
 	, m_pParentObj(nullptr)
 	, m_bFrustum(true)
-	, m_bDynamicShadow(false)
+	, m_bDynamicShadow(true)
 	, m_bDead(false)
 {
 	
@@ -34,7 +34,7 @@ CGameObject::CGameObject(CGameObject& _origin)
 	: m_arrCom{}
 	, m_vecChild()
 	, m_pParentObj(nullptr)
-	, m_bDynamicShadow(_origin.m_bDynamicShadow)
+	, m_bDynamicShadow(true)
 	, m_iLayerIdx(-1)
 	, m_bFrustum(_origin.m_bFrustum)
 	, m_bDead(false)
@@ -78,13 +78,12 @@ void CGameObject::awake()
 			m_arrCom[i]->awake();
 	}	
 
-	if (!m_bDead)
+	
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		for (size_t i = 0; i < m_vecScript.size(); ++i)
-		{
-			m_vecScript[i]->awake();
-		}
+		m_vecScript[i]->awake();
 	}
+	
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
@@ -100,13 +99,12 @@ void CGameObject::start()
 			m_arrCom[i]->start();
 	}
 
-	if (!m_bDead)
+	
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		for (size_t i = 0; i < m_vecScript.size(); ++i)
-		{
-			m_vecScript[i]->start();
-		}
+		m_vecScript[i]->start();
 	}
+	
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
@@ -116,19 +114,21 @@ void CGameObject::start()
 
 void CGameObject::update()
 {
+	
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
+
 		if (nullptr != m_arrCom[i])
 			m_arrCom[i]->update();
+
 	}
 
-	if (!m_bDead)
+
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		for (size_t i = 0; i < m_vecScript.size(); ++i)
-		{
-			m_vecScript[i]->update();
-		}
+		m_vecScript[i]->update();
 	}
+	
 	
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
@@ -139,19 +139,19 @@ void CGameObject::update()
 
 void CGameObject::lateupdate()
 {
+	
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrCom[i])
 			m_arrCom[i]->lateupdate();
 	}
 
-	if (!m_bDead)
+	
+	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		for (size_t i = 0; i < m_vecScript.size(); ++i)
-		{
-			m_vecScript[i]->lateupdate();
-		}
+		m_vecScript[i]->lateupdate();
 	}
+	
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
@@ -161,6 +161,7 @@ void CGameObject::lateupdate()
 
 void CGameObject::finalupdate()
 {
+	
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrCom[i])
@@ -171,10 +172,11 @@ void CGameObject::finalupdate()
 	{
 		m_vecChild[i]->finalupdate();
 	}
-
-	// Register
+	
+		// Register
 	CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene()->GetLayer(m_iLayerIdx);
 	pCurLayer->RegisterObject(this);
+	
 }
 
 
@@ -265,6 +267,22 @@ void CGameObject::SetAllMeshrenderActive(bool _b)
 
 	if (MeshRender())
 		MeshRender()->Activate(_b);
+}
+
+void CGameObject::SetAlldynamicShadow(bool _b)
+{
+	const vector<CGameObject*>& vecChild = GetChild();
+
+	UINT ChildCount = vecChild.size();
+
+	for (UINT i = 0; i < ChildCount; ++i)
+	{
+		vecChild[i]->SetDynamicShadow(false);
+		vecChild[i]->SetFrustumCheck(false);
+	}
+
+	SetDynamicShadow(false);
+	SetFrustumCheck(false);
 }
 
 void CGameObject::ChangeLayerIdx(UINT _Idx)
@@ -584,8 +602,14 @@ void CGameObject::LoadFromScene(FILE* _pFile)
 			CMesh* pMesh = MeshRender()->GetMesh().Get();
 
 			if (pMesh->IsNavMesh())
+			{
 				CResMgr::GetInst()->GetNavMeshVec().push_back(this);
+				SetDynamicShadow(false);
+			}
+				
 		}		
 	}
+
+
 
 }

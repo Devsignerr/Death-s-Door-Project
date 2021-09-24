@@ -283,6 +283,20 @@ void CMonsterScript::TransColScale(Vec3 _Scale, LAYER_TYPE _Type)
 void CMonsterScript::awake()
 {
 	CActorScript::awake();
+
+	const vector<CGameObject*>& childvec = GetObj()->GetChild();
+
+	for (int i = 0; i < childvec.size(); ++i)
+	{
+		if (childvec[i]->MeshRender()&& nullptr==childvec[i]->Collider3D())
+		{
+			Vec4 BurnInfo = Vec4(1.0f, 0.f, 0.f, 0.f);
+			int BurnType = (UINT)BURN_TYPE::MONSTER_BURN;
+
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::INT_1, &BurnType);
+			childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
+		}
+	}
 }
 
 void CMonsterScript::update()

@@ -40,56 +40,60 @@ void CreateTestScene()
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
 	//Scene Load
-	//CSaveLoadMgr::LoadScene(pCurScene, L"scene\\test1234.scene");
+	CSaveLoadMgr::LoadScene(pCurScene, L"scene\\TitleScene.scene");
 
 
 	CGameObject* pObj = nullptr;
-	// =================
+
+
+	// ==================
 	// UI Camera Object
 	// ==================
-	//pObj = new CGameObject;
-	//pObj->SetName(L"UI Camera Object");
-	//pObj->AddComponent(new CTransform);
-	//pObj->AddComponent(new CCamera);
-	//
-	//pObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	//pObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-	//pObj->Camera()->SetCameraType(CAMERA_TYPE::UI_CAM);
-	//pObj->Camera()->SetFar(1000.f);
-	//CRenderMgr::GetInst()->RegisterUICamera(pObj->Camera());
-	//
-	////playercol - monsterattackcol
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_ATTACK_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::WALL_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::WALL_COL);
-	//
-	//// playerattackcol - monstercol
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MONSTER_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::SCENE_CHANGE_COL);
-	//
-	//CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
-	//
-	//
-	//pCurScene->awake();
-	//pCurScene->SetState(SCENE_STATE::PLAY);
-	//return;
-
-	//CGameObject* pObj = nullptr;
+	pObj = new CGameObject;
+	pObj->SetName(L"UI Camera Object");
+	pObj->AddComponent(new CTransform);
+	pObj->AddComponent(new CCamera);
+	
+	pObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	pObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pObj->Camera()->SetCameraType(CAMERA_TYPE::UI_CAM);
+	pObj->Camera()->SetFar(1000.f);
+	CRenderMgr::GetInst()->RegisterUICamera(pObj->Camera());
+	
+	//playercol - monsterattackcol
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_ATTACK_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MONSTER_BULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_ATTACK_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::WALL_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::WALL_COL);
+	
+	// playerattackcol - monstercol
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MONSTER_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::BOSS_BULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::CROWBULLET_COL);
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::SCENE_CHANGE_COL);
+	
+	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
+	
+	
+	pCurScene->awake();
+	pCurScene->SetState(SCENE_STATE::PLAY);
+	return;
 
 	// Texture ·Îµù 
 	Ptr<CTexture> pSkyBoxTex = CResMgr::GetInst()->Load<CTexture>(L"SkyBox_01", L"texture\\skybox\\Sky02.jpg");
 	Ptr<CTexture> pSkyBoxTexArr = CResMgr::GetInst()->Load<CTexture>(L"SkyBox_Cube_Water", L"texture\\skybox\\SkyWater.dds");
 	CResMgr::GetInst()->Load<CTexture>(L"SkyBox_Cube_Dawn", L"texture\\skybox\\SkyDawn.dds");
+
+	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"Room_MainHall-mat3-_Emissive"))
 	CResMgr::GetInst()->Load<CTexture>(L"Room_MainHall-mat3-_Emissive", L"texture\\FBXTexture\\Room_MainHall-mat3-_Emissive.png");
+
+	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"Room_Right_Emis"))
 	CResMgr::GetInst()->Load<CTexture>(L"Room_Right_Emis", L"texture\\FBXTexture\\Room_Right_Emis.png");
 
 	if(nullptr==CResMgr::GetInst()->FindRes<CTexture>(L"Lantern_Emis"))
@@ -98,6 +102,9 @@ void CreateTestScene()
 	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"Lantern_Emis2"))
 		CResMgr::GetInst()->Load<CTexture>(L"Lantern_Emis2", L"texture\\FBXTexture\\Lantern_Emis2.png");
 
+	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"Room_Left-_Emissive.png"))
+		CResMgr::GetInst()->Load<CTexture>(L"Room_Left-_Emissive.png", L"texture\\FBXTexture\\Room_Left-_Emissive.png");
+	
 	if (nullptr == CResMgr::GetInst()->FindRes<CTexture>(L"weapon_emis"))
 		CResMgr::GetInst()->Load<CTexture>(L"weapon_emis", L"texture\\FBXTexture\\weapon_emis.png");
 
@@ -194,16 +201,16 @@ void CreateTestScene()
 	// ==================
 	// Particle System
 	// ==================
-	CGameObject* pParticle = new CGameObject;
-	pParticle->SetName(L"Particle System");
-
-	pParticle->AddComponent(new CTransform);
-	pParticle->AddComponent(new CParticleSystem);
-
-	pParticle->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
-
-	pParticle->ParticleSystem()->SetTexture(ParticleTex);
-	pCurScene->AddObject(pParticle, LAYER_TYPE::PARTICLE);
+	//CGameObject* pParticle = new CGameObject;
+	//pParticle->SetName(L"Particle System");
+	//
+	//pParticle->AddComponent(new CTransform);
+	//pParticle->AddComponent(new CParticleSystem);
+	//
+	//pParticle->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
+	//
+	//pParticle->ParticleSystem()->SetTexture(ParticleTex);
+	//pCurScene->AddObject(pParticle, LAYER_TYPE::PARTICLE);
 
 
 	//
@@ -257,19 +264,19 @@ void CreateTestScene()
 	// =============
 	// Collider Object
 	// =============
-	pObj = new CGameObject;
-	pObj->SetName(L"Collider17");
-	pObj->AddComponent(new CTransform);
-	pObj->AddComponent(new CMeshRender);
-	pObj->AddComponent(new CCollider3D);
-
-	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
-	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
-
-	pObj->Transform()->SetLocalScale(Vec3(400.f, 400.f, 400.f));
-	pObj->Transform()->SetLocalPos(Vec3(400.f, 0.f, 400.f));
-
-	pCurScene->AddObject(pObj, (UINT)LAYER_TYPE::MONSTER_COL);
+	//pObj = new CGameObject;
+	//pObj->SetName(L"Collider17");
+	//pObj->AddComponent(new CTransform);
+	//pObj->AddComponent(new CMeshRender);
+	//pObj->AddComponent(new CCollider3D);
+	//
+	//pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
+	//pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+	//
+	//pObj->Transform()->SetLocalScale(Vec3(400.f, 400.f, 400.f));
+	//pObj->Transform()->SetLocalPos(Vec3(400.f, 0.f, 400.f));
+	//
+	//pCurScene->AddObject(pObj, (UINT)LAYER_TYPE::MONSTER_COL);
 
 
 	// playercol - monsterattackcol
@@ -291,6 +298,7 @@ void CreateTestScene()
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::PLAYER_COL, (UINT)LAYER_TYPE::SCENE_CHANGE_COL);
 
 	CCollisionMgr::GetInst()->CollisionCheck((UINT)LAYER_TYPE::BOSS_COL, (UINT)LAYER_TYPE::INDETERMINATE);
+
 	pCurScene->awake();
 
 	// Scene Save

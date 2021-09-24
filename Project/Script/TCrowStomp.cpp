@@ -3,6 +3,7 @@
 #include "CPlayerScript.h"
 #include "TCrowSliding.h"
 #include "TCrowJump.h"
+#include "CCrowScript.h"
 
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
@@ -52,9 +53,19 @@ void TCrowStomp::update()
 
 		Pos.x += CTimeMgr::GetInst()->GetfDT() * Front.x * m_Speed * 2.0f;
 		Pos.z += CTimeMgr::GetInst()->GetfDT() * Front.z * m_Speed * 2.0f;
+
+		if (681 == CurAni->GetFrameIdx())
+		{
+			m_Script->OnOffAttackCol(true);
+		}
+		else if (682 == CurAni->GetFrameIdx())
+		{
+			m_Script->OnOffAttackCol(false);
+		}
 	}
 	else
 	{
+
 		Pos.x += CTimeMgr::GetInst()->GetfDT() * Front.x * m_Speed * 2.0f;
 		Pos.z += CTimeMgr::GetInst()->GetfDT() * Front.z * m_Speed * 2.0f;
 	
@@ -89,6 +100,10 @@ void TCrowStomp::update()
 
 void TCrowStomp::Enter()
 {
+
+	if (nullptr == m_Script)
+		m_Script = (CCrowScript*)GetScript();
+
 	m_SlidingState = (TCrowSliding*)GetFSM()->FindState(L"Sliding");
 
 	m_JumpState = (TCrowJump*)GetFSM()->FindState(L"Jump");
@@ -110,6 +125,7 @@ TCrowStomp::TCrowStomp()
 	, m_Speed(1500.0f)
 	, m_SlidingState(nullptr)
 	, m_JumpState(nullptr)
+	, m_Script(nullptr)
 {
 }
 

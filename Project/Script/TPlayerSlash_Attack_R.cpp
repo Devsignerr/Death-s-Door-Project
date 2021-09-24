@@ -90,6 +90,16 @@ void TPlayerSlash_Attack_R::update()
 		((CPlayerScript*)GetScript())->ChangeState(PLAYER_STATE::IDLE, 0.01f, L"Idle", false);
 	}
 
+	if (KEY_TAP(KEY_TYPE::SPACE))
+	{
+		if (nullptr != CPlayerScript::m_pHorizonSlashR)
+			CPlayerScript::m_pHorizonSlashR->SetAllMeshrenderActive(false);
+
+		if (nullptr != CPlayerScript::m_pHorizonSlashL)
+			CPlayerScript::m_pHorizonSlashL->SetAllMeshrenderActive(false);
+
+		GetFSM()->ChangeState(L"Roll", 0.1f, L"Roll", false);
+	}
 }
 
 void TPlayerSlash_Attack_R::Enter()

@@ -105,17 +105,18 @@ void CBossScript::CreateCol(const wstring& _Name, Vec3 _Pos, Vec3 _Scale, LAYER_
 	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 
-	if (_Type == LAYER_TYPE::BOSS_ATTACK_COL)
-	{
-		Obj->Collider3D()->SetParentOffsetPos(_Pos);
-		Obj->MeshRender()->Activate(false);
-		Obj->Collider3D()->Activate(false);
-	}
-
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)_Type);
 
 	GetObj()->AddChild(Obj);
+
+	if (_Type == LAYER_TYPE::BOSS_ATTACK_COL)
+	{
+		Obj->Collider3D()->SetParentOffsetPos(_Pos);
+		Obj->Collider3D()->Activate(false);
+	}
+
+	Obj->MeshRender()->Activate(false);
 }
 
 void CBossScript::TransColPos(Vec3 _Pos, LAYER_TYPE _Type)

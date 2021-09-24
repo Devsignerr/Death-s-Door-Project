@@ -9,7 +9,7 @@ bool CFence::m_IsOpen = false;
 
 void CFence::awake()
 {
-	Vec3 Down = -Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 Down = Vec3(0.f, -1.f, 0.f);
 	m_DestPos = Transform()->GetLocalPos() + Down * 700.0f;
 	CreateWallCol();
 	m_PrevOpenCheck = m_IsOpen;
@@ -42,19 +42,16 @@ void CFence::update()
 		}
 	}
 
-	if (KEY_TAP(KEY_TYPE::SPACE))
-	{
-		m_IsOpen = true;
-	}
+	//if (KEY_TAP(KEY_TYPE::SPACE))
+	//{
+	//	m_IsOpen = true;
+	//}
 }
 
 void CFence::CreateWallCol()
 {
-	static int a = 0;
-
-	if (0 == a)
-	{
-		++a;
+	
+		
 		std::queue<WALLINFO> WallInfo = {};
 		Vec3 FencePos = Transform()->GetLocalPos();
 		WALLINFO Temp = { };
@@ -94,6 +91,7 @@ void CFence::CreateWallCol()
 
 			pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 			pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
+			pObj->MeshRender()->Activate(false);
 
 			CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 			CurScene->AddObject(pObj, (UINT)LAYER_TYPE::WALL_COL);
@@ -105,8 +103,7 @@ void CFence::CreateWallCol()
 				m_FenceWall = pObj;
 			}
 		}
-
-	}
+	
 }
 
 void CFence::OnCollisionEnter(CGameObject* _pOther)

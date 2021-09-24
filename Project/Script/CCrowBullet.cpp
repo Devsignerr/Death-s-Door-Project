@@ -88,6 +88,9 @@ void CCrowBullet::GuidedMove()
 
 void CCrowBullet::awake()
 {
+	GetObj()->SetDynamicShadow(true);
+	//CProjectile::awake();
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	Vec3 PlayerFront = CPlayerScript::GetPlayerFront();
 
@@ -113,6 +116,17 @@ void CCrowBullet::awake()
 	m_DestAttachTime = (-b + sqrtf(b * b - 4.0f * a * c)) / (2 * a);
 	m_VelocityX = -(m_Pos.x - (PlayerPos.x)) / m_DestAttachTime;
 	m_VelocityZ = -(m_Pos.z - (PlayerPos.z)) / m_DestAttachTime;
+
+
+	const vector<CGameObject*>& vecChild = GetObj()->GetChild();
+
+	UINT ChildCount = vecChild.size();
+
+	for (UINT i = 0; i < ChildCount; ++i)
+	{
+		if (vecChild[i]->MeshRender() && vecChild[i]->Collider3D())
+			vecChild[i]->MeshRender()->Activate(false);
+	}
 }
 
 void CCrowBullet::update()
@@ -124,7 +138,8 @@ void CCrowBullet::update()
 
 void CCrowBullet::OnCollisionEnter(CGameObject* _pOther)
 {
-	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL)
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL||
+		_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL)
 	{
 		CCameraScript::SetCameraShake(0.1f, 100.f, 3.f);
 

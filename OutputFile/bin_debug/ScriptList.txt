@@ -22,8 +22,10 @@ CFadeScript
 CFence
 CFireDamageParticle
 CFogScript
+CGateScript
 CHpBar
 CIronmaceScript
+CLeverScript
 CMapChange
 CMapGimic
 CMemoryPoolScript

@@ -8,6 +8,7 @@ class CCastleScript :
 private:
 	enum class CASTLE_STATE
 	{
+		CUTSCENEWALK,
 		CUTSCENE,
 		WALK,
 		FLY,
@@ -39,7 +40,7 @@ private:
 	};
 
 private:
-	CFSM*						m_pFSM;
+	CFSM* m_pFSM;
 	CASTLE_STATE				m_eState;
 	map<CASTLE_STATE, wstring>	m_mapState;
 	int							m_Hp;

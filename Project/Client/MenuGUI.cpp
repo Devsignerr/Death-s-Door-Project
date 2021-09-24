@@ -607,8 +607,6 @@ void MenuGUI::ChangeSceneState(CScene* _pScene, SCENE_STATE _eState)
         CSaveLoadMgr::LoadScene(_pScene, L"scene\\temp.scene");
         CSceneMgr::GetInst()->ChangeScene(_pScene);
 
-        
-
         // InspeactorGUI 의 타겟 오브젝트 무효화
         InspectorGUI* pInspector = (InspectorGUI*)CImGUIMgr::GetInst()->FindGUI(L"Inspector");
         pInspector->SetTargetObject(nullptr);

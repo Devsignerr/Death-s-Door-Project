@@ -411,6 +411,7 @@ enum class GIMICTYPE
 	ELEVATOR,
 	DOOR,
 	LEVER,
+	GATE,
 	END
 };
 

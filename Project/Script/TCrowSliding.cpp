@@ -508,6 +508,8 @@ void TCrowSliding::Enter()
         m_SlidingTotalCount = 3;
     }
 
+    m_Script->OnOffAttackCol(true);
+
 }
 
 void TCrowSliding::Exit()
@@ -519,6 +521,7 @@ void TCrowSliding::Exit()
     m_SpecialPatternEndCheck = false;
     m_SlidingTime = 0.0f;
     m_PrevPoint = 0;
+    m_Script->OnOffAttackCol(false);
 }
 
 TCrowSliding::TCrowSliding()

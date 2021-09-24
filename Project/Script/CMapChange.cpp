@@ -31,13 +31,19 @@ void CMapChange::awake()
 		m_ChangeCollNum = m_ThisCollNum - 1;
 
 	FindCollNum.push_back(GetObj());
+
+	MeshRender()->Activate(false);
 }
 
 void CMapChange::update()
 {
 	if (true == m_MapChangeCheck)
 	{
-		if (true == CFadeScript::GetIsFadeInOut())
+		CGameObject* pPostEffect = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PostEffect Object", (UINT)LAYER_TYPE::POSTEFFECT);
+
+		CFadeScript* script = (CFadeScript*)pPostEffect->GetScript();
+
+		if (true == script->GetIsFadeInOut())
 		{
 			IsMapChange = true;
 
@@ -86,6 +92,17 @@ void CMapChange::update()
 						}
 					}
 
+					else if (true==m_bNoDoor_OnThisScene)
+					{
+						CPlayerScript* Player = CPlayerScript::GetPlayer();
+
+						Player->GetObj()->GetChild()[0]->MeshRender()->Activate(true);
+						Player->GetObj()->GetChild()[1]->MeshRender()->Activate(true);
+
+						m_MapChangeCheck = false;
+						IsMapChange = false;
+					}
+
 					break;
 				}
 			}
@@ -98,6 +115,7 @@ CMapChange::CMapChange()
 	, m_ThisCollNum(-1)
 	, m_ChangeCollNum(-1)
 	, m_MapChangeCheck(false)
+	, m_bNoDoor_OnThisScene(true)
 {
 }
 
@@ -112,7 +130,12 @@ void CMapChange::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_COL== Obj->GetLayerIndex())
 	{
-		CFadeScript::Fade_Out();
+		CGameObject* pPostEffect = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PostEffect Object", (UINT)LAYER_TYPE::POSTEFFECT);
+
+		CFadeScript* script = (CFadeScript*)pPostEffect->GetScript();
+
+		script->Fade_Out();
+
 		m_MapChangeCheck = true;
 	}
 
@@ -124,15 +147,23 @@ void CMapChange::OnCollisionEnter(CGameObject* _pOther)
 
 	vector<CGameObject*>::iterator iter = Temp.begin();
 
+	int DoorCount = 0;
+
 	for (; iter != Temp.end(); ++iter)
 	{
 		if ((*iter)->GetScript())
 		{
 			if (((CMapGimic*)(*iter)->GetScript())->GetGimicType() == GIMICTYPE::DOOR)
 			{
+				DoorCount++;
 				((CDoorScript*)(*iter)->GetScript())->Spawn();
 			}
 		}
+	}
+
+	if (DoorCount > 0)
+	{
+		m_bNoDoor_OnThisScene = false;
 	}
 
 }
@@ -147,7 +178,13 @@ void CMapChange::OnCollisionExit(CGameObject* _pOther)
 	
 	if ((UINT)LAYER_TYPE::PLAYER_COL == Obj->GetLayerIndex())
 	{
-		CFadeScript::Fade_In();
+		
+		CGameObject* pPostEffect = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PostEffect Object", (UINT)LAYER_TYPE::POSTEFFECT);
+
+		CFadeScript* script = (CFadeScript*)pPostEffect->GetScript();
+
+		script->Fade_In();
+
 		//m_MapChangeCheck = false;
 	}
 }

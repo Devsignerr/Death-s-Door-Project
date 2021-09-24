@@ -1,12 +1,17 @@
 #include "pch.h"
 #include "TCrowDeath.h"
 #include "CCrowScript.h"
+#include "CMapGimic.h"
+#include "CDoorScript.h"
 
 
 #include <Engine/CAnimator3D.h>
 #include <Engine/CTimeMgr.h>
 #include <Engine/CMeshRender.h>
 #include <Engine/CCollider3D.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CLayer.h>
 
 void TCrowDeath::update()
 {
@@ -48,12 +53,37 @@ void TCrowDeath::update()
 				childvec[i]->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &BurnInfo);
 			}
 		}
-
 	}
 
 	if (3.0f < m_PaperBurnTime)
 	{
-		CScript::DeleteObject(GetObj());
+		if (!m_bDead)
+		{
+			CreateDoor();
+			CScript::DeleteObject(GetObj());
+			m_bDead = true;
+		}
+	}
+}
+
+void TCrowDeath::CreateDoor()
+{
+	vector<CGameObject*>& Temp = (vector<CGameObject*>&)CSceneMgr::GetInst()->GetCurScene()->GetLayer((UINT)LAYER_TYPE::MAP_GIMIC)->GetObjects();
+
+	vector<CGameObject*>::iterator iter = Temp.begin();
+
+	int DoorCount = 0;
+
+	for (; iter != Temp.end(); ++iter)
+	{
+		if ((*iter)->GetScript())
+		{
+			if (((CMapGimic*)(*iter)->GetScript())->GetGimicType() == GIMICTYPE::DOOR)
+			{			
+				((CDoorScript*)(*iter)->GetScript())->Spawn();
+				((CDoorScript*)(*iter)->GetScript())->CreateCol(L"Stage_Room");
+			}
+		}
 	}
 }
 
@@ -61,6 +91,9 @@ void TCrowDeath::Enter()
 {
 	if (nullptr == m_Script)
 		m_Script = (CCrowScript*)GetObj()->GetScript();
+
+	m_Script->OnOffAttackCol(false);
+	CCrowScript::SetCrowDeath();
 
 	if (nullptr == m_RedTex)
 		m_RedTex = CResMgr::GetInst()->FindRes<CTexture>(L"RedTex");

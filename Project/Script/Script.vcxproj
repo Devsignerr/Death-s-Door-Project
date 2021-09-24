@@ -279,8 +279,10 @@ call CodeGen.exe</Command>
     <ClInclude Include="CFence.h" />
     <ClInclude Include="CFireDamageParticle.h" />
     <ClInclude Include="CFogScript.h" />
+    <ClInclude Include="CGateScript.h" />
     <ClInclude Include="CHpBar.h" />
     <ClInclude Include="CIronmaceScript.h" />
+    <ClInclude Include="CLeverScript.h" />
     <ClInclude Include="CMapChange.h" />
     <ClInclude Include="CMapGimic.h" />
     <ClInclude Include="CMemoryPoolScript.h" />
@@ -315,6 +317,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="TCastleCutScene.h" />
+    <ClInclude Include="TCastleCutSceneWalk.h" />
     <ClInclude Include="TCastleDeath.h" />
     <ClInclude Include="TCastleFly.h" />
     <ClInclude Include="TCastleFly_Finish.h" />
@@ -413,8 +416,10 @@ call CodeGen.exe</Command>
     <ClCompile Include="CFence.cpp" />
     <ClCompile Include="CFireDamageParticle.cpp" />
     <ClCompile Include="CFogScript.cpp" />
+    <ClCompile Include="CGateScript.cpp" />
     <ClCompile Include="CHpBar.cpp" />
     <ClCompile Include="CIronmaceScript.cpp" />
+    <ClCompile Include="CLeverScript.cpp" />
     <ClCompile Include="CMapChange.cpp" />
     <ClCompile Include="CMapGimic.cpp" />
     <ClCompile Include="CMemoryPoolScript.cpp" />
@@ -455,6 +460,7 @@ call CodeGen.exe</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TCastleCutScene.cpp" />
+    <ClCompile Include="TCastleCutSceneWalk.cpp" />
     <ClCompile Include="TCastleDeath.cpp" />
     <ClCompile Include="TCastleFly.cpp" />
     <ClCompile Include="TCastleFly_Finish.cpp" />

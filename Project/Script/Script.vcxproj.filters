@@ -397,6 +397,15 @@
     <ClInclude Include="TIronIdle.h">
       <Filter>ScriptCode\FSM\Boss\Iron</Filter>
     </ClInclude>
+    <ClInclude Include="CLeverScript.h">
+      <Filter>ScriptCode\Map_Gimic\Lever</Filter>
+    </ClInclude>
+    <ClInclude Include="CGateScript.h">
+      <Filter>ScriptCode\Map_Gimic\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="TCastleCutSceneWalk.h">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -560,6 +569,12 @@
     </Filter>
     <Filter Include="ScriptCode\Map_Gimic\Door">
       <UniqueIdentifier>{66aff110-9f68-49e5-ae4d-43f5ecb6c531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\Lever">
+      <UniqueIdentifier>{b914d58f-545b-4309-ba29-52c3f86e0c26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptCode\Map_Gimic\Gate">
+      <UniqueIdentifier>{fb27cf26-154a-4e2a-ae1d-37546ed530d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -955,6 +970,15 @@
     </ClCompile>
     <ClCompile Include="TIronIdle.cpp">
       <Filter>ScriptCode\FSM\Boss\Iron</Filter>
+    </ClCompile>
+    <ClCompile Include="CLeverScript.cpp">
+      <Filter>ScriptCode\Map_Gimic\Lever</Filter>
+    </ClCompile>
+    <ClCompile Include="CGateScript.cpp">
+      <Filter>ScriptCode\Map_Gimic\Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="TCastleCutSceneWalk.cpp">
+      <Filter>ScriptCode\FSM\Boss\Castle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -12,6 +12,7 @@ private:
     int m_ThisCollNum;
     int m_ChangeCollNum;
     bool m_MapChangeCheck;
+    bool m_bNoDoor_OnThisScene;
 public:
     int GetThisColNum() { return m_ThisCollNum; }
 

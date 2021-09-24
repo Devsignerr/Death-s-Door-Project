@@ -7,6 +7,8 @@
 
 void CSkullBullet::awake()
 {
+	CProjectile::awake();
+
 	Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
 	m_Pos = Transform()->GetLocalPos();
 	m_MaxHeight = m_Pos.y + 500.0f;

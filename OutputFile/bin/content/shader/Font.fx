@@ -26,8 +26,16 @@ float4 PS_Font(VTX_OUT _in) : SV_Target
     float4 vObjectColor = float4(1.f, 0.f, 1.f, 1.f);
     if (btex_0)
         vObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+  
     
     vObjectColor = Fade_In_Out(vObjectColor, g_int_0, g_float_0);
+    
+      
+    if (1 == g_int_1)
+    {
+        vObjectColor.a *= 3.0f;
+    }
+       
     
     return vObjectColor;
 }

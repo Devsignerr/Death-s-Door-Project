@@ -404,7 +404,10 @@ void CTongueScript::Death()
 
 	if (3.0f < m_PaperBurnTime)
 	{
-		DeleteObject(GetGameObject());
+		if (!GetObj()->IsDead())
+		{
+			CScript::DeleteObject(GetObj());
+		}
 	}
 }
 

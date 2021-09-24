@@ -36,12 +36,13 @@ void CPlayerHook::Destroy()
 		GetObj()->SetAllMeshrenderActive(false);
 		GetObj()->SetAllColliderActive(false);
 		Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));	
-		DeleteObject(GetObj());
+		CScript::DeleteObject(GetObj());
 	}
 }
 
 void CPlayerHook::awake()
 {
+	CProjectile::awake();
 	CreateCollider((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, Vec3(50.f, 50.f, 50.f), Vec3(0.f, 0.f, -50.f));
 }
 
@@ -210,7 +211,7 @@ void CPlayerHook::CheckArrived()
 	float Distance = abs(Vec3::Distance(PlayerPos, HookPos));
 
 	//도착지에서 50만큼떨어져있다면 
-	if (Distance < 250.f)
+	if (Distance < 200.f)
 	{
 		m_bArrived = true;
 	}
@@ -227,7 +228,7 @@ void CPlayerHook::OnCollisionEnter(CGameObject* _pOther)
 	}
 	else
 	{
-		Vec3 OtherPos = _pOther->Transform()->GetLocalPos();
+		Vec3 OtherPos = CPlayerScript::GetPlayerPos();
 		Vec3 LocalPos = Transform()->GetLocalPos();
 
 		OtherPos.y = 0.f;

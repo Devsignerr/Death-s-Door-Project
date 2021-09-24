@@ -8,15 +8,20 @@
 
 void CSceneChange::awake()
 {
-	m_NextSceneName = GetObj()->GetName();
+	m_NextSceneName = GetObj()->GetName(); 
+
+	MeshRender()->Activate(false);
 }
 
 void CSceneChange::update()
 {
-
 	if (true == m_fadeCheck)
 	{
-		if (true == CFadeScript::GetIsFadeInOut())
+		CGameObject* pPostEffect = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PostEffect Object", (UINT)LAYER_TYPE::POSTEFFECT);
+
+		CFadeScript* script = (CFadeScript*)pPostEffect->GetScript();
+
+		if (true == script->GetIsFadeInOut())
 		{
 			m_fadeCheck = false;
 			CSceneMgr::GetInst()->SceneChange(m_NextSceneName.c_str());
@@ -41,7 +46,12 @@ void CSceneChange::OnCollisionEnter(CGameObject* _pOther)
 
 	if ((UINT)LAYER_TYPE::PLAYER_COL == Obj->GetLayerIndex())
 	{
-		CFadeScript::Fade_Out();
+		CGameObject* pPostEffect = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PostEffect Object", (UINT)LAYER_TYPE::POSTEFFECT);
+
+		CFadeScript* script = (CFadeScript*)pPostEffect->GetScript();
+
+		script->Fade_Out();
+
 		m_fadeCheck = true;
 	}
 

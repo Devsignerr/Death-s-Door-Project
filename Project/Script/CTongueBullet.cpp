@@ -63,6 +63,11 @@ void CTongueBullet::update()
 
 }
 
+void CTongueBullet::awake()
+{
+	CProjectile::awake();
+}
+
 void CTongueBullet::OnCollisionEnter(CGameObject* _pOther)
 {
 	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL || _pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL)

@@ -62,7 +62,7 @@ public:
     virtual void LoadFromScene(FILE* _pFile) {};
 
     Ptr<CSound> Play_Sound(wstring _wstr,int _iRoopCount=1, bool _bOverlap = false, float _Volume = 0.5f);
-
+    Ptr<CSound> Play_RegionLoopSound(wstring _wstr, unsigned int StartPoint, int _iRoopCount = 1, bool _bOverlap = false, float _Volume = 0.5f);
 
 public:
     CScript(int _iScriptType);

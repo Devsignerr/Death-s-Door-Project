@@ -7,6 +7,7 @@
 
 void CPlayerMagic::awake()
 {
+	CProjectile::awake();
 	CreateCollider((UINT)LAYER_TYPE::PLAYER_ATTACK_COL, Vec3(100.f, 100.f, 100.f), Vec3(0.f, 0.f, 0.f));
 }
 

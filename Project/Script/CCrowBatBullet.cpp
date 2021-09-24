@@ -119,6 +119,7 @@ bool CCrowBatBullet::CircleMove()
 
 void CCrowBatBullet::awake()
 {
+	//CProjectile::awake();
 	m_fTheta = 1.5f;
 }
 
@@ -142,7 +143,8 @@ void CCrowBatBullet::update()
 
 void CCrowBatBullet::OnCollisionEnter(CGameObject* _pOther)
 {
-	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL)
+	if (_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_ATTACK_COL ||
+		_pOther->GetLayerIndex() == (UINT)LAYER_TYPE::PLAYER_COL)
 	{
 		Vec3 Pos = Transform()->GetLocalPos();
 		Vec3 DiffPos = Pos-CPlayerScript::GetPlayerPos();

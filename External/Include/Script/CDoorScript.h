@@ -25,6 +25,7 @@ public:
 public:
     void Spawn();
     void Disappear();
+    void CreateCol(wstring _wstr);
 
 public:
     virtual void awake();

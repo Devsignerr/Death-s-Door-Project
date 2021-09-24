@@ -15,7 +15,7 @@ public:
 	static float GetStep() { return m_fStep; }
 
 public:
-	virtual void awake() {}
+	virtual void awake();
 	void update() override;
 
 	virtual void SaveToScene(FILE* _pFile) override;

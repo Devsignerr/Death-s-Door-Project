@@ -68,6 +68,37 @@ void CSound::Play(int _iRoopCount, bool _bOverlap, float _Volume)
 	m_listChannel.push_back(pChannel);
 }
 
+
+void CSound::PlayRegionLoop(int _iRoopCount, unsigned int StartPoint, bool _bOverlap, float _Volume)
+{
+	if (_iRoopCount <= -1)
+	{
+		assert(nullptr);
+	}
+
+	// 재생되고 있는 채널이 있는데, 중복재생을 허용하지 않았다 -> 재생 안함
+	if (!_bOverlap && !m_listChannel.empty())
+	{
+		return;
+	}
+
+	_iRoopCount -= 1;
+
+	FMOD::Channel* pChannel = nullptr;
+	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
+
+	pChannel->setVolume(_Volume);
+	pChannel->setCallback(CHANNEL_CALLBACK);
+	pChannel->setUserData(this);
+
+	pChannel->setMode(FMOD_LOOP_NORMAL);
+	pChannel->setLoopCount(_iRoopCount);
+	pChannel->setPosition(StartPoint, FMOD_TIMEUNIT_PCM);
+
+
+	m_listChannel.push_back(pChannel);
+}
+
 void CSound::Stop()
 {
 	list<FMOD::Channel*>::iterator iter;

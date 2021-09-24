@@ -3,8 +3,11 @@
 class CHpBar : public CScript
 {
 public:
+    static bool m_HitCheck;
+public:
     vector<CGameObject*> m_HpBar;
     int                      m_Hp;
+
 public:
     virtual void awake();
     virtual void update();
@@ -17,4 +20,3 @@ public:
 
     CLONE(CHpBar);
 };
-

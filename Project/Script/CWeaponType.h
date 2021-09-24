@@ -16,8 +16,8 @@ private:
 private:
     map<WEAPONTYPE, CGameObject*>   m_WeaponIcon;
     WEAPONTYPE                      m_CurType;
-    CGameObject*                    PrevIcon;
-    CGameObject*                    CurIcon;
+    CGameObject* m_PrevIcon;
+    CGameObject* m_CurIcon;
     bool                            m_IsChange;
 
 private:
@@ -36,4 +36,3 @@ public:
 
     CLONE(CWeaponType);
 };
-

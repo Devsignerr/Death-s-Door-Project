@@ -14,6 +14,11 @@ CPlayerChain::~CPlayerChain()
 {
 }
 
+void CPlayerChain::awake()
+{
+	CProjectile::awake();
+}
+
 void CPlayerChain::update()
 {
 	if (!m_bActive)

@@ -11,7 +11,8 @@ void TIronWalk::update()
 	CAnimator3D* CurAni = GetObj()->Animator3D();
 	UINT iCurClipIdx = CurAni->GetClipIdx();
 
-	m_Script->RotateSysTem(8.0f);
+	m_Script->RotateSysTem(1.0f);
+
 	if (255 <= CurAni->GetFrameIdx() && 266 >= CurAni->GetFrameIdx() ||
 		275 <= CurAni->GetFrameIdx())
 	{

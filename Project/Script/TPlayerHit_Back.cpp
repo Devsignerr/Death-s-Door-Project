@@ -4,6 +4,10 @@
 #include <Engine/CKeyMgr.h>
 #include <Engine/CAnimator3D.h>
 #include <Engine/CFSM.h>
+#include <Engine/CSceneMgr.h>
+#include <Engine/CScene.h>
+#include <Engine/CLayer.h>
+#include <Engine/CCollider3D.h>
 
 void TPlayerHit_Back::update()
 {
@@ -18,7 +22,8 @@ void TPlayerHit_Back::update()
 
 void TPlayerHit_Back::Enter()
 {
-	
+	CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"PlayerAttackCol", (UINT)LAYER_TYPE::PLAYER_ATTACK_COL);
+	Obj->Collider3D()->Activate(false);
 }
 
 void TPlayerHit_Back::Exit()

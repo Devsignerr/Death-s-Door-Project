@@ -20,6 +20,8 @@ void CMapGimic::CreateCol(Vec3 _Scale, Vec3 _OffsetPos, wstring _Name)
 	Obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_C3D"));
 	Obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Collider3DMtrl"), 0);
 
+	Obj->MeshRender()->Activate(false);
+
 	CScene* CurScene = CSceneMgr::GetInst()->GetCurScene();
 	CurScene->AddObject(Obj, (UINT)LAYER_TYPE::MAP_GIMIC_COL);
 

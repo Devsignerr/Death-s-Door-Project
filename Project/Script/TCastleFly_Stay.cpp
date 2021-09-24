@@ -23,7 +23,7 @@ void TCastleFly_Stay::update()
 
 			LaserPos.y = Pos.y;
 			Vec3 Diff = LaserPos - Pos;
-		
+
 			float Length = Diff.Length();
 
 			Diff.y = 0.0f;
@@ -52,8 +52,8 @@ void TCastleFly_Stay::update()
 	else
 	{
 		Vec3 LaserFrontDir = m_LaserPoint->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
-		if (TurnToLaserPoint((LaserFrontDir * -100000.0f), 5.0f))
+		LaserFrontDir = Vec3(0.0f, 0.0f, 1.0f);
+		if (TurnToLaserPoint((LaserFrontDir * -1000000.0f), 5.0f))
 		{
 			GetFSM()->ChangeState(L"Fly_Finish", 0.1f, L"Fly_Finish", false);
 		}

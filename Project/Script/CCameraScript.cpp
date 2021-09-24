@@ -112,7 +112,6 @@ void CCameraScript::CameraShake()
 
         Transform()->SetLocalPos(CameraPos);
     }
-
 }
 
 void CCameraScript::MakeLightFollow(Vec3 _MovePos)
@@ -306,8 +305,7 @@ void CCameraScript::LookAtPlayer(Vec3 _PlayerPos)
 {
     Transform()->SetLocalPos(_PlayerPos+m_vCameraOffset);
 }
-
-void CCameraScript::CutSceneCamera()
+void CCameraScript::CutSceneCamera(Vec3 _Pos, Vec3 _Rot)
 {
     if (PROJ_TYPE::ORTHOGRAPHIC == Camera()->GetProjType())
     {
@@ -316,40 +314,41 @@ void CCameraScript::CutSceneCamera()
     }
 
     Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+    m_eMode = CAMERA_MODE::FREE;
 
-    // Transform은 바로 적용되지 않기때문에,
-    // 카메라가 이동할 위치에서 플레이어를 바라보는 회전값을 구한 뒤 적용시킨다
-    CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"Cube", 0);
-    Vec3 ObjPos = Obj->Transform()->GetLocalPos();
+    //// Transform은 바로 적용되지 않기때문에,
+    //// 카메라가 이동할 위치에서 플레이어를 바라보는 회전값을 구한 뒤 적용시킨다
+    //CGameObject* Obj = CSceneMgr::GetInst()->GetCurScene()->FindObjectByLayer(L"Cube", 0);
+    //Vec3 ObjPos = Obj->Transform()->GetLocalPos();
 
-    Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
-    Vec3 Diff = PlayerPos - ObjPos;
+    //Vec3 PlayerPos = CPlayerScript::GetPlayerPos();
+    //Vec3 Diff = PlayerPos - ObjPos;
 
-    Vec3 vUP = Obj->Transform()->GetLocalDir(DIR_TYPE::UP);
-    Vec3 vFront = Obj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+    //Vec3 vUP = Obj->Transform()->GetLocalDir(DIR_TYPE::UP);
+    //Vec3 vFront = Obj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
-    Vec3 vFrontCross = Diff.Cross(vFront);
-    float Frontdot = vFrontCross.Dot(vUP);
+    //Vec3 vFrontCross = Diff.Cross(vFront);
+    //float Frontdot = vFrontCross.Dot(vUP);
 
-    Vec3 Rot = Obj->Transform()->GetLocalRot();
-    Diff.Normalize();
+    //Vec3 Rot = Obj->Transform()->GetLocalRot();
+    //Diff.Normalize();
 
-    float RotAngle = vFront.Dot(Diff);
-    RotAngle = acos(RotAngle);
+    //float RotAngle = vFront.Dot(Diff);
+    //RotAngle = acos(RotAngle);
 
-    // y축 회전
-    if (Frontdot > 0.0)
-        Rot.y -= RotAngle;
-    else if (Frontdot < 0.0)
-        Rot.y += RotAngle;
+    //// y축 회전
+    //if (Frontdot > 0.0)
+    //    Rot.y -= RotAngle;
+    //else if (Frontdot < 0.0)
+    //    Rot.y += RotAngle;
 
-    // x축 회전
-    Vec3 Down = -Obj->Transform()->GetLocalDir(DIR_TYPE::UP);
-    float Dot = Down.Dot(Diff);
-    Rot.x = Dot;
+    //// x축 회전
+    //Vec3 Down = -Obj->Transform()->GetLocalDir(DIR_TYPE::UP);
+    //float Dot = Down.Dot(Diff);
+    //Rot.x = Dot;
 
-    Transform()->SetLocalPos(ObjPos);
-    Transform()->SetLocalRot(Rot);
+    Transform()->SetLocalPos(_Pos);
+    Transform()->SetLocalRot(_Rot);
 
 }
 
@@ -358,6 +357,8 @@ void CCameraScript::ResetOriginCamera()
     Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
     Transform()->SetLocalPos(m_OriginCameraPos);
     Transform()->SetLocalRot(m_OriginCameraRot);
+
+    m_eMode = CAMERA_MODE::FOLLOW;
 }
 
 void CCameraScript::EndingSCeneCamera()

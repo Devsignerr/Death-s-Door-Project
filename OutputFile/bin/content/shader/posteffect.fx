@@ -72,7 +72,7 @@ float4 PS_PostEffect(VTX_OUT _in) : SV_Target
     vOriginalColor += vBloomColor;
     
     //화면 흑백으로 강하게 대비 처리 
-    if (BLACKWHITE==1)
+    if (BLACKWHITE == 1)
     {
         float Brigtness = (vOriginalColor.x + vOriginalColor.y + vOriginalColor.z) / 3.f;
         
@@ -89,10 +89,5 @@ float4 PS_PostEffect(VTX_OUT _in) : SV_Target
     
     return Fade_In_Out(vOriginalColor, FADETYPE, FADETIME);
 }
-
-
-
-
-
 
 #endif

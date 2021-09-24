@@ -82,6 +82,7 @@ public:
     //그러면 자식을 탐색하여 해당 컴포넌트를 모두 끄거나 킨다.
     void SetAllColliderActive(bool _b);
     void SetAllMeshrenderActive(bool _b);
+    void SetAlldynamicShadow(bool _b);
 
 public:
     void ChangeLayerIdx(UINT _Idx);

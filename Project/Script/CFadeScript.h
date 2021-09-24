@@ -11,15 +11,16 @@ class CFadeScript :public CScript
     };
 
 private:
-    static FADETYPE m_FadeType;
-    static bool m_FadeInOut;
-    static float m_Time;
-    static float m_FadeTime;
+    FADETYPE m_FadeType;
+    bool m_FadeInOut;
+    float m_Time;
+    float m_FadeTime;
+    bool  m_SceneChangeCheck;
 public:
-    static void Fade_In();
-    static void Fade_Out();
-    static void SetFadeTime(float _Time) { m_FadeTime = XM_PI * _Time; }
-    static bool GetIsFadeInOut() { return m_FadeInOut; }
+    void Fade_In();
+    void Fade_Out();
+    void SetFadeTime(float _Time) { m_FadeTime = XM_PI * _Time; }
+    bool GetIsFadeInOut() { return m_FadeInOut; }
 private:
     void Fade_in(float _FadeTime);
     void Fade_out(float _FadeTime);
@@ -37,4 +38,3 @@ public:
 
     CLONE(CFadeScript);
 };
-
